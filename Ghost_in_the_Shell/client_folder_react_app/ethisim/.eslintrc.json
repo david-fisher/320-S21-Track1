@@ -1,0 +1,34 @@
+{ // Visit https://eslint.org/docs/user-guide/configuring for more configuration settings
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "prettier" //This turns off all ESLint rules that are unnecessary or might conflict with Prettier
+
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        /* Error lvl of the rule can be changed to these three values
+     * "off" or 0 - turn the rule off
+     * "warn" or 1 - turn the rule on as a warning (doesn't affect exit code)
+     * "error" or 2 - turn the rule on as an error (exit code will be 1)
+     * There could be other rules not added below that should be added
+     */
+     "react/display-name": "off"
+    }
+}

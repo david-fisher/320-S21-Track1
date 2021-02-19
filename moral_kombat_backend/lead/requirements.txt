@@ -1,0 +1,4 @@
+Django==2.2.13
+django_filter==2.4.0
+djangorestframework==3.12.2
+django-cors-headers==3.5.0
