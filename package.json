@@ -1,0 +1,19 @@
+{
+  "name": "320-f20-track-iii",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/david-fisher/320-F20-Track-III.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/david-fisher/320-F20-Track-III/issues"
+  },
+  "homepage": "https://github.com/david-fisher/320-F20-Track-III#readme"
+}
