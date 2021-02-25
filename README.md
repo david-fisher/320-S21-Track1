@@ -1,6 +1,11 @@
 # 320-F21-Track-I
 https://github.com/david-fisher/320-S21-Track1
 
+## SPIN UP ALL COMPONENTS OF THE SOFTWARE WITH JUST ONE COMMAND
+
+1. Clone this repo and cd into 320-S21-Track1 directory
+2. Key in 'docker-compose up'
+
 BELOW IS THE README FROM LAST SEMESTER'S TRACK III REPO
 
 Ethisim is a website that allows you to easily create and assign ethics

@@ -1,0 +1,53 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: Ghost_in_the_Shell/client_folder_react_app/ethisim
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./Ghost_in_the_Shell/client_folder_react_app/ethisim:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    container_name: 320_frontend
+    networks:
+      - '320'
+  
+  backend:
+    build:
+      context: moral_kombat_backend
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+    networks:
+      - '320'
+    container_name: backend320
+
+  database:
+    image: postgres
+    container_name: postgres-db
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=db"
+    ports:
+      - 5432:5432
+    expose:
+      - '5432'
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - '320'
+
+volumes:
+  postgres-data:
+
+networks:
+  '320':

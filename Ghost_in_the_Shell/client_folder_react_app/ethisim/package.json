@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.0.4",
-    "@testing-library/user-event": "^12.1.6",
-    "axios": "^0.21.0",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.7.1",
+    "axios": "^0.21.1",
     "html-to-text": "^5.1.1",
     "material-table": "^1.68.0",
     "node": "^15.3.0",
@@ -20,7 +20,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
     "start": "^5.1.0",
-    "suneditor-react": "^2.14.2"
+    "suneditor-react": "^2.15.2"
   },
   "scripts": {
     "start": "react-scripts start",
