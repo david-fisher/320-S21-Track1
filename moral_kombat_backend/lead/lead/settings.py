@@ -27,7 +27,7 @@ SECRET_KEY = '@!6b5hzk8m7y+gdyeq$8&@g!c%0m+8hhaquat0=ml80biwz)kg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -100,6 +100,12 @@ DATABASES = {
         'PASSWORD': 'qy2xdb_zEcAZFOmY7fvQT1SddHRUhbCI',
         'HOST': 'raja.db.elephantsql.com',
         'PORT': '5432',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'db',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'postgres',
+        # 'HOST': 'postgres-db',
+        # 'PORT': '5432'
     }
 }
 
