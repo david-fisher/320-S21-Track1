@@ -25,6 +25,11 @@ services:
       - 8000:8000
     depends_on:
       - database
+    environment:
+      - POSTGRESHOST=${POSTGRESHOST}
+      - POSTGRESUSERNAME=${POSTGRESUSERNAME}
+      - POSTGRESPASSWORD=${POSTGRESPASSWORD}
+      - POSTGRESDB=${POSTGRESDB}
     networks:
       - '320'
     container_name: backend320

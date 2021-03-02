@@ -1,10 +1,22 @@
-# 320-F21-Track-I
+# 320-S21-Track-I
 https://github.com/david-fisher/320-S21-Track1
 
 ## SPIN UP ALL COMPONENTS OF THE SOFTWARE WITH JUST ONE COMMAND
 
 1. Clone this repo and cd into 320-S21-Track1 directory
 2. Key in 'docker-compose up'
+
+### Note
+
+This branch contains the .env file with all the required variables assigned their corresponding values. 
+In order to successfully boot the application without the .env file, the client will have to pass the 
+following environment variables and assign them appropriate values in the command line prior to running
+'docker-compose up' :
+
+1. POSTGRESDB - Name of the database
+2. POSTGRESUSERNAME - Username to connect to the database server
+3. POSTGRESPASSWORD - Password to connect to the database server
+4. POSTGRESHOST - Url of the host
 
 BELOW IS THE README FROM LAST SEMESTER'S TRACK III REPO
 
