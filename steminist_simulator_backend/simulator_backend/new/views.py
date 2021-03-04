@@ -49,8 +49,8 @@ def scenarioIntroduction(request):
 
 
 def task(request):
-    scenarioID = request.POST['scenarioid']
-    if not isinstance(scenarioID, int):
+    scenarioID = request.GET['scenarioid']
+    if not isinstance(studentID, int):
         print("Invalid ID")
         return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
     else:
