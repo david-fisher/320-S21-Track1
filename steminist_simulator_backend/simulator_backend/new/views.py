@@ -11,8 +11,8 @@ def index(request):
 
 
 def scenarios(request):
-    studentID = request.POST['studentid']
-    if not isintance(studemtID, int):
+    studentID = request.GET['studentid']
+    if not isinstance(studentID, int):
         print("Invalid student ID")
         return HttpResponseBadRequest('Invalid student ID: %s' %str(studentID))
     else:
@@ -26,8 +26,8 @@ def scenarios(request):
 
 
 def intro(request):
-    scenarioID = request.POST['scenarioid']
-    if not isintance(studemtID, int):
+    scenarioID = request.GET['scenarioid']
+    if not isinstance(studentID, int):
         print("Invalid ID")
         return HttpResponseBadRequest('Invalid scenario ID: %s' %str(scenarioID))
     else:
@@ -41,8 +41,8 @@ def intro(request):
 
 
 def task(request):
-    scenarioID = request.POST['scenarioid']
-    if not isintance(studemtID, int):
+    scenarioID = request.GET['scenarioid']
+    if not isinstance(studentID, int):
         print("Invalid ID")
         return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
     else:
