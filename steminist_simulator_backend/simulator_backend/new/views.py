@@ -3,6 +3,8 @@ from django.core.serializers import serialize
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest
 import new.models as md
 import json
+import logging
+
 
 INTROPAGE = 1
 TASKPAGE = 2
@@ -24,7 +26,6 @@ CONCLUSIONPAGE = 12
 def index(request):
     return HttpResponse("This is the API")
 
-
 def scenarios(request):
     jsonData = json.loads(request.body)
     studentID = jsonData['studentId']
@@ -35,12 +36,16 @@ def scenarios(request):
     else:
         try:
             scenarioQuerySet = md.Scenario.objects.filter(id=studentID)
-            resultData = (list(scenarioQuerySet.values()))
-        except md.User.DoesNotExist:
-            return HttpResponseNotFound('Student ID not found.')
-        else:
-            print("Got all scenarios")
-            return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+            # If no scenarios with the given studentId were found, return 404 error
+            if len(scenarioQuerySet) == 0:
+                return HttpResponseNotFound('Scenario not found with the given studentId')
+
+            resultData = (list(scenarioQuerySet.values()))   
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Scenario")
+
+        print("Got all scenarios")
+        return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
 
 
 def scenarioIntroduction(request):
@@ -53,12 +58,16 @@ def scenarioIntroduction(request):
     else:
         try:
             scenarioIntroQuerySet = md.Page.objects.filter(order=INTROPAGE, scenario_id=scenarioID)
+            # If no pages with the given scenarioId and order were found, return 404 error
+            if len(scenarioIntroQuerySet) == 0:
+                return HttpResponseNotFound('Page not found with the given scenarioId')
+
             resultData = (list(scenarioIntroQuerySet.values()))
-        except md.Page.DoesNotExist:
-            return HttpResponseNotFound('No scenario found with scenario ID.' %str(scenarioID))
-        else:
-            print("Got scenario introduction.")
-            return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Page")
+
+        print("Got scenario introduction.")
+        return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
 
 
 def scenarioTask(request):
@@ -71,11 +80,14 @@ def scenarioTask(request):
     else:
         try:
             scenarioTaskQuerySet = md.Page.objects.filter(order=TASKPAGE, scenario_id=scenarioID)
+            # If no pages with the given scenarioId and order were found, return 404 error
+            if len(scenarioTaskQuerySet) == 0:
+                return HttpResponseNotFound('Page not found with the given scenarioId')
+
             resultData = (list(scenarioTaskQuerySet.values()))
-            print(resultData)
-        except md.DoesNotExist:
-            return HttpResponseNotFound('No scenario found with scenario ID.' % str(scenarioID))
-        else:
-            print("Got scenario introduction.")
-            return JsonResponse({'status': 200, 'result': resultData})
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Page")
+
+        print("Got scenario introduction.")
+        return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
 
