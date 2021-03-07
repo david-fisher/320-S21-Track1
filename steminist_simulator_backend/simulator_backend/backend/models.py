@@ -22,7 +22,7 @@ class Course(models.Model):
 # PartOf Model
 class PartOf(models.Model):
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
-    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)\
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)

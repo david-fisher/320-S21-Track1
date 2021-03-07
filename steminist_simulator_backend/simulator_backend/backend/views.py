@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.serializers import serialize
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest
-import new.models as md
+import backend.models as md
 import json
 import logging
 
@@ -46,7 +46,6 @@ def scenarios(request):
 
         print("Got all scenarios")
         return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
-
 
 def scenarioIntroduction(request):
     jsonData = json.loads(request.body)

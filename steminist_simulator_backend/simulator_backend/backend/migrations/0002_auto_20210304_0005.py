@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('new', '0001_initial'),
+        ('backend', '0001_initial'),
     ]
 
     operations = [
@@ -38,8 +38,8 @@ class Migration(migrations.Migration):
             name='PartOf',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('course_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='new.course')),
-                ('scenario_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='new.scenario')),
+                ('course_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.course')),
+                ('scenario_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.scenario')),
             ],
         ),
         migrations.CreateModel(
@@ -49,15 +49,15 @@ class Migration(migrations.Migration):
                 ('order', models.IntegerField()),
                 ('page_type', models.CharField(max_length=5)),
                 ('body_text', models.CharField(max_length=1000)),
-                ('scenario_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='new.scenario')),
+                ('scenario_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.scenario')),
             ],
         ),
         migrations.CreateModel(
             name='Enrolled',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('course_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='new.course')),
-                ('student_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='new.user')),
+                ('course_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.course')),
+                ('student_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.user')),
             ],
         ),
     ]
