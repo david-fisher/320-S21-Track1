@@ -1,0 +1,39 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow builds the three docker containers and pushes them to docker hub
+  build-docker-image:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      #logs in to docker
+      - name: docker login
+        run: |
+          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+      - name: docker build
+        run: |
+          docker-compose up -d
+      #commit images to docker
+      - name: docker commit
+        run: | 
+          docker commit -m "frontend image" -a "frontend" frontend dacollins/docking:frontend
+          docker commit -m "backend image" -a "backend" backend dacollins/docking:backend
+          docker commit -m "postgres image" -a "database" postgres-db dacollins/docking:database
+      # Push built images to docker hub
+      - name: docker push
+        run: |
+          docker push dacollins/docking:frontend
+          docker push dacollins/docking:backend
+          docker push dacollins/docking:database
