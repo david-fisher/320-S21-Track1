@@ -1,6 +1,7 @@
 version: "3"
 services:
   frontend:
+    image: frontend
     build:
       context: Ghost_in_the_Shell/client_folder_react_app/ethisim
     ports:
@@ -14,11 +15,12 @@ services:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    container_name: 320_frontend
+    container_name: frontend
     networks:
       - '320'
   
   backend:
+    image: backend
     build:
       context: moral_kombat_backend
     ports:
@@ -32,7 +34,7 @@ services:
       - POSTGRESDB=${POSTGRESDB}
     networks:
       - '320'
-    container_name: backend320
+    container_name: backend
 
   database:
     image: postgres
