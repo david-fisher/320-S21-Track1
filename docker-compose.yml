@@ -1,7 +1,6 @@
 version: "3"
 services:
   frontend:
-    image: frontend
     build:
       context: Ghost_in_the_Shell/client_folder_react_app/ethisim
     ports:
@@ -20,7 +19,6 @@ services:
       - '320'
   
   backend:
-    image: backend
     build:
       context: moral_kombat_backend
     ports:
