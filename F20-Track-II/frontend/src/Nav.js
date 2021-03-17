@@ -112,7 +112,7 @@ function Nav() {
                     </Button>
                   </Link> */}
                 </Typography>
-                <Button color="inherit">LogOut</Button>
+                <Button onClick={() => window.location.href = 'http://localhost:3006'} color="inherit">LogOut</Button>
               </Toolbar>
             </AppBar>
 
