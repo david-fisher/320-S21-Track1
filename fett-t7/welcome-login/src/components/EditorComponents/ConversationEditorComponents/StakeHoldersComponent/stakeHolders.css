@@ -1,0 +1,37 @@
+.stakeHolders {
+    text-align: left;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+#button {
+    margin-bottom: 60px;
+}
+
+#form {
+    margin-top: -50px;
+    margin-left: -15px;
+}
+
+.questions-header {
+    text-align: left;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: -40px;
+}
+
+.point-selection-body {
+    text-align: left;
+    margin-left: 25px;
+}
+
+.point-selection-header {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#SaveButton {
+    position: absolute;
+    left: 750px;
+    top: 158px;
+}

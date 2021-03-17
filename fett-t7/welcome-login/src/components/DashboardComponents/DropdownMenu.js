@@ -33,7 +33,7 @@ export default function SimpleMenu() {
                 onClose={handleClose}
             >
                 <MenuItem
-                    onClick={() => window.location.href = 'http://localhost:3006'}
+                    onClick={handleClose}
                     component={Link}
                     to={{
                         pathname: '/home',
