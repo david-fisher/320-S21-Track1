@@ -103,23 +103,34 @@ def initialReflection(request):
     if request.method == 'GET':
         data = request.GET
         scenarioID = data['scenarioId']
-        if not isinstance(scenarioID, int):
+
+        if not isinstance(int(scenarioID), int):
             print("Invalid scenario ID")
             return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
 
+        resultData = None
         try:
             scenarioReflectionQuerySet = md.Page.objects.filter(order=INITIAL_REFLECTION, scenario_id=scenarioID)
             # If no pages with the given scenarioId and order were found, return 404 error
-            if len(scenarioReflectionQuerySet) == 0:
-                return HttpResponseNotFound('Page not found with the given scenarioId')
+            # print(len(scenarioReflectionQuerySet))
+            # if len(scenarioReflectionQuerySet) == 0:
+            #     return HttpResponseNotFound('Page not found with the given scenarioId')
+            # resultData = (list(scenarioReflectionQuerySet.values()))
 
-            resultData = (list(scenarioReflectionQuerySet.values()))
-
+            resultData = {
+                "prompts": [
+                    {
+                        "text": "Initial reflection prompt",
+                        "id": 1
+                    }
+                ],
+                "body_text": "Body text before initial reflection"
+            }
         except Exception as ex:
             logging.exception('Exception thrown: Query Failed to retrieve Page')
-        finally:
-            print("Got initial relfection.")
-            return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
+
+        print("Got initial reflection.")
+        return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
 
     elif request.method == 'POST':
         data = request.POST
