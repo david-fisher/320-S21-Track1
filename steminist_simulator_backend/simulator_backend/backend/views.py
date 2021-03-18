@@ -148,3 +148,37 @@ def initialReflection(request):
             print("Initial reflection not added")
             return HttpResponseNotFound('student ID, scenario ID or prompt does not exist in database.')
 
+def scenarioInitialAction(request):
+    if request.method == 'GET':
+        jsonData = json.loads(request.body)
+        scenarioID = jsonData['scenarioId']
+
+        if not isinstance(scenarioID, int):
+            print("Invalid ID")
+            return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+        else:
+            try:
+                scenarioInitialActQuerySet = md.Page.objects.filter(order= INIT_ACTION, scenario_id=scenarioID)
+
+                # if len(scenarioInitialActQuerySet) == 0:
+                #     return HttpResponseNotFound('No initial actions = found with the given scenarioId')
+
+                # resultData = list(scenarioInitialActQuerySet.values())
+                resultData = [
+                    {
+                        "question_id": 1,
+                        "question": "Do you want to make a decision before speaking to stakeholders?",
+                        "option_id": [1, 2],
+                        "option": ["Approve Decision without talking to stakeholders", "Postpone decision to talk to stakeholders"]
+                    }
+                ]
+
+                return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+
+            except Exception as ex:
+                logging.exception("Exception thrown: Query Failed to retrieve Page")
+
+                
+    
+    # Radhika's Section
+    # elif request.method == 'POST':
