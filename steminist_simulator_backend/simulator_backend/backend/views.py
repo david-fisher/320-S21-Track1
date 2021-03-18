@@ -4,6 +4,8 @@ from django.http import HttpResponse, JsonResponse, HttpResponseForbidden, HttpR
 import backend.models as md
 import json
 import logging
+from datetime import datetime
+import backend.queries as queries
 
 
 INTROPAGE = 1
@@ -23,9 +25,12 @@ CONCLUSIONPAGE = 12
 """def err_json_res(status, err):
     return JsonResponse({'status':int(status), 'error':err})"""
 
+@api_view(['GET'])
 def index(request):
     return HttpResponse("This is the API")
 
+
+@api_view(['GET'])
 def scenarios(request):
     jsonData = json.loads(request.body)
     studentID = jsonData['studentId']
@@ -40,13 +45,16 @@ def scenarios(request):
             if len(scenarioQuerySet) == 0:
                 return HttpResponseNotFound('Scenario not found with the given studentId')
 
-            resultData = (list(scenarioQuerySet.values()))   
+            resultData = (list(scenarioQuerySet.values()))
+
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Scenario")
 
         print("Got all scenarios")
         return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
 
+
+@api_view(['GET'])
 def scenarioIntroduction(request):
     jsonData = json.loads(request.body)
     scenarioID = jsonData['scenarioId']
@@ -62,6 +70,7 @@ def scenarioIntroduction(request):
                 return HttpResponseNotFound('Page not found with the given scenarioId')
 
             resultData = (list(scenarioIntroQuerySet.values()))
+
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Page")
 
@@ -69,6 +78,7 @@ def scenarioIntroduction(request):
         return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
 
 
+@api_view(['GET'])
 def scenarioTask(request):
     jsonData = json.loads(request.body)
     scenarioID = jsonData['scenarioId']
@@ -84,9 +94,57 @@ def scenarioTask(request):
                 return HttpResponseNotFound('Page not found with the given scenarioId')
 
             resultData = (list(scenarioTaskQuerySet.values()))
+
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Page")
 
         print("Got scenario introduction.")
         return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
+
+
+@api_view(['GET', 'PUT'])
+def initialReflection(request):
+    jsonData = json.loads(request.body)
+    scenarioID = jsonData['scenarioId']
+    if not isinstance(scenarioID, int):
+        print("Invalid scenario ID")
+        return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+
+    if request.method == 'GET':
+        try:
+            scenarioReflectionQuerySet = md.Page.objects.filter(order=INITIAL_REFLECTION, scenario_id=scenarioID)
+            # If no pages with the given scenarioId and order were found, return 404 error
+            if len(scenarioReflectionQuerySet) == 0:
+                return HttpResponseNotFound('Page not found with the given scenarioId')
+
+            resultData = (list(scenarioReflectionQuerySet.values()))
+
+        except Exception as ex:
+            logging.exception('Exception thrown: Query Failed to retrieve Page')
+        finally:
+            print("Got initial relfection.")
+            return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
+
+    elif request.method == 'PUT':
+        studentID = jsonData['studentId']
+        no_error = True
+        if not isinstance(studentID, int):
+            print("Invalid student ID")
+            return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
+
+        timestamp = datetime.now()
+        for prompt_num in jsonData:
+            if not isinstance(prompt_num, int):
+                print("Invalid prompt number")
+                return HttpResponseBadRequest('Invalid prompt number: %s' % str(prompt_num))
+
+            inputData = jsonData
+            no_error = queries.addReflectionResponse(studentID, inputData, prompt_num, scenarioID, timestamp)
+
+        if no_error:
+            print("Updated initial reflection.")
+            return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
+        else:
+            print("Initial reflection not added")
+            return HttpResponseNotFound('student ID, scenario ID or prompt does not exist in database.')
 
