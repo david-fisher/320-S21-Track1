@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "model": "backend.Course",
+      "fields": {
+        "webpage": "google.com",
+        "name": "CS320", 
+        "semester": "F20"
+      }
+    },
+    {
+        "id": 2,
+        "model": "backend.Course",
+        "fields": {
+          "webpage": "algorithms.com",
+          "name": "CS311", 
+          "semester": "F20"
+        }
+    }
+]
