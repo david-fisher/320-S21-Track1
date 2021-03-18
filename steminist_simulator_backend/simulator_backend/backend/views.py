@@ -6,6 +6,7 @@ import json
 import logging
 from datetime import datetime
 import backend.queries as queries
+import time # possible change of library
 
 
 INTROPAGE = 1
@@ -160,6 +161,40 @@ def initialReflection(request):
             print("Initial reflection not added")
             return HttpResponseNotFound('student ID, scenario ID or prompt does not exist in database.')
 
+        
+
+def scenarioInitialReflectionResponse(request):
+        if request.method == 'GET':
+            jsonData = json.loads(request.body)
+            scenarioID = jsonData['scenarioID']
+            studentID = jsonData['studentID']
+
+            if not isinstance(scenarioID, int):
+                print("Invalid ID")
+                return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+            if not isinstance(studentID, int):
+                print("Invalid ID")
+                return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
+            else:
+                try:
+                    # scenarioInitialReflectionQuerySet = md.Page.objects.filter(order = INITIAL_REFLECTION, scenario_id = scenarioID, student_id = studentID)
+                      
+                    #if (scenarioInitialReflectionQuerySet) == None:
+                    # return HttpResponseNotFound('No initial reflection response found with one or both of the IDs')
+                        
+                    #resultData = list(scenarioInitialReflectionQuerySet.values())
+                    resultData = [
+                        {
+                            "prompt_id": 1,
+                            "response": "I think that we should proceed with this....."
+                        }
+                    ]
+
+                    return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+
+                except Exception as ex:
+                    logging.exception("Exception thrown: Query Failed to retrieve Page")
+                
 def scenarioInitialAction(request):
     if request.method == 'GET':
         data = request.GET
@@ -190,7 +225,36 @@ def scenarioInitialAction(request):
             except Exception as ex:
                 logging.exception("Exception thrown: Query Failed to retrieve Page")
 
+    elif request.method == 'POST':
+        jsonData = json.loads(request.body)
+        scenarioID = jsonData['scenarioID']
+        studentID = jsonData['studentID']
+        # data = jsonData['data']
+        
+        if not isinstance(scenarioID, int):
+            print("Invalid scenario ID")
+            return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+        elif not isinstance(studentID, int):
+            print("Invalid student ID")
+            return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
+        else:
+            timestamp = time.time() # get time stamp, i'm using time rn but can change to any library as fits
+            
+            # POST data
+            postData = [
+                {
+                    "student_id": 1,
+                    "question_id": 1,
+                    "choice_id": 2,
+                    "scenario_id": 1,
+                    "timestamp": 1594819641.9622827,
+                }
+            ]
+            
+            initialActionQuery = [0, 1] # query for all possible choices for scenario_id and question_id
+            # if not(1 in initialAction): # change to choice_id instead of 1
+            #     return HttpResponseBadRequest('Invalid choice ID: %s' % str(1))
                 
-    
-    # Radhika's Section
-    # elif request.method == 'POST':
+            # post to database function here!!
+            
+            return JsonResponse({'status': 200, 'result': 'success'}, content_type="application/json")

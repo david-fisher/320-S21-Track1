@@ -8,5 +8,6 @@ urlpatterns = [
     path('scenarios/intro', views.scenarioIntroduction, name='scenarioIntroduction'),
     path('scenarios/task', views.scenarioTask, name='scenarioTask'),
     path('scenarios/initialAction', views.scenarioInitialAction, name='scenarioInitialAction'),
-    path('scenarios/initialReflection', views.initialReflection, name='scenarioInitialReflect')
+    path('scenarios/initialReflection', views.initialReflection, name='scenarioInitialReflect'),
+    path('scenarios/initialReflectionResponse', views.scenarioInitialReflectionResponse, name='scenarioInitialReflecRes')
 ]
