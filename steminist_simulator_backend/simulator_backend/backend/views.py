@@ -113,7 +113,7 @@ def scenarioInitialReflectionResponse(request):
                     resultData = [
                         {
                             "prompt_id": 1,
-                            "prompt": "Write your initial reflection"
+                            "response": "I think that we should proceed with this....."
                         }
                     ]
 
