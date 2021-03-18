@@ -105,16 +105,22 @@ def scenarioInitialReflectionResponse(request):
             else:
                 try:
                     scenarioInitialReflectionQuerySet = md.Page.objects.filter(order = INITIAL_REFLECTION, scenario_id = scenarioID, student_id = studentID)
-                    if (scenarioInitialReflectionQuerySet) == null:
-                        return HttpResponseNotFound('No initial reflection response found with one or both of the IDs')
+                      
+                    #if (scenarioInitialReflectionQuerySet) == None:
+                    # return HttpResponseNotFound('No initial reflection response found with one or both of the IDs')
                         
-                    resultData = list(scenarioInitialReflectionQuerySet.values())
+                    #resultData = list(scenarioInitialReflectionQuerySet.values())
+                    resultData = [
+                        {
+                            "prompt_id": 1,
+                            "prompt": "Write your initial reflection"
+                        }
+                    ]
+
+                    return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+
                 except Exception as ex:
                     logging.exception("Exception thrown: Query Failed to retrieve Page")
-                
-                print('Got initial reflection response')
-                return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
-
                 
 def scenarioInitialAction(request):
     if request.method == 'GET':
