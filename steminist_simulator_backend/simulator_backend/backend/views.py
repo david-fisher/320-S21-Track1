@@ -30,8 +30,8 @@ def index(request):
 
 
 def scenarios(request):
-    jsonData = json.loads(request.body)
-    studentID = jsonData['studentId']
+    data = request.GET
+    studentID = data['studentId']
 
     if not isinstance(studentID, int):
         print("Invalid student ID")
@@ -53,8 +53,8 @@ def scenarios(request):
 
 
 def scenarioIntroduction(request):
-    jsonData = json.loads(request.body)
-    scenarioID = jsonData['scenarioId']
+    data = request.GET
+    scenarioID = data['scenarioId']
 
     if not isinstance(scenarioID, int):
         print("Invalid ID")
@@ -76,8 +76,8 @@ def scenarioIntroduction(request):
 
 
 def scenarioTask(request):
-    jsonData = json.loads(request.body)
-    scenarioID = jsonData['scenarioId']
+    data = request.GET
+    scenarioID = data['scenarioId']
 
     if not isinstance(scenarioID, int):
         print("Invalid ID")
@@ -99,13 +99,14 @@ def scenarioTask(request):
 
 
 def initialReflection(request):
-    jsonData = json.loads(request.body)
-    scenarioID = jsonData['scenarioId']
-    if not isinstance(scenarioID, int):
-        print("Invalid scenario ID")
-        return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
 
     if request.method == 'GET':
+        data = request.GET
+        scenarioID = data['scenarioId']
+        if not isinstance(scenarioID, int):
+            print("Invalid scenario ID")
+            return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+
         try:
             scenarioReflectionQuerySet = md.Page.objects.filter(order=INITIAL_REFLECTION, scenario_id=scenarioID)
             # If no pages with the given scenarioId and order were found, return 404 error
@@ -121,19 +122,24 @@ def initialReflection(request):
             return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
 
     elif request.method == 'POST':
-        studentID = jsonData['studentId']
+        data = request.POST
+        scenarioID = data['scenarioId']
+        if not isinstance(scenarioID, int):
+            print("Invalid scenario ID")
+            return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+        studentID = data['studentId']
         no_error = True
         if not isinstance(studentID, int):
             print("Invalid student ID")
             return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
 
         timestamp = datetime.now()
-        for prompt_num in jsonData:
+        for prompt_num in data:
             if not isinstance(prompt_num, int):
                 print("Invalid prompt number")
                 return HttpResponseBadRequest('Invalid prompt number: %s' % str(prompt_num))
 
-            inputData = jsonData
+            inputData = data
             no_error = queries.addReflectionResponse(studentID, inputData, prompt_num, scenarioID, timestamp)
 
         if no_error:
@@ -145,8 +151,8 @@ def initialReflection(request):
 
 def scenarioInitialAction(request):
     if request.method == 'GET':
-        jsonData = json.loads(request.body)
-        scenarioID = jsonData['scenarioId']
+        data = request.GET
+        scenarioID = data['scenarioId']
 
         if not isinstance(scenarioID, int):
             print("Invalid ID")
