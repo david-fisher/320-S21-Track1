@@ -197,8 +197,10 @@ def scenarioInitialReflectionResponse(request):
                 
 def scenarioInitialAction(request):
     if request.method == 'GET':
-        data = request.GET
-        scenarioID = data['scenarioId']
+        # data = request.GET
+        # scenarioID = data['scenarioId']
+        jsonData = json.loads(request.body)
+        scenarioID = jsonData['scenarioId']
 
         if not isinstance(scenarioID, int):
             print("Invalid ID")
