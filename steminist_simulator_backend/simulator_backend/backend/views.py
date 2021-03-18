@@ -92,6 +92,38 @@ def scenarioTask(request):
         return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
         
 
+def scenarioInitialReflectionResponse(request):
+        if request.method == 'GET':
+            jsonData = json.loads(request.body)
+            scenarioID = jsonData['scenarioID']
+            studentID = jsonData['studentID']
+
+            if not isinstance(scenarioID, int):
+                print("Invalid ID")
+                return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+            if not isinstance(studentID, int):
+                print("Invalid ID")
+                return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
+            else:
+                try:
+                    # scenarioInitialReflectionQuerySet = md.Page.objects.filter(order = INITIAL_REFLECTION, scenario_id = scenarioID, student_id = studentID)
+                      
+                    #if (scenarioInitialReflectionQuerySet) == None:
+                    # return HttpResponseNotFound('No initial reflection response found with one or both of the IDs')
+                        
+                    #resultData = list(scenarioInitialReflectionQuerySet.values())
+                    resultData = [
+                        {
+                            "prompt_id": 1,
+                            "response": "I think that we should proceed with this....."
+                        }
+                    ]
+
+                    return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+
+                except Exception as ex:
+                    logging.exception("Exception thrown: Query Failed to retrieve Page")
+                
 def scenarioInitialAction(request):
     if request.method == 'GET':
         jsonData = json.loads(request.body)
