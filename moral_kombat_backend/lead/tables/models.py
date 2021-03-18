@@ -8,8 +8,7 @@ class scenarios(models.Model):
     class Meta:
         unique_together = (('SCENARIO'), ('VERSION'))
     SCENARIO = models.AutoField(primary_key = True, editable=False)
-    #TODO remove professors
-    PROFESSOR = models.ForeignKey('professors', to_field = 'PROFESSOR', on_delete =models.CASCADE, related_name="scenario_creator2", default = 1)
+    PROFESSOR = models.ManyToManyField('professors', through = 'membership')
     VERSION = models.IntegerField(default=1, editable=False)
     NAME = models.CharField(max_length = 1000)
     PUBLIC = models.BooleanField(default = False)
@@ -202,6 +201,10 @@ class professors(models.Model):
     PROFESSOR = models.IntegerField(primary_key = True)
     NAME = models.CharField(max_length = 1000)
 
+class membership(models.Model):
+    PROFESSOR = models.ForeignKey('professors', on_delete = models.CASCADE)
+    SCENARIO = models.ForeignKey('scenarios', on_delete = models.CASCADE)
+    DATE_JOINED = models.DateField()
 
 class Issues(models.Model):
     class Meta:
