@@ -25,12 +25,10 @@ CONCLUSIONPAGE = 12
 """def err_json_res(status, err):
     return JsonResponse({'status':int(status), 'error':err})"""
 
-@api_view(['GET'])
 def index(request):
     return HttpResponse("This is the API")
 
 
-@api_view(['GET'])
 def scenarios(request):
     jsonData = json.loads(request.body)
     studentID = jsonData['studentId']
@@ -54,7 +52,6 @@ def scenarios(request):
         return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
 
 
-@api_view(['GET'])
 def scenarioIntroduction(request):
     jsonData = json.loads(request.body)
     scenarioID = jsonData['scenarioId']
@@ -78,7 +75,6 @@ def scenarioIntroduction(request):
         return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
 
 
-@api_view(['GET'])
 def scenarioTask(request):
     jsonData = json.loads(request.body)
     scenarioID = jsonData['scenarioId']
@@ -102,7 +98,6 @@ def scenarioTask(request):
         return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
 
 
-@api_view(['GET', 'PUT'])
 def initialReflection(request):
     jsonData = json.loads(request.body)
     scenarioID = jsonData['scenarioId']
@@ -125,7 +120,7 @@ def initialReflection(request):
             print("Got initial relfection.")
             return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
 
-    elif request.method == 'PUT':
+    elif request.method == 'POST':
         studentID = jsonData['studentId']
         no_error = True
         if not isinstance(studentID, int):
