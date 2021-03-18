@@ -104,7 +104,7 @@ def scenarioInitialReflectionResponse(request):
                 return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
             else:
                 try:
-                    scenarioInitialReflectionQuerySet = md.Page.objects.filter(order = INITIAL_REFLECTION, scenario_id = scenarioID, student_id = studentID)
+                    # scenarioInitialReflectionQuerySet = md.Page.objects.filter(order = INITIAL_REFLECTION, scenario_id = scenarioID, student_id = studentID)
                       
                     #if (scenarioInitialReflectionQuerySet) == None:
                     # return HttpResponseNotFound('No initial reflection response found with one or both of the IDs')
