@@ -126,7 +126,7 @@ def scenarioInitialAction(request):
         jsonData = json.loads(request.body)
         scenarioID = jsonData['scenarioID']
         studentID = jsonData['studentID']
-        data = jsonData['data']
+        # data = jsonData['data']
         
         if not isinstance(scenarioID, int):
             print("Invalid scenario ID")
@@ -149,8 +149,8 @@ def scenarioInitialAction(request):
             ]
             
             initialActionQuery = [0, 1] # query for all possible choices for scenario_id and question_id
-            if not(1 in initialAction): # change to choice_id instead of 1
-                return HttpResponseBadRequest('Invalid choice ID: %s' % str(1))
+            # if not(1 in initialAction): # change to choice_id instead of 1
+            #     return HttpResponseBadRequest('Invalid choice ID: %s' % str(1))
                 
             # post to database function here!!
             
