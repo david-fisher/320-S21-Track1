@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseForbidden, HttpR
 import backend.models as md
 import json
 import logging
+import time # possible change of library
 
 
 INTROPAGE = 1
@@ -89,6 +90,7 @@ def scenarioTask(request):
 
         print("Got scenario introduction.")
         return JsonResponse({'status': 200, 'result': resultData}, content_type="application/json")
+        
 
 def scenarioInitialReflectionResponse(request):
         if request.method == 'GET':
@@ -152,7 +154,36 @@ def scenarioInitialAction(request):
             except Exception as ex:
                 logging.exception("Exception thrown: Query Failed to retrieve Page")
 
+    elif request.method == 'POST':
+        jsonData = json.loads(request.body)
+        scenarioID = jsonData['scenarioID']
+        studentID = jsonData['studentID']
+        # data = jsonData['data']
+        
+        if not isinstance(scenarioID, int):
+            print("Invalid scenario ID")
+            return HttpResponseBadRequest('Invalid scenario ID: %s' % str(scenarioID))
+        elif not isinstance(studentID, int):
+            print("Invalid student ID")
+            return HttpResponseBadRequest('Invalid student ID: %s' % str(studentID))
+        else:
+            timestamp = time.time() # get time stamp, i'm using time rn but can change to any library as fits
+            
+            # POST data
+            postData = [
+                {
+                    "student_id": 1,
+                    "question_id": 1,
+                    "choice_id": 2,
+                    "scenario_id": 1,
+                    "timestamp": 1594819641.9622827,
+                }
+            ]
+            
+            initialActionQuery = [0, 1] # query for all possible choices for scenario_id and question_id
+            # if not(1 in initialAction): # change to choice_id instead of 1
+            #     return HttpResponseBadRequest('Invalid choice ID: %s' % str(1))
                 
-    
-    # Radhika's Section
-    # elif request.method == 'POST':
+            # post to database function here!!
+            
+            return JsonResponse({'status': 200, 'result': 'success'}, content_type="application/json")
