@@ -1,8 +1,5 @@
-# 320-F20-Track-II
+# last semester's 320-S20-Track-II
 
-Track 2 Repo: https://github.com/david-fisher/320-F20-Track-II
-
-Track 4 Repo: https://github.com/david-fisher/320-F20-Track-IV 
 
 # Differential Team database: how to build
 1. Install postgreSQL:  
@@ -17,7 +14,8 @@ note: The file `database_setup.sql` can currently be found in the `erd-implement
 # how to connect to database from react.js
 1. run `npm install all` within the directory containing `package.json` to install all dependencies for the pg package, which is the library used to communicate between the PostgreSQL database and the react.js app, as well as all other dependencies outlined in the `package_lock.json` file
 
-2. In `goon-universe`, the app can be run with `node app.js`.
+2. In `goon-universe`, the app can be run with `node app.js`. 
+	-(make sure that there is a .env file there, or else it wont run)
 
 3. Using the functions outlined in `queries.js`, which implements the REST API enumerated in `app.js`, frontend teams can now interact with the database from their React.js app as usual.
 
