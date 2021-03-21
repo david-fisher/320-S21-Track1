@@ -1,3 +1,15 @@
+# How to use docker-compose to build and run the web application
+
+1. After cloning the repo to your local machine, update the .env file in the root directory of the project with the
+configuration settings of your database
+2. Since we have 3 different frontend components configured in one docker-compose file, if we run docker-compose up, we
+end up getting a timeout error. To remedy that, restart docker and paste these 2 commands in your terminal window:
+###### export DOCKER_CLIENT_TIMEOUT=120
+###### export COMPOSE_HTTP_TIMEOUT=120
+3. Run docker-compose up
+
+### Once every component is built, the landing page will be accessible at http://localhost:3006
+
 ### Note
 #This is the file structure for this track
 

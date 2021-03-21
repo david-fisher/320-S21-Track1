@@ -1,5 +1,5 @@
 var env = require('node-env-file');
-env(__dirname + '/.env');
+// env(__dirname + '/.env');
 // require("dotenv").config()
 /*
  * These constants are concatenated into SQL queries below, so be careful
