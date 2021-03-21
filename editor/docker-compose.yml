@@ -2,13 +2,13 @@ version: "3"
 services:
   frontend:
     build:
-      context: Ghost_in_the_Shell/client_folder_react_app/ethisim
+      context: frontend/client_folder_react_app/ethisim
     ports:
       - 3000:3000
     depends_on:
       - backend
     volumes:
-      - ./Ghost_in_the_Shell/client_folder_react_app/ethisim:/app
+      - ./frontend/client_folder_react_app/ethisim:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
@@ -20,7 +20,7 @@ services:
   
   backend:
     build:
-      context: moral_kombat_backend
+      context: backend
     ports:
       - 8000:8000
     depends_on:
