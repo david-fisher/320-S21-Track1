@@ -30,7 +30,7 @@ jobs:
         with:
           context: ./editor/frontend/ethisim/
           push: true
-          tags: dacollins/docking:frontend-editor
+          tags: dacollins/ethisim:frontend-editor
           cache-from: type=registery, ref=dacollins/ethisim:frontend-editor
           cache-to: type=inline
           
@@ -39,7 +39,7 @@ jobs:
         with:
           context: ./editor/backend/
           push: true
-          tags: dacollins/docking:backend-editor
+          tags: dacollins/ethisim:backend-editor
           cache-from: type=registery, ref=dacollins/ethisim:backend-editor
           cache-to: type=inline
           
@@ -48,7 +48,7 @@ jobs:
         with:
           context: ./simulator/frontend/
           push: true
-          tags: dacollins/docking:frontend-simulator
+          tags: dacollins/ethisim:frontend-simulator
           cache-from: type=registery, ref=dacollins/ethisim:frontend-simulator
           cache-to: type=inline
           
@@ -57,7 +57,7 @@ jobs:
         with:
           context: ./simulator/goon-universe/
           push: true
-          tags: dacollins/docking:backend-simulator
+          tags: dacollins/ethisim:backend-simulator
           cache-from: type=registery, ref=dacollins/ethisim:backend-simulator
           cache-to: type=inline
           
@@ -66,7 +66,7 @@ jobs:
         with:
           context: ./landing page/welcome-login/
           push: true
-          tags: dacollins/docking:frontend-landing-page
+          tags: dacollins/ethisim:frontend-landing-page
           cache-from: type=registery, ref=dacollins/ethisim:frontend-landing-page
           cache-to: type=inline
       
