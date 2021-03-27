@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import ShareIcon from '@material-ui/icons/Share';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
     Typography,
     Button,
@@ -12,8 +11,8 @@ import {
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add'
 import PropTypes from 'prop-types';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,18 +46,46 @@ DialogTitle.propTypes = {
     onClose: PropTypes.any.isRequired,
 };
 
-const UserRole = [
-    { title: 'Read Only' },
-    { title: 'Edit Only' },
-    { title: 'Admin' },
-];
+const ValidationTextField = withStyles({
+    root: {
+        width: '300px',
+        color: 'black',
+        alignItems: 'left',
+        '& .MuiOutlinedInput-root': {
+            '&:hover fieldset': {
+                borderColor: 'black',
+                borderWidth: '2',
+            },
+        },
+        '& .MuiFormLabel-root': {
+            color: 'black',
+        },
+        '& .MuiInputBase-root': {
+            color: 'black',
+        },
+        '& input:valid + fieldset': {
+            borderColor: 'black',
+            borderWidth: 2,
+        },
+        '& input:invalid + fieldset': {
+            borderColor: 'black',
+            borderWidth: 2,
+        },
+        '& input:valid:focus + fieldset': {
+            color: 'black',
+            borderColor: 'black',
+            borderLeftWidth: 6,
+            padding: '4px !important', // override inline-style
+        },
+    },
+})(TextField);
 
 function DialogTitle(props) {
     const classes = useStyles();
     const { onClose } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root}>
-            <Typography variant="h6">Share with Professor</Typography>
+            <Typography variant="h6">Add Scenario using Course Code</Typography>
             {onClose ? (
                 <IconButton
                     aria-label="close"
@@ -72,15 +99,9 @@ function DialogTitle(props) {
     );
 }
 
-export default function ShareDialog(props) {
+export default function CodeDialog(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-
-    const [email, setEmail] = useState('');
-
-    const onChangeEmail = (event) => {
-        setEmail(event.target.value);
-    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -98,8 +119,8 @@ export default function ShareDialog(props) {
                 onClick={handleClickOpen}
                 className={classes.buttonText}
             >
-                <ShareIcon />
-                <Typography variant="subtitle1">Share</Typography>
+                <AddIcon />
+                <Typography variant="subtitle1">Add Scenario using Course Code</Typography>
             </Button>
             <Dialog
                 fullWidth={true}
@@ -110,43 +131,28 @@ export default function ShareDialog(props) {
             >
                 <DialogTitle onClose={handleClose}></DialogTitle>
                 <DialogContent dividers>
-                    <Typography align="left" variant="h6">
-                        Select User Role
-                    </Typography>
-                    <Autocomplete
-                        id="User_Role"
-                        options={UserRole}
-                        getOptionLabel={(option) => option.title}
-                        style={{ width: 300 }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="User Role Options"
-                                variant="outlined"
-                            />
-                        )}
-                    />
+                    <form
+                        className={classes.textField}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <ValidationTextField
+                            label="Enter Course Code"
+                            id="Enter Course Code"
+                            variant="outlined"
+                            onInput={(e) => e.target.value = ("" + e.target.value).toUpperCase()}
+                        />
+                    </form>
                 </DialogContent>
 
                 <DialogActions>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="Enter Email"
-                        label="Enter Email"
-                        name="Enter Email"
-                        value={email}
-                        onChange={onChangeEmail}
-                    />
                     <Button
                         className={classes.saveButton}
                         autoFocus
                         color="primary"
                         onClick={handleClose}
                     >
-                        Submit
+                        <AddIcon/>Add Scenario
                     </Button>
                 </DialogActions>
             </Dialog>
