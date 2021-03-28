@@ -11,9 +11,9 @@ export default function App() {
     return (
         <Router>
             <Route exact path="/">
-                <Redirect to="/home" />
+                <Redirect to="/dashboard" />
             </Route>
-            <Route path="/home" component={Dashboard} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
             <Route
