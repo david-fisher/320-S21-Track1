@@ -1,26 +1,77 @@
 version: "3"
 services:
-  frontend:
+  frontend-editor:
     build:
-      context: Ghost_in_the_Shell/client_folder_react_app/ethisim
+      context: editor/frontend/ethisim
     ports:
       - 3000:3000
     depends_on:
-      - backend
+      - backend-editor
     volumes:
-      - ./Ghost_in_the_Shell/client_folder_react_app/ethisim:/app
+      - ./editor/frontend/ethisim:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    container_name: 320_frontend
+    container_name: frontend-editor
+    networks:
+      - '320'
+
+  frontend-simulator:
+    build:
+      context: simulator/frontend
+    ports:
+      - 3001:3000
+    depends_on:
+      - backend-simulator
+    volumes:
+      - ./simulator/frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    container_name: frontend-simulator
+    networks:
+      - '320'
+
+  frontend-landing-page:
+    build:
+      context: landing page/welcome-login
+    ports:
+      - 3006:3000
+    volumes:
+      - ./landing page/welcome-login:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    container_name: frontend-landing-page
     networks:
       - '320'
   
-  backend:
+  backend-simulator:
     build:
-      context: moral_kombat_backend
+      context: simulator/goon-universe
+    ports:
+      - 5000:5000
+    depends_on:
+      - database
+    environment:
+      - PGHOST=${POSTGRESHOST}
+      - PGUSER=${POSTGRESUSERNAME}
+      - PGPASSWORD=${POSTGRESPASSWORD}
+      - PGDATABASE=${POSTGRESDB}
+      - PGPORT=5432
+    networks:
+      - '320'
+    container_name: backend-simulator
+
+  backend-editor:
+    build:
+      context: editor/backend
     ports:
       - 8000:8000
     depends_on:
@@ -32,7 +83,7 @@ services:
       - POSTGRESDB=${POSTGRESDB}
     networks:
       - '320'
-    container_name: backend320
+    container_name: backend-editor
 
   database:
     image: postgres
