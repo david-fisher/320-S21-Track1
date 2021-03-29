@@ -55,10 +55,23 @@
         "pk": 1,
         "fields": {
             "page_type": "PLAIN",
-            "page_title": "Page Title",
+            "page_title": "Simulator Introduction",
             "version_id": 1,
             "body": "Many software engineers trainees and providers have reported feeling unprepared for the ethical dilemmas they faced while practicing in real life. Simulation is an effective teaching modality in the training of  professionals. This resource describes the development, implementation, and assessment of an innovative simulation training program for global ethics.",
             "next_page": 2,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 2,
+        "fields": {
+            "page_type": "PLAIN",
+            "page_title": "Task Page",
+            "version_id": 1,
+            "body": "You are a software engineer at Walmart Labs working on building a smart refridgerator with voice control and image recognition to keep track of produce.",
+            "next_page": 3,
             "x_coordinate": 0,
             "y_coordinate": 0
         }
@@ -68,7 +81,7 @@
         "pk": 1,
         "fields": {
             "scenario_id": 1,
-            "name": "Version 1.0 of Scenario 1",
+            "name": "Privacy Dilemma Scenario Version 1.0",
             "num_conversation": 5,
             "first_page": 1
         }
@@ -80,6 +93,12 @@
             "scenario_id": 1,
             "version_id": 1, 
             "course_id": 1
+        }
+    }, {
+        "model": "backend.AssignedTo",
+        "fields": {
+            "user_id": 1,
+            "version_id": 1
         }
     }
   ]
