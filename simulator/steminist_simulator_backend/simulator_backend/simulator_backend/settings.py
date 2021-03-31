@@ -26,7 +26,12 @@ SECRET_KEY = 'l8&-fe$t-4xsh^g8y7l)yl$6jj9b5+&6n0n$%(l7^*ie)n+@x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True # If this is used then CORS_ORIGIN_WHITELIST will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3001/',
+]
 
 
 # Application definition
@@ -80,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'simulator_backend',
-        'USER': 'gerrygan',
-        'PASSWORD': 'password',
+        'USER': 'adam',
+        'PASSWORD': 'scratchrocks',
         'HOST': 'localhost',
         'POST': '5432'
     }

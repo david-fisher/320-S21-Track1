@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import '../App.css';
+import deleteReq from '../universalHTTPRequests/delete';
+import post from '../universalHTTPRequests/post';
+import get from '../universalHTTPRequests/get';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {Grid, Paper, Button, Tabs, Tab, Box, Typography} from '@material-ui/core';
 import {useEffect, useState} from "react";
 import ScenarioCard from './components/scenarioCard';
 import CodeButton from './components/classCodeDialog';
+
+//TODO when Shibboleth gets implemented
+const endpointGet = '/scenarios';
+const endpointPost = '/dashboard';
 
 const useStyles = makeStyles((theme) => ({
  root: {
@@ -143,6 +150,69 @@ export default function Home() {
    ]
  });
  
+    // post on success, concatenating a scenario card to array
+    //delete on success, concatenating a scenario card to array
+
+    //when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
+
+    //post returns new id of scenario, when you concatenating to array set the id to that
+    const [finishedScenarios, setFinishedScenarios] = useState(null);
+    const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+        data: null,
+        loading: false,
+        error: null,
+    });
+    // // eslint-disable-next-line
+    // const [fetchCourseResponse, setFetchCourseResponse] = useState({
+    //     data: null,
+    //     loading: false,
+    //     error: null,
+    // });
+    // eslint-disable-next-line
+    const [shouldFetch, setShouldFetch] = useState(0);
+    // eslint-disable-next-line
+
+    //Get Scenario
+    let getData = () => {
+        function onSuccess(response) {
+            let finishedScenarios = response.data
+            finishedScenarios = finishedScenarios.map((data) => (
+                <ScenarioCard
+                title = {data.NAME}
+                course = "CS 240"
+                date = {data.VERSION_ID}
+              />
+            ));
+            setFinishedScenarios(finishedScenarios);
+    }
+
+    function onFailure() {
+        //setErrorBannerMessage('Failed to get scenarios! Please try again.');
+        //setErrorBannerFade(true);
+    }
+    get(setFetchScenariosResponse, endpointGet, onFailure, onSuccess);
+};
+
+    // //Get Courses
+    // let getCourses = () => {
+    //     function onSuccessCourse(response) {
+    //         setMenuCourseItems(response.data);
+    //     }
+
+    //     function onFailureCourse() {
+    //         setErrorBannerMessage('Failed to get courses! Please try again.');
+    //         setErrorBannerFade(true);
+    //     }
+    //     get(
+    //         setFetchCourseResponse,
+    //         endpointGetCourses,
+    //         onFailureCourse,
+    //         onSuccessCourse
+    //     );
+    // };
+
+    //Reload Page
+useEffect(getData, [shouldFetch]);
  
 
 function a11yProps(index) {
@@ -169,7 +239,19 @@ const handleChange = (event, newValue) => {
        <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
          <h1>To Do</h1>
        </Grid>
-       {scenarios.incompleteScenarios.map(scenario => (
+       <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="flex-start"
+          alignItems="stretch"
+        >
+          <Paper elevation={5} className={classes.paper}>
+            {finishedScenarios}
+            <Button className={classes.button}>Select Scenario</Button>
+          </Paper>
+       </Grid>
+       {/* {scenarios.incompleteScenarios.map(scenario => (
        <Grid item xs={12} sm={6} md={4} lg={3}>
            <Paper elevation={5} className={classes.paper}>
              <ScenarioCard
@@ -180,7 +262,7 @@ const handleChange = (event, newValue) => {
              <Button className={classes.button}>Select Scenario</Button>
            </Paper>
        </Grid>
-       ))}
+       ))} */}
        <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
         <Box m={2} pt={3}>
           <CodeButton />
