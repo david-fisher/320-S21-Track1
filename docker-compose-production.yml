@@ -3,7 +3,7 @@ services:
   frontend-editor:
     image: dacollins/docking:frontend-editor
     ports:
-      - 3000:3000
+      - 3000:80
     depends_on:
       - backend-editor
     environment:
@@ -17,7 +17,7 @@ services:
   frontend-simulator:
     image: dacollins/docking:frontend-simulator
     ports:
-      - 3001:3000
+      - 3001:80
     depends_on:
       - backend-simulator
     environment:
@@ -31,7 +31,7 @@ services:
   frontend-landing-page:
     image: dacollins/docking:frontend-landing-page
     ports:
-      - 3006:3000
+      - 3006:80
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true # docker run -i
