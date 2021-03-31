@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'simulator_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'simulator_backend',
+        'NAME': 'simbackend',
         'USER': 'adam',
         'PASSWORD': 'scratchrocks',
         'HOST': 'localhost',
