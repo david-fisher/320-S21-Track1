@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
     input: {
         display: 'none',
     },
+    label:{
+        color:'#808080',
+        fontSize: 15
+    }
 }));
 
 const styles = (theme) => ({
@@ -309,7 +313,7 @@ export default function StakeHolder({
                         component="span"
                         style={{ textTransform: 'unset' }}
                     >
-                        Upload
+                        Select Image
                     </Button>
                 </label>
                 <input
@@ -321,25 +325,45 @@ export default function StakeHolder({
             </label>
 
             <div id="Bio">
-                <TextField
-                    label="Biography"
-                    style={{ width: 500 }}
-                    multiline
-                    rows={2}
-                    variant="outlined"
-                    onClick={handleClickOpenBio}
-                />
+                <Typography className={classes.label} variant="h6" color="initial">
+                    Biography
+                </Typography>
+                <div onClick={handleClickOpenBio}>
+                    <SunEditor
+                                setContents={bio}
+                                resizingBar={false}
+                                disable={true}
+                                showToolbar={false}
+                                setOptions={{
+                                    width: 500,
+                                    height: 1,
+                                    placeholder:
+                                        'Enter the biography of the stakeholder...',
+                                    }}
+                                onChange={handleChangeBiography}
+                            />
+                </div>
             </div>
 
             <div id="MainConversationField">
-                <TextField
-                    label="Main Conversation"
-                    style={{ width: 500 }}
-                    multiline
-                    rows={2}
-                    variant="outlined"
-                    onClick={handleClickOpenMainConvo}
-                />
+                <Typography className={classes.label} variant="h6" color="initial">
+                    Main Conversation
+                </Typography>
+                <div onClick={handleClickOpenMainConvo}>
+                    <SunEditor
+                                setContents={mainConvo}
+                                resizingBar={false}
+                                disable={true}
+                                showToolbar={false}
+                                setOptions={{
+                                    width: 500,
+                                    height: 1,
+                                    placeholder:
+                                        'Enter the main conversation of the stakeholder...',
+                                    }}
+                                onChange={handleChangeConversation}
+                            />
+                </div>
             </div>
             <div id="DeleteButton">
                 <Button
@@ -396,7 +420,7 @@ export default function StakeHolder({
                                 width: '100%',
                                 height: 400,
                                 placeholder:
-                                    'Enter in introduction of component...',
+                                'Enter the biography of the stakeholder...',
                                 buttonList: [
                                     ['font', 'fontSize', 'formatBlock'],
                                     ['paragraphStyle', 'blockquote'],
@@ -561,7 +585,7 @@ export default function StakeHolder({
                             setOptions={{
                                 height: 400,
                                 placeholder:
-                                    'Enter in introduction of component...',
+                                'Enter the main conversation of the stakeholder...',
                                 buttonList: [
                                     ['font', 'fontSize', 'formatBlock'],
                                     ['paragraphStyle', 'blockquote'],
