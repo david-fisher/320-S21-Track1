@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,12 +27,15 @@ SECRET_KEY = 'l8&-fe$t-4xsh^g8y7l)yl$6jj9b5+&6n0n$%(l7^*ie)n+@x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'backend',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
