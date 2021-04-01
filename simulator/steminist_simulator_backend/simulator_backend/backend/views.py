@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 import json
 import logging
+from datetime import datetime
+import backend.queries as queries
 
 from django.db import connection
 
@@ -108,3 +110,75 @@ def scenarioTask(request):
         print("Got scenario task.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
+
+def initialReflection(request):
+    jsonData = json.loads(request.body)
+
+    if request.method == 'GET':
+        scenarioID = jsonData['scenario_id']
+
+        try:
+            scenarioID = int(scenarioID)
+        except:
+            print("Invalid scenario ID")
+            return JsonResponse({'status':400, 'message':'Invalid scenario ID: hello'}, content_type="application/json")
+
+        resultData = None
+        try:
+            scenarioReflectionQuerySet = md.Page.objects.filter(order=INITIAL_REFLECTION, scenario_id=scenarioID)
+            # If no pages with the given scenarioId and order were found, return 404 error
+            # print(len(scenarioReflectionQuerySet))
+            if len(scenarioReflectionQuerySet) == 0:
+                return JsonResponse({'status': 404, 'message':'Page not found with the given scenario ID'},
+                                    content_type="application/json")
+            resultData = (list(scenarioReflectionQuerySet.values()))
+
+            resultData = {
+                "status":200,
+                "message": "Body text before initial reflection",
+                "prompts": [
+                    {
+                        "prompt_id":1,
+                        "response": "Initial reflection prompt"
+                    }
+                ]
+            }
+        except Exception as ex:
+            logging.exception('Exception thrown: Query Failed to retrieve Page')
+            return JsonResponse({'status':500, 'message':'Exception thrown: Query Failed to retrieve Page'})
+
+        print("Got initial reflection.")
+        return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+
+
+    elif request.method == 'POST':
+        data = request.POST
+        scenarioID = data['scenarioId']
+        try:
+            scenarioID = int(scenarioID)
+        except:
+            print("Invalid scenario ID")
+            return JsonResponse({'status': 400, 'message': 'Invalid scenario ID'}, content_type="application/json")
+        studentID = data['studentId']
+        no_error = True
+        if not isinstance(studentID, int):
+            print("Invalid student ID")
+            return JsonResponse({'status': 400, 'message': 'Invalid student ID'}, content_type="application/json")
+
+        timestamp = datetime.now()
+        for prompt in data['body']:
+            prompt_num = prompt['prompt_id']
+            if not isinstance(prompt_num, int):
+                print("Invalid prompt number")
+                return JsonResponse({'status': 400, 'message': 'Invalid prompt ID'}, content_type="application/json")
+
+            inputData = data
+            no_error = queries.addReflectionResponse(studentID, inputData, prompt_num, scenarioID, timestamp)
+
+        if no_error:
+            print("Updated initial reflection.")
+            return JsonResponse({'status': 200, 'result':"Updated initial reflection."}, content_type="application/json")
+        else:
+            print("Initial reflection not added")
+            return JsonResponse({'status': 404, 'message': 'student ID, scenario ID or prompt does not exist in database.'},
+                                content_type="application/json")
