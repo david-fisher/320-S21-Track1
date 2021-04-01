@@ -9,6 +9,7 @@ import {Grid, Paper, Button, Tabs, Tab, Box, Typography} from '@material-ui/core
 import {useEffect, useState} from "react";
 import ScenarioCard from './components/scenarioCard';
 import CodeButton from './components/classCodeDialog';
+import ProgressBar from './components/progressBar';
 
 //TODO when Shibboleth gets implemented
 const endpointGet = '/scenarios';
@@ -115,40 +116,53 @@ export default function Home() {
  
  const [scenarios, setScenarios] =useState({         //temporary array of scenarios
    incompleteScenarios : [
-     {
-       title : "Google Advertising",
-       course : " CS 220",
-       date : "Modified 2/10/20"
-     },
-     {
-       title : "Test Scenario",
-       course : " CS 230",
-       date : "Modified 2/11/20"
-     },
-     {
-       title : "UMass Test Ethics",
-       course : " CS 250",
-       date : "Modified 3/10/20"
-     }
-   ],
-   completeScenarios : [
-     {
-     title : "Google Advertising B",
-     course : " CS 220",
-     date : "Modified 2/10/20"
-   },
-   {
-     title : "Test Scenario B",
-     course : " CS 230",
-     date : "Modified 2/11/20"
-   },
-   {
-     title : "UMass Test Ethics B",
-     course : " CS 250",
-     date : "Modified 3/10/20"
-   }
-   ]
- });
+    {
+      title : "Google Advertising",
+      course : " CS 220",
+      date : "Modified 2/10/20",
+      completed : 8,
+      max : 10,
+    },
+    {
+      title : "Test Scenario",
+      course : " CS 230",
+      date : "Modified 2/11/20",
+      completed : 10,
+      max : 30,
+    },
+    {
+      title : "UMass Test Ethics",
+      course : " CS 250",
+      date : "Modified 3/10/20",
+      completed : 5,
+      max : 60,
+    }
+  ],
+  completeScenarios : [
+    {
+    title : "Google Advertising B",
+    course : " CS 220",
+    date : "Modified 2/10/20",
+    completed : 10,
+    max : 10,
+  },
+  {
+    title : "Test Scenario B",
+    course : " CS 230",
+    date : "Modified 2/11/20",
+    completed : 6,
+    max : 6,
+  },
+  {
+    title : "UMass Test Ethics B",
+    course : " CS 250",
+    date : "Modified 3/10/20",
+    completed : 7,
+    max : 7,
+  }
+  ]
+});
+
  
     // post on success, concatenating a scenario card to array
     //delete on success, concatenating a scenario card to array
@@ -251,7 +265,7 @@ const handleChange = (event, newValue) => {
             <Button className={classes.button}>Select Scenario</Button>
           </Paper>
        </Grid>
-       {/* {scenarios.incompleteScenarios.map(scenario => (
+       {scenarios.incompleteScenarios.map(scenario => (
        <Grid item xs={12} sm={6} md={4} lg={3}>
            <Paper elevation={5} className={classes.paper}>
              <ScenarioCard
@@ -260,9 +274,10 @@ const handleChange = (event, newValue) => {
                date = {scenario.date}
              />
              <Button className={classes.button}>Select Scenario</Button>
+             <ProgressBar completed={scenario.completed} max={scenario.max} size={10}/>
            </Paper>
        </Grid>
-       ))} */}
+       ))}
        <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
         <Box m={2} pt={3}>
           <CodeButton />
@@ -284,6 +299,7 @@ const handleChange = (event, newValue) => {
              date = {scenario.date}
            />
            <Button className={classes.button}>Select Scenario</Button>
+           <ProgressBar completed={scenario.completed} max={scenario.max} size={10}/>
          </Paper>
        </Grid>
        ))}
