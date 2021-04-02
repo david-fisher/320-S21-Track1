@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
+import { Avatar, Button} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -81,6 +81,7 @@ StakeHolder.propTypes = {
     id: PropTypes.number,
     removeStakeHolder: PropTypes.any,
     job: PropTypes.string,
+    photo: PropTypes.any,
     stakeHolders: PropTypes.any,
     setStakeHolders: PropTypes.func,
 };
@@ -92,8 +93,9 @@ export default function StakeHolder({
     id,
     removeStakeHolder,
     job,
+    photo,
     stakeHolders,
-    setStakeHolders,
+    setStakeHolders
 }) {
     const classes = useStyles();
 
@@ -104,9 +106,11 @@ export default function StakeHolder({
     const [stakeHolderName, setStakeHolderName] = useState(name);
     const [stakeHolderJob, setStakeHolderJob] = useState(job);
     const [stakeHolderBiography, setStakeHolderBiography] = useState(bio);
+    const [stakeHolderPhoto, setStakeHolderPhoto] = useState(photo); // Image object to be uploaded on save 
     const [stakeHolderConversation, setStakeHolderConversation] = useState(
         mainConvo
     );
+    const[displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
     const [issues, setIssues] = useState([]);
     const [qRData, setQRData] = useState([]);
     const [isLoading, setLoading] = useState(false);
@@ -148,11 +152,12 @@ export default function StakeHolder({
         setOpenBio(true);
     };
     const handleCloseBio = () => {
-        updateBasicText(
+        updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
         setOpenBio(false);
     };
@@ -160,11 +165,12 @@ export default function StakeHolder({
         setOpenMainConvo(true);
     };
     const handleCloseMainConvo = () => {
-        updateBasicText(
+        updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
         setOpenMainConvo(false);
     };
@@ -193,25 +199,41 @@ export default function StakeHolder({
 
     const onChangeName = (e) => {
         setStakeHolderName(e.target.value);
-        updateBasicText(
+        updateStakeholderInfo(
             e.target.value,
             stakeHolderJob,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
     };
 
     const onChangeJob = (e) => {
         setStakeHolderJob(e.target.value);
-        updateBasicText(
+        updateStakeholderInfo(
             stakeHolderName,
             e.target.value,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
     };
 
-    function updateBasicText(shname, shjob, shbio, shconvo) {
+    const onUploadPhoto = (e) => { // Uses PUT request to upload photo to database
+        var image = e.target.files[0];
+        var url = URL.createObjectURL(image)
+        setdisplayedPhoto(url);
+        setStakeHolderPhoto(image);
+        updateStakeholderInfo(
+            stakeHolderName,
+            stakeHolderJob,
+            stakeHolderBiography,
+            stakeHolderConversation,
+            image
+            );
+    };
+
+    function updateStakeholderInfo(shname, shjob, shbio, shconvo, shphoto) {
         const updatedStakeHolders = [...stakeHolders];
         setStakeHolders(
             updatedStakeHolders.map((sh) => {
@@ -220,6 +242,7 @@ export default function StakeHolder({
                     sh.JOB = shjob;
                     sh.DESCRIPTION = shbio;
                     sh.INTRODUCTION = shconvo;
+                    sh.PHOTO = shphoto;
                 }
                 return sh;
             })
@@ -297,33 +320,27 @@ export default function StakeHolder({
                     onChange={onChangeJob}
                 />
             </div>
-            <img id="stakeimg" src={shemptylogo} alt=" "></img>
-            <label id="upl" htmlFor="contained-button-file">
-                <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="contained-button-file"
-                    multiple
-                    type="file"
-                />
-                <label htmlFor="contained-button-file">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        component="span"
-                        style={{ textTransform: 'unset' }}
-                    >
-                        Select Image
-                    </Button>
-                </label>
-                <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-file"
-                    type="file"
-                />
+            
+            <Avatar id="SHimg" src={displayedPhoto}/>
+             
+            <label id="upl"> 
+                <Button
+                    variant="contained"
+                    color="primary"
+                    component="span"
+                    style={{ textTransform: 'unset' }}
+                >
+                    Select Image
+                    <input
+                        accept="image/jpeg, image/png"
+                        type="file"
+                        multiple={false}
+                        hidden
+                        onChange={onUploadPhoto}
+                    />
+                </Button>   
             </label>
-
+             
             <div id="Bio">
                 <Typography className={classes.label} variant="h6" color="initial">
                     Biography
