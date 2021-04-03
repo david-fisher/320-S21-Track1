@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BASE_URL } from './../constants/config';
+import { BACK_URL } from './../constants/config';
 
 // Universal fetch request using axios
 export default function universalFetch(
@@ -15,7 +15,7 @@ export default function universalFetch(
         error: null,
     });
     axios
-        .get(BASE_URL + endpoint)
+        .get(BACK_URL + endpoint)
         .then((resp) => {
             setResponse({
                 data: resp.data,

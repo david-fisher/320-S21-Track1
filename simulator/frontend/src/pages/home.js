@@ -18,6 +18,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  errorContainer: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   paper: {
     padding: theme.spacing(2),
     textAlign: 'left',
@@ -244,9 +250,7 @@ export default function Home() {
             <ErrorIcon className={classes.iconError} />
             <Typography align="center" variant="h3">
               Error in fetching Scenarios.
-                    </Typography>
-          </div>
-          <div className={classes.errorContainer}>
+            </Typography>
             <Button
               variant="contained"
               color="primary"

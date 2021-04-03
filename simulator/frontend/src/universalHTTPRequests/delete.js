@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from './../constants/config';
+import { BACK_URL } from './../constants/config';
 // Universal delete request using axios
 export default function universalDelete(
     setResponse,
@@ -14,7 +14,7 @@ export default function universalDelete(
         error: null,
     });
     axios
-        .delete(BASE_URL + endpoint, requestBody)
+        .delete(BACK_URL + endpoint, requestBody)
         .then((resp) => {
             setResponse({
                 data: resp.data,

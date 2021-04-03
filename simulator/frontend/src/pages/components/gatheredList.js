@@ -6,7 +6,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import InfoModal from './infoModal';
 import axios from 'axios';
 import { ScenariosContext } from '../../Nav';
-import {BASE_URL, STUDENT_ID} from "../../constants/config";
+import {BACK_URL, STUDENT_ID} from "../../constants/config";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,7 +46,7 @@ export default function InfoGatheredList({pages}) {
           case 'page':
             return axios({
               method: 'get',
-              url: BASE_URL + '/scenarios/task',
+              url: BACK_URL + '/scenarios/task',
               headers: {
                 studentID: STUDENT_ID,
                 scenarioID: scenarios.currentScenarioID

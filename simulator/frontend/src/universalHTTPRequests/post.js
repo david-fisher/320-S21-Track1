@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BASE_URL } from './../constants/config';
+import { BACK_URL } from './../constants/config';
 
 // Universal fetch request using axios
 export default function universalPost(
@@ -16,7 +16,7 @@ export default function universalPost(
         error: null,
     });
     axios
-        .post(BASE_URL + endpoint, requestBody)
+        .post(BACK_URL + endpoint, requestBody)
         .then((resp) => {
             setResponse({
                 data: resp.data,

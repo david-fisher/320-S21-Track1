@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from './../constants/config';
+import { BACK_URL } from './../constants/config';
 // Universal put request using axios
 export default function universalPut(
     setResponse,
@@ -14,7 +14,7 @@ export default function universalPut(
         error: null,
     });
     axios
-        .put(BASE_URL + endpoint, requestBody)
+        .put(BACK_URL + endpoint, requestBody)
         .then((resp) => {
             setResponse({
                 data: resp.data,
