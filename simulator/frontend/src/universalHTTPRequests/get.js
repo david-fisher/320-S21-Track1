@@ -15,15 +15,7 @@ export default function universalFetch(
         error: null,
     });
     axios
-        .get(BASE_URL + endpoint, {
-            method: 'GET',
-            body: JSON.stringify({
-                userId: 1
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
+        .get(BASE_URL + endpoint)
         .then((resp) => {
             setResponse({
                 data: resp.data,
@@ -32,8 +24,6 @@ export default function universalFetch(
             });
             onSuccess && onSuccess(resp);
         })
-        .then(response => response.json())
-        .then(json => console.log(json))
         .catch((err) => {
             setResponse({
                 data: null,

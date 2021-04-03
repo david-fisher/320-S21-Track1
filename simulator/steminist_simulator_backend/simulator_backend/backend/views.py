@@ -30,8 +30,7 @@ def index(request):
     return HttpResponse("This is the API")
 
 def scenarios(request):
-    jsonData = json.loads(request.body)
-    userId = jsonData['userId']
+    userId = int(request.GET['userId'])
 
     if not isinstance(userId, int):
         print("Invalid user ID")
@@ -54,10 +53,9 @@ def scenarios(request):
         print("Got all scenarios")
         return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
-def scenarioIntroduction(request):
-    jsonData = json.loads(request.body)
-    versionID = jsonData['versionId']
-    pageID = jsonData['pageId']
+def scenarioIntroduction(request):    
+    versionID = int(request.GET['versionId'])
+    pageID = int(request.GET['pageId'])
 
     if not isinstance(versionID, int):
         print("Invalid version ID")
@@ -82,9 +80,8 @@ def scenarioIntroduction(request):
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
 def scenarioTask(request):
-    jsonData = json.loads(request.body)
-    versionID = jsonData['versionId']
-    pageID = jsonData['pageId']
+    versionID = int(request.GET['versionId'])
+    pageID = int(request.GET['pageId'])
 
     if not isinstance(versionID, int):
         print("Invalid Version ID")
