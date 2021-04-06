@@ -105,3 +105,58 @@ def scenarioTask(request):
         print("Got scenario task.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
+def initialActionResponse(request):
+    userID = int(request.GET['userId'])
+    versionID = int(request.GET['versionId'])
+    
+    if not isinstance(userID, int):
+        print("Invalid page ID")
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid User ID'})
+    elif not isinstance(versionID, int):
+        print("Invalid version ID")
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
+    else: 
+        try:
+            initActionResponseQuerySet = md.Page.objects.filter(user_id = userID, version_id = versionID)\
+                .values("user_id", "response_id","choice" )
+
+            if len(initActionResponseQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'Page not found with given IDs'})
+
+            resultData = list(initActionResponseQuerySet) 
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Page")  
+
+        print("Got student's response.")   
+        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})  
+
+def scenarioConclusion(request):
+    versionID = int(request.GET['versionId'])  
+
+    if not isinstance(versionID, int):
+        print("Invalid version ID")
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
+    else:
+        try:
+            scenarioConclustionQuerySet = d.Page.objects.filter(version_id = versionID)\
+                .values("user_id", "scenario_id", "body" )
+            
+            if len(scenarioConclustionQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'Conclusion not found with given IDs'})
+            
+            resultData = list(scenarioConclustionQuerySet)
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Page") 
+
+        print("Got scenario conclusions.")
+        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})  
+
+
+
+            
+            
+
+
+
