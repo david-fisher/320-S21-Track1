@@ -11,7 +11,7 @@ import {
     Link,
     Grid,
 } from '@material-ui/core';
-import { DOMAIN } from './constants/config';
+import { DOMAIN } from '../Constants/Config';
 import { Link as RouterLink } from 'react-router-dom';
 import Copyright from '../components/Copyright';
 import RedLogo from '../shared/RedLogo.png';
@@ -86,7 +86,7 @@ export default function Login() {
                         </Grid>
                     </Grid>
                     <Button
-                        onClick={() => window.location.href = DOMAIN + ':3001'}
+                        onClick={() => window.location.href = DOMAIN + ((process.env.NODE_ENV === 'production') ? '/simulator' : ':3001')}
                         className={classes.submit}
                         type="submit"
                         fullWidth
@@ -95,7 +95,7 @@ export default function Login() {
                         Login for Simulator
                     </Button>
                     <Button
-                        onClick={() => window.location.href = DOMAIN + ':3000/'}
+                        onClick={() => window.location.href = DOMAIN + ((process.env.NODE_ENV === 'production') ? '/editor' : ':3000')}
                         className={classes.submit}
                         type="submit"
                         fullWidth
