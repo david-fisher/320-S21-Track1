@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./landing page/welcome-login/
-	  file: ./landing page/welcome-login/Dockerfile.prod
+          file: ./landing page/welcome-login/Dockerfile.prod
           push: true
           tags: dacollins/ethisim:frontend-landing-page
           cache-from: type=registery, ref=dacollins/ethisim:frontend-landing-page
@@ -56,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./editor/frontend/ethisim/
-	  file: ./editor/frontend/ethisim/Dockerfile.prod
+          file: ./editor/frontend/ethisim/Dockerfile.prod
           push: true
           tags: dacollins/ethisim:frontend-editor
           cache-from: type=registery, ref=dacollins/ethisim:frontend-editor
@@ -92,7 +92,7 @@ jobs:
           uses: docker/build-push-action@v2
           with:
             context: ./simulator/frontend/
-	    file: ./simulator/frontend/Dockerfile.prod
+            file: ./simulator/frontend/Dockerfile.prod
             push: true
             tags: dacollins/ethisim:frontend-simulator
             cache-from: type=registery, ref=dacollins/ethisim:frontend-simulator
