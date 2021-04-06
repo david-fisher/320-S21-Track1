@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import Copyright from '../components/Copyright';
 import { Link } from 'react-router-dom';
+import { DOMAIN } from './constants/config';
 import HomepageNavBar from '../components/HomepageComponents/HomepageNavBar';
 import Background from '../shared/umass.jpg';
 
@@ -120,7 +121,7 @@ function StudentAccess() {
             </Container>
             <Container className={classes.studentButtonsContainer}>
                 <Button
-                    onClick={() => window.location.href = 'http://localhost:3001'}
+                    onClick={() => window.location.href = DOMAIN + ':3001'}
                     className={classes.guestButton}
                     variant="contained"
                     color="gray"
