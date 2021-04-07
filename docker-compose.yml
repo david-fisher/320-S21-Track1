@@ -54,9 +54,9 @@ services:
   
   backend-simulator:
     build:
-      context: simulator/goon-universe
+      context: simulator/steminist_simulator_backend
     ports:
-      - 5000:5000
+      - 7000:8000
     depends_on:
       - database
     environment:
