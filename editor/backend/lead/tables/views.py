@@ -351,7 +351,7 @@ class dashboard_page(APIView):
         PROFESSOR = self.request.query_params.get('professor_id')
         #TODO check that id != none
         #get all scenarios belonging to this professor
-        scenario_query = scenarios.objects.filter(PROFESSOR = PROFESSOR).values()
+        scenario_query = scenarios.objects.filter(user_id__user_id = PROFESSOR).values()
         #loop through scenarios and append required information (course, page info)
         logistics = []
         for scenario in scenario_query:

@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ScenariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'VERSION', 'NAME', 'IS_FINISHED', 'PUBLIC', 'NUM_CONVERSATION', 'PROFESSOR')
+        fields = ('SCENARIO', 'VERSION', 'NAME', 'IS_FINISHED', 'PUBLIC', 'user_id', 'DATE_CREATED')
 
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,7 +88,7 @@ class ResponsesSerializer(serializers.ModelSerializer):
 class allScenariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PROFESSOR')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'user')
 
 class Scenarios_forSerializer(serializers.ModelSerializer):
     class Meta:
@@ -103,7 +103,7 @@ class Generic_pageSerializer(serializers.ModelSerializer):
 class Professors_teachSerializer(serializers.ModelSerializer):
     class Meta:
         model = professors_teach
-        fields = ('PROFESSOR', 'COURSE')
+        fields = ('USER_ID', 'COURSE')
 
 class IssuesSerializer(serializers.ModelSerializer):
     class Meta:
