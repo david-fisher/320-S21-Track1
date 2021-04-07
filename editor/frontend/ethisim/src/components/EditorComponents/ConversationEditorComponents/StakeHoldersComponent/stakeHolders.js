@@ -167,11 +167,51 @@ export default function StakeHolderFields({ scenario }) {
     const saveStakeHolders = (e) => {
         var data = [...stakeHolders];
 
+        for(var i = 0; i < data.length; i++){
+            var form = new FormData();
+            var id; 
+            var item = data[i];
+            for(var key in item){
+                if(key === 'STAKEHOLDER'){
+                    id = item[key];
+                    form.append(key, item[key]);
+                }
+                else if(key === 'PHOTO'){
+                    if(item[key] instanceof File){
+                        form.append(key, item[key]);
+                    }
+                }
+                else{
+                    form.append(key, item[key]);
+                }
+            }
+            var config = {
+                method: 'put',
+                url: baseURL + '/api/stakeholders/' + id + '/',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                data: form,
+            };
+    
+            axios(config)
+                .then(function (response) {
+                    setSuccessBannerMessage('Successfully saved the stakeholders!');
+                    setSuccessBannerFade(true);
+                })
+                .catch(function (error) {
+                    setErrorBannerMessage(
+                        'Failed to save the stakeholders! Please try again.'
+                    );
+                    setErrorBannerFade(true);
+                });
+        }
+        /* console.log(data);
         var config = {
             method: 'put',
             url: baseURL + '/multi_stake?SCENARIO=' + scenario,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
             },
             data: data,
         };
@@ -186,7 +226,7 @@ export default function StakeHolderFields({ scenario }) {
                     'Failed to save the stakeholders! Please try again.'
                 );
                 setErrorBannerFade(true);
-            });
+            }); */
     };
 
     /*
@@ -250,6 +290,7 @@ export default function StakeHolderFields({ scenario }) {
                         name={stakeHolder.NAME}
                         job={stakeHolder.JOB}
                         bio={stakeHolder.DESCRIPTION}
+                        photo={stakeHolder.PHOTO}
                         mainConvo={stakeHolder.INTRODUCTION}
                         stakeHolders={stakeHolders}
                         setStakeHolders={setStakeHolders}

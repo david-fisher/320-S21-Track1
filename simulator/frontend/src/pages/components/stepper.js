@@ -10,6 +10,7 @@ import {
   Button,
   Box,
 } from "@material-ui/core";
+import ProgressBar from './progressBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,6 +101,7 @@ export default function VerticalLinearStepper(props) {
   return (
     <div className={classes.root}>
       <Box mt={3} ml={1}>
+      <ProgressBar completed={4} max={10} size={20}/>           {/*store pages completed and max pages*/}
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => (
             <Step
