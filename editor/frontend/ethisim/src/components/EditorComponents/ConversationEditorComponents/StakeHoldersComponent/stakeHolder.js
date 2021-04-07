@@ -331,7 +331,6 @@ export default function StakeHolder({
                 <div onClick={handleClickOpenBio}>
                     <SunEditor
                                 setContents={bio}
-                                resizingBar={false}
                                 disable={true}
                                 showToolbar={false}
                                 setOptions={{
@@ -339,6 +338,8 @@ export default function StakeHolder({
                                     height: 1,
                                     placeholder:
                                         'Enter the biography of the stakeholder...',
+                                    resizingBar: false,
+                                    showPathLabel: false,
                                     }}
                                 onChange={handleChangeBiography}
                             />
@@ -352,7 +353,6 @@ export default function StakeHolder({
                 <div onClick={handleClickOpenMainConvo}>
                     <SunEditor
                                 setContents={mainConvo}
-                                resizingBar={false}
                                 disable={true}
                                 showToolbar={false}
                                 setOptions={{
@@ -360,6 +360,8 @@ export default function StakeHolder({
                                     height: 1,
                                     placeholder:
                                         'Enter the main conversation of the stakeholder...',
+                                    resizingBar: false,
+                                    showPathLabel: false,
                                     }}
                                 onChange={handleChangeConversation}
                             />
