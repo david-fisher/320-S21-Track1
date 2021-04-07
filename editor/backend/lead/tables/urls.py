@@ -9,8 +9,8 @@ from django.conf.urls import url
 
 router = routers.DefaultRouter()
 router.register('api/demographics', DemographicsViewSet, 'demographics')
-router.register('api/students', StudentsViewSet, 'students')
-router.register('api/professors', ProfessorsViewSet, 'professors')
+router.register('api/users', UsersViewSet, 'users')
+# router.register('api/professors', ProfessorsViewSet, 'professors')
 router.register('api/scenarios', ScenariosViewSet, 'scenarios')
 router.register('api/pages', PagesViewSet, 'pages')
 router.register('api/stakeholder_page', Stakeholder_pageViewSet, 'stakeholder_page')

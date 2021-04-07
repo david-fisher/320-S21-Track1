@@ -8,16 +8,20 @@ class DemographicsSerializer(serializers.ModelSerializer):
         fields = ('STUDENT', 'AGE', 'GRADE', 'GENDER', 'RACE', 'MAJOR')
 
 
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = students
-        fields = ('STUDENT', 'NAME')
+# class StudentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = students
+#         fields = ('STUDENT', 'NAME')
 
-class ProfessorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = professors
-        fields = ('PROFESSOR', 'NAME')
+# class ProfessorSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = professors
+#         fields = ('PROFESSOR', 'NAME')
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = '__all__'
 
 class ScenariosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,7 +40,7 @@ class Stakeholder_pageSerializer(serializers.ModelSerializer):
 
 class Reflection_questionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = reflection_questions
+        model = reflection_question
         fields = ('PAGE', 'REFLECTION_QUESTION')
 
 
@@ -93,7 +97,7 @@ class Scenarios_forSerializer(serializers.ModelSerializer):
 
 class Generic_pageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = generic_page
+        model = generic_pages
         fields = ('PAGE', 'BODY')
 
 class Professors_teachSerializer(serializers.ModelSerializer):
@@ -108,7 +112,7 @@ class IssuesSerializer(serializers.ModelSerializer):
 
 class Action_pageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = action_page
+        model = action_page_choices
         fields = '__all__'
 
 

@@ -102,19 +102,19 @@ class DemographicsViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = DemographicsSerializer
 
-class StudentsViewSet(viewsets.ModelViewSet):
-    queryset = students.objects.all()
+class UsersViewSet(viewsets.ModelViewSet):
+    queryset = Users.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = StudentSerializer
+    serializer_class = UserSerializer
 
-class ProfessorsViewSet(viewsets.ModelViewSet):
-    queryset = professors.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = ProfessorSerializer
+# class ProfessorsViewSet(viewsets.ModelViewSet):
+#     queryset = professors.objects.all()
+#     permission_classes = [
+#         permissions.AllowAny
+#     ]
+#     serializer_class = ProfessorSerializer
 
 
 class ScenariosViewSet(viewsets.ModelViewSet):
@@ -154,7 +154,7 @@ class Stakeholder_pageViewSet(viewsets.ModelViewSet):
 
 
 class Reflection_QuestionsViewSet(viewsets.ModelViewSet):
-    queryset = reflection_questions.objects.all()
+    queryset = reflection_question.objects.all()
     permissions_classes = [
         permissions.AllowAny
     ]
@@ -216,7 +216,7 @@ class Scenarios_forViewSet(viewsets.ModelViewSet):
 
 # generic_page ViewSet
 class generic_pageViewSet(viewsets.ModelViewSet):
-    queryset = generic_page.objects.all()
+    queryset = generic_pages.objects.all()
     permissions_class = [
         permissions.AllowAny
     ]
@@ -241,7 +241,7 @@ class IssuesViewSet(viewsets.ModelViewSet):
 
 
 class Action_pageViewSet(viewsets.ModelViewSet):
-    queryset = action_page.objects.all()
+    queryset = action_page_choices.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
@@ -563,7 +563,7 @@ class pages_page(APIView):
         page_type = page.PAGE_TYPE
         # Check page.PAGE_TYPE = 'REFLECTION'
         if (page_type == 'R'):
-            reflection_query = reflection_questions.objects.filter(PAGE = PAGE_ID).values()
+            reflection_query = reflection_question.objects.filter(PAGE = PAGE_ID).values()
             page_data.update(
                 {
                     "REFLECTION_QUESTIONS": reflection_query
@@ -737,7 +737,7 @@ class pages_page(APIView):
                     # Check that each reflectuon question already exists
                     for question in request.data['REFLECTION_QUESTIONS']:
                         try:
-                            reflection_page = reflection_questions.objects.get(id = question.get('id'))
+                            reflection_page = reflection_question.objects.get(id = question.get('id'))
                         except:
                             # If the subpage DOES NOT EXIST, then you create that new page and post it and continue to the next component
                             question['PAGE'] = PAGE_ID
@@ -1044,7 +1044,7 @@ class stakeholders_page(APIView):
                     "REFLECTION_QUESTIONS": reflection_query
                 }
             )
- reflection_query = reflection_questions.objects.filter(PAGE = PAGE_ID).values()
+ reflection_query = reflection_question.objects.filter(PAGE = PAGE_ID).values()
             page_data.update(
                 {
                     "REFLECTION_QUESTIONS": reflection_query
@@ -1317,7 +1317,7 @@ class student_responses(APIView):
             for name in name_query:
                 NAME = name['PAGE_TITLE']
                 TYPE = name['PAGE_TYPE']
-            ref_questions_query = reflection_questions.objects.filter(PAGE = reflection["PAGE_id"]).values()
+            ref_questions_query = reflection_question.objects.filter(PAGE = reflection["PAGE_id"]).values()
             for question in ref_questions_query:
                 QUESTION = question['REFLECTION_QUESTION']
             ref_answers_query = reflections_taken.objects.filter(PAGE = reflection["PAGE_id"]).values()
