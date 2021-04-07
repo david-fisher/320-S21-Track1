@@ -16,4 +16,6 @@ RUN npm install react-scripts@3.4.1 -g --silent
 # add app
 COPY . ./
 
+ENV REACT_APP_URL=https://ethisim1.cs.umass.edu
+
 RUN npm run build
