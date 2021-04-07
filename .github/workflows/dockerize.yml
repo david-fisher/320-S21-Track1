@@ -110,7 +110,8 @@ jobs:
 
   #deploys the application to CSCF servers          
   deploy:
-
+      needs: [landing-page, editor, simulator]
+      
       runs-on: ubuntu-latest
 
       steps:

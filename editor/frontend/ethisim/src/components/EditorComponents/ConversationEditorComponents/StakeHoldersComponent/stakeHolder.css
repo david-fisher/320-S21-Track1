@@ -1,13 +1,14 @@
 #parent {
     position: relative;
     padding-top: 300px;
+    padding-bottom: 50px;
     top: 10px;
     left: 15px;
 }
 /*biography textfield*/
 
 #Bio {
-    position: absolute;
+    position:absolute;
     left: 180px;
     top: 80px;
 }
@@ -15,7 +16,7 @@
 #MainConversationField {
     position: absolute;
     left: 180px;
-    top: 160px;
+    top: 190px;
 }
 
 /*StakeHolder name*/
@@ -45,24 +46,23 @@
 #upl {
     position: absolute;
     top: 220px;
-    left: 20px;
 }
 
 #stakequestion {
     position: absolute;
-    top: 250px;
+    top: 310px;
     left: 180px;
 }
 
 #PointButton {
     position: absolute;
-    top: 250px;
+    top: 310px;
     left: 380px;
 }
 
 #DeleteButton {
     position: absolute;
-    top: 250px;
+    top: 310px;
     left: 580px;
 }
 
