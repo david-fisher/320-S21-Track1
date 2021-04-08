@@ -111,8 +111,9 @@ def scenarioTask(request):
 
 def initialAction(request):
     if request.method == 'GET':
-        versionID = int(request.GET['versionId'])
-        pageID = int(request.GET['pageId'])
+        jsonData = json.loads(request.body)
+        versionID = jsonData['versionId']
+        pageID = jsonData['pageId']
         
         if not isinstance(versionID, int):
             print("Invalid Version ID")
@@ -136,8 +137,9 @@ def initialAction(request):
 
 def stakeholder(request):
     if request.method == 'GET':
-        versionID = int(request.GET['versionId'])
-        pageID = int(request.GET['pageId'])
+        jsonData = json.loads(request.body)
+        versionID = jsonData['versionId']
+        pageID = jsonData['pageId']
         
         if not isinstance(versionID, int):
             print("Invalid Version ID")
@@ -167,6 +169,7 @@ def stakeholder(request):
     
 def conversation(request):
     if request.method == 'GET':
+        jsonData = json.loads(request.body)
         statekholderID = jsonData['stakeholderId']
         
         if not isinstance(statekholderID, int):
