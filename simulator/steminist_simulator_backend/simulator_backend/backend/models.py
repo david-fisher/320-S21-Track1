@@ -228,3 +228,8 @@ class StudentTime(models.Model):
 
     class Meta:
         db_table = "student_time"
+        
+class Choice(models.Model):
+    action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
+    choice = models.TextField()
+    result_page = models.IntegerField()

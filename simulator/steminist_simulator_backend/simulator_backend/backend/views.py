@@ -120,7 +120,8 @@ def initialAction(request):
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID'})
         else:
             try:
-                initialActionQuerySet = md.ActionPage.objects.filter(page_id=pageID).values('choice', 'result_page')
+                actionPageID = md.ActionPage.objects.filter(page_id=pageID).values('action_page_id')
+                initialActionQuerySet = md.Choice.objects.filter(action_page_id__in=actionPageID).values('action_page_id', 'choice', 'result_page')
                 resultData = list(initialActionQuerySet)
                 if len(resultData) == 0:
                 return JsonResponse(status=404, data={'status': 404,

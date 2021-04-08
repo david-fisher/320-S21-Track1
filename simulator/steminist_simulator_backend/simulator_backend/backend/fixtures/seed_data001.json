@@ -106,14 +106,21 @@
         "pk": 1,
         "fields": {
             "page_id": 3,
+            "choice": 0,
+            "result_page": 0
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "fields": {
+            "action_page_id": 1,
             "choice": {
-                "Go on with project",
-                "Stop and ask question"
-            }
-            "result_page":
-            {
-                10,
-                5
+                "1": "Go on with project",
+                "2": "Postpone project and ask questions"
+            },
+            "result_page": {
+                "1": 4,
+                "2": 5
             }
         }
     },
@@ -122,8 +129,8 @@
         "fields": {
             "page_id": 5,
             "stakeholder_id": {
-                1,
-                2
+                "1": 1,
+                "2": 2
             }
         }
     },
@@ -156,8 +163,12 @@
         "pk": 1,
         "fields" {
             "stakeholder_id": 2,
-            "question": "What is your thoughts on data privacy?",
-            "response_id": "There must be transparency."
+            "question": {
+                "1": "What is your thoughts on data privacy?"
+            },
+            "response_id": {
+                "1": "There must be transparency."
+            }
         }
     },
     {
@@ -165,8 +176,12 @@
         "pk": 2,
         "fields" {
             "stakeholder_id": 1,
-            "question": "What is your thoughts on dark pattern design?",
-            "response_id": "We use it all the time!! It's no biggie!"
+            "question": {
+                "1": "What is your thoughts on dark pattern design?"
+            },
+            "response_id": {
+                "1": "We use it all the time!! It's no biggie!"
+            }
         }
     }
   ]
