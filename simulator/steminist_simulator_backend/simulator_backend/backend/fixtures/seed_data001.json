@@ -105,7 +105,7 @@
         "model": "backend.ActionPage",
         "pk": 1,
         "fields": {
-            "action_page_id": 3,
+            "page_id": 3,
             "choice": {
                 "Go on with project",
                 "Stop and ask question"

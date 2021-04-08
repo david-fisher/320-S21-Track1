@@ -176,7 +176,7 @@ class ActionPage(models.Model):
 class ActionsTaken(models.Model):
     # response_id = models.ForeignKey(Responses.response_id, on_delete=CASCADE)
     response_id = models.IntegerField()
-    action_page = models.ForeignKey(ActionPage, on_delete=CASCADE) 
+    page_id = models.ForeignKey(ActionPage, on_delete=CASCADE) 
 
     class Meta:
         db_table = "actions_taken"
