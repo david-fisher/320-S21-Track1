@@ -122,8 +122,11 @@ def initialAction(request):
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID'})
         else:
             try:
-                initialAction = md.ActionPage.objects.filter(page_id=pageID, version_id=versionID)
-                print(initialAction)
+                initialActionQuerySet = md.ActionPage.objects.filter(page_id=pageID).values('choice', 'result_page')
+                resultData = list(initialActionQuerySet)
+                if len(resultData) == 0:
+                return JsonResponse(status=404, data={'status': 404,
+                                                      'message': "No Action found base on given page ID"})
             except Exception as ex:
                 loggin.exception("Exception thrown: Query Failed to retrieve Initial Action")
             

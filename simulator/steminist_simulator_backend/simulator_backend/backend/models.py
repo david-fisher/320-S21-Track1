@@ -117,6 +117,7 @@ class Stakeholder(models.Model):
     description = models.TextField()
     job = models.CharField(blank=False, max_length=100)
     introduction = models.TextField()
+    photopath = models.TextField()
 
     class Meta:
         db_table = "stakeholder"
