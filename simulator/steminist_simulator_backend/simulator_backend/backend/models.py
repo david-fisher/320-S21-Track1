@@ -139,7 +139,7 @@ class ConversationsHad(models.Model):
 
 class Conversation(models.Model):
     conversation_id = models.AutoField(primary_key=True)
-    scenario_id = models.IntegerField()
+    # scenario_id = models.IntegerField()
     stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
     question = models.TextField()
     response_id = models.TextField()

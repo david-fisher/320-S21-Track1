@@ -129,15 +129,12 @@ def initialAction(request):
             
         print("Got scenario task.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': {}})
-    elif request.method == 'POST':
-        versionID = int(request.GET['versionId'])
-        pageID = int(request.GET['pageId'])
     
 
 def stakeholder(request):
     if request.method == 'GET':
-        pageID = int(request.GET['pageId'])
         versionID = int(request.GET['versionId'])
+        pageID = int(request.GET['pageId'])
         
         if not isinstance(versionID, int):
             print("Invalid Version ID")
@@ -149,7 +146,7 @@ def stakeholder(request):
             try:
                 stakeholdersID = md.StakeholderPage.objects.filter(page_id=pageID).values('stakeholder_id')
                 stakeholderQuerySet = md.Stateholder.objects.filter(stakeholder_id__in = stakeholdersID, version_id = versionID)\
-                    .values('stakeholder_id', 'name', 'description', 'job', 'introduction')
+                    .values('stakeholder_id', 'name', 'description', 'job', 'introduction', 'photopath')
                 if len(stakeholder) == 0:
                     return JsonResponse(status=404, data={'status': 404,
                                                           'message': "‘No statekholder found base on given Version ID’"})
@@ -163,15 +160,11 @@ def stakeholder(request):
                 'message': 'succes',
                 'result': resultData
             })
-    elif request.method == 'POST':
-        pageID = int(request.GET['pageId'])
-        versionID = int(request.GET['versionId'])
     
     
 def conversation(request):
     if request.method == 'GET':
         statekholderID = jsonData['stakeholderId']
-        scenarioID = jsonData['scenarioId']
         
         if not isinstance(statekholderID, int):
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid stakeholder ID'})
@@ -179,7 +172,7 @@ def conversation(request):
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
         else:
             try:
-                conversationQuerySet = md.Conversations.objects.filter(statekholder_id=statekholderID, scenario_id=scenarioID)\
+                conversationQuerySet = md.Conversations.objects.filter(statekholder_id=statekholderID)\
                     .values('conversation_id', 'question', 'response_id')
                 if len(conversationQuerySet) == 0:
                     return JsonResponse(status=404, data={'status': 404,'message': "No conversation found base on Stakeholder ID"})
@@ -190,10 +183,7 @@ def conversation(request):
             print("Got conversations.")
             return JsonResponse(status=200, data={
                 'status': 200,
-                'message': 'success'
+                'message': 'success',
                 'result': resultData
             })
-    elif request.method == 'POST':
-        statekholderID = jsonData['stakeholderId']
-        scenarioID = jsonData['scenarioId']
 
