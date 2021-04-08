@@ -4,12 +4,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class scenarios(models.Model):
-    class Meta:
-        unique_together = (('SCENARIO'), ('VERSION'))
     SCENARIO = models.AutoField(primary_key = True, editable=False)
     user = models.ForeignKey('users', to_field = 'user_id', on_delete =models.CASCADE, related_name="scenario_creator2", null=True, db_column="USER_ID")
     NAME = models.CharField(max_length = 1000)
-    VERSION = models.ForeignKey('versions', on_delete=models.CASCADE, null=True)
     PUBLIC = models.BooleanField(default = False)
     IS_FINISHED = models.BooleanField(default = False)
     DATE_CREATED = models.DateField(auto_now_add=True)

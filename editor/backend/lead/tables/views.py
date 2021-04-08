@@ -214,6 +214,13 @@ class Scenarios_forViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = Scenarios_forSerializer
 
+class VersionsViewSet(viewsets.ModelViewSet):
+    queryset = Versions.objects.all()
+    permissions_class = [
+        permissions.AllowAny
+    ]
+    serializer_class = VersionsSerializer
+
 # generic_page ViewSet
 class generic_pageViewSet(viewsets.ModelViewSet):
     queryset = generic_pages.objects.all()
@@ -260,11 +267,10 @@ class logistics_page(APIView):
         scenario = scenarios.objects.get(SCENARIO = SCENARIO)
         scenario_dict = ScenariosSerializer(scenario).data
         #loop through scenarios and append required information (course, page info)
-
-        scenarios_for_query = scenarios_for.objects.filter(SCENARIO=scenario_dict['SCENARIO']).values()
+        scenarios_for_query = scenarios_for.objects.filter(SCENARIO_id=scenario_dict['SCENARIO']).values()
         course_id_array = []
         for x in scenarios_for_query:
-            print(x)
+            print(2, x)
             course_id_array.append(x['COURSE_id'])
 
         course_dict_array = []
@@ -318,9 +324,13 @@ class logistics_page(APIView):
     def put(self, request, *args, **kwargs):
         #save the scenario
         extant_scenario = scenarios.objects.get(SCENARIO = request.data['SCENARIO'])
+        request.data["user_id"] = extant_scenario.user.user_id
         scenario_serializer = ScenariosSerializer(extant_scenario, data = request.data)
+        scenario_serializer.user = extant_scenario.user
         if scenario_serializer.is_valid():
             scenario_serializer.save()
+        else:
+            print(scenario_serializer.errors)
 
         #delete currently assocated classes
         scenarios_for.objects.filter(SCENARIO = request.data['SCENARIO']).delete()
@@ -330,7 +340,6 @@ class logistics_page(APIView):
             scenarios_for_dict = {
                 "COURSE" : course['COURSE'],
                 "SCENARIO" : request.data['SCENARIO'],
-                "VERSION" : request.data['VERSION']
             }
             print(scenarios_for_dict)
         #save the classes associated with it in scenarios_for
@@ -389,8 +398,11 @@ class dashboard_page(APIView):
 
     def post(self, request, *args, **kwargs):
         #save the scenario
+        request.data["user_id"] = request.data["PROFESSOR"]
+        del request.data["PROFESSOR"]
         scenario_serializer = ScenariosSerializer(data = request.data)
         if not (scenario_serializer.is_valid()):
+            print(scenario_serializer.errors)
             print("scenario saved incorrectly")
             return Response(scenario_serializer.errors)
         scenario_serializer.save()
@@ -402,7 +414,6 @@ class dashboard_page(APIView):
             scenarios_for_dict = {
                 "SCENARIO" : scenario_dict['SCENARIO'],
                 "COURSE" : course['COURSE'],
-                "VERSION" : scenario_dict['VERSION']
             }
             print(scenarios_for_dict)
             print(scenario_dict)
@@ -425,10 +436,12 @@ class dashboard_page(APIView):
         }
 
         intro_page_serializer = PagesSerializer(data=intro_page)
+        print(intro_page_serializer)
         if intro_page_serializer.is_valid():
             intro_page_serializer.save()
         else:
             print("intro page saved incorrectly")
+            print(intro_page_serializer.errors)
             return Response(intro_page_serializer.errors)
 
         #TODO create blank stakeholder page and return it
@@ -483,11 +496,11 @@ class multi_issue(APIView):
 class flowchart(APIView):
     #get all page objects given a scenario id
     def get(self, request, *args, **kwargs):
-        SCENARIO = self.request.query_params.get('scenario_id')
-        pages_query = pages.objects.filter(SCENARIO=SCENARIO).values()
+        SCENARIO = int(self.request.query_params.get('scenario_id'))
+        pages_query = pages.objects.filter(SCENARIO_id=SCENARIO).values()
         for page in pages_query:
             if page['PAGE_TYPE'] == 'A':
-                page['ACTION'] = action_page.objects.filter(PAGE=page['PAGE']).values()
+                page['ACTION'] = action_page_choices.objects.filter(PAGE=page['PAGE']).values()
 
 
         return Response(pages_query)
@@ -502,12 +515,14 @@ class flowchart(APIView):
             #save updated choices within action pages  
             if updated_page['PAGE_TYPE'] == 'A':
                 for updated_choice in updated_page['ACTION']:
-                    extant_choice = action_page.objects.get(id=updated_choice['id']) 
-                    action_serializer = Action_pageSerializer(extant_choice, updated_choice)
-                    if not action_serializer.is_valid():
-                        print("error with PUTing choices")
-                        return Response(action_serializer.errors)
-                    action_serializer.save()
+                    extant_choice = action_page_choices.objects.filter(PAGE=updated_choice['PAGE'], CHOICE=updated_choice["CHOICE"]).first()
+                    if updated_choice["RESULT_PAGE"]:
+                        extant_choice.RESULT_PAGE = pages.objects.get(pk=updated_choice["RESULT_PAGE"])
+                        action_serializer = Action_pageSerializer(extant_choice, updated_choice)
+                        if not action_serializer.is_valid():
+                            print("error with PUTing choices")
+                            return Response(action_serializer.errors)
+                        extant_choice.save()
             #save the page itself    
             extant_page = pages.objects.get(SCENARIO = SCENARIO, PAGE = updated_page['PAGE'])
             serializer = PagesSerializer(extant_page, data=updated_page)
@@ -519,7 +534,7 @@ class flowchart(APIView):
         pages_query = pages.objects.filter(SCENARIO=SCENARIO).values()
         for page in pages_query:
             if page['PAGE_TYPE'] == 'A':
-                page['ACTION'] = action_page.objects.filter(PAGE=page['PAGE']).values()
+                page['ACTION'] = action_page_choices.objects.filter(PAGE=page['PAGE']).values()
         return Response(pages_query)
 
 
@@ -574,7 +589,7 @@ class pages_page(APIView):
 
         # Check page.PAGE_TYPE = 'ACTION'
         if (page_type == 'A'):
-            action_query = action_page.objects.filter(PAGE = PAGE_ID).values()
+            action_query = action_page_choices.objects.filter(PAGE = PAGE_ID).values()
             page_data.update(
                 {
                     "CHOICES": action_query
@@ -585,7 +600,7 @@ class pages_page(APIView):
         
         # Check page.PAGE_TYPE = 'GENERIC'
         if (page_type == 'G' or page_type == 'I'):
-            generic_query = generic_page.objects.filter(PAGE = PAGE_ID).values()
+            generic_query = generic_pages.objects.filter(PAGE = PAGE_ID).values()
             page_data.update(
                 {
                     "BODIES":generic_query
@@ -615,9 +630,7 @@ class pages_page(APIView):
     def post(self, request):
 
         # Takes the scenario_id from the URL if the url has ?scenario_id=<id> at the end, no parameter passed return error 400
-
         page_type = request.data["PAGE_TYPE"]
-
         # If the request is a reflection page  
         if (page_type == 'R'):
             pages_serializer = PagesSerializer(data=request.data)
@@ -764,10 +777,10 @@ class pages_page(APIView):
                 if pages_serializer.is_valid():
                     pages_serializer.save()
                     
-                    # Check that each Action_Page already exists
+                    # Check that each action_page_choices already exists
                     for action in request.data['CHOICES']:
                         try:
-                            choices_page = action_page.objects.get(id = action.get('id'))
+                            choices_page = action_page_choices.objects.get(id = action.get('id'))
                         except:
                             # If the subpage DOES NOT EXIST, then you create that new page and post it and continue to the next component
                             action['PAGE'] = PAGE_ID
@@ -797,7 +810,7 @@ class pages_page(APIView):
                     # Check that each Generic Page already exists
                     for body in request.data['BODIES']:
                         try:
-                            body_page = generic_page.objects.get(id = body.get('id'))
+                            body_page = generic_pages.objects.get(id = body.get('id'))
                         except:
                             # If the subpage DOES NOT EXIST, then you create that new page and post it and continue to the next component
                             body['PAGE'] = PAGE_ID
@@ -882,7 +895,7 @@ class pages_page(APIView):
                     return Response(pages_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             #also set and result_page fields pointing to the deleted page to be null as well.
-            action_pages = action_page.objects.filter(RESULT_PAGE = PAGE_ID)
+            action_pages = action_page_choices.objects.filter(RESULT_PAGE = PAGE_ID)
             for updated_page in action_pages:
                 extant_page = updated_page
                 updated_page.RESULT_PAGE = None
@@ -1297,7 +1310,7 @@ class student_responses(APIView):
             for name in name_query:
                 NAME = name['PAGE_TITLE']
                 TYPE = name['PAGE_TYPE']
-            choices_query = action_page.objects.filter(PAGE = response["ACTION_PAGE_id"]).values()
+            choices_query = action_page_choices.objects.filter(PAGE = response["ACTION_PAGE_id"]).values()
             for choice in choices_query:
                 choice_array.append(choice['CHOICE'])
             chosen_query = responses.objects.filter(ACTION_PAGE_id = response["ACTION_PAGE_id"]).values()

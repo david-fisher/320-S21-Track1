@@ -24,9 +24,19 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ScenariosSerializer(serializers.ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'VERSION', 'NAME', 'IS_FINISHED', 'PUBLIC', 'user_id', 'DATE_CREATED')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PUBLIC', 'user_id', 'DATE_CREATED')
+
+    def create(self, validated_data):
+        user_id = validated_data.pop('user_id')
+        user = Users.objects.get(pk=user_id.pk)
+        scen = scenarios.objects.create(**validated_data)
+        scen.user_id = user.pk
+        scen.save()
+        return scen
+
 
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,6 +104,11 @@ class Scenarios_forSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios_for
         fields = ('SCENARIO', 'COURSE', 'VERSION')
+
+class VersionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Versions
+        fields = '__all__'
 
 class Generic_pageSerializer(serializers.ModelSerializer):
     class Meta:
