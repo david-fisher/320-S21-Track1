@@ -3,6 +3,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
+import { DOMAIN } from '../../Constants/Config';
 import shemptylogo from '../EditorComponents/ConversationEditorComponents/StakeHoldersComponent/shemptylogo.png';
 
 export default function SimpleMenu() {
@@ -33,7 +34,13 @@ export default function SimpleMenu() {
                 onClose={handleClose}
             >
                 <MenuItem
-                    onClick={() => window.location.href = 'http://localhost:3006'}
+                    onClick={() =>
+                        (window.location.href =
+                            DOMAIN +
+                            (process.env.NODE_ENV === 'production'
+                                ? '/'
+                                : ':3006'))
+                    }
                     component={Link}
                     to={{
                         pathname: '/home',

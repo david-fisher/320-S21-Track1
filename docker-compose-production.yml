@@ -1,51 +1,22 @@
 version: "3"
 services:
-  frontend-editor:
-    image: dacollins/docking:frontend-editor
+  frontend:
+    build: 
+      context: .
     ports:
-      - 3000:3000
-    depends_on:
-      - backend-editor
+      - 443:443
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    container_name: frontend-editor
+    container_name: frontend
     networks:
       - '320'
 
-  frontend-simulator:
-    image: dacollins/docking:frontend-simulator
-    ports:
-      - 3001:3000
-    depends_on:
-      - backend-simulator
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    container_name: frontend-simulator
-    networks:
-      - '320'
-
-  frontend-landing-page:
-    image: dacollins/docking:frontend-landing-page
-    ports:
-      - 3006:3000
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    container_name: frontend-landing-page
-    networks:
-      - '320'
-  
   backend-simulator:
-    image: dacollins/docking:backend-simulator
+    image: dacollins/ethisim:backend-simulator
     ports:
-      - 5000:5000
-    depends_on:
-      - database
+      - 7000:8000
     environment:
       - PGHOST=${POSTGRESHOST}
       - PGUSER=${POSTGRESUSERNAME}
@@ -57,11 +28,9 @@ services:
     container_name: backend-simulator
 
   backend-editor:
-    image: dacollins/docking:backend-editor
+    image: dacollins/ethisim:backend-editor
     ports:
       - 8000:8000
-    depends_on:
-      - database
     environment:
       - POSTGRESHOST=${POSTGRESHOST}
       - POSTGRESUSERNAME=${POSTGRESUSERNAME}
@@ -70,26 +39,6 @@ services:
     networks:
       - '320'
     container_name: backend-editor
-
-  database:
-    image: postgres
-    container_name: postgres-db
-    environment:
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=postgres"
-      - "POSTGRES_DB=db"
-    ports:
-      - 5432:5432
-    expose:
-      - '5432'
-    restart: always
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - '320'
-
-volumes:
-  postgres-data:
 
 networks:
   '320':

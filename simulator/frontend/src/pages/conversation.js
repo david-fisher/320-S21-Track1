@@ -7,7 +7,7 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import HTMLRenderer from "./components/htmlRenderer";
 import { ScenariosContext } from "../Nav";
@@ -40,7 +40,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     React.useEffect(() => {
       axios({
         method: "get",
-        url: BASE_URL + "/scenarios/stakeholders/conversation",
+        url: BACK_URL + "/scenarios/stakeholders/conversation",
         headers: {
           scenarioID: scenarios.currentScenarioID,
           studentID: STUDENT_ID,

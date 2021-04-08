@@ -7,7 +7,7 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import HTMLRenderer from './components/htmlRenderer';
 import { ScenariosContext } from "../Nav";
@@ -59,7 +59,7 @@ function Introduction({ pages, setPages, activePage, setActivePage }) {
     // backend call
     axios({
       method: 'get',
-      url: BASE_URL + '/scenarios/intro',
+      url: BACK_URL + '/scenarios/intro',
       headers: {
         scenarioID: scenarios.currentScenarioID,
         studentID: STUDENT_ID,

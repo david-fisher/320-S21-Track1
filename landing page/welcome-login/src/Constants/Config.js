@@ -1,3 +1,1 @@
-const baseURL = 'http://127.0.0.1:8000'; 
-
-export { baseURL };
+export const DOMAIN = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_URL : 'http://localhost';

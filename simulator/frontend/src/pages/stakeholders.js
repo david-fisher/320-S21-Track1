@@ -3,7 +3,7 @@ import { makeStyles, withStyles, Typography, Box, Grid, Button,
   Card, CardContent, Modal, Dialog, DialogContent, DialogContentText } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import { GatheredInfoContext } from './simulationWindow';
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import Conversation from './conversation';
 import { ScenariosContext } from "../Nav";
@@ -65,7 +65,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
     (async () => {
       await axios({
         method: 'get',
-        url: BASE_URL + '/scenarios/stakeholders',
+        url: BACK_URL + '/scenarios/stakeholders',
         headers: {
           scenarioID: scenarios.currentScenarioID,
           studentID: STUDENT_ID
@@ -89,7 +89,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
 
         axios({
           method: 'get',
-          url: BASE_URL + '/scenarios/stakeholders/history',
+          url: BACK_URL + '/scenarios/stakeholders/history',
           headers: {
             scenarioID: scenarios.currentScenarioID,
             studentID: STUDENT_ID
@@ -196,7 +196,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
                 });
                 axios({
                   method: 'put',
-                  url: BASE_URL + '/scenarios/stakeholders',
+                  url: BACK_URL + '/scenarios/stakeholders',
                   data: {
                     scenarioID: scenarios.currentScenarioID,
                     studentID: STUDENT_ID,

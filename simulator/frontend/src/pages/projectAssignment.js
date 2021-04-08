@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import React from "react";
 import {
   withStyles,
@@ -63,7 +63,7 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage }) {
   React.useEffect(() => {
     axios({
       method: "get",
-      url: BASE_URL + "/scenarios/task",
+      url: BACK_URL + "/scenarios/task",
       headers: {
         scenarioID: scenarios.currentScenarioID,
         studentID: STUDENT_ID,
