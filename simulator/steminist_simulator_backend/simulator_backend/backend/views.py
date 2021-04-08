@@ -171,15 +171,17 @@ def stakeholder(request):
 def conversation(request):
     if request.method == 'GET':
         jsonData = json.loads(request.body)
+        versionID = jsonData['versionId']
         statekholderID = jsonData['stakeholderId']
         
         if not isinstance(statekholderID, int):
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid stakeholder ID'})
-        elif not isinstance(scenarioID, int):
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
+        elif not isinstance(versionID, int):
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid version ID'})
         else:
             try:
-                conversationQuerySet = md.Conversations.objects.filter(stakekholder_id=stakekholderID)\
+                stakeholderId = md.Stakeholder.objects.filter(version_id=versionID, stakeholder_id=stakeholderID).values('stakeholder_id')
+                conversationQuerySet = md.Conversations.objects.filter(stakekholder_id__in=stakekholderId)\
                     .values('conversation_id', 'question', 'response_id')
                 if len(conversationQuerySet) == 0:
                     return JsonResponse(status=404, data={'status': 404,'message': "No conversation found base on Stakeholder ID"})
