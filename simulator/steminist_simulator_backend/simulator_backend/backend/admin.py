@@ -1,0 +1,30 @@
+from django.contrib import admin
+
+# Register your models here.
+from backend.models import *
+
+admin.site.register(UserType)
+admin.site.register(User)
+admin.site.register(Course)
+admin.site.register(StudentsIn)
+admin.site.register(Major)
+admin.site.register(ProfessorTeach)
+admin.site.register(Scenario)
+admin.site.register(Page)
+admin.site.register(Version)
+admin.site.register(Response)
+admin.site.register(AssignedTo)
+admin.site.register(ScenariosFor)
+admin.site.register(Stakeholder)
+admin.site.register(ConversationsHad)
+# admin.site.register(Conversation)
+admin.site.register(ReflectionQuestion)
+admin.site.register(Conversation)
+admin.site.register(GenericPage)
+admin.site.register(ActionPage)
+admin.site.register(ActionsTaken)
+admin.site.register(Issue)
+admin.site.register(StakeholderPage)
+admin.site.register(Coverage)
+admin.site.register(ReflectionsTaken)
+admin.site.register(StudentTime)

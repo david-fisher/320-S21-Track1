@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: CI/CD
 
 on:
   push:
@@ -7,33 +7,122 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
 jobs:
-  # This workflow builds the three docker containers and pushes them to docker hub
-  build-docker-image:
+  # Job to build landing page
+  landing-page:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      #logs in to docker
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
       - name: docker login
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
-      - name: docker build
+      
+      # Build and push Landing Page Frontend image
+      - name: build and push landing page
+        uses: docker/build-push-action@v2
+        with:
+          context: ./landing page/welcome-login/
+          file: ./landing page/welcome-login/Dockerfile.prod
+          push: true
+          tags: dacollins/ethisim:frontend-landing-page
+          cache-from: type=registery, ref=dacollins/ethisim:frontend-landing-page
+          cache-to: type=inline
+  
+  editor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - name: docker login
         run: |
-          docker-compose up -d
-      #commit images to docker
-      - name: docker commit
-        run: | 
-          docker commit -m "frontend image" -a "frontend" frontend dacollins/docking:frontend
-          docker commit -m "backend image" -a "backend" backend dacollins/docking:backend
-          docker commit -m "postgres image" -a "database" postgres-db dacollins/docking:database
-      # Push built images to docker hub
-      - name: docker push
-        run: |
-          docker push dacollins/docking:frontend
-          docker push dacollins/docking:backend
-          docker push dacollins/docking:database
+          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+
+       #Build and push Editor Frontend image       
+      - name: build and push editor frontend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./editor/frontend/ethisim/
+          file: ./editor/frontend/ethisim/Dockerfile.prod
+          push: true
+          tags: dacollins/ethisim:frontend-editor
+          cache-from: type=registery, ref=dacollins/ethisim:frontend-editor
+          cache-to: type=inline
+
+      # Build and push Editor Backend image
+      - name: build and push editor backend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./editor/backend/
+          push: true
+          tags: dacollins/ethisim:backend-editor
+          cache-from: type=registery, ref=dacollins/ethisim:backend-editor
+          cache-to: type=inline
+
+  simulator:
+
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v1
+        
+        - name: docker login
+          run: |
+            docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+
+        # Build and push Simulator Frontend image
+        - name: build and push simulator frontend
+          uses: docker/build-push-action@v2
+          with:
+            context: ./simulator/frontend/
+            file: ./simulator/frontend/Dockerfile.prod
+            push: true
+            tags: dacollins/ethisim:frontend-simulator
+            cache-from: type=registery, ref=dacollins/ethisim:frontend-simulator
+            cache-to: type=inline
+        
+        # Build and push Simulator Backend image
+        - name: build and push simulator backend
+          uses: docker/build-push-action@v2
+          with:
+            context: ./simulator/steminist_simulator_backend/
+            push: true
+            tags: dacollins/ethisim:backend-simulator
+            cache-from: type=registery, ref=dacollins/ethisim:backend-simulator
+            cache-to: type=inline
+
+  #deploys the application to CSCF servers          
+  deploy:
+      needs: [landing-page, editor, simulator]
+      
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: install sshpass
+          run: | 
+            sudo apt-get install sshpass
+
+        #login to the server using ssh
+        - name: log in to server
+          run: |
+            sshpass -p ${{ secrets.CSCF_SERVER_PASS }} ssh -tt -o StrictHostKeyChecking=no ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }} "docker-compose down && docker rmi kubernators_frontend:latest -f && docker pull dacollins/ethisim:frontend-landing-page && docker pull dacollins/ethisim:frontend-editor && docker pull dacollins/ethisim:frontend-simulator && docker-compose pull && docker-compose up -d"

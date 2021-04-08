@@ -84,6 +84,7 @@ class stakeholders(models.Model):
     JOB = models.TextField(default = "default")
     # MATRIX = ArrayField(ArrayField(models.IntegerField(), size = 15), size = 15)
     INTRODUCTION = models.TextField(default = 'default')
+    PHOTO = models.ImageField(upload_to="stakeholder_images/", null=True)
 
 
 
