@@ -100,5 +100,66 @@
             "user_id": 1,
             "version_id": 1
         }
+    },
+    {
+        "model": "backend.ActionPage",
+        "pk": 1,
+        "fields": {
+            "action_page_id": 3,
+            "choice": [
+                "Go on with project",
+                "Stop and ask question"
+            ]
+            "result_page": [10, 5]
+        }
+    },
+    {
+        "model": "backend.StakeholderPage",
+        "fields": {
+            "page_id": 5,
+            "stakeholder_id": [1, 2]
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "name": "Elon Musk",
+            "description": "He is the one with many Executives surrounding him",
+            "job": "CEO of Tesla",
+            "introduction": "You are wandering in a park thinking about the issue you are facing and how to address it with your supervisor. You look up and here he is Elon Musk himself. The idead of consulting him sparks in your mind."
+            "photopath": "elonmusk.jpg"
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "name": "Bill Gates",
+            "description": "One of the great minds of the world. He has dealt with many ethical dillemma.",
+            "job": "Founder of Microsoft",
+            "introduction": "You are visiting your sister in Seattle, WA. You come to Dick's drive thru, a renowed Seattle fast food chain. Little do you know, Gates is standing right behind you. He overhear your conversation with your sister about your concern and decide to weigh in."
+            "photopath": "billgates.jpg"
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 1,
+        "fields" {
+            "stakeholder_id": 2,
+            "question": "What is your thoughts on data privacy?",
+            "response_id": "There must be transparency."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 2,
+        "fields" {
+            "stakeholder_id": 1,
+            "question": "What is your thoughts on dark pattern design?",
+            "response_id": "We use it all the time!! It's no biggie!"
+        }
     }
   ]
