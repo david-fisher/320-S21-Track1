@@ -150,9 +150,12 @@ def stakeholder(request):
         else:
             try:
                 stakeholdersID = md.StakeholderPage.objects.filter(page_id=pageID).values('stakeholder_id')
-                stakeholderQuerySet = md.Stateholder.objects.filter(stakeholder_id__in = stakeholdersID, version_id = versionID)\
+                if len(stakeholdersID) == 0:
+                    return JsonResponse(status=404, data={'status': 404,
+                                                          'message': "‘No statekholder found base on given Page ID’"})
+                stakeholderQuerySet = md.Stakeholder.objects.filter(stakeholder_id__in = stakeholdersID, version_id = versionID)\
                     .values('stakeholder_id', 'name', 'description', 'job', 'introduction', 'photopath')
-                if len(stakeholder) == 0:
+                if len(stakeholderQuerySet) == 0:
                     return JsonResponse(status=404, data={'status': 404,
                                                           'message': "‘No statekholder found base on given Version ID’"})
                 resultData = list(stakeholderQuerySet)
@@ -178,7 +181,7 @@ def conversation(request):
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
         else:
             try:
-                conversationQuerySet = md.Conversations.objects.filter(statekholder_id=statekholderID)\
+                conversationQuerySet = md.Conversations.objects.filter(stakekholder_id=stakekholderID)\
                     .values('conversation_id', 'question', 'response_id')
                 if len(conversationQuerySet) == 0:
                     return JsonResponse(status=404, data={'status': 404,'message': "No conversation found base on Stakeholder ID"})
