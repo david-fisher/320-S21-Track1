@@ -106,18 +106,25 @@
         "pk": 1,
         "fields": {
             "action_page_id": 3,
-            "choice": [
+            "choice": {
                 "Go on with project",
                 "Stop and ask question"
-            ]
-            "result_page": [10, 5]
+            }
+            "result_page":
+            {
+                10,
+                5
+            }
         }
     },
     {
         "model": "backend.StakeholderPage",
         "fields": {
             "page_id": 5,
-            "stakeholder_id": [1, 2]
+            "stakeholder_id": {
+                1,
+                2
+            }
         }
     },
     {
