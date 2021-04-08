@@ -8,21 +8,35 @@ class DemographicsSerializer(serializers.ModelSerializer):
         fields = ('STUDENT', 'AGE', 'GRADE', 'GENDER', 'RACE', 'MAJOR')
 
 
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = students
-        fields = ('STUDENT', 'NAME')
+# class StudentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = students
+#         fields = ('STUDENT', 'NAME')
 
-class ProfessorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = professors
-        fields = ('PROFESSOR', 'NAME')
+# class ProfessorSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = professors
+#         fields = ('PROFESSOR', 'NAME')
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = '__all__'
 
 class ScenariosSerializer(serializers.ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'VERSION', 'NAME', 'IS_FINISHED', 'PUBLIC', 'NUM_CONVERSATION', 'PROFESSOR')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PUBLIC', 'user_id', 'DATE_CREATED')
+
+    def create(self, validated_data):
+        user_id = validated_data.pop('user_id')
+        user = Users.objects.get(pk=user_id.pk)
+        scen = scenarios.objects.create(**validated_data)
+        scen.user_id = user.pk
+        scen.save()
+        return scen
+
 
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,7 +50,7 @@ class Stakeholder_pageSerializer(serializers.ModelSerializer):
 
 class Reflection_questionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = reflection_questions
+        model = reflection_question
         fields = ('PAGE', 'REFLECTION_QUESTION')
 
 
@@ -84,22 +98,27 @@ class ResponsesSerializer(serializers.ModelSerializer):
 class allScenariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PROFESSOR')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'user')
 
 class Scenarios_forSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios_for
         fields = ('SCENARIO', 'COURSE', 'VERSION')
 
+class VersionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Versions
+        fields = '__all__'
+
 class Generic_pageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = generic_page
+        model = generic_pages
         fields = ('PAGE', 'BODY')
 
 class Professors_teachSerializer(serializers.ModelSerializer):
     class Meta:
         model = professors_teach
-        fields = ('PROFESSOR', 'COURSE')
+        fields = ('USER_ID', 'COURSE')
 
 class IssuesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,7 +127,7 @@ class IssuesSerializer(serializers.ModelSerializer):
 
 class Action_pageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = action_page
+        model = action_page_choices
         fields = '__all__'
 
 
