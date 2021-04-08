@@ -1,7 +1,7 @@
 import React,{useEffect} from "react";
 import { makeStyles, withStyles, Typography, Box, Button, Grid } from "@material-ui/core";
 import Checkbox from "./components/checkbox";
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import { ScenariosContext } from "../Nav";
 import HTMLRenderer from "./components/htmlRenderer";
@@ -42,7 +42,7 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
     (async () => {
       axios({
         method: 'get',
-        url: BASE_URL + content_url,
+        url: BACK_URL + content_url,
         headers: {
           scenarioID: scenarios.currentScenarioID,
           studentID: STUDENT_ID,
@@ -70,7 +70,7 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
     console.log("Question ID's " + questionID);
     request_data[questionID[0].toString()] = data;
     await axios({
-      url: BASE_URL + content_url,
+      url: BACK_URL + content_url,
       method: 'put',
       data: {
         scenarioID: scenarios.currentScenarioID,

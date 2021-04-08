@@ -1,5 +1,5 @@
 import React from "react";
-
+import { DOMAIN } from './constants/config';
 import Summary from "./pages/summary";
 import Home from "./pages/home";
 import RadarTest from "./pages/chartTest";
@@ -74,6 +74,7 @@ export const ScenariosContext = React.createContext();
 function Nav() {
   const classes = useStyles();
   const scenariosState = React.useState({});
+  const landingPage = DOMAIN + ':3006';
 
   return (
     <div className={classes.root}>
@@ -112,7 +113,7 @@ function Nav() {
                     </Button>
                   </Link> */}
                 </Typography>
-                <Button onClick={() => window.location.href = 'http://localhost:3006'} color="inherit">LogOut</Button>
+                <Button onClick={() => window.location.href = landingPage} color="inherit">LogOut</Button>
               </Toolbar>
             </AppBar>
 

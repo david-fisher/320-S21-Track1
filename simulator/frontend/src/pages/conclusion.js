@@ -3,7 +3,7 @@ import { withStyles, Typography, Box, Grid, Button } from "@material-ui/core";
 import QA from "./components/q&a";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import { ScenariosContext } from "../Nav";
 
 
@@ -22,7 +22,7 @@ function Conclusion({pages, setPages, activePage, setActivePage}) {
     // backend call
     axios({
       method: 'get',
-      url: BASE_URL + '/scenarios/conclusion',
+      url: BACK_URL + '/scenarios/conclusion',
       headers: {
         scenarioID: scenarios.currentScenarioID,
         studentID: STUDENT_ID,

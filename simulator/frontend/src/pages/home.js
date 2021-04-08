@@ -1,46 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import '../App.css';
+import deleteReq from '../universalHTTPRequests/delete';
+import post from '../universalHTTPRequests/post';
+import get from '../universalHTTPRequests/get';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {Grid, Paper, Button, Tabs, Tab, Box, Typography} from '@material-ui/core';
-import {useEffect, useState} from "react";
+import { Grid, Paper, Button, Tabs, Tab, Box, Typography } from '@material-ui/core';
 import ScenarioCard from './components/scenarioCard';
+import LoadingSpinner from './components/LoadingSpinner';
+import ErrorIcon from '@material-ui/icons/Error';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import CodeButton from './components/classCodeDialog';
+import ProgressBar from './components/progressBar';
+import { STUDENT_ID } from './../constants/config';
 
 const useStyles = makeStyles((theme) => ({
- root: {
-   flexGrow: 1,
- },
- paper: {
-   padding: theme.spacing(2),
-   textAlign: 'left',
-   color: theme.palette.text.secondary,
-   background: theme.palette.primary,
-   '&:hover': {
-     transform: "scale3d(1.05, 1.05, 1)",
-     backgroundColor: '#f3e4e3'
-    
-   }
- },
+  root: {
+    flexGrow: 1,
+  },
+  errorContainer: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'left',
+    color: theme.palette.text.secondary,
+    background: theme.palette.primary,
+    '&:hover': {
+      transform: "scale3d(1.05, 1.05, 1)",
+      backgroundColor: '#f3e4e3'
 
- button: {
-   variant: 'contained',
-   color: 'primary',
- },
- grid: {
-   justifyContent: "center",
-   textAlign: "center",
-   width: '100%',
-   margin: '0px',
- },
- button: {
-   variant: 'contained',
-   color: 'white',
-   background: 'black',
- },
- 
+    }
+  },
+
+  button: {
+    variant: 'contained',
+    color: 'primary',
+  },
+  grid: {
+    justifyContent: "center",
+    textAlign: "center",
+    width: '100%',
+    margin: '0px',
+  },
+  button: {
+    variant: 'contained',
+    color: 'white',
+    background: 'black',
+  },
+
 }));
- 
+
+const endpointGet = '/scenarios?userId=';
+const endpointPost = '/dashboard';
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -79,17 +95,17 @@ const StyledTab = withStyles((theme) => ({
       backgroundColor: '#8c8c8c',
       color: 'white',
       opacity: 1,
-    selected: { 
-      backgroundColor: '#8c8c8c'
-    }
-    
-  },
+      selected: {
+        backgroundColor: '#8c8c8c'
+      }
+
+    },
   },
 }))((props) => <Tab disableRipple {...props} />);
 
 const StyledTabs = withStyles({
-  root:{
-    
+  root: {
+
   },
 
   indicator: {
@@ -105,111 +121,203 @@ const StyledTabs = withStyles({
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
 export default function Home() {
- 
- const [scenarios, setScenarios] =useState({         //temporary array of scenarios
-   incompleteScenarios : [
-     {
-       title : "Google Advertising",
-       course : " CS 220",
-       date : "Modified 2/10/20"
-     },
-     {
-       title : "Test Scenario",
-       course : " CS 230",
-       date : "Modified 2/11/20"
-     },
-     {
-       title : "UMass Test Ethics",
-       course : " CS 250",
-       date : "Modified 3/10/20"
-     }
-   ],
-   completeScenarios : [
-     {
-     title : "Google Advertising B",
-     course : " CS 220",
-     date : "Modified 2/10/20"
-   },
-   {
-     title : "Test Scenario B",
-     course : " CS 230",
-     date : "Modified 2/11/20"
-   },
-   {
-     title : "UMass Test Ethics B",
-     course : " CS 250",
-     date : "Modified 3/10/20"
-   }
-   ]
- });
- 
- 
+  const classes = useStyles();
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+
+  // post on success, concatenating a scenario card to array
+  //delete on success, concatenating a scenario card to array
+
+  //when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
+
+  //post returns new id of scenario, when you concatenating to array set the id to that
+  const [menuCourseItems, setMenuCourseItems] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [scenarios, setScenarios] = useState({     //temporary array of scenarios
+      incompleteScenarios: [
+        {
+          title: " ",
+          course: " ",
+          date: " ",
+          completed: 10,
+          max: 10,
+        }
+      ],
+      completeScenarios: [
+        {
+          title: " ",
+          course: " ",
+          date: " ",
+          completed: 10,
+          max: 10,
+        }
+      ]
+    });
+  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  // // eslint-disable-next-line
+  // const [fetchCourseResponse, setFetchCourseResponse] = useState({
+  //     data: null,
+  //     loading: false,
+  //     error: null,
+  // });
+  // eslint-disable-next-line
+  const [shouldFetch, setShouldFetch] = useState(0);
+  // eslint-disable-next-line
+
+  //Get Scenario
+  let getData = () => {
+    function onSuccess(response) {
+      let incomplete = response.data.result.map((data) => (
+        {
+          title: data.name,
+          course: data.num_conversation,
+          date: data.version_id
+        }
+      ));
+      let complete = response.data.result.map((data) => (
+        {
+          title: data.name,
+          course: data.num_conversation,
+          date: data.version_id
+        }
+      ));
+      let scen = {
+        incompleteScenarios: incomplete,
+        completeScenarios: complete
+      };
+      setScenarios(scen);
+      debugger;
+    }
+
+    function onFailure() {
+      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      //setErrorBannerFade(true);
+    }
+    get(setFetchScenariosResponse, (endpointGet + STUDENT_ID), onFailure, onSuccess);
   };
-}
-const [value, setValue] = React.useState(0);
 
-const handleChange = (event, newValue) => {
+  // //Get Courses
+  // let getCourses = () => {
+  //     function onSuccessCourse(response) {
+  //         setMenuCourseItems(response.data);
+  //     }
+
+  //     function onFailureCourse() {
+  //         setErrorBannerMessage('Failed to get courses! Please try again.');
+  //         setErrorBannerFade(true);
+  //     }
+  //     get(
+  //         setFetchCourseResponse,
+  //         endpointGetCourses,
+  //         onFailureCourse,
+  //         onSuccessCourse
+  //     );
+  // };
+
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
- const classes = useStyles();
- return (
-   <div className={classes.root}>
-     <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
-          <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
-          <StyledTab className={classes.tab} label="Completed Scenarios" {...a11yProps(1)} />
+  useEffect(getData, [shouldFetch]);
+
+  if (fetchScenariosResponse.loading) {
+    return (
+      <div>
+        <div style={{ marginTop: '100px' }}>
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
+
+  if (fetchScenariosResponse.error) {
+    return (
+      <div>
+        <div className={classes.issue}>
+          <div className={classes.errorContainer}>
+            <ErrorIcon className={classes.iconError} />
+            <Typography align="center" variant="h3">
+              Error in fetching Scenarios.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={getData}
+            >
+              <RefreshIcon className={classes.iconRefreshLarge} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.root}>
+      <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
+        <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
+        <StyledTab className={classes.tab} label="Completed Scenarios" {...a11yProps(1)} />
       </StyledTabs>
       <TabPanel value={value} index={0}>
-      <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
-       <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
-         <h1>To Do</h1>
-       </Grid>
-       {scenarios.incompleteScenarios.map(scenario => (
-       <Grid item xs={12} sm={6} md={4} lg={3}>
-           <Paper elevation={5} className={classes.paper}>
-             <ScenarioCard
-               title = {scenario.title}
-               course = {scenario.course}
-               date = {scenario.date}
-             />
-             <Button className={classes.button}>Select Scenario</Button>
-           </Paper>
-       </Grid>
-       ))}
-       <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
-        <Box m={2} pt={3}>
-          <CodeButton />
-        </Box>
-       </Grid>
-     </Grid>
+        <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
+          <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
+            <h1>To-Do</h1>
+          </Grid>
+          {scenarios.incompleteScenarios.map(scenario => (
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Paper elevation={5} className={classes.paper}>
+                <ScenarioCard
+                  title={scenario.title}
+                  course={scenario.course}
+                  date={scenario.date}
+                />
+                <Button className={classes.button}>Select Scenario</Button>
+                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
+              </Paper>
+            </Grid>
+          ))}
+          <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
+            <Box m={2} pt={3}>
+              <CodeButton />
+            </Box>
+          </Grid>
+        </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-      <Grid container spacing={2} className={classes.grid}>     {/*completed scenarios section*/}
-       <Grid item xs={12}>
-         <h1>Completed</h1>
-       </Grid>
-       {scenarios.completeScenarios.map(scenario => (
-       <Grid item xs={12} sm={6} md={4} lg={3}>
-         <Paper elevation={5} className={classes.paper}>
-         <ScenarioCard
-             title = {scenario.title}
-             course = {scenario.course}
-             date = {scenario.date}
-           />
-           <Button className={classes.button}>Select Scenario</Button>
-         </Paper>
-       </Grid>
-       ))}
-     </Grid>
+        <Grid container spacing={2} className={classes.grid}>     {/*completed scenarios section*/}
+          <Grid item xs={12}>
+            <h1>Completed</h1>
+          </Grid>
+          {scenarios.completeScenarios.map(scenario => (
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Paper elevation={5} className={classes.paper}>
+                <ScenarioCard
+                  title={scenario.title}
+                  course={scenario.course}
+                  date={scenario.date}
+                />
+                <Button className={classes.button}>Select Scenario</Button>
+                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </TabPanel>
-     
- 
-     
-   </div>
- );
+
+
+
+    </div>
+  );
 }
