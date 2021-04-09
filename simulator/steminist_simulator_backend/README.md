@@ -6,8 +6,9 @@
 - You can use the following to guide on how you can setup your local POSTGRES DV: https://medium.com/@rudipy/how-to-connecting-postgresql-with-a-django-application-f479dc949a11
 
 2. Connect local POSTGRES database to Django application
-- Navigate to ./simulator_backend/simulator_backend/settings.py and change the DB settings to fit with your local DB.
-![database](./img/database_config.png)
+- Navigate to ./simulator_backend/simulator_backend/ directory and add a .env file with the following environment variables:
+
+![environment variables](./img/environment_variables.png)
 
 3. Install dependencies
 ```
