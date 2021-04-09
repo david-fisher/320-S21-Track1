@@ -1,7 +1,7 @@
 import React from "react";
 import Radar from "./chart/chart";
 import { withStyles, Typography, Box, Grid, Button } from "@material-ui/core";
-import { BASE_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios'
 import ScrollableTabsButtonAuto from "./components/tabs"
 

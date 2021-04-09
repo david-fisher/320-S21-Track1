@@ -1,0 +1,44 @@
+version: "3"
+services:
+  frontend:
+    build: 
+      context: .
+    ports:
+      - 443:443
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    container_name: frontend
+    networks:
+      - '320'
+
+  backend-simulator:
+    image: dacollins/ethisim:backend-simulator
+    ports:
+      - 7000:8000
+    environment:
+      - PGHOST=${POSTGRESHOST}
+      - PGUSER=${POSTGRESUSERNAME}
+      - PGPASSWORD=${POSTGRESPASSWORD}
+      - PGDATABASE=${POSTGRESDB}
+      - PGPORT=5432
+    networks:
+      - '320'
+    container_name: backend-simulator
+
+  backend-editor:
+    image: dacollins/ethisim:backend-editor
+    ports:
+      - 8000:8000
+    environment:
+      - POSTGRESHOST=${POSTGRESHOST}
+      - POSTGRESUSERNAME=${POSTGRESUSERNAME}
+      - POSTGRESPASSWORD=${POSTGRESPASSWORD}
+      - POSTGRESDB=${POSTGRESDB}
+    networks:
+      - '320'
+    container_name: backend-editor
+
+networks:
+  '320':

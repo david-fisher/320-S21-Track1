@@ -13,7 +13,7 @@ import Stakeholders from "./stakeholders.js";
 import Feedback from "./feedback.js";
 import { ScenariosContext } from "../Nav.js";
 import axios from "axios";
-import {BASE_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
+import {BACK_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
 
 export const GatheredInfoContext = createContext();
 
@@ -64,7 +64,7 @@ function SimulationWindow() {
 
       axios({
         method: 'get',
-        url: BASE_URL + '/scenarios',
+        url: BACK_URL + '/scenarios',
         headers: {
           studentID: STUDENT_ID,
         }
