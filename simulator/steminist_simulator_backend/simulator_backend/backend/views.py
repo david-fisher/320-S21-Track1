@@ -105,7 +105,7 @@ def scenarioTask(request):
         print("Got scenario task.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
-def finalAction(request):
+def finalActionPrompt(request):
     if request.method == 'GET':
         versionID = int(request.GET['versionId'])
         pageID = int(request.GET['pageId'])
