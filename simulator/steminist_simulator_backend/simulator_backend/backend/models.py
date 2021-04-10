@@ -167,13 +167,14 @@ class GenericPage(models.Model):
 class ActionPage(models.Model):
     action_page_id = models.AutoField(primary_key=True)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    chosen_choice = models.TextField(null=True)
+    chosen_choice = models.IntegerField(null=True)
     result_page = models.IntegerField(null=True)
 
     class Meta:
         db_table = "action_page"
 
 class Choice(models.Model):
+    choices_id = models.AutoField(primary_key=True)
     action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
     choice_text = models.TextField()
     next_page = models.IntegerField()
