@@ -94,7 +94,8 @@
             "version_id": 1, 
             "course_id": 1
         }
-    }, {
+    }, 
+    {
         "model": "backend.AssignedTo",
         "fields": {
             "user_id": 1,
@@ -102,86 +103,103 @@
         }
     },
     {
+        "model": "backend.Stakeholder",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Elon Musk",
+            "description": "",
+            "job": "CEO of Tesla",
+            "introduction": "",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Bill Gates",
+            "description": "",
+            "job": "Founder of Microsoft",
+            "introduction": "",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 1,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "How do you like your coffee?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 2,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "When will Tesla be driveless car?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 3,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What is your usual order at Dick's?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 4,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What is your thoughts on app secretly taking users' data?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 3,
+        "fields": {
+            "page_type": "INITIALACTION",
+            "page_title": "Initial Action Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": 4,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
         "model": "backend.ActionPage",
         "pk": 1,
         "fields": {
             "page_id": 3,
-            "choice": 0,
+            "choice": "",
             "result_page": 0
         }
     },
     {
-        "model": "backend.Choice",
+        "model": "backend.Choices",
         "fields": {
             "action_page_id": 1,
-            "choice": {
-                "1": "Go on with project",
-                "2": "Postpone project and ask questions"
-            },
-            "result_page": {
-                "1": 4,
-                "2": 5
-            }
+            "choice": "Procede with project.",
+            "result_page": 4
         }
     },
     {
-        "model": "backend.StakeholderPage",
+        "model": "backend.Choices",
         "fields": {
-            "page_id": 5,
-            "stakeholder_id": {
-                "1": 1,
-                "2": 2
-            }
-        }
-    },
-    {
-        "model": "backend.Stakeholder",
-        "pk": 1,
-        "fields": {
-            "version_id": 1,
-            "name": "Elon Musk",
-            "description": "He is the one with many Executives surrounding him",
-            "job": "CEO of Tesla",
-            "introduction": "You are wandering in a park thinking about the issue you are facing and how to address it with your supervisor. You look up and here he is Elon Musk himself. The idead of consulting him sparks in your mind."
-            "photopath": "elonmusk.jpg"
-        }
-    },
-    {
-        "model": "backend.Stakeholder",
-        "pk": 2,
-        "fields": {
-            "version_id": 1,
-            "name": "Bill Gates",
-            "description": "One of the great minds of the world. He has dealt with many ethical dillemma.",
-            "job": "Founder of Microsoft",
-            "introduction": "You are visiting your sister in Seattle, WA. You come to Dick's drive thru, a renowed Seattle fast food chain. Little do you know, Gates is standing right behind you. He overhear your conversation with your sister about your concern and decide to weigh in."
-            "photopath": "billgates.jpg"
-        }
-    },
-    {
-        "model": "backend.Conversation",
-        "pk": 1,
-        "fields" {
-            "stakeholder_id": 2,
-            "question": {
-                "1": "What is your thoughts on data privacy?"
-            },
-            "response_id": {
-                "1": "There must be transparency."
-            }
-        }
-    },
-    {
-        "model": "backend.Conversation",
-        "pk": 2,
-        "fields" {
-            "stakeholder_id": 1,
-            "question": {
-                "1": "What is your thoughts on dark pattern design?"
-            },
-            "response_id": {
-                "1": "We use it all the time!! It's no biggie!"
-            }
+            "action_page_id": 1,
+            "choice": "Postpone and ask questions.",
+            "result_page": 5
         }
     }
   ]

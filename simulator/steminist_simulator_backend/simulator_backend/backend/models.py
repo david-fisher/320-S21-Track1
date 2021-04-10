@@ -113,9 +113,10 @@ class ScenariosFor(models.Model):
 class Stakeholder(models.Model):
     stakeholder_id = models.AutoField(primary_key=True)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    name = models.CharField(blank=False, max_length=100)
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
+    name = models.TextField(blank=False)
     description = models.TextField()
-    job = models.CharField(blank=False, max_length=100)
+    job = models.TextField(blank=False)
     introduction = models.TextField()
     photopath = models.TextField()
 
@@ -173,6 +174,14 @@ class ActionPage(models.Model):
     class Meta:
         db_table = "action_page"
 
+class Choices(models.Model):
+    action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
+    choice = models.TextField(blank=False)
+    result_page = models.IntegerField(blank=False)
+
+    class Meta:
+        db_table = "choices"
+
 class ActionsTaken(models.Model):
     # response_id = models.ForeignKey(Responses.response_id, on_delete=CASCADE)
     response_id = models.IntegerField()
@@ -229,7 +238,4 @@ class StudentTime(models.Model):
     class Meta:
         db_table = "student_time"
         
-class Choice(models.Model):
-    action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
-    choice = models.TextField()
-    result_page = models.IntegerField()
+

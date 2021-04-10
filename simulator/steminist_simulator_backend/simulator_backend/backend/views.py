@@ -107,92 +107,90 @@ def scenarioTask(request):
 
 
 def initialAction(request):
-    if request.method == 'GET':
-        jsonData = json.loads(request.body)
-        versionID = jsonData['versionId']
-        pageID = jsonData['pageId']
+    print("initial action")
+    if request.method == "GET":
+        versionID = int(request.GET['versionId'])
+        pageID = int(request.GET['pageId'])
         
         if not isinstance(versionID, int):
             print("Invalid Version ID")
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
         elif not isinstance(pageID, int):
-            print("Invalid page ID")
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID'})
+            print("Invalid Page ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
         else:
             try:
-                actionPageID = md.ActionPage.objects.filter(page_id=pageID).values('action_page_id')
-                initialActionQuerySet = md.Choice.objects.filter(action_page_id__in=actionPageID).values('action_page_id', 'choice', 'result_page')
+                pageQuerySet = md.Page.objects.filter(version_id=versionID, page_id=pageID).values('page_id')
+                if len(pageQuerySet) == 0:
+                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No initial action found’"})
+                actionPageQuerySet = md.ActionPage.objects.filter(page_id__in=pageQuerySet).values('action_page_id')
+                if len(actionPageQuerySet) == 0:
+                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No initial action found’"})
+                initialActionQuerySet = md.Choices.objects.filter(action_page_id__in=actionPageQuerySet).values('choice', 'result_page')
+                if len(initialActionQuerySet) == 0:
+                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No initial action found’"})
                 resultData = list(initialActionQuerySet)
-                if len(resultData) == 0:
-                return JsonResponse(status=404, data={'status': 404,
-                                                      'message': "No Action found base on given page ID"})
             except Exception as ex:
                 loggin.exception("Exception thrown: Query Failed to retrieve Initial Action")
             
-        print("Got scenario task.")
-        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': {}})
-    
+            print("Got initial actions.")
+            return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
+
 
 def stakeholder(request):
-    if request.method == 'GET':
-        jsonData = json.loads(request.body)
-        versionID = jsonData['versionId']
-        pageID = jsonData['pageId']
+    if request.method == "GET":
+        versionID = int(request.GET['versionId'])
+        scenarioID = int(request.GET['scenarioId'])
         
         if not isinstance(versionID, int):
             print("Invalid Version ID")
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
-        elif not isinstance(pageID, int):
-            print("Invalid page ID")
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID'})
+        elif not isinstance(scenarioID, int):
+            print("Invalid Scenario ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
         else:
             try:
-                stakeholdersID = md.StakeholderPage.objects.filter(page_id=pageID).values('stakeholder_id')
-                if len(stakeholdersID) == 0:
-                    return JsonResponse(status=404, data={'status': 404,
-                                                          'message': "‘No statekholder found base on given Page ID’"})
-                stakeholderQuerySet = md.Stakeholder.objects.filter(stakeholder_id__in = stakeholdersID, version_id = versionID)\
+                stakeholderQuerySet = md.Stakeholder.objects.filter(scenario_id = scenarioID, version_id = versionID)\
                     .values('stakeholder_id', 'name', 'description', 'job', 'introduction', 'photopath')
                 if len(stakeholderQuerySet) == 0:
-                    return JsonResponse(status=404, data={'status': 404,
-                                                          'message': "‘No statekholder found base on given Version ID’"})
+                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No statekholder found’"})
                 resultData = list(stakeholderQuerySet)
             except Exception as ex:
                 loggin.exception("Exception thrown: Query Failed to retrieve Stakeholder")
             
             print("Got stakeholders.")
-            return JsonResponse(status=200, data={
-                'status': 200,
-                'message': 'succes',
-                'result': resultData
-            })
+            return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
     
     
 def conversation(request):
-    if request.method == 'GET':
-        jsonData = json.loads(request.body)
-        versionID = jsonData['versionId']
-        statekholderID = jsonData['stakeholderId']
+    print("in conversation")
+    if request.method == "GET":
+        versionID = int(request.GET['versionId'])
+        scenarioID = int(request.GET['scenarioId'])
+        stakeholderID = int(request.GET['stakeholderId'])
         
-        if not isinstance(statekholderID, int):
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid stakeholder ID'})
-        elif not isinstance(versionID, int):
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid version ID'})
+        if not isinstance(versionID, int):
+            print("Invalid Version ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
+        elif not isinstance(scenarioID, int):
+            print("Invalid Scenario ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
+        elif not isinstance(stakeholderID, int):
+            print("Invalid Stakeholder ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Stakeholder ID'})
         else:
             try:
-                stakeholderId = md.Stakeholder.objects.filter(version_id=versionID, stakeholder_id=stakeholderID).values('stakeholder_id')
-                conversationQuerySet = md.Conversations.objects.filter(stakekholder_id__in=stakekholderId)\
-                    .values('conversation_id', 'question', 'response_id')
+                stakeholderQuerySet = md.Stakeholder.objects.filter(scenario_id = scenarioID, version_id = versionID, stakeholder_id=stakeholderID)\
+                    .values('stakeholder_id')
+                if len(stakeholderQuerySet) == 0:
+                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No conversation found’"})
+                conversationQuerySet = md.Conversation.objects.filter(stakeholder_id__in=stakeholderQuerySet)\
+                    .values('conversation_id', 'stakeholder_id', 'question', 'response_id')
                 if len(conversationQuerySet) == 0:
-                    return JsonResponse(status=404, data={'status': 404,'message': "No conversation found base on Stakeholder ID"})
+                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No conversation found’"})
                 resultData = list(conversationQuerySet)
             except Exception as ex:
                 loggin.exception("Exception thrown: Query Failed to retrieve Conversation")
-
-            print("Got conversations.")
-            return JsonResponse(status=200, data={
-                'status': 200,
-                'message': 'success',
-                'result': resultData
-            })
-
+            
+            print("Got conversation.")
+            return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
