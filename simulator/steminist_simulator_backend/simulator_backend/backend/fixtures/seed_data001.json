@@ -94,11 +94,53 @@
             "version_id": 1, 
             "course_id": 1
         }
-    }, {
+    }, 
+    {
         "model": "backend.AssignedTo",
         "fields": {
             "user_id": 1,
             "version_id": 1
         }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 10,
+        "fields": {
+            "page_type": "ACTION",
+            "page_title": "Final Action Page",
+            "version_id": 1,
+            "body": "Having talked to the stakeholders, what is your course of action?",
+            "next_page": -1,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPage",
+        "pk": 1,
+        "fields": {
+            "action_page_id": 1,
+            "page_id": 10,
+            "chosen_choice": null,
+            "result_page": null
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 1,
+        "fields": {
+            "action_page_id": 1,
+            "choice_text": "Approve project assignment.",
+            "next_page": 11
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 2,
+        "fields": {
+            "action_page_id": 1,
+            "choice_text": "Deny project assignment.",
+            "next_page": 11
+        }
     }
-  ]
+]

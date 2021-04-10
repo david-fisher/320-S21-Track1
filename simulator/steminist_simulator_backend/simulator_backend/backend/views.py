@@ -96,7 +96,7 @@ def scenarioTask(request):
             # If no pages with the given versionId and pageId are found, return 404 error
             if len(scenarioTaskQuerySet) == 0:
                 return JsonResponse(status=404, data={'status': 404,
-                                                      'message': '‘No task page found base on given Version ID’'})
+                                                      'message': '‘No task page found based on given Version ID’'})
 
             resultData = list(scenarioTaskQuerySet)
         except Exception as ex:
@@ -105,3 +105,36 @@ def scenarioTask(request):
         print("Got scenario task.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
+def finalAction(request):
+    if request.method == 'GET':
+        versionID = int(request.GET['versionId'])
+        pageID = int(request.GET['pageId'])
+
+        if not isinstance(versionID, int):
+            print("Invalid Version ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
+        elif not isinstance(pageID, int):
+            print("Invalid page ID")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID'})
+        else:
+            try:
+                pageQuerySet = md.Page.objects.filter(page_id=pageID, version_id=versionID)\
+                                .values('page_id', 'page_type', 'page_title', 'version_id', 'body')
+                actionPageIDQuerySet = md.ActionPage.objects.filter(page_id=pageID).values_list('action_page_id')
+                actionPageChoicesQuerySet = md.Choice.objects.filter(action_page_id__in=actionPageIDQuerySet)\
+                                            .values('choice_text')                      
+                
+                if len(pageQuerySet) == 0:
+                    return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'No final action page found based on given Version ID'})
+                elif len(actionPageIDQuerySet) == 0:
+                    return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'The given pageId is not an action page'})
+
+                resultData = list(pageQuerySet)[0]
+                resultData["choices"] = list(actionPageChoicesQuerySet)
+
+            except Exception as ex:
+                logging.exception("Exception thrown: Query Failed to retrieve Page")
+            
+            return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
