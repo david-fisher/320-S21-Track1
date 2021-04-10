@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
 class UserType(models.Model):
@@ -166,19 +167,20 @@ class GenericPage(models.Model):
 class ActionPage(models.Model):
     action_page_id = models.AutoField(primary_key=True)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    choice = models.TextField()
-    result_page = models.IntegerField()
+    chosen_choice = models.IntegerField(null=True)
+    result_page = models.IntegerField(null=True)
 
     class Meta:
         db_table = "action_page"
 
-class ActionsTaken(models.Model):
-    # response_id = models.ForeignKey(Responses.response_id, on_delete=CASCADE)
-    response_id = models.IntegerField()
-    action_page = models.ForeignKey(ActionPage, on_delete=CASCADE) 
+class Choice(models.Model):
+    choices_id = models.AutoField(primary_key=True)
+    action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
+    choice_text = models.TextField()
+    next_page = models.IntegerField()
 
     class Meta:
-        db_table = "actions_taken"
+        db_table = "choice"
 
 class Issue(models.Model):
     issue_id = models.AutoField(primary_key=True)
