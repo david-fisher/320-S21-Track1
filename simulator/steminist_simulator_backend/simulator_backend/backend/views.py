@@ -119,18 +119,24 @@ def finalActionPrompt(request):
         else:
             resultData = None
             try:
+                versionQuerySet = md.Version.objects.filter(version_id=versionID)
+                if len(list(versionQuerySet)) == 0:
+                    return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'No version found with the given versionId'})
+
                 pageQuerySet = md.Page.objects.filter(page_id=pageID, version_id=versionID)\
                                 .values('page_id', 'page_type', 'page_title', 'version_id', 'body')
+                if len(list(pageQuerySet)) == 0:
+                    return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'No final action page found based on given page Id and version Id'})
+
                 actionPageIDQuerySet = md.ActionPage.objects.filter(page_id=pageID).values_list('action_page_id')
                 actionPageChoicesQuerySet = md.Choice.objects.filter(action_page_id__in=actionPageIDQuerySet)\
                                             .values('choices_id', 'action_page_id', 'choice_text')                      
                 
-                if len(pageQuerySet) == 0:
+                if len(list(actionPageIDQuerySet)) == 0:
                     return JsonResponse(status=404, data={'status': 404,
-                                                      'message': 'No final action page found based on given Version ID'})
-                elif len(actionPageIDQuerySet) == 0:
-                    return JsonResponse(status=404, data={'status': 404,
-                                                      'message': 'The given pageId is not an action page'})
+                                                      'message': 'No final action page found based on given page Id and version Id'})
 
                 resultData = list(pageQuerySet)[0]
                 resultData["choices"] = list(actionPageChoicesQuerySet)
@@ -165,7 +171,7 @@ def finalAction(request):
 
             if len(actionPage) == 0:
                 return JsonResponse(status=404, data={'status': 404,
-                                                    'message': 'No final action page found based on given page Id'})
+                                                    'message': 'No final action found based on given page Id'})
 
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
