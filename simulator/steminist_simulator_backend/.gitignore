@@ -1,3 +1,4 @@
 .idea
 /simulator_backend/backend/__pycache__/
 /simulator_backend/simulator_backend/__pycache__/
+/simulator_backend/backend/migrations/__pycache__/
