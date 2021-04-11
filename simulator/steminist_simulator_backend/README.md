@@ -35,3 +35,25 @@ python manage.py runserver
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
 - Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
+
+
+## If you run into errors with Postgres, it will be helpful to drop the steminist_backend database and start from scratch:
+1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
+There is more than 1 way to do this step.
+```
+psql -U postgres
+```
+2. Drop simulator_backend database and create it again.
+```
+DROP DATABASE simulator_backend;
+CREATE DATABASE simulator_backend;
+```
+3. Grant all privileges to your postgres user.
+```
+GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
+```
+4. Exit postgres command line.
+```
+\q
+```
+5. Continue from Step 4 above(Apply migrations to your local DB).
