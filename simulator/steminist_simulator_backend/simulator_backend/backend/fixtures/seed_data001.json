@@ -115,13 +115,53 @@
         }
     },
     {
+        "model": "backend.Page",
+        "pk": 3,
+        "fields": {
+            "page_type": "INITIALACTION",
+            "page_title": "Initial Action Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": 4,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPage",
+        "pk": 2,
+        "fields": {
+            "page_id": 3,
+            "chosen_choice": null,
+            "result_page": null
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 3,
+        "fields": {
+            "action_page_id": 2,
+            "choice_text": "Procede with project.",
+            "next_page": 4
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 4,
+        "fields": {
+            "action_page_id": 2,
+            "choice_text": "Postpone and ask questions.",
+            "next_page": 5
+        }
+    },
+    {
         "model": "backend.Stakeholder",
         "pk": 1,
         "fields": {
             "version_id": 1,
             "scenario_id": 1,
             "name": "Elon Musk",
-            "description": "",
+            "description": "Very cool.",
             "job": "CEO of Tesla",
             "introduction": "",
             "photopath": ""
@@ -134,7 +174,7 @@
             "version_id": 1,
             "scenario_id": 1,
             "name": "Bill Gates",
-            "description": "",
+            "description": "Not that cool",
             "job": "Founder of Microsoft",
             "introduction": "",
             "photopath": ""
@@ -174,44 +214,6 @@
             "stakeholder_id": 2,
             "question": "What is your thoughts on app secretly taking users' data?",
             "response_id": ""
-        }
-    },
-    {
-        "model": "backend.Page",
-        "pk": 3,
-        "fields": {
-            "page_type": "INITIALACTION",
-            "page_title": "Initial Action Page",
-            "version_id": 1,
-            "body": "",
-            "next_page": 4,
-            "x_coordinate": 0,
-            "y_coordinate": 0
-        }
-    },
-    {
-        "model": "backend.ActionPage",
-        "pk": 1,
-        "fields": {
-            "page_id": 3,
-            "choice": "",
-            "result_page": 0
-        }
-    },
-    {
-        "model": "backend.Choices",
-        "fields": {
-            "action_page_id": 1,
-            "choice": "Procede with project.",
-            "result_page": 4
-        }
-    },
-    {
-        "model": "backend.Choices",
-        "fields": {
-            "action_page_id": 1,
-            "choice": "Postpone and ask questions.",
-            "result_page": 5
         }
     }
 ]
