@@ -19,11 +19,22 @@
         "model": "backend.Scenario",
         "pk": 1,
         "fields": {
-            "name": "Privacy Dilemma Scenario",
             "user_id": 1,
             "public": true,
             "is_finished": false,
             "date_created": "2020-01-01"
+        }
+    },
+    {
+        "model": "backend.Session",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "scenario_id": 1,
+            "version_id": 1,
+            "course_id": 1,
+            "date_started": "2020-01-01",
+            "is_finished": false
         }
     },
     {
@@ -57,7 +68,7 @@
         "pk": 1,
         "fields": {
             "scenario_id": 1,
-            "name": "Privacy Dilemma Scenario Version 1.0",
+            "name": "Privacy Dilemma Scenario",
             "num_conversation": 5,
             "first_page": 1
         }

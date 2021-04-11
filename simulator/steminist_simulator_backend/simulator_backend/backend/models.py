@@ -15,7 +15,6 @@ class Course(models.Model):
 class Scenario(models.Model):
     scenario_id = models.AutoField(primary_key=True)
     user_id = models.IntegerField() # not sure what this is for
-    name = models.CharField(max_length=100, blank=False)
     public = models.BooleanField()
     is_finished = models.BooleanField()
     date_created = models.DateField()

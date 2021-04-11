@@ -7,6 +7,6 @@ urlpatterns = [
     path('scenarios', views.scenarios, name='scenarios'),
     path('scenarios/intro', views.scenarioIntroduction, name='scenarioIntroduction'),
     path('scenarios/task', views.scenarioTask, name='scenarioTask'),
-    path('scenarios/finalAction/prompt', views.finalActionPrompt, name='scenarioFinalActionPrompt'),
-    path('scenarios/finalAction', views.finalAction, name='scenarioFinalAction')
+    path('scenarios/action/prompt', views.actionPrompt, name='scenarioActionPrompt'),
+    path('scenarios/action', views.action, name='scenarioAction')
 ]
