@@ -101,10 +101,12 @@ class Response(models.Model):
 class Stakeholder(models.Model):
     stakeholder_id = models.AutoField(primary_key=True)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    name = models.CharField(blank=False, max_length=100)
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
+    name = models.TextField(blank=False)
     description = models.TextField()
-    job = models.CharField(blank=False, max_length=100)
+    job = models.TextField(blank=False)
     introduction = models.TextField()
+    photopath = models.TextField()
 
     class Meta:
         db_table = "stakeholders"
