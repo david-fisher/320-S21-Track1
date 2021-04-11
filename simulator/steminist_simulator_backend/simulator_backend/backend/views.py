@@ -155,7 +155,7 @@ def conversation(request):
             print("Got conversation.")
             return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
 
-            
+
 def actionPrompt(request):
     if request.method == 'GET':
         versionID = int(request.GET['versionId'])
@@ -233,8 +233,6 @@ def action(request):
             # Check if the choiceId exist
             try:
                 choiceObj = md.Choice.objects.get(choices_id=choiceId)
-                choiceId = choiceObj.choices_id
-                choiceText = choiceObj.choice_text
             except md.ActionPage.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'No Choice found based on given choice Id'})
@@ -248,28 +246,31 @@ def action(request):
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'Session not found based on give params'})
 
-            # If choice hasn't been submitted, save the given choiceId in ActionPage object and create new 
-            # Response object for the new choice.
+            # If response hasn't been submitted for given page, create new Response object for the action submission.
             response = None
-            if actionPage.chosen_choice == None:
-                actionPage.chosen_choice = choiceId
-                actionPage.result_page = choiceObj.next_page
-                actionPage.save()
-
-                # Add a response for the given choice
-                responseObj = md.Response(session_id=session, version_id=version, page_id=page,
-                                          date_taken=datetime.now(), course_id=course, choice=choiceText)
-            
-                response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
-                responseObj.save()
-            # If choice has been submitted, return the 400 error code with the response object.
-            else:
+            try:
                 responseObj = md.Response.objects.get(session_id=session, version_id=version, page_id=pageID)
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
+
+                # Add choiceText and nextPage field to response obj
+                response['choice_text'] = choiceObj.choice_text
+                response['next_page'] = choiceObj.next_page
 
                 return JsonResponse(status=400, data={'status': 400,
                                                     'message': 'Response has already been submitted for this page.',
                                                     'result': response})
+            except md.Response.DoesNotExist:
+                # Add a response for the given choice
+                responseObj = md.Response(session_id=session, version_id=version, page_id=page,
+                                          date_taken=datetime.now(), course_id=course, choice=choiceObj.choices_id)
+            
+                response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
+
+                # Add choiceText and nextPage field to response obj
+                response['choice_text'] = choiceObj.choice_text
+                response['next_page'] = choiceObj.next_page
+
+                responseObj.save()
 
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
@@ -313,16 +314,22 @@ def action(request):
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'Session not found based on give params'})
 
-            # If action hasn't been submitted, save the given choiceId in ActionPage object and create new 
-            # Response object for the new choice.
             response = None
-            if actionPage.chosen_choice == None:
-                return JsonResponse(status=404, data={'status': 404, 'message': 'Action hasnt been submitted yet', 'result': None})
-            # If choice has been submitted, return the 400 error code with the response object.
-            else:
-                responseObj = md.Response.objects.get(session_id=session, version_id=version, page_id=page)
+            try:
+                responseObj = md.Response.objects.get(session_id=session, version_id=version, page_id=pageID)
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
 
-                return JsonResponse(status=400, data={'status': 400, 'message': 'success', 'result': response})
+                # Retrieve choiceObject from responseObj above
+                choiceObj = md.Choice.objects.get(choices_id=int(responseObj.choice))
+
+                # Add choiceText and nextPage field to return obj
+                response['choice_text'] = choiceObj.choice_text
+                response['next_page'] = choiceObj.next_page
+
+                return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': response})
+            
+            except md.Response.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404, 'message': 'Action hasnt been submitted yet', 'result': None})
+
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
