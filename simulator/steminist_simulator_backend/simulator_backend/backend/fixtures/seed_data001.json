@@ -1,12 +1,5 @@
 [
     {
-      "model": "backend.UserType",
-      "pk": 1,
-      "fields": {
-        "name": "non-guest"
-      }
-    },
-    {
         "model": "backend.Course",
         "pk": 1,
         "fields": {
@@ -14,29 +7,12 @@
         }
     },
     {
-        "model": "backend.User",
+        "model": "backend.ScenarioForUser",
         "pk": 1,
         "fields": {
-            "email": "gerrygan@example.com",
-            "firstname": "Gerry",
-            "lastname": "Gan",
-            "date_joined": "2021-01-01",
-            "user_type_id": 1,
-            "editor": false
-        }
-    },
-    {
-        "model": "backend.StudentsIn",
-        "fields": {
-            "user_id": 1,
-            "course_id": 1
-        }
-    },
-    {
-        "model": "backend.Major",
-        "pk": 1,
-        "fields": {
-            "name": "Computer Science"
+            "scenario_id": 1,
+            "version_id": 1,
+            "user_id": 1
         }
     },
     {
@@ -46,7 +22,7 @@
             "name": "Privacy Dilemma Scenario",
             "user_id": 1,
             "public": true,
-            "is_finished": true,
+            "is_finished": false,
             "date_created": "2020-01-01"
         }
     },
@@ -84,22 +60,6 @@
             "name": "Privacy Dilemma Scenario Version 1.0",
             "num_conversation": 5,
             "first_page": 1
-        }
-    },
-    {
-        "model": "backend.ScenariosFor",
-        "pk": 1,
-        "fields": {
-            "scenario_id": 1,
-            "version_id": 1, 
-            "course_id": 1
-        }
-    }, 
-    {
-        "model": "backend.AssignedTo",
-        "fields": {
-            "user_id": 1,
-            "version_id": 1
         }
     },
     {

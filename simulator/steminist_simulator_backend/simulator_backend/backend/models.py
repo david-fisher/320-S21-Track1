@@ -1,54 +1,16 @@
 from django.db import models
+from django.db.models.aggregates import Max
 from django.db.models.deletion import CASCADE
-from django.db.models.fields.related import ForeignKey
+from django.db.models.fields.related import ForeignKey, OneToOneField
 
 # Create your models here.
-class UserType(models.Model):
-    user_type_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, blank=False)
-
-    class Meta:
-        db_table = "user_type"
-
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    email = models.EmailField(blank=False)
-    firstname = models.CharField(blank=False, max_length=100)
-    lastname = models.CharField(blank=False, max_length=100)
-    date_joined = models.DateField()
-    user_type_id = models.ForeignKey(UserType, on_delete=CASCADE)
-    editor = models.BooleanField()
-
-    class Meta:
-        db_table = "user"
 
 class Course(models.Model):
     course_id = models.AutoField(primary_key=True)
     name = models.CharField(blank=False, max_length=100)
 
     class Meta:
-        db_table = "course"
-
-class StudentsIn(models.Model):
-    user_id = models.ForeignKey(User, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
-
-    class Meta:
-        db_table = "students_in"
-
-class Major(models.Model):
-    major_id = models.AutoField(primary_key=True)
-    name = models.CharField(blank=False, max_length=200)
-
-    class Meta:
-        db_table = "major"
-
-class ProfessorTeach(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
-
-    class Meta:
-        db_table = "professor_teach"
+        db_table = "courses"
     
 class Scenario(models.Model):
     scenario_id = models.AutoField(primary_key=True)
@@ -59,7 +21,7 @@ class Scenario(models.Model):
     date_created = models.DateField()
 
     class Meta:
-        db_table = "scenario"
+        db_table = "scenarios"
     
 class Page(models.Model):
     page_id = models.AutoField(primary_key=True)
@@ -72,7 +34,7 @@ class Page(models.Model):
     y_coordinate = models.IntegerField()
 
     class Meta:
-        db_table = "page"
+        db_table = "pages"
 
 class Version(models.Model):
     version_id = models.AutoField(primary_key=True)
@@ -82,11 +44,52 @@ class Version(models.Model):
     first_page = models.ForeignKey(Page, on_delete=CASCADE)
 
     class Meta:
-        db_table = "version"
+        db_table = "versions"
+
+class Change(models.Model):
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    asset_changed = models.CharField(max_length=1000)
+    new_content = models.TextField()
+    forked_from = models.IntegerField()
+
+    class Meta:
+        db_table = "changes"
+
+class Session(models.Model):
+    session_id = models.AutoField(primary_key=True)
+    user_id = models.IntegerField()
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    date_started = models.DateTimeField()
+    is_finished = models.BooleanField()
+
+    class Meta:
+        db_table = "sessions"
+
+class SessionTime(models.Model):
+    session_id = models.ForeignKey(Session, on_delete=CASCADE)
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    date_taken = models.DateTimeField()
+    page_id = models.ForeignKey(Page, on_delete=CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    class Meta:
+        db_table = "session_times"
+
+class ScenarioForUser(models.Model):
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    user_id = models.IntegerField()
+
+    class Meta:
+        db_table = "scenario_for_user"
 
 class Response(models.Model):
     response_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=CASCADE)
+    session_id = models.ForeignKey(Session, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
@@ -94,22 +97,7 @@ class Response(models.Model):
     choice = models.TextField()
 
     class Meta:
-        db_table = "response"
-
-class AssignedTo(models.Model):
-    user_id = models.ForeignKey(User, on_delete=CASCADE)
-    version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    
-    class Meta:
-        db_table = "assigned_to"
-
-class ScenariosFor(models.Model):
-    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
-    version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
-
-    class Meta:
-        db_table = "scenarios_for"
+        db_table = "responses"
 
 class Stakeholder(models.Model):
     stakeholder_id = models.AutoField(primary_key=True)
@@ -120,13 +108,10 @@ class Stakeholder(models.Model):
     introduction = models.TextField()
 
     class Meta:
-        db_table = "stakeholder"
+        db_table = "stakeholders"
 
 class ConversationsHad(models.Model):
-    # Cannot seem to reference a particular column, can only reference a model
-    # user_id = models.ForeignKey(Responses.user_id, on_delete=CASCADE)
-    user_id = models.IntegerField()
-    # course_id = models.ForeignKey(Responses.course_id, on_delete=CASCADE)
+    session_id = models.ForeignKey(Session, on_delete=CASCADE)
     course_id = models.IntegerField()
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
@@ -140,26 +125,16 @@ class ConversationsHad(models.Model):
 
 class Conversation(models.Model):
     conversation_id = models.AutoField(primary_key=True)
-    scenario_id = models.IntegerField()
     stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
     question = models.TextField()
     response_id = models.TextField()
 
     class Meta:
-        db_table = "conversation"
-
-class ReflectionQuestion(models.Model):
-    reflection_question_id = models.AutoField(primary_key=True)
-    page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    reflection_question = models.TextField()
-
-    class Meta:
-        db_table = "reflection_question"
+        db_table = "conversations"
 
 class GenericPage(models.Model):
     generic_page_id = models.AutoField(primary_key=True)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    body = models.TextField()
 
     class Meta:
         db_table = "generic_page"
@@ -185,11 +160,12 @@ class Choice(models.Model):
 class Issue(models.Model):
     issue_id = models.AutoField(primary_key=True)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
     name = models.TextField()
     importance_score = models.IntegerField()
 
     class Meta:
-        db_table = "issue"
+        db_table = "issues"
 
 class StakeholderPage(models.Model):
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
@@ -207,8 +183,8 @@ class Coverage(models.Model):
         db_table = "coverage"
 
 class ReflectionsTaken(models.Model):
-    reflections = models.CharField(max_length=100)
-    user_id = models.ForeignKey(User, on_delete=CASCADE)
+    reflections = models.TextField()
+    session_id = models.ForeignKey(Session, on_delete=CASCADE)
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
@@ -218,14 +194,17 @@ class ReflectionsTaken(models.Model):
     class Meta:
         db_table = "reflections_taken"
 
-class StudentTime(models.Model):
-    user_id = models.ForeignKey(User, on_delete=CASCADE)
-    course_id = models.IntegerField()
+class Asset(models.Model):
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    date_taken = models.DateTimeField()
-    page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    name = models.CharField(max_length=100)
+    content = models.TextField()
 
     class Meta:
-        db_table = "student_time"
+        db_table = "asset"
+
+class Invitation(models.Model):
+    invitation_key = models.TextField()
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "invitations"
