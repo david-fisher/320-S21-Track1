@@ -41,7 +41,7 @@
         "model": "backend.Page",
         "pk": 1,
         "fields": {
-            "page_type": "PLAIN",
+            "page_type": "INTRODUCTION",
             "page_title": "Simulator Introduction",
             "version_id": 1,
             "body": "Many software engineers trainees and providers have reported feeling unprepared for the ethical dilemmas they faced while practicing in real life. Simulation is an effective teaching modality in the training of  professionals. This resource describes the development, implementation, and assessment of an innovative simulation training program for global ethics.",
@@ -54,7 +54,7 @@
         "model": "backend.Page",
         "pk": 2,
         "fields": {
-            "page_type": "PLAIN",
+            "page_type": "TASKPAGE",
             "page_title": "Task Page",
             "version_id": 1,
             "body": "You are a software engineer at Walmart Labs working on building a smart refridgerator with voice control and image recognition to keep track of produce.",
@@ -77,7 +77,7 @@
         "model": "backend.Page",
         "pk": 10,
         "fields": {
-            "page_type": "ACTION",
+            "page_type": "FINALACTION",
             "page_title": "Final Action Page",
             "version_id": 1,
             "body": "Having talked to the stakeholders, what is your course of action?",
