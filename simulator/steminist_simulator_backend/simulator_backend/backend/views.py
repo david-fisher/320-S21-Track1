@@ -7,6 +7,7 @@ from rest_framework.response import Response
 import json
 import logging
 
+from django.db.models import F
 from django.db import connection
 
 INTROPAGE = 1
@@ -37,9 +38,10 @@ def scenarios(request):
         return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid User ID: ' + str(userId)})
     else:
         try:
-            versionIdQuerySet = md.AssignedTo.objects.filter(user_id=userId).values_list('version_id')
+            versionIdQuerySet = md.ScenarioForUser.objects.filter(user_id=userId).values_list('version_id')
             scenarioVersionQuerySet = md.Version.objects.filter(version_id__in=versionIdQuerySet)\
-                                        .values('version_id', 'name', 'num_conversation', 'first_page')
+                                        .values('version_id', 'name', 'num_conversation', 'first_page', 
+                                                is_finished=F('scenario_id__is_finished'), date_created=F('scenario_id__date_created'))
 
             # If no scenarios with the given userId were found, return 404 error
             if len(scenarioVersionQuerySet) == 0:
