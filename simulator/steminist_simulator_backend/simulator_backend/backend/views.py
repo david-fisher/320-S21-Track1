@@ -162,8 +162,12 @@ def finalAction(request):
             print("Invalid page ID")
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID'})
         
-        resultData = None
         try:
+            versionQuerySet = md.Version.objects.filter(version_id=versionID)
+            if len(list(versionQuerySet)) == 0:
+                return JsonResponse(status=404, data={'status': 404,
+                                                    'message': 'No version found with the given versionId'})
+
             actionPageIDQuerySet = md.ActionPage.objects.filter(page_id=pageID).values_list('action_page_id')
             md.ActionPage.objects.filter(action_page_id__in=actionPageIDQuerySet)\
                            .update(chosen_choice=choiceId)
