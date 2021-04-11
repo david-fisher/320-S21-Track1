@@ -1,12 +1,5 @@
 [
     {
-      "model": "backend.UserType",
-      "pk": 1,
-      "fields": {
-        "name": "non-guest"
-      }
-    },
-    {
         "model": "backend.Course",
         "pk": 1,
         "fields": {
@@ -14,40 +7,34 @@
         }
     },
     {
-        "model": "backend.User",
+        "model": "backend.ScenarioForUser",
         "pk": 1,
         "fields": {
-            "email": "gerrygan@example.com",
-            "firstname": "Gerry",
-            "lastname": "Gan",
-            "date_joined": "2021-01-01",
-            "user_type_id": 1,
-            "editor": false
-        }
-    },
-    {
-        "model": "backend.StudentsIn",
-        "fields": {
-            "user_id": 1,
-            "course_id": 1
-        }
-    },
-    {
-        "model": "backend.Major",
-        "pk": 1,
-        "fields": {
-            "name": "Computer Science"
+            "scenario_id": 1,
+            "version_id": 1,
+            "user_id": 1
         }
     },
     {
         "model": "backend.Scenario",
         "pk": 1,
         "fields": {
-            "name": "Privacy Dilemma Scenario",
             "user_id": 1,
             "public": true,
-            "is_finished": true,
+            "is_finished": false,
             "date_created": "2020-01-01"
+        }
+    },
+    {
+        "model": "backend.Session",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "scenario_id": 1,
+            "version_id": 1,
+            "course_id": 1,
+            "date_started": "2020-01-01",
+            "is_finished": false
         }
     },
     {
@@ -81,25 +68,50 @@
         "pk": 1,
         "fields": {
             "scenario_id": 1,
-            "name": "Privacy Dilemma Scenario Version 1.0",
+            "name": "Privacy Dilemma Scenario",
             "num_conversation": 5,
             "first_page": 1
         }
     },
     {
-        "model": "backend.ScenariosFor",
+        "model": "backend.Page",
+        "pk": 10,
+        "fields": {
+            "page_type": "ACTION",
+            "page_title": "Final Action Page",
+            "version_id": 1,
+            "body": "Having talked to the stakeholders, what is your course of action?",
+            "next_page": -1,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPage",
         "pk": 1,
         "fields": {
-            "scenario_id": 1,
-            "version_id": 1, 
-            "course_id": 1
+            "action_page_id": 1,
+            "page_id": 10,
+            "chosen_choice": null,
+            "result_page": null
         }
-    }, 
+    },
     {
-        "model": "backend.AssignedTo",
+        "model": "backend.Choice",
+        "pk": 1,
         "fields": {
-            "user_id": 1,
-            "version_id": 1
+            "action_page_id": 1,
+            "choice_text": "Approve project assignment.",
+            "next_page": 11
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 2,
+        "fields": {
+            "action_page_id": 1,
+            "choice_text": "Deny project assignment.",
+            "next_page": 11
         }
     },
     {
@@ -202,4 +214,4 @@
             "result_page": 5
         }
     }
-  ]
+]

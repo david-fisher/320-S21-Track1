@@ -8,5 +8,7 @@ urlpatterns = [
     path('scenarios/intro', views.scenarioIntroduction, name='scenarioIntroduction'),
     path('scenarios/task', views.scenarioTask, name='scenarioTask'),
     path('scenarios/stakeholder', views.stakeholder , name='stakeholder'),
-    path('scenarios/conversation', views.conversation, name='conversation')
+    path('scenarios/conversation', views.conversation, name='conversation'),
+    path('scenarios/action/prompt', views.actionPrompt, name='scenarioActionPrompt'),
+    path('scenarios/action', views.action, name='scenarioAction')
 ]
