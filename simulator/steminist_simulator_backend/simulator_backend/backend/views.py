@@ -106,37 +106,6 @@ def scenarioTask(request):
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
 
-def initialAction(request):
-    print("initial action")
-    if request.method == "GET":
-        versionID = int(request.GET['versionId'])
-        pageID = int(request.GET['pageId'])
-        
-        if not isinstance(versionID, int):
-            print("Invalid Version ID")
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
-        elif not isinstance(pageID, int):
-            print("Invalid Page ID")
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid scenario ID'})
-        else:
-            try:
-                pageQuerySet = md.Page.objects.filter(version_id=versionID, page_id=pageID).values('page_id')
-                if len(pageQuerySet) == 0:
-                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No initial action found’"})
-                actionPageQuerySet = md.ActionPage.objects.filter(page_id__in=pageQuerySet).values('action_page_id')
-                if len(actionPageQuerySet) == 0:
-                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No initial action found’"})
-                initialActionQuerySet = md.Choices.objects.filter(action_page_id__in=actionPageQuerySet).values('choice', 'result_page')
-                if len(initialActionQuerySet) == 0:
-                    return JsonResponse(status=404, data={'status': 404, 'message': "‘No initial action found’"})
-                resultData = list(initialActionQuerySet)
-            except Exception as ex:
-                loggin.exception("Exception thrown: Query Failed to retrieve Initial Action")
-            
-            print("Got initial actions.")
-            return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
-
-
 def stakeholder(request):
     if request.method == "GET":
         versionID = int(request.GET['versionId'])
