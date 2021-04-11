@@ -264,13 +264,12 @@ def action(request):
                 responseObj = md.Response(session_id=session, version_id=version, page_id=page,
                                           date_taken=datetime.now(), course_id=course, choice=choiceObj.choices_id)
             
+                responseObj.save()
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
 
                 # Add choiceText and nextPage field to response obj
                 response['choice_text'] = choiceObj.choice_text
                 response['next_page'] = choiceObj.next_page
-
-                responseObj.save()
 
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
