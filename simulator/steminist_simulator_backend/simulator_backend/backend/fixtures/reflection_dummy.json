@@ -1,0 +1,88 @@
+[
+  {
+        "model": "backend.Scenario",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "public": true,
+            "is_finished": true,
+            "date_created": "2020-01-01"
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 1,
+        "fields": {
+            "page_type": "ACTION",
+            "page_title": "INITIAL_REFLECTION",
+            "scenario_id": 1,
+            "body": "Many software engineers trainees and providers have reported feeling unprepared for the ethical dilemmas they faced while practicing in real life. Simulation is an effective teaching modality in the training of  professionals. This resource describes the development, implementation, and assessment of an innovative simulation training program for global ethics.",
+            "next_page": 2,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPage",
+        "pk": 1,
+        "fields": {
+            "page_id": 1,
+            "choices": "choice1",
+            "result_page": 1
+        }
+    },
+    {
+        "model": "backend.Scenario",
+        "pk": 2,
+        "fields": {
+            "user_id": 2,
+            "public": true,
+            "is_finished": true,
+            "date_created": "2020-01-01"
+        }
+    },
+    {
+          "model": "backend.Page",
+          "pk": 2,
+          "fields": {
+              "page_type": "ACTION",
+              "page_title": "INITIAL_REFLECTION",
+              "scenario_id": 2,
+              "body": "body 2",
+              "next_page": 3,
+              "x_coordinate": 0,
+              "y_coordinate": 0
+          }
+    },
+    {
+          "model": "backend.ActionPage",
+          "pk": 2,
+          "fields": {
+              "page_id": 2,
+              "choices": "choice2",
+              "result_page": 2
+          }
+    },
+    {
+          "model": "backend.Page",
+          "pk": 3,
+          "fields": {
+              "page_type": "ACTION",
+              "page_title": "INITIAL_REFLECTION",
+              "scenario_id": 2,
+              "body": "body3",
+              "next_page": 4,
+              "x_coordinate": 0,
+              "y_coordinate": 0
+          }
+    },
+    {
+          "model": "backend.ActionPage",
+          "pk": 3,
+          "fields": {
+              "page_id": 3,
+              "choices": "choice3",
+              "result_page": 3
+          }
+    }
+]

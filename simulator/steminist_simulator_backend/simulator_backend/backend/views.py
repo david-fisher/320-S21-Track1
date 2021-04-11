@@ -9,6 +9,7 @@ import logging
 from datetime import datetime
 import backend.queries as queries
 
+
 from django.db import connection
 
 INTROPAGE = 1
@@ -112,9 +113,9 @@ def scenarioTask(request):
 
 
 def initialReflection(request):
-    jsonData = json.loads(request.body)
 
     if request.method == 'GET':
+        jsonData = request.GET
         scenarioID = jsonData['scenario_id']
 
         try:
@@ -125,55 +126,60 @@ def initialReflection(request):
 
         resultData = None
         try:
-            scenarioReflectionQuerySet = md.Page.objects.filter(order=INITIAL_REFLECTION, scenario_id=scenarioID)
+            message, resultData = queries.getReflectionPage(scenarioID, 'INITIAL_REFLECTION')
             # If no pages with the given scenarioId and order were found, return 404 error
             # print(len(scenarioReflectionQuerySet))
-            if len(scenarioReflectionQuerySet) == 0:
+            if len(resultData) == 0:
                 return JsonResponse({'status': 404, 'message':'Page not found with the given scenario ID'},
                                     content_type="application/json")
-            resultData = (list(scenarioReflectionQuerySet.values()))
 
-            resultData = {
-                "status":200,
-                "message": "Body text before initial reflection",
-                "prompts": [
-                    {
-                        "prompt_id":1,
-                        "response": "Initial reflection prompt"
-                    }
+            '''
+            {
+                "status": 200,
+                "message": "body 1",
+                "body": [
+                    [
+                        {
+                            "prompt_id": 1,
+                            "response": "choice1"
+                        }
+                    ]
                 ]
             }
+            '''
         except Exception as ex:
             logging.exception('Exception thrown: Query Failed to retrieve Page')
             return JsonResponse({'status':500, 'message':'Exception thrown: Query Failed to retrieve Page'})
 
         print("Got initial reflection.")
-        return JsonResponse({'status':200, 'result': resultData}, content_type="application/json")
+        return JsonResponse({'status':200, 'message':message, 'body': resultData}, content_type="application/json")
 
 
     elif request.method == 'POST':
-        data = request.POST
-        scenarioID = data['scenarioId']
+        jsonData = json.loads(request.body)
+
+        scenarioID = jsonData['scenario_id']
+
         try:
             scenarioID = int(scenarioID)
         except:
             print("Invalid scenario ID")
             return JsonResponse({'status': 400, 'message': 'Invalid scenario ID'}, content_type="application/json")
-        studentID = data['studentId']
+        studentID = jsonData['student_id']
         no_error = True
         if not isinstance(studentID, int):
             print("Invalid student ID")
             return JsonResponse({'status': 400, 'message': 'Invalid student ID'}, content_type="application/json")
 
         timestamp = datetime.now()
-        for prompt in data['body']:
+        for prompt in jsonData['body']:
             prompt_num = prompt['prompt_id']
             if not isinstance(prompt_num, int):
                 print("Invalid prompt number")
                 return JsonResponse({'status': 400, 'message': 'Invalid prompt ID'}, content_type="application/json")
 
-            inputData = data
-            no_error = queries.addReflectionResponse(studentID, inputData, prompt_num, scenarioID, timestamp)
+            inputData = jsonData
+            no_error = queries.addInitReflectResponse(studentID, inputData, prompt_num, scenarioID, timestamp)
 
         if no_error:
             print("Updated initial reflection.")

@@ -2,12 +2,31 @@
 # might be deprecated in future
 import backend.models as md
 from django.db import transaction
-
+from django.db.models import Prefetch, Q
 
 INITIAL_REFLECTION = 3 # page number 3
 
 
-def addReflectionResponse(studentID, inputData, promptNum, scenarioID, timestamp, page_order):
+def getReflectionPage(scenarioID, position):
+    try:
+        aps = md.ActionPage.objects.prefetch_related('page_id')
+        pages = md.Page.objects.filter(page_title=position, scenario_id=scenarioID, page_type='ACTION')
+
+        body = pages.values()[0]['body']
+        #print(body)
+        responses = []
+
+        for page in pages:
+
+            responses.append([{'prompt_id':a['ap_id'], 'response':a['choices']} for a in aps.filter(page_id=page.page_id).values()])
+
+    except Exception as e:
+        responses = None
+        print('ERROR: %s' %str(e))
+
+    return body,responses
+
+'''def addReflectionResponse(studentID, inputData, promptNum, scenarioID, timestamp, page_order):
 
     try:
         pageSelection = md.Page.objects.filter(scenario_id=scenarioID, order=page_order)
@@ -47,6 +66,8 @@ def addInitReflectResponse(studentID, inputData, promptNum, scenarioID, timestam
     try:
         result = addReflectionResponse(studentID, inputData, promptNum, scenarioID, timestamp, INITIAL_REFLECTION)
     except Exception as e:
+        print(e)
         return False
     else:
-        return result
+        return result'''
+
