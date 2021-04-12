@@ -165,13 +165,12 @@ def initialReflection(request):
         except:
             print("Invalid scenario ID")
             return JsonResponse({'status': 400, 'message': 'Invalid scenario ID'}, content_type="application/json")
-        studentID = jsonData['student_id']
+        userID = jsonData['student_id']
         no_error = True
-        if not isinstance(studentID, int):
-            print("Invalid student ID")
-            return JsonResponse({'status': 400, 'message': 'Invalid student ID'}, content_type="application/json")
+        if not isinstance(userID, int):
+            print("Invalid user ID")
+            return JsonResponse({'status': 400, 'message': 'Invalid user ID'}, content_type="application/json")
 
-        timestamp = datetime.now()
         for prompt in jsonData['body']:
             prompt_num = prompt['prompt_id']
             if not isinstance(prompt_num, int):
@@ -179,7 +178,7 @@ def initialReflection(request):
                 return JsonResponse({'status': 400, 'message': 'Invalid prompt ID'}, content_type="application/json")
 
             inputData = jsonData
-            no_error = queries.addInitReflectResponse(studentID, inputData, prompt_num, scenarioID, timestamp)
+            no_error = queries.addInitReflectResponse(userID, scenarioID, inputData, pageID)
 
         if no_error:
             print("Updated initial reflection.")

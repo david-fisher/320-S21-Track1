@@ -9,15 +9,13 @@ INITIAL_REFLECTION = 3 # page number 3
 
 def getReflectionPage(scenarioID, position):
     try:
-        aps = md.ActionPage.objects.prefetch_related('page_id')
+        aps = md.ActionPage.objects.prefetch_related('page_id') # prefetch?
         pages = md.Page.objects.filter(page_title=position, scenario_id=scenarioID, page_type='ACTION')
 
         body = pages.values()[0]['body']
-        #print(body)
         responses = []
 
         for page in pages:
-
             responses.append([{'prompt_id':a['ap_id'], 'response':a['choices']} for a in aps.filter(page_id=page.page_id).values()])
 
     except Exception as e:
@@ -26,27 +24,11 @@ def getReflectionPage(scenarioID, position):
 
     return body,responses
 
-'''def addReflectionResponse(studentID, inputData, promptNum, scenarioID, timestamp, page_order):
+
+def addReflectionResponse(studentID, inputData, promptNum, scenarioID, timestamp, page_order):
 
     try:
-        pageSelection = md.Page.objects.filter(scenario_id=scenarioID, order=page_order)
-        if len(pageSelection) == 0:
-            raise Exception("Empty SQL selection")
-        pageID = pageSelection[0].id # TODO recheck if pageSelection subscriptable
 
-        submissionSelection = md.Submissions.objects.filter(scenario_id=scenarioID, student_id=studentID) # TODO no Submissions class in models.py yet
-        if len(submissionSelection) == 0:
-            raise Exception("Empty SQL selection")
-        submissionID = submissionSelection[0].id # TODO recheck if submissionSelection subscriptable
-
-        # insertion step
-        # TODO please recheck this, I'm not used to transaction.atomic()
-        with transaction.atomic():
-            responseCreation = md.Response(submission_id=submissionID, page_id=pageID, time=timestamp) # TODO no Response class in models.py yet
-            responseCreation.save()
-            responseID = responseCreation[0].id
-            promptResponseCreation = md.Prompt_response(id=responseID, prompt_num=promptNum, response=inputData) # TODO no Prompt_message class in models.py yet
-            promptResponseCreation.save()
 
     except Exception as e:
         if hasattr(e, 'message'):
@@ -58,7 +40,7 @@ def getReflectionPage(scenarioID, position):
     else:
         return True
 
-
+'''
 def addInitReflectResponse(studentID, inputData, promptNum, scenarioID, timestamp):
 
     # I don't know why we have to go such length but I respect the legacy code
