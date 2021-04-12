@@ -111,9 +111,16 @@ function Nav() {
                     <Button className={classes.title} color="inherit">
                       Chart
                     </Button>
+                    onClick={() => window.location.href = landingPage} color="inherit">LogOut
                   </Link> */}
                 </Typography>
-                <Button onClick={() => window.location.href = landingPage} color="inherit">LogOut</Button>
+                <Button
+
+                    onClick={() => window.location.href = 'https://ethisim1.cs.umass.edu/Shibboleth.sso/Logout?return=/'}
+
+                    color="inherit">LogOut
+
+                </Button>
               </Toolbar>
             </AppBar>
 
