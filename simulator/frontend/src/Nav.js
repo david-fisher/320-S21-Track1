@@ -116,7 +116,7 @@ function Nav() {
                 </Typography>
                 <Button
 
-                    onClick={() => window.location.href = 'https://ethisim1.cs.umass.edu/Shibboleth.sso/Logout?return=/'}
+                    onClick={() => window.location.href = '/Shibboleth.sso/Logout?return=/'}
 
                     color="inherit">LogOut
 

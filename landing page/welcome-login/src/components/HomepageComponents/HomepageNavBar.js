@@ -107,7 +107,9 @@ export default function HomepageNavBar() {
                         component={Link}
                         //to={'/login'}
                         //onClick={() => window.location.href = 'https://ethisim1.cs.umass.edu/Shibboleth.sso/Login'}
-                        onClick={() => window.location.href = 'https://ethisim1.cs.umass.edu/Shibboleth.sso/Login?target=/simulator'}
+
+                        onClick={() => window.location.href = '/Shibboleth.sso/Login?target=/simulator'}
+
                         className={classes.signupButton}
                         variant="contained"
 
