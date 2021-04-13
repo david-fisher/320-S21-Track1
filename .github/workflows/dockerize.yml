@@ -125,4 +125,4 @@ jobs:
         #login to the server using ssh
         - name: log in to server
           run: |
-            sshpass -p ${{ secrets.CSCF_SERVER_PASS }} ssh -tt -o StrictHostKeyChecking=no ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }} "docker-compose down && docker pull dacollins/ethisim:frontend-landing-page && docker pull dacollins/ethisim:frontend-editor && docker pull dacollins/ethisim:frontend-simulator && docker-compose pull && docker-compose up -d"
+            sshpass -p ${{ secrets.CSCF_SERVER_PASS }} ssh -tt -o StrictHostKeyChecking=no ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }} "docker-compose down && docker rmi kubernators_frontend:latest -f && docker pull dacollins/ethisim:frontend-landing-page && docker pull dacollins/ethisim:frontend-editor && docker pull dacollins/ethisim:frontend-simulator && docker-compose pull && docker-compose up -d"
