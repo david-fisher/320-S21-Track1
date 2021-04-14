@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import  { Redirect, Route } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { makeStyles } from '@material-ui/core/styles';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import ErrorIcon from '@material-ui/icons/Error';
 import {
     Button,
     TextField,
@@ -42,72 +46,108 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+    const [fetchResponse, setFetchResponse] = useState({
+        editor: null,
+        loading: true,
+        error: null,
+    });
+    const [shouldFetch, setShouldFetch] = useState(0);
     const classes = useStyles();
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.container}>
-                <img src={RedLogo} alt="EthismLogo" className={classes.logo} />
-                <Typography variant="h4">Login (placeholder)</Typography>
-                <form className={classes.form}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    <Grid container direction="column">
-                        <Grid item>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        value="remember"
-                                        color="primary"
-                                    />
-                                }
-                                label="Remember me"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        onClick={() => window.location.href = DOMAIN + ((process.env.NODE_ENV === 'production') ? '/simulator' : ':3001')}
-                        className={classes.submit}
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                    >
-                        Login for Simulator
-                    </Button>
-                    <Button
-                        onClick={() => window.location.href = DOMAIN + ((process.env.NODE_ENV === 'production') ? '/editor' : ':3000')}
-                        className={classes.submit}
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                    >
-                        Login for Editor
-                    </Button>
-                </form>
+    //IMPLEMENT SHIBBOLETH
+    let getData = () => {
+        setFetchResponse({
+            editor: false,
+            loading: true,
+            error: null,
+        });
+        setTimeout(() => {  console.log("World!"); }, 100000);
+        function onSuccess(response) {
+            let finishedScenarios = response.data.filter(
+                (data) => data.IS_FINISHED
+            );
+            let unfinishedScenarios = response.data.filter(
+                (data) => !data.IS_FINISHED
+            );
+            //setFinishedScenarios(finishedScenarios);
+            //setUnfinishedScenarios(unfinishedScenarios);
+        }
+        function onFailure() {}
+        //get(setFetchResponse, endpointGet, onFailure, onSuccess);
+        setFetchResponse({
+            editor: true,
+            loading: false,
+            error: null,
+        });
+    };
+
+    //Reload Page
+    useEffect(() => {
+        setTimeout(() => {
+            getData()
+            let bool = (Math.random() < 0.5);
+            if (bool){
+                window.location.href = "http://localhost:3001";
+            }
+            else{
+                window.location.href = "http://localhost:3000";
+            }
+        }, 5000)
+      }, [shouldFetch]);
+    //useEffect(getData, [shouldFetch]);
+
+    if (fetchResponse.loading) {
+        return (
+            <Container component="main" maxWidth="xs">
+            <div>
+                <div style={{ marginTop: '100px' }}>
+                    <LoadingSpinner />
+                </div>
             </div>
-            <Box className={classes.copyright}>
-                <Copyright />
-            </Box>
-        </Container>
-    );
+            </Container>
+        );
+    }
+
+    if (fetchResponse.error) {
+        return (
+            <Container component="main" maxWidth="xs">
+            <div>
+                <div className={classes.issue}>
+                    <div className={classes.errorContainer}>
+                        <ErrorIcon className={classes.iconError} />
+                        <Typography align="center" variant="h3">
+                            Error in fetching Shibboleth status.
+                        </Typography>
+                    </div>
+                    <div className={classes.errorContainer}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={getData}
+                        >
+                            <RefreshIcon className={classes.iconRefreshLarge} />
+                        </Button>
+                    </div>
+                </div>
+            </div>
+            </Container>
+        );
+    }
+
+    if (!fetchResponse.loading) {
+        if (fetchResponse.editor) {
+            return (
+                <Container component="main" maxWidth="xs">
+                    <Redirect to='/dashboard'  />
+                </Container>
+            );
+        }
+        else{ 
+            return (
+                <Container component="main" maxWidth="xs">
+                    <Redirect to='/simulator'  />
+                </Container>
+            );
+        }
+    }
 }
