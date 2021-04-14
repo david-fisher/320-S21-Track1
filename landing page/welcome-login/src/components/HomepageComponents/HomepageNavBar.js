@@ -105,9 +105,14 @@ export default function HomepageNavBar() {
 
                     <Button
                         component={Link}
-                        to={'/login'}
+                        //to={'/login'}
+                        //onClick={() => window.location.href = 'https://ethisim1.cs.umass.edu/Shibboleth.sso/Login'}
+
+                        onClick={() => window.location.href = '/Shibboleth.sso/Login?target=/simulator'}
+
                         className={classes.signupButton}
                         variant="contained"
+
                     >
                         <Typography
                             variant="h6"

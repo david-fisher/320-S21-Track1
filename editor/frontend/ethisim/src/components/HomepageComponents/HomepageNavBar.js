@@ -111,7 +111,7 @@ export default function HomepageNavBar() {
                             className={classes.loginButtonText}
                             variant="h6"
                         >
-                            Log In
+                            Log InNN
                         </Typography>
                     </Button>
                 </Toolbar>
