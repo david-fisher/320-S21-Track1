@@ -19,6 +19,21 @@ from django.db import connection
 def index(request):
     return HttpResponse("This is the API")
 
+def getDisplayName(request):
+    return HttpResponse(request.META['displayName'])
+
+def getPrimaryAffiliation(request):
+    return HttpResponse(request.META['eduPersonPrimaryAffiliation'])
+
+def getMail(request):
+    return HttpResponse(request.META['mail'])
+
+def checkAttribute(request):
+    if request.hasattr('Shib-Identity-Provider'):
+        print("User has a valid session")
+    else:
+        print("Invalid session")
+
 def scenarios(request):
     userId = int(request.GET['userId'])
 
