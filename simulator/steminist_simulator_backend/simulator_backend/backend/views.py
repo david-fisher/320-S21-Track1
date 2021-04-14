@@ -20,7 +20,6 @@ def index(request):
     return HttpResponse("This is the API")
 
 def readAttributes(request):
-    print("User has a valid session")
     resultData = {
             "userId": request.META['uid'],
             "name": request.META['displayName'],
