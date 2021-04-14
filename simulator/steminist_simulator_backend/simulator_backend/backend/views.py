@@ -20,22 +20,15 @@ def index(request):
     return HttpResponse("This is the API")
 
 def readAttributes(request):
-    sessionID = int(request.GET['sessionId'])
-
-    if request.hasattr('Shib-Identity-Provider'):
-        print("User has a valid session")
-        resultData = [
-            {
-               "displayName": "Gerry"
-               "eduPersonPrimaryAffiliation": "student"
-               "mail": "student@umass.edu"
-            }
-        ]
-        return HttpResponse(request.META['resultData'])
-    else:
-        print("Invalid Session")
-        return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Session ID: ' + str(sessionID)})
-
+    print("User has a valid session")
+    resultData = {
+            "userId": request.META['uid'],
+            "name": request.META['displayName'],
+            "affliation": request.META['eduPersonPrimaryAffiliation'],
+            "email": request.META['mail']
+    }
+    
+    return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
 def scenarios(request):
     userId = int(request.GET['userId'])
