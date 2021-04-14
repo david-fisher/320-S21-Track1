@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('', views.readAttributes, name='readAttributes')
+    path('/shib/attributes', views.readAttributes, name='readAttributes')
     path('scenarios', views.scenarios, name='scenarios'),
     path('scenarios/intro', views.scenarioIntroduction, name='scenarioIntroduction'),
     path('scenarios/task', views.scenarioTask, name='scenarioTask'),
