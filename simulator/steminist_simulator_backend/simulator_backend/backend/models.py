@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
 
+
 # Create your models here.
 class UserType(models.Model):
     user_type_id = models.AutoField(primary_key=True)
