@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from "react-router-dom";
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import Summary from "./pages/summary";
 import Home from "./pages/home";
 import SimulationWindow from "./pages/simulationWindow";
@@ -9,13 +9,15 @@ import './App.css';
 
 function App() {
   return (
-    <>
-      <CssBaseline />
-      <Route exact path="/" component={Home} />
-      <Route exact path="/summary" component={Summary}/>
-      <Route exact path="/simulation" component={SimulationWindow}/>
-      <Route exact path="/chartTest" component={RadarTest}/>
-    </>
+    <Router>
+        <Route exact path="/">
+            <Redirect to="/home" />
+        </Route>
+        <Route path="/home" component={Home} />
+        <Route path="/summary" component={Summary} />
+        <Route path="/simulation" component={SimulationWindow} />
+        <Route path="/chartTest" component={RadarTest} />
+    </Router>
   );
 }
 

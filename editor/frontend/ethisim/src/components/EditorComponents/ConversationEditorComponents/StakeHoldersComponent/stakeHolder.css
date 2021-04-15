@@ -35,9 +35,10 @@
     left: 160px;
 }
 
-#stakeimg {
+#SHimg {
     position: absolute;
     height: 120px;
+    width: 120px;
     top: 90px;
     margin-bottom: 110px;
 }

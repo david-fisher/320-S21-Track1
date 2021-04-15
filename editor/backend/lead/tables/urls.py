@@ -4,6 +4,7 @@ from django.urls import path
 from django.conf import settings
 from .views import *
 from django.conf.urls import url
+from django.conf.urls.static import static
 
 # DemographicsViewSet, allScenariosViewSet, StudentsViewSet, ProfessorsViewSet, ScenariosViewSet, Choices_forViewSet, Stakeholder_pageViewSet, ConversationsViewSet, Stakeholder_inViewSet, StakeholdersViewSet
 
@@ -52,3 +53,6 @@ urlpatterns = [
 ] 
 
 urlpatterns += router.urls
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

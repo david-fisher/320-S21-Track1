@@ -6,8 +6,9 @@
 - You can use the following to guide on how you can setup your local POSTGRES DV: https://medium.com/@rudipy/how-to-connecting-postgresql-with-a-django-application-f479dc949a11
 
 2. Connect local POSTGRES database to Django application
-- Navigate to ./simulator_backend/simulator_backend/settings.py and change the DB settings to fit with your local DB.
-![database](./img/database_config.png)
+- Navigate to ./simulator_backend/simulator_backend/ directory and add a .env file with the following environment variables:
+
+![environment variables](./img/environment_variables.png)
 
 3. Install dependencies
 ```
@@ -34,3 +35,25 @@ python manage.py runserver
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
 - Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
+
+
+## If you run into errors with Postgres, it will be helpful to drop the steminist_backend database and start from scratch:
+1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
+There is more than 1 way to do this step.
+```
+psql -U postgres
+```
+2. Drop simulator_backend database and create it again.
+```
+DROP DATABASE simulator_backend;
+CREATE DATABASE simulator_backend;
+```
+3. Grant all privileges to your postgres user.
+```
+GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
+```
+4. Exit postgres command line.
+```
+\q
+```
+5. Continue from Step 4 above(Apply migrations to your local DB).

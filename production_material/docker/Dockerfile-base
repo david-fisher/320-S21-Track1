@@ -1,0 +1,47 @@
+FROM centos:8
+
+ENV container docker
+
+# some basic configuration
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+VOLUME [ "/sys/fs/cgroup" ]
+
+CMD ["/usr/sbin/init"]
+
+# Install Apache
+
+RUN yum update -y
+
+RUN yum upgrade -y
+
+RUN yum install -y curl openssl-devel libcurl-devel python38 make glibc-devel gcc gcc-c++ krb5-devel
+
+RUN yum -y install httpd httpd-tools
+
+RUN yum -y install httpd; yum clean all; systemctl enable httpd.service
+
+RUN yum -y install ca-certificates
+
+COPY /shibboleth/security:shibboleth.repo /etc/yum.repos.d/security:shibboleth.repo
+
+COPY /shibboleth/hosts /etc/hosts
+
+ADD /shibboleth/conf.d /etc/httpd/conf.d
+ADD /shibboleth/conf /etc/httpd/conf
+ADD /shibboleth/shibboleth /etc/shibboleth
+
+RUN yum update -y
+
+RUN yum install shibboleth -y
+
+RUN yum install mod_ssl -y
+
+EXPOSE 80 443

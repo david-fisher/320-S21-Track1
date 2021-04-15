@@ -8,7 +8,7 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import { BASE_URL, STUDENT_ID, SCENARIO_ID }from "../constants/config";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID }from "../constants/config";
 import axios from 'axios';
 import { ScenariosContext } from "../Nav";
 
@@ -56,7 +56,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
     (async () => {
       await axios({
         method: 'get',
-        url: BASE_URL + content_url,
+        url: BACK_URL + content_url,
         headers: {
           scenarioID: scenarios.currentScenarioID
         }
@@ -70,7 +70,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
       axios({
         method: 'get',
-        url: BASE_URL + res_url,
+        url: BACK_URL + res_url,
         headers: {
           scenarioID: scenarios.currentScenarioID,
           studentID: STUDENT_ID
@@ -88,7 +88,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
   async function handleResponse(data) {
     await axios({
-      url: BASE_URL + content_url,
+      url: BACK_URL + content_url,
       method: 'put',
       data: {
         scenarioID: scenarios.currentScenarioID,
