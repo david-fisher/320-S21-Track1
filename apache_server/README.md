@@ -17,6 +17,79 @@
 	d. This allows for a choice of approaches based on the need for native integration with Apache or for portability between web servers.
 	
 ## Installing Apache:
-1. Run this command to install Apache:
-	yum install httpd.x86_64
-2. 
+1. Ensure you are using the latest versions of the software:
+
+	```sudo yum update```
+	
+2. Run this command to install Apache:
+
+	```yum install httpd.x86_64```
+	
+## Activating Apache:
+1. To start the Apache service:
+
+	```sudo systemctl start httpd```
+	
+2. Set the Apache service to start when the system boots:
+
+	```sudo systemctl enable httpd```
+	
+## Verifying Apache:
+1. To display information about Apache, and verify it’s currently running:
+
+	```sudo systemctl status httpd```
+	
+You will see an ```active``` status when Apache is running
+
+	Redirecting to /bin/systemctl status httpd.service
+	● httpd.service - The Apache HTTP Server
+	   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+	   Active: active (running) since Wed 2019-02-20 01:29:08 UTC; 5s ago
+	     Docs: man:httpd(8)
+		   man:apachectl(8)
+	 Main PID: 1290 (httpd)
+	   Status: "Processing requests..."
+	   CGroup: /system.slice/httpd.service
+		   ├─1290 /usr/sbin/httpd -DFOREGROUND
+		   ├─1291 /usr/sbin/httpd -DFOREGROUND
+		   ├─1292 /usr/sbin/httpd -DFOREGROUND
+		   ├─1293 /usr/sbin/httpd -DFOREGROUND
+		   ├─1294 /usr/sbin/httpd -DFOREGROUND
+		   └─1295 /usr/sbin/httpd -DFOREGROUND
+	...
+
+	
+## Configuring Apache:
+In a standard installation, CentOS 7 is set to prevent traffic to Apache
+
+1. Modify your firewall to allow connections on these ports using the following commands:
+
+	```sudo firewall-cmd ––permanent ––add-port=80/tcp```
+	
+	```sudo firewall-cmd ––permanent ––add-port=443/tcp```
+	
+2. Once these complete successfully, reload the firewall to apply the changes with the command:
+
+	```sudo firewall-cmd ––reload```	
+
+## Important Apache Commands:
+
+To stop Apache Service: 
+	```sudo systemctl stop httpd```
+	
+To prevent or disable Apache from starting when the system boots: 
+	```sudo systemctl disable httpd```
+	
+Re-enable Apache at boot: 
+	```sudo systemctl enable httpd```
+	
+To start the Apache service:
+	```sudo systemctl start httpd```
+	
+To Restart Apache and apply any changes: 
+	```sudo systemctl restart httpd```
+
+
+
+
+
