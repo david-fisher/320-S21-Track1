@@ -1,12 +1,5 @@
 [
     {
-      "model": "backend.UserType",
-      "pk": 1,
-      "fields": {
-        "name": "non-guest"
-      }
-    },
-    {
         "model": "backend.Course",
         "pk": 1,
         "fields": {
@@ -14,47 +7,41 @@
         }
     },
     {
-        "model": "backend.User",
+        "model": "backend.ScenarioForUser",
         "pk": 1,
         "fields": {
-            "email": "gerrygan@example.com",
-            "firstname": "Gerry",
-            "lastname": "Gan",
-            "date_joined": "2021-01-01",
-            "user_type_id": 1,
-            "editor": false
-        }
-    },
-    {
-        "model": "backend.StudentsIn",
-        "fields": {
-            "user_id": 1,
-            "course_id": 1
-        }
-    },
-    {
-        "model": "backend.Major",
-        "pk": 1,
-        "fields": {
-            "name": "Computer Science"
+            "scenario_id": 1,
+            "version_id": 1,
+            "user_id": 1
         }
     },
     {
         "model": "backend.Scenario",
         "pk": 1,
         "fields": {
-            "name": "Privacy Dilemma Scenario",
             "user_id": 1,
             "public": true,
-            "is_finished": true,
+            "is_finished": false,
             "date_created": "2020-01-01"
+        }
+    },
+    {
+        "model": "backend.Session",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "scenario_id": 1,
+            "version_id": 1,
+            "course_id": 1,
+            "date_started": "2020-01-01",
+            "is_finished": false
         }
     },
     {
         "model": "backend.Page",
         "pk": 1,
         "fields": {
-            "page_type": "PLAIN",
+            "page_type": "INTRODUCTION",
             "page_title": "Simulator Introduction",
             "version_id": 1,
             "body": "Many software engineers trainees and providers have reported feeling unprepared for the ethical dilemmas they faced while practicing in real life. Simulation is an effective teaching modality in the training of  professionals. This resource describes the development, implementation, and assessment of an innovative simulation training program for global ethics.",
@@ -67,7 +54,7 @@
         "model": "backend.Page",
         "pk": 2,
         "fields": {
-            "page_type": "PLAIN",
+            "page_type": "TASKPAGE",
             "page_title": "Task Page",
             "version_id": 1,
             "body": "You are a software engineer at Walmart Labs working on building a smart refridgerator with voice control and image recognition to keep track of produce.",
@@ -81,24 +68,152 @@
         "pk": 1,
         "fields": {
             "scenario_id": 1,
-            "name": "Privacy Dilemma Scenario Version 1.0",
+            "name": "Privacy Dilemma Scenario",
             "num_conversation": 5,
             "first_page": 1
         }
     },
     {
-        "model": "backend.ScenariosFor",
+        "model": "backend.Page",
+        "pk": 10,
+        "fields": {
+            "page_type": "FINALACTION",
+            "page_title": "Final Action Page",
+            "version_id": 1,
+            "body": "Having talked to the stakeholders, what is your course of action?",
+            "next_page": -1,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPage",
         "pk": 1,
         "fields": {
-            "scenario_id": 1,
-            "version_id": 1, 
-            "course_id": 1
+            "action_page_id": 1,
+            "page_id": 10,
+            "chosen_choice": null,
+            "result_page": null
         }
-    }, {
-        "model": "backend.AssignedTo",
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 1,
         "fields": {
-            "user_id": 1,
-            "version_id": 1
+            "action_page_id": 1,
+            "choice_text": "Approve project assignment.",
+            "next_page": 11
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 2,
+        "fields": {
+            "action_page_id": 1,
+            "choice_text": "Deny project assignment.",
+            "next_page": 11
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 3,
+        "fields": {
+            "page_type": "INITIALACTION",
+            "page_title": "Initial Action Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": 4,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPage",
+        "pk": 2,
+        "fields": {
+            "page_id": 3,
+            "chosen_choice": null,
+            "result_page": null
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 3,
+        "fields": {
+            "action_page_id": 2,
+            "choice_text": "Procede with project.",
+            "next_page": 4
+        }
+    },
+    {
+        "model": "backend.Choice",
+        "pk": 4,
+        "fields": {
+            "action_page_id": 2,
+            "choice_text": "Postpone and ask questions.",
+            "next_page": 5
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Elon Musk",
+            "description": "Very cool.",
+            "job": "CEO of Tesla",
+            "introduction": "",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Bill Gates",
+            "description": "Not that cool",
+            "job": "Founder of Microsoft",
+            "introduction": "",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 1,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "How do you like your coffee?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 2,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "When will Tesla be driveless car?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 3,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What is your usual order at Dick's?",
+            "response_id": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 4,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What is your thoughts on app secretly taking users' data?",
+            "response_id": ""
         }
     }
-  ]
+]

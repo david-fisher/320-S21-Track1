@@ -7,5 +7,6 @@ urlpatterns = [
     path('scenarios', views.scenarios, name='scenarios'),
     path('scenarios/intro', views.scenarioIntroduction, name='scenarioIntroduction'),
     path('scenarios/task', views.scenarioTask, name='scenarioTask'),
-    path('scenarios/initialReflection', views.initialReflection, name='initialReflection')
+    path('scenarios/reflection', views.reflection, name='reflection'),
+    path('scenarios/reflection/response', views.reflectionResponse, name='reflection/response')
 ]

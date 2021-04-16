@@ -1,88 +1,143 @@
 [
   {
-        "model": "backend.Scenario",
-        "pk": 1,
-        "fields": {
-            "user_id": 1,
-            "public": true,
-            "is_finished": true,
-            "date_created": "2020-01-01"
-        }
-    },
-    {
-        "model": "backend.Page",
-        "pk": 1,
-        "fields": {
-            "page_type": "ACTION",
-            "page_title": "INITIAL_REFLECTION",
-            "scenario_id": 1,
-            "body": "Many software engineers trainees and providers have reported feeling unprepared for the ethical dilemmas they faced while practicing in real life. Simulation is an effective teaching modality in the training of  professionals. This resource describes the development, implementation, and assessment of an innovative simulation training program for global ethics.",
-            "next_page": 2,
-            "x_coordinate": 0,
-            "y_coordinate": 0
-        }
-    },
-    {
-        "model": "backend.ActionPage",
-        "pk": 1,
-        "fields": {
-            "page_id": 1,
-            "choices": "choice1",
-            "result_page": 1
-        }
-    },
-    {
-        "model": "backend.Scenario",
-        "pk": 2,
-        "fields": {
-            "user_id": 2,
-            "public": true,
-            "is_finished": true,
-            "date_created": "2020-01-01"
-        }
-    },
-    {
-          "model": "backend.Page",
-          "pk": 2,
-          "fields": {
-              "page_type": "ACTION",
-              "page_title": "INITIAL_REFLECTION",
-              "scenario_id": 2,
-              "body": "body 2",
-              "next_page": 3,
-              "x_coordinate": 0,
-              "y_coordinate": 0
-          }
-    },
-    {
-          "model": "backend.ActionPage",
-          "pk": 2,
-          "fields": {
-              "page_id": 2,
-              "choices": "choice2",
-              "result_page": 2
-          }
-    },
-    {
-          "model": "backend.Page",
-          "pk": 3,
-          "fields": {
-              "page_type": "ACTION",
-              "page_title": "INITIAL_REFLECTION",
-              "scenario_id": 2,
-              "body": "body3",
-              "next_page": 4,
-              "x_coordinate": 0,
-              "y_coordinate": 0
-          }
-    },
-    {
-          "model": "backend.ActionPage",
-          "pk": 3,
-          "fields": {
-              "page_id": 3,
-              "choices": "choice3",
-              "result_page": 3
-          }
+    "model": "backend.Version",
+    "pk": 1,
+    "fields": {
+      "scenario_id": 1,
+      "name": "Thai Le",
+      "num_conversation": 1,
+      "first_page": 1
     }
+  },
+  {
+    "model": "backend.Version",
+    "pk": 2,
+    "fields": {
+      "scenario_id": 1,
+      "name": "Thai Le",
+      "num_conversation": 1,
+      "first_page": 2
+    }
+  },
+  {
+    "model": "backend.Page",
+    "pk": 1,
+    "fields": {
+      "page_type": "ACTION",
+      "page_title": "INITIAL_REFLECTION",
+      "version_id": 1,
+      "body": "Fill in these prompts.",
+      "next_page": 2,
+      "x_coordinate": 0,
+      "y_coordinate": 0
+    }
+  },
+  {
+    "model": "backend.Page",
+    "pk": 2,
+    "fields": {
+      "page_type": "ACTION",
+      "page_title": "INITIAL_REFLECTION",
+      "version_id": 2,
+      "body": "Fill in these prompts. 2",
+      "next_page": 3,
+      "x_coordinate": 0,
+      "y_coordinate": 0
+    }
+  },
+  {
+    "model": "backend.Session",
+    "pk": 1,
+    "fields": {
+      "user_id": 1,
+      "scenario_id": 1,
+      "version_id": 1,
+      "course_id": 1,
+      "date_started": "2020-01-01",
+      "is_finished": false
+    }
+  },
+  {
+    "model": "backend.Session",
+    "pk": 2,
+    "fields": {
+      "user_id": 2,
+      "scenario_id": 1,
+      "version_id": 2,
+      "course_id": 1,
+      "date_started": "2020-01-01",
+      "is_finished": false
+    }
+  },
+  {
+    "model": "backend.ActionPage",
+    "pk": 1,
+    "fields": {
+      "page_id": 1,
+      "chosen_choice": null,
+      "result_page": null
+    }
+  },
+  {
+    "model": "backend.ActionPage",
+    "pk": 2,
+    "fields": {
+      "page_id": 2,
+      "chosen_choice": null,
+      "result_page": null
+    }
+  },
+  {
+    "model": "backend.Response",
+    "pk": 1,
+    "fields": {
+      "session_id": 1,
+      "version_id": 1,
+      "page_id": 1,
+      "course_id": 1,
+      "date_taken": "2020-01-01",
+      "choice": "[PROMPT]Here is prompt 1."
+    }
+  },
+  {
+    "model": "backend.Response",
+    "pk": 2,
+    "fields": {
+      "session_id": 1,
+      "version_id": 1,
+      "page_id": 1,
+      "course_id": 1,
+      "date_taken": "2020-01-01",
+      "choice": "[PROMPT]Here is prompt 2."
+    }
+  },
+  {
+    "model": "backend.Response",
+    "pk": 3,
+    "fields": {
+      "session_id": 2,
+      "version_id": 2,
+      "page_id": 2,
+      "course_id": 1,
+      "date_taken": "2020-01-01",
+      "choice": "[PROMPT]Here is prompt 3."
+    }
+  },
+  {
+    "model": "backend.Scenario",
+    "pk": 1,
+    "fields": {
+      "user_id": 1,
+      "public": true,
+      "is_finished": false,
+      "date_created": "2020-01-01"
+    }
+  },
+  {
+    "model": "backend.Course",
+    "pk": 1,
+    "fields": {
+      "name": "CS320"
+    }
+  }
 ]
