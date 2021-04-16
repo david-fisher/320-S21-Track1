@@ -17,7 +17,7 @@
 	d. This allows for a choice of approaches based on the need for native integration with Apache or for portability between web servers.
 	
 ## Installing Apache:
-1. update the local Apache ```httpd``` package index to reflect the latest upstream changes:
+1. Update the local Apache ```httpd``` package index to reflect the latest upstream changes:
 
 	```sudo yum update httpd```
 	
