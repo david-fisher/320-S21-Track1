@@ -17,9 +17,9 @@
 	d. This allows for a choice of approaches based on the need for native integration with Apache or for portability between web servers.
 	
 ## Installing Apache:
-1. Ensure you are using the latest versions of the software:
+1. update the local Apache ```httpd``` package index to reflect the latest upstream changes:
 
-	```sudo yum update```
+	```sudo yum update httpd```
 	
 2. Run this command to install Apache:
 
