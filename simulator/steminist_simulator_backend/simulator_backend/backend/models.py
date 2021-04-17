@@ -111,6 +111,15 @@ class Stakeholder(models.Model):
     class Meta:
         db_table = "stakeholders"
 
+class Conversation(models.Model):
+    conversation_id = models.AutoField(primary_key=True)
+    stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
+    question = models.TextField()
+    response_id = models.TextField()
+
+    class Meta:
+        db_table = "conversations"
+
 class ConversationsHad(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
     course_id = models.IntegerField()
@@ -123,15 +132,6 @@ class ConversationsHad(models.Model):
 
     class Meta:
         db_table = "conversations_had"
-
-class Conversation(models.Model):
-    conversation_id = models.AutoField(primary_key=True)
-    stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
-    question = models.TextField()
-    response_id = models.TextField()
-
-    class Meta:
-        db_table = "conversations"
 
 class GenericPage(models.Model):
     generic_page_id = models.AutoField(primary_key=True)
