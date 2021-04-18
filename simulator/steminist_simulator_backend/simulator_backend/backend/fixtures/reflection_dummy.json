@@ -20,6 +20,16 @@
     }
   },
   {
+    "model": "backend.Version",
+    "pk": 3,
+    "fields": {
+      "scenario_id": 1,
+      "name": "Thai Le",
+      "num_conversation": 1,
+      "first_page": 3
+    }
+  },
+  {
     "model": "backend.Page",
     "pk": 1,
     "fields": {
@@ -41,6 +51,19 @@
       "version_id": 2,
       "body": "Fill in these prompts. 2",
       "next_page": 3,
+      "x_coordinate": 0,
+      "y_coordinate": 0
+    }
+  },
+  {
+    "model": "backend.Page",
+    "pk": 3,
+    "fields": {
+      "page_type": "ACTION",
+      "page_title": "INITIAL_REFLECTION",
+      "version_id": 3,
+      "body": "Fill in these prompts. 2",
+      "next_page": 4,
       "x_coordinate": 0,
       "y_coordinate": 0
     }
@@ -70,6 +93,30 @@
     }
   },
   {
+    "model": "backend.Session",
+    "pk": 2,
+    "fields": {
+      "user_id": 2,
+      "scenario_id": 1,
+      "version_id": 2,
+      "course_id": 1,
+      "date_started": "2020-01-01",
+      "is_finished": false
+    }
+  },
+  {
+    "model": "backend.Session",
+    "pk": 3,
+    "fields": {
+      "user_id": 3,
+      "scenario_id": 1,
+      "version_id": 3,
+      "course_id": 1,
+      "date_started": "2020-01-01",
+      "is_finished": false
+    }
+  },
+  {
     "model": "backend.ActionPage",
     "pk": 1,
     "fields": {
@@ -83,6 +130,15 @@
     "pk": 2,
     "fields": {
       "page_id": 2,
+      "chosen_choice": null,
+      "result_page": null
+    }
+  },
+  {
+    "model": "backend.ActionPage",
+    "pk": 3,
+    "fields": {
+      "page_id": 3,
       "chosen_choice": null,
       "result_page": null
     }
@@ -121,6 +177,18 @@
       "course_id": 1,
       "date_taken": "2020-01-01",
       "choice": "[PROMPT]Here is prompt 3."
+    }
+  },
+  {
+    "model": "backend.Response",
+    "pk": 4,
+    "fields": {
+      "session_id": 3,
+      "version_id": 3,
+      "page_id": 3,
+      "course_id": 1,
+      "date_taken": "2020-01-01",
+      "choice": "Here is prompt 4"
     }
   },
   {

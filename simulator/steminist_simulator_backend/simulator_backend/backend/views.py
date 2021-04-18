@@ -205,8 +205,7 @@ def reflection(request):
                                          "for Reflection purpose. Please contact backend/database about this.")
                     elif '[RESPONSE]' in prompt_question:
                         raise ValueError("'[RESPONSE]' tag in response, the prompt in the response object has already "
-                                         "been filled. Use GET /reflection/response to view the responded prompts. "
-                                         "Please contact backend/database about this.")
+                                         "been filled. Use GET /reflection/response to view the responded prompts.")
 
                     prompt_question = prompt_question.replace('[PROMPT]', '')
                     prompts.append({"prompt_id": int(prompt.response_id), "prompt": prompt_question})
@@ -257,8 +256,8 @@ def reflection(request):
                 return JsonResponse({'status': 400, 'message': 'Invalid prompt response', 'err': str(e)},
                                     content_type="application/json")
             except md.Response.DoesNotExist:
-                return JsonResponse({'status': 400, 'message': 'Invalid prompt response id, response not found.',
-                                     'err': str(e)}, content_type="application/json")
+                return JsonResponse({'status': 400, 'message': 'Invalid prompt response id, response not found.'},
+                                     content_type="application/json")
 
             if overwritten:
                 return JsonResponse({'status': 200, 'result': "Updated reflection."}, content_type="application/json")
