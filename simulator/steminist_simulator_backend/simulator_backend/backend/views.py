@@ -421,16 +421,20 @@ def conversation(request):
                     return JsonResponse(staus=404, data={'status': 404, 'message': 'No Issue ID found'})
                 
                 try:
-                    coverageObj = md.Coverage.objects.get(issue_id__in=issueQuerySet, stakeholder_id=stakeholderID)
+                    coverageObj = md.Coverage.objects.filter(issue_id__in=issueQuerySet, stakeholder_id=stakeholderID).values('coverage_score')
                 except md.Coverage.DoesNotExist:
                     return JsonResponse(staus=404, data={'status': 404, 'message': 'No Coverage found'})
+                
+                coverageScore = 0.0
+                for score in list(coverageObj):
+                    coverageScore += score['coverage_score']
 
                 # create new stakeholderPage object
                 pageObj = md.Page.objects.get(version_id=versionID, page_type=pageType)
                 stakeholderPageObj = md.StakeholderPage(page_id=pageObj, stakeholder_id=stakeholderObj)
                 stakeholderPageObj.save()
                 # create new conversationHad object
-                conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, course_id=courseID, date_taken=datetime.now(), score=coverageObj.__dict__['coverage_score'])
+                conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, course_id=courseID, date_taken=datetime.now(), score=coverageScore)
                 conversationHadObj.save()
                 resultData['already_exist'] = False
             

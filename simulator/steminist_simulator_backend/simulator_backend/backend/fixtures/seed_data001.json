@@ -165,6 +165,16 @@
         }
     },
     {
+        "model": "backend.Issue",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Test Issue 2",
+            "importance_score": 30
+        }
+    },
+    {
         "model": "backend.Stakeholder",
         "pk": 1,
         "fields": {
@@ -190,6 +200,14 @@
         "fields": {
             "issue_id": 1,
             "stakeholder_id": 2,
+            "coverage_score": 1.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 2,
+            "stakeholder_id": 1,
             "coverage_score": 1.5
         }
     },
