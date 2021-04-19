@@ -16,7 +16,7 @@
 	
 	d. This allows for a choice of approaches based on the need for native integration with Apache or for portability between web servers.
 	
-## Installing Apache:
+## How to install Apache:
 1. Update the local Apache ```httpd``` package index to reflect the latest upstream changes:
 
 	```sudo yum update httpd```
@@ -25,19 +25,19 @@
 
 	```yum install httpd.x86_64```
 	
-## Activating Apache:
+## How to activate Apache:
 1. To start the Apache service:
 
-	```sudo systemctl start httpd```
+	```systemctl start httpd```
 	
 2. Set the Apache service to start when the system boots:
 
-	```sudo systemctl enable httpd```
+	```systemctl enable httpd```
 	
-## Verifying Apache:
+## How to verify Apache:
 1. To display information about Apache, and verify it’s currently running:
 
-	```sudo systemctl status httpd```
+	```systemctl status httpd```
 	
 You will see an ```active``` status when Apache is running
 
@@ -59,35 +59,35 @@ You will see an ```active``` status when Apache is running
 	...
 
 	
-## Configuring Apache:
+## How to configure Apache:
 In a standard installation, CentOS 7 is set to prevent traffic to Apache
 
 1. Modify your firewall to allow connections on these ports using the following commands:
 
-	```sudo firewall-cmd ––permanent ––add-port=80/tcp```
+	```firewall-cmd ––permanent ––add-port=80/tcp```
 	
-	```sudo firewall-cmd ––permanent ––add-port=443/tcp```
+	```firewall-cmd ––permanent ––add-port=443/tcp```
 	
 2. Once these complete successfully, reload the firewall to apply the changes with the command:
 
-	```sudo firewall-cmd ––reload```	
+	```firewall-cmd ––reload```	
 
-## Important Apache Commands:
+## Some important Apache Commands:
 
 To stop Apache Service: 
-	```sudo systemctl stop httpd```
+	```systemctl stop httpd```
 	
 To prevent or disable Apache from starting when the system boots: 
-	```sudo systemctl disable httpd```
+	```systemctl disable httpd```
 	
 Re-enable Apache at boot: 
-	```sudo systemctl enable httpd```
+	```systemctl enable httpd```
 	
 To start the Apache service:
-	```sudo systemctl start httpd```
+	```systemctl start httpd```
 	
 To Restart Apache and apply any changes: 
-	```sudo systemctl restart httpd```
+	```systemctl restart httpd```
 
 
 
