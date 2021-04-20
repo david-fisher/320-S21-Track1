@@ -19,6 +19,16 @@ from django.db import connection
 def index(request):
     return HttpResponse("This is the API")
 
+def readAttributes(request):
+    resultData = {
+            "userId": request.META['uid'],
+            "name": request.META['displayName'],
+            "affliation": request.META['eduPersonPrimaryAffiliation'],
+            "email": request.META['mail']
+    }
+    
+    return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
+
 def scenarios(request):
     userId = int(request.GET['userId'])
 
