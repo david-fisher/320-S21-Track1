@@ -1,4 +1,4 @@
-**# How to use docker-compose to build and run the web applicati**on
+# How to use docker-compose to build and run the web application
 
 1. After cloning the repo to your local machine, update the .env file in the root directory of the project with the
 configuration settings of your database
@@ -24,9 +24,9 @@ end up getting a timeout error. To remedy that, restart docker and paste these 2
 NOTE: All of the folders may not have a back end due to last years structure
 
 ## How to get started
-Each branch/folder has a corresponding README file containing isntructions on how to
+Each branch/folder has a corresponding README file containing instructions on how to
 operate and run each part of the structure. <br />
-Follow the instructions there
+Follow the instructions there.
 
 
 ## If you wish to run everything at once
@@ -44,4 +44,4 @@ Follow the instructions there
 
 ###### When done running all in the terminal
 Go to where the landing pages has been open on your browser [http://localhost:3006/home]. <br />
-You should be able to traverse to Simulator, Editor, and Landing page all from there 
+You should be able to traverse to Simulator, Editor, and Landing page all from there.
