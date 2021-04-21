@@ -191,11 +191,10 @@ def actionPrompt(request):
                     return JsonResponse(status=404, data={'status': 404,
                                                       'message': 'No action page found based on given page Id and version Id'})
 
-                actionPageIDQuerySet = md.ActionPage.objects.filter(page_id=pageID).values_list('action_page_id')
-                actionPageChoicesQuerySet = md.Choice.objects.filter(action_page_id__in=actionPageIDQuerySet)\
-                                            .values('choices_id', 'action_page_id', 'choice_text')                      
+                actionPageChoicesQuerySet = md.ActionPageChoice.objects.filter(page_id=pageID)\
+                                            .values(choices_id=F('apc_id'), choice_text=F('choice'))                      
                 
-                if len(list(actionPageIDQuerySet)) == 0:
+                if len(list(actionPageChoicesQuerySet)) == 0:
                     return JsonResponse(status=404, data={'status': 404,
                                                       'message': 'No action page found based on given page Id and version Id'})
 
@@ -232,18 +231,17 @@ def action(request):
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'No version found with the given versionId'})
             
-            # Check if there is a Action Page given the pageId 
+            # Check if there is a Page given the pageId 
             try:
                 page = md.Page.objects.get(page_id=pageID)
-                actionPage = md.ActionPage.objects.get(page_id=pageID)
-            except md.ActionPage.DoesNotExist or md.Page.DoesNotExist:
+            except md.Page.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
-                                                    'message': 'No Action page found based on given page Id'})
-            
+                                                    'message': 'No Page found based on given page Id'})
+
             # Check if the choiceId exist
             try:
-                choiceObj = md.Choice.objects.get(choices_id=choiceId)
-            except md.ActionPage.DoesNotExist:
+                choiceObj = md.ActionPageChoice.objects.get(apc_id=choiceId)
+            except md.ActionPageChoice.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'No Choice found based on given choice Id'})
 
@@ -263,8 +261,8 @@ def action(request):
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
 
                 # Add choiceText and nextPage field to response obj
-                response['choice_text'] = choiceObj.choice_text
-                response['next_page'] = choiceObj.next_page
+                response['choice_text'] = choiceObj.choice
+                response['next_page'] = choiceObj.result_page
 
                 return JsonResponse(status=400, data={'status': 400,
                                                     'message': 'Response has already been submitted for this page.',
@@ -272,14 +270,14 @@ def action(request):
             except md.Response.DoesNotExist:
                 # Add a response for the given choice
                 responseObj = md.Response(session_id=session, version_id=version, page_id=page,
-                                          date_taken=datetime.now(), course_id=course, choice=choiceObj.choices_id)
+                                          date_taken=datetime.now(), course_id=course, choice=choiceObj.apc_id)
             
                 responseObj.save()
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
 
                 # Add choiceText and nextPage field to response obj
-                response['choice_text'] = choiceObj.choice_text
-                response['next_page'] = choiceObj.next_page
+                response['choice_text'] = choiceObj.choice
+                response['next_page'] = choiceObj.result_page
 
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
@@ -307,14 +305,6 @@ def action(request):
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'No version found with the given versionId'})
             
-            # Check if there is a Action Page given the pageId 
-            try:
-                page = md.Page.objects.get(page_id=pageID)
-                actionPage = md.ActionPage.objects.get(page_id=pageID)
-            except md.ActionPage.DoesNotExist or md.Page.DoesNotExist:
-                return JsonResponse(status=404, data={'status': 404,
-                                                    'message': 'No Action page found based on given page Id'})
-            
             # Obtain session field based on given params
             try:
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
@@ -329,11 +319,11 @@ def action(request):
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
 
                 # Retrieve choiceObject from responseObj above
-                choiceObj = md.Choice.objects.get(choices_id=int(responseObj.choice))
+                choiceObj = md.ActionPageChoice.objects.get(apc_id=int(responseObj.choice))
 
                 # Add choiceText and nextPage field to return obj
-                response['choice_text'] = choiceObj.choice_text
-                response['next_page'] = choiceObj.next_page
+                response['choice_text'] = choiceObj.choice
+                response['next_page'] = choiceObj.result_page
 
                 return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': response})
             
