@@ -13,13 +13,13 @@ end up getting a timeout error. To remedy that, restart docker and paste these 2
 #File structure for this track
 
 ###simulator
-    1. frontend
-    2. backend
+1. frontend
+2. backend
 ####editor
-    1. frontend
-    2. backend
+1. frontend
+2. backend
 ####landing page
-    1. frontend
+1. frontend
 
 ### All of the folders may not have a back end due to last years structure
 
@@ -31,17 +31,17 @@ Follow the instructions there
 
 #If you wish to run everything at once
 ###Run the landing page
-    1. Run back end(if applicable)
-    2. Run front end(if applicatble)
+1. Run back end(if applicable)
+2. Run front end(if applicatble)
 
 ###Run the simulator
-    1. Run back end(if applicable)
-    2. Run front end(if applicatble)
+1. Run back end(if applicable)
+2. Run front end(if applicatble)
 
 ###Run the landing page
-    1. Run back end(if applicable)
-    2. Run front end(if applicatble)
+1. Run back end(if applicable)
+2. Run front end(if applicatble)
 
 ###When done running all in the terminal
-  Go to where the landing pages has been open on your browser [http://localhost:3006/home]. <br />
-  You should be able to travere to Simulator, Editor, and Landing oage all from there 
+Go to where the landing pages has been open on your browser [http://localhost:3006/home]. <br />
+You should be able to travere to Simulator, Editor, and Landing oage all from there 
