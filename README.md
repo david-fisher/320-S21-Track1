@@ -44,4 +44,4 @@ Follow the instructions there
 
 ###When done running all in the terminal
 Go to where the landing pages has been open on your browser [http://localhost:3006/home]. <br />
-You should be able to travere to Simulator, Editor, and Landing oage all from there 
+You should be able to traverse to Simulator, Editor, and Landing page all from there 
