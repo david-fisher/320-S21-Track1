@@ -3,7 +3,6 @@ from django.db.models.aggregates import Max
 from django.db.models.deletion import CASCADE
 from django.db.models.fields.related import ForeignKey, OneToOneField
 
-
 # Create your models here.
 
 class Course(models.Model):
@@ -38,7 +37,6 @@ class Page(models.Model):
     class Meta:
         db_table = "pages"
 
-
 class Version(models.Model):
     version_id = models.AutoField(primary_key=True)
     scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
@@ -49,7 +47,6 @@ class Version(models.Model):
     class Meta:
         db_table = "versions"
 
-
 class Change(models.Model):
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     asset_changed = models.CharField(max_length=1000)
@@ -58,7 +55,6 @@ class Change(models.Model):
 
     class Meta:
         db_table = "changes"
-
 
 class Session(models.Model):
     session_id = models.AutoField(primary_key=True)
@@ -72,7 +68,6 @@ class Session(models.Model):
     class Meta:
         db_table = "sessions"
 
-
 class SessionTime(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
@@ -85,7 +80,6 @@ class SessionTime(models.Model):
     class Meta:
         db_table = "session_times"
 
-
 class ScenarioForUser(models.Model):
     scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
@@ -93,7 +87,6 @@ class ScenarioForUser(models.Model):
 
     class Meta:
         db_table = "scenario_for_user"
-
 
 class Response(models.Model):
     response_id = models.AutoField(primary_key=True)
@@ -107,7 +100,6 @@ class Response(models.Model):
     class Meta:
         db_table = "responses"
 
-
 class Stakeholder(models.Model):
     stakeholder_id = models.AutoField(primary_key=True)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
@@ -120,7 +112,6 @@ class Stakeholder(models.Model):
 
     class Meta:
         db_table = "stakeholders"
-
 
 class ConversationsHad(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
@@ -145,7 +136,6 @@ class Conversation(models.Model):
     class Meta:
         db_table = "conversations"
 
-
 class GenericPage(models.Model):
     generic_page_id = models.AutoField(primary_key=True)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
@@ -163,7 +153,6 @@ class ActionPage(models.Model):
     class Meta:
         db_table = "action_page"
 
-
 class Choice(models.Model):
     choices_id = models.AutoField(primary_key=True)
     action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
@@ -172,7 +161,6 @@ class Choice(models.Model):
 
     class Meta:
         db_table = "choice"
-
 
 class Issue(models.Model):
     issue_id = models.AutoField(primary_key=True)
@@ -183,7 +171,6 @@ class Issue(models.Model):
 
     class Meta:
         db_table = "issues"
-
 
 class StakeholderPage(models.Model):
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
@@ -214,7 +201,6 @@ class ReflectionsTaken(models.Model):
     class Meta:
         db_table = "reflections_taken"
 
-
 class Asset(models.Model):
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     name = models.CharField(max_length=100)
@@ -222,7 +208,6 @@ class Asset(models.Model):
 
     class Meta:
         db_table = "asset"
-
 
 class Invitation(models.Model):
     invitation_key = models.TextField()

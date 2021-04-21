@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
+import { Avatar, Button} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
     input: {
         display: 'none',
     },
+    label:{
+        color:'#808080',
+        fontSize: 15
+    }
 }));
 
 const styles = (theme) => ({
@@ -77,6 +81,7 @@ StakeHolder.propTypes = {
     id: PropTypes.number,
     removeStakeHolder: PropTypes.any,
     job: PropTypes.string,
+    photo: PropTypes.any,
     stakeHolders: PropTypes.any,
     setStakeHolders: PropTypes.func,
 };
@@ -88,8 +93,9 @@ export default function StakeHolder({
     id,
     removeStakeHolder,
     job,
+    photo,
     stakeHolders,
-    setStakeHolders,
+    setStakeHolders
 }) {
     const classes = useStyles();
 
@@ -100,9 +106,11 @@ export default function StakeHolder({
     const [stakeHolderName, setStakeHolderName] = useState(name);
     const [stakeHolderJob, setStakeHolderJob] = useState(job);
     const [stakeHolderBiography, setStakeHolderBiography] = useState(bio);
+    const [stakeHolderPhoto, setStakeHolderPhoto] = useState(photo); // Image object to be uploaded on save 
     const [stakeHolderConversation, setStakeHolderConversation] = useState(
         mainConvo
     );
+    const[displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
     const [issues, setIssues] = useState([]);
     const [qRData, setQRData] = useState([]);
     const [isLoading, setLoading] = useState(false);
@@ -144,11 +152,12 @@ export default function StakeHolder({
         setOpenBio(true);
     };
     const handleCloseBio = () => {
-        updateBasicText(
+        updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
         setOpenBio(false);
     };
@@ -156,11 +165,12 @@ export default function StakeHolder({
         setOpenMainConvo(true);
     };
     const handleCloseMainConvo = () => {
-        updateBasicText(
+        updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
         setOpenMainConvo(false);
     };
@@ -189,25 +199,41 @@ export default function StakeHolder({
 
     const onChangeName = (e) => {
         setStakeHolderName(e.target.value);
-        updateBasicText(
+        updateStakeholderInfo(
             e.target.value,
             stakeHolderJob,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
     };
 
     const onChangeJob = (e) => {
         setStakeHolderJob(e.target.value);
-        updateBasicText(
+        updateStakeholderInfo(
             stakeHolderName,
             e.target.value,
             stakeHolderBiography,
-            stakeHolderConversation
+            stakeHolderConversation,
+            stakeHolderPhoto
         );
     };
 
-    function updateBasicText(shname, shjob, shbio, shconvo) {
+    const onUploadPhoto = (e) => { // Uses PUT request to upload photo to database
+        var image = e.target.files[0];
+        var url = URL.createObjectURL(image)
+        setdisplayedPhoto(url);
+        setStakeHolderPhoto(image);
+        updateStakeholderInfo(
+            stakeHolderName,
+            stakeHolderJob,
+            stakeHolderBiography,
+            stakeHolderConversation,
+            image
+            );
+    };
+
+    function updateStakeholderInfo(shname, shjob, shbio, shconvo, shphoto) {
         const updatedStakeHolders = [...stakeHolders];
         setStakeHolders(
             updatedStakeHolders.map((sh) => {
@@ -216,6 +242,7 @@ export default function StakeHolder({
                     sh.JOB = shjob;
                     sh.DESCRIPTION = shbio;
                     sh.INTRODUCTION = shconvo;
+                    sh.PHOTO = shphoto;
                 }
                 return sh;
             })
@@ -293,53 +320,69 @@ export default function StakeHolder({
                     onChange={onChangeJob}
                 />
             </div>
-            <img id="stakeimg" src={shemptylogo} alt=" "></img>
-            <label id="upl" htmlFor="contained-button-file">
-                <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="contained-button-file"
-                    multiple
-                    type="file"
-                />
-                <label htmlFor="contained-button-file">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        component="span"
-                        style={{ textTransform: 'unset' }}
-                    >
-                        Upload
-                    </Button>
-                </label>
-                <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-file"
-                    type="file"
-                />
+            
+            <Avatar id="SHimg" src={displayedPhoto}/>
+             
+            <label id="upl"> 
+                <Button
+                    variant="contained"
+                    color="primary"
+                    component="span"
+                    style={{ textTransform: 'unset' }}
+                >
+                    Select Image
+                    <input
+                        accept="image/jpeg, image/png"
+                        type="file"
+                        multiple={false}
+                        hidden
+                        onChange={onUploadPhoto}
+                    />
+                </Button>   
             </label>
-
+             
             <div id="Bio">
-                <TextField
-                    label="Biography"
-                    style={{ width: 500 }}
-                    multiline
-                    rows={2}
-                    variant="outlined"
-                    onClick={handleClickOpenBio}
-                />
+                <Typography className={classes.label} variant="h6" color="initial">
+                    Biography
+                </Typography>
+                <div onClick={handleClickOpenBio}>
+                    <SunEditor
+                                setContents={bio}
+                                disable={true}
+                                showToolbar={false}
+                                setOptions={{
+                                    width: 500,
+                                    height: 1,
+                                    placeholder:
+                                        'Enter the biography of the stakeholder...',
+                                    resizingBar: false,
+                                    showPathLabel: false,
+                                    }}
+                                onChange={handleChangeBiography}
+                            />
+                </div>
             </div>
 
             <div id="MainConversationField">
-                <TextField
-                    label="Main Conversation"
-                    style={{ width: 500 }}
-                    multiline
-                    rows={2}
-                    variant="outlined"
-                    onClick={handleClickOpenMainConvo}
-                />
+                <Typography className={classes.label} variant="h6" color="initial">
+                    Main Conversation
+                </Typography>
+                <div onClick={handleClickOpenMainConvo}>
+                    <SunEditor
+                                setContents={mainConvo}
+                                disable={true}
+                                showToolbar={false}
+                                setOptions={{
+                                    width: 500,
+                                    height: 1,
+                                    placeholder:
+                                        'Enter the main conversation of the stakeholder...',
+                                    resizingBar: false,
+                                    showPathLabel: false,
+                                    }}
+                                onChange={handleChangeConversation}
+                            />
+                </div>
             </div>
             <div id="DeleteButton">
                 <Button
@@ -396,7 +439,7 @@ export default function StakeHolder({
                                 width: '100%',
                                 height: 400,
                                 placeholder:
-                                    'Enter in introduction of component...',
+                                'Enter the biography of the stakeholder...',
                                 buttonList: [
                                     ['font', 'fontSize', 'formatBlock'],
                                     ['paragraphStyle', 'blockquote'],
@@ -561,7 +604,7 @@ export default function StakeHolder({
                             setOptions={{
                                 height: 400,
                                 placeholder:
-                                    'Enter in introduction of component...',
+                                'Enter the main conversation of the stakeholder...',
                                 buttonList: [
                                     ['font', 'fontSize', 'formatBlock'],
                                     ['paragraphStyle', 'blockquote'],
