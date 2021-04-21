@@ -87,31 +87,21 @@
         }
     },
     {
-        "model": "backend.ActionPage",
+        "model": "backend.ActionPageChoice",
         "pk": 1,
         "fields": {
-            "action_page_id": 1,
             "page_id": 10,
-            "chosen_choice": null,
-            "result_page": null
+            "choice": "Approve project assignment.",
+            "result_page": 11
         }
     },
     {
-        "model": "backend.Choice",
-        "pk": 1,
-        "fields": {
-            "action_page_id": 1,
-            "choice_text": "Approve project assignment.",
-            "next_page": 11
-        }
-    },
-    {
-        "model": "backend.Choice",
+        "model": "backend.ActionPageChoice",
         "pk": 2,
         "fields": {
-            "action_page_id": 1,
-            "choice_text": "Deny project assignment.",
-            "next_page": 11
+            "page_id": 10,
+            "choice": "Deny project assignment.",
+            "result_page": 11
         }
     },
     {
@@ -128,30 +118,21 @@
         }
     },
     {
-        "model": "backend.ActionPage",
-        "pk": 2,
-        "fields": {
-            "page_id": 3,
-            "chosen_choice": null,
-            "result_page": null
-        }
-    },
-    {
-        "model": "backend.Choice",
+        "model": "backend.ActionPageChoice",
         "pk": 3,
         "fields": {
-            "action_page_id": 2,
-            "choice_text": "Procede with project.",
-            "next_page": 4
+            "page_id": 3,
+            "choice": "Approve project assignment.",
+            "result_page": 4
         }
     },
     {
-        "model": "backend.Choice",
+        "model": "backend.ActionPageChoice",
         "pk": 4,
         "fields": {
-            "action_page_id": 2,
-            "choice_text": "Postpone and ask questions.",
-            "next_page": 5
+            "page_id": 3,
+            "choice": "Postpone and ask questions.",
+            "result_page": 5
         }
     },
     {
