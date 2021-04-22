@@ -22,13 +22,21 @@ def index(request):
     return HttpResponse("This is the API")
 
 def readAttributes(request):
-    resultData = {
-            "userId": request.META['uid'],
-            "name": request.META['displayName'],
-            "affliation": request.META['eduPersonPrimaryAffiliation'],
-            "email": request.META['mail']
-    }
-    
+    try: 
+        resultData = {
+                "userId": request.META['uid'],
+                "name": request.META['displayName'],
+                "affliation": request.META['eduPersonPrimaryAffiliation'],
+                "email": request.META['mail']
+        }
+    except KeyError as ex:
+        resultData = {
+                "userId": "gerrygan",
+                "name": "Gerry Gan",
+                "affliation": "Student",
+                "email": "example@umass.edu"
+        }
+
     return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
 def scenarios(request):
@@ -39,8 +47,11 @@ def scenarios(request):
         return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid User ID: ' + str(userId)})
     else:
         try:
-            versionIdQuerySet = md.ScenarioForUser.objects.filter(user_id=userId).values_list('version_id')
-            scenarioVersionQuerySet = md.Version.objects.filter(version_id__in=versionIdQuerySet)\
+            userObj = md.User.objects.get(user_id=userId)
+            courseIdQuerySet = md.Takes.objects.filter(user_id=userObj.user_id).values_list('course_id')
+            scenarioIdQuerySet = md.ClassAssignment.objects.filter(course_id__in=courseIdQuerySet)\
+                                   .values('scenario_id')
+            scenarioVersionQuerySet = md.Version.objects.filter(scenario_id__in=scenarioIdQuerySet)\
                                         .values('version_id', 'name', 'num_conversation', 'first_page', 
                                                 is_finished=F('scenario_id__is_finished'), date_created=F('scenario_id__date_created'))
 
@@ -553,7 +564,6 @@ def actionPrompt(request):
                 logging.exception("Exception thrown: Query Failed to retrieve Page")
             
             return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
-
 
 def action(request):
     if request.method == 'POST':
