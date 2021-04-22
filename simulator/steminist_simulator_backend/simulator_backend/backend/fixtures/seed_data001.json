@@ -69,7 +69,7 @@
         "fields": {
             "scenario_id": 1,
             "name": "Privacy Dilemma Scenario",
-            "num_conversation": 5,
+            "num_conversation": 3,
             "first_page": 1
         }
     },
