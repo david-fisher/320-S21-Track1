@@ -60,11 +60,11 @@ services:
     depends_on:
       - database
     environment:
-      - PGHOST=${POSTGRESHOST}
-      - PGUSER=${POSTGRESUSERNAME}
-      - PGPASSWORD=${POSTGRESPASSWORD}
-      - PGDATABASE=${POSTGRESDB}
-      - PGPORT=5432
+      - DB_HOST=${POSTGRESHOST}
+      - DATABASE_USER=${POSTGRESUSERNAME}
+      - DATABASE_PASSWORD=${POSTGRESPASSWORD}
+      - DATABASE_NAME=${POSTGRESDB}
+      - DB_PORT=5432
     networks:
       - '320'
     container_name: backend-simulator
