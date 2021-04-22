@@ -11,17 +11,39 @@ class Course(models.Model):
 
     class Meta:
         db_table = "courses"
+
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    user_type_id = models.IntegerField() # no idea what this is for
+    access_level = models.IntegerField()
+
+    class Meta:
+        db_table = "users"
+
+class Takes(models.Model):
+    user_id = models.ForeignKey(User, on_delete=CASCADE)
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "takes"
     
 class Scenario(models.Model):
     scenario_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField() # not sure what this is for
+    user_id = models.IntegerField()
     public = models.BooleanField()
     is_finished = models.BooleanField()
     date_created = models.DateField()
 
     class Meta:
         db_table = "scenarios"
-    
+
+class ClassAssignment(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "class_assignment"
+
 class Page(models.Model):
     page_id = models.AutoField(primary_key=True)
     page_type = models.CharField(blank=False, max_length=200)

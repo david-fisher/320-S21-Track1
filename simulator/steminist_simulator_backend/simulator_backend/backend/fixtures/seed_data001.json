@@ -19,10 +19,34 @@
         "model": "backend.Scenario",
         "pk": 1,
         "fields": {
-            "user_id": 1,
+            "user_id": 99,
             "public": true,
             "is_finished": false,
             "date_created": "2020-01-01"
+        }
+    },
+    {
+        "model": "backend.ClassAssignment",
+        "pk": 1,
+        "fields": {
+            "course_id": 1,
+            "scenario_id": 1
+        }
+    },
+    {
+        "model": "backend.User",
+        "pk": 1,
+        "fields": {
+            "user_type_id": 1,
+            "access_level": 1
+        }
+    },
+    {
+        "model": "backend.Takes",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "course_id": 1
         }
     },
     {
