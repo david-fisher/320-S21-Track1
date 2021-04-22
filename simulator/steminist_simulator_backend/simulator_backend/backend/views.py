@@ -22,13 +22,21 @@ def index(request):
     return HttpResponse("This is the API")
 
 def readAttributes(request):
-    resultData = {
-            "userId": request.META['uid'],
-            "name": request.META['displayName'],
-            "affliation": request.META['eduPersonPrimaryAffiliation'],
-            "email": request.META['mail']
-    }
-    
+    try: 
+        resultData = {
+                "userId": request.META['uid'],
+                "name": request.META['displayName'],
+                "affliation": request.META['eduPersonPrimaryAffiliation'],
+                "email": request.META['mail']
+        }
+    except KeyError as ex:
+        resultData = {
+                "userId": "gerrygan",
+                "name": "Gerry Gan",
+                "affliation": "Student",
+                "email": "example@umass.edu"
+        }
+
     return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
 def scenarios(request):
