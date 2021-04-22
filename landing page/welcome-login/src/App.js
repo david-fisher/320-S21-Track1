@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import Signup from './pages/signup';
-import Login from './pages/login';
+import Wait from './pages/wait';
 import Homepage from './pages/homepage';
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
                 <Redirect to="/home" />
             </Route>
             <Route path="/home" component={Homepage} />
-            <Route path="/login" component={Login} />
+            <Route path="/wait" component={Wait} />
         </Router>
     );
 }
