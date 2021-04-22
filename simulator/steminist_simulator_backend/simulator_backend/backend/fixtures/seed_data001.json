@@ -87,31 +87,21 @@
         }
     },
     {
-        "model": "backend.ActionPage",
+        "model": "backend.ActionPageChoice",
         "pk": 1,
         "fields": {
-            "action_page_id": 1,
             "page_id": 10,
-            "chosen_choice": null,
-            "result_page": null
+            "choice": "Approve project assignment.",
+            "result_page": 11
         }
     },
     {
-        "model": "backend.Choice",
-        "pk": 1,
-        "fields": {
-            "action_page_id": 1,
-            "choice_text": "Approve project assignment.",
-            "next_page": 11
-        }
-    },
-    {
-        "model": "backend.Choice",
+        "model": "backend.ActionPageChoice",
         "pk": 2,
         "fields": {
-            "action_page_id": 1,
-            "choice_text": "Deny project assignment.",
-            "next_page": 11
+            "page_id": 10,
+            "choice": "Deny project assignment.",
+            "result_page": 11
         }
     },
     {
@@ -128,30 +118,41 @@
         }
     },
     {
-        "model": "backend.ActionPage",
-        "pk": 2,
-        "fields": {
-            "page_id": 3,
-            "chosen_choice": null,
-            "result_page": null
-        }
-    },
-    {
-        "model": "backend.Choice",
+        "model": "backend.ActionPageChoice",
         "pk": 3,
         "fields": {
-            "action_page_id": 2,
-            "choice_text": "Procede with project.",
-            "next_page": 4
+            "page_id": 3,
+            "choice": "Approve project assignment.",
+            "result_page": 4
         }
     },
     {
-        "model": "backend.Choice",
+        "model": "backend.ActionPageChoice",
         "pk": 4,
         "fields": {
-            "action_page_id": 2,
-            "choice_text": "Postpone and ask questions.",
-            "next_page": 5
+            "page_id": 3,
+            "choice": "Postpone and ask questions.",
+            "result_page": 5
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Test Issue",
+            "importance_score": 10
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Test Issue 2",
+            "importance_score": 30
         }
     },
     {
@@ -165,6 +166,30 @@
             "job": "CEO of Tesla",
             "introduction": "",
             "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 1,
+            "coverage_score": 1.3
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 2,
+            "coverage_score": 1.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 2,
+            "stakeholder_id": 1,
+            "coverage_score": 1.5
         }
     },
     {
@@ -186,7 +211,7 @@
         "fields": {
             "stakeholder_id": 1,
             "question": "How do you like your coffee?",
-            "response_id": ""
+            "response_id": "I like a caramel frap."
         }
     },
     {
@@ -195,7 +220,7 @@
         "fields": {
             "stakeholder_id": 1,
             "question": "When will Tesla be driveless car?",
-            "response_id": ""
+            "response_id": "Soon enough *evil laugh*"
         }
     },
     {
@@ -204,7 +229,7 @@
         "fields": {
             "stakeholder_id": 2,
             "question": "What is your usual order at Dick's?",
-            "response_id": ""
+            "response_id": "2 Deluxe hold mayo, a Large Fries and strawberry shake"
         }
     },
     {
@@ -213,7 +238,20 @@
         "fields": {
             "stakeholder_id": 2,
             "question": "What is your thoughts on app secretly taking users' data?",
-            "response_id": ""
+            "response_id": "That's pure evil!"
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 4,
+        "fields": {
+            "page_type": "STAKEHOLDERPAGE",
+            "page_title": "Stakeholder Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": 5,
+            "x_coordinate": 0,
+            "y_coordinate": 0
         }
     }
 ]
