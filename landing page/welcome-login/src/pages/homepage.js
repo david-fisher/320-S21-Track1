@@ -98,7 +98,7 @@ function StudentAccess() {
             <Container className={classes.studentButtonsContainer}>
                 <Button
                     component={Link}
-                    to={'/login'}
+                    to={'/wait'}
                     className={classes.accessButton}
                     variant="contained"
                     color="primary"
@@ -109,7 +109,7 @@ function StudentAccess() {
                 </Button>
                 <Button
                     component={Link}
-                    to={'/login'}
+                    to={'/wait'}
                     className={classes.accessButton}
                     variant="contained"
                     color="primary"
@@ -148,9 +148,6 @@ function EthisimIntro() {
         <div className={classes.ethisimIntroContainer}>
             <BlackTextTypography variant="h3" align="center">
                 Welcome to <b>Ethisim</b>
-            </BlackTextTypography>
-            <BlackTextTypography variant="h5" align="center">
-                Convenient Ethics Simulations
             </BlackTextTypography>
             <BlackTextTypography align="center" className={classes.margin}>
                 Ethisim allows you to easily create and assign ethics

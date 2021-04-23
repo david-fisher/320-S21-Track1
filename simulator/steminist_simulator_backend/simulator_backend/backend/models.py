@@ -12,10 +12,24 @@ class Course(models.Model):
     class Meta:
         db_table = "courses"
 
+class User(models.Model):
+    user_id = models.AutoField(primary_key=True)
+    user_type_id = models.IntegerField() # no idea what this is for
+    access_level = models.IntegerField()
 
+    class Meta:
+        db_table = "users"
+
+class Takes(models.Model):
+    user_id = models.ForeignKey(User, on_delete=CASCADE)
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "takes"
+    
 class Scenario(models.Model):
     scenario_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField()  # not sure what this is for
+    user_id = models.IntegerField()
     public = models.BooleanField()
     is_finished = models.BooleanField()
     date_created = models.DateField()
@@ -23,6 +37,12 @@ class Scenario(models.Model):
     class Meta:
         db_table = "scenarios"
 
+class ClassAssignment(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "class_assignment"
 
 class Page(models.Model):
     page_id = models.AutoField(primary_key=True)
@@ -113,6 +133,15 @@ class Stakeholder(models.Model):
     class Meta:
         db_table = "stakeholders"
 
+class Conversation(models.Model):
+    conversation_id = models.AutoField(primary_key=True)
+    stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
+    question = models.TextField()
+    response_id = models.TextField()
+
+    class Meta:
+        db_table = "conversations"
+
 class ConversationsHad(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
     course_id = models.IntegerField()
@@ -143,24 +172,14 @@ class GenericPage(models.Model):
     class Meta:
         db_table = "generic_page"
 
-
-class ActionPage(models.Model):
-    action_page_id = models.AutoField(primary_key=True)
+class ActionPageChoice(models.Model):
+    apc_id = models.AutoField(primary_key=True)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    chosen_choice = models.IntegerField(null=True)
+    choice = models.TextField(null=True)
     result_page = models.IntegerField(null=True)
 
     class Meta:
-        db_table = "action_page"
-
-class Choice(models.Model):
-    choices_id = models.AutoField(primary_key=True)
-    action_page_id = models.ForeignKey(ActionPage, on_delete=CASCADE)
-    choice_text = models.TextField()
-    next_page = models.IntegerField()
-
-    class Meta:
-        db_table = "choice"
+        db_table = "action_page_choices"
 
 class Issue(models.Model):
     issue_id = models.AutoField(primary_key=True)
