@@ -207,19 +207,6 @@ class Coverage(models.Model):
     class Meta:
         db_table = "coverage"
 
-
-class ReflectionsTaken(models.Model):
-    reflections = models.TextField()
-    session_id = models.ForeignKey(Session, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
-    version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
-    date_taken = models.DateTimeField()
-    page_id = models.ForeignKey(Page, on_delete=CASCADE)
-
-    class Meta:
-        db_table = "reflections_taken"
-
 class Asset(models.Model):
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     name = models.CharField(max_length=100)
@@ -243,3 +230,16 @@ class ReflectionQuestion(models.Model):
 
     class Meta:
         db_table = "reflection_questions" 
+
+class ReflectionsTaken(models.Model):
+    reflections = models.TextField()
+    rq_id = models.ForeignKey(ReflectionQuestion, on_delete=CASCADE)
+    session_id = models.ForeignKey(Session, on_delete=CASCADE)
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
+    date_taken = models.DateTimeField()
+    page_id = models.ForeignKey(Page, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "reflections_taken"
