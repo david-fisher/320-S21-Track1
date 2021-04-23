@@ -234,3 +234,12 @@ class Invitation(models.Model):
 
     class Meta:
         db_table = "invitations"
+
+class ReflectionQuestion(models.Model):
+    rq_id = models.AutoField(primary_key=True)
+    version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    page_id = models.ForeignKey(Page, on_delete=CASCADE)
+    reflection_question = models.TextField()
+
+    class Meta:
+        db_table = "reflection_questions" 
