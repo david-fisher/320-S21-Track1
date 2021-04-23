@@ -24,7 +24,7 @@ python manage.py migrate
 5. Seed the database(add initial data).
 - In the same directory as above, run the following command:
 ```
-python manage.py loaddata seed_data001.json
+python manage.py loaddata 01_intro_pages.json 02_reflection_pages.json 03_action_pages.json 04_stakeholder_page.json
 ```
 
 6. Run server.
