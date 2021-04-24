@@ -237,9 +237,9 @@ class ReflectionsTaken(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
+    page_id = models.ForeignKey(Page, on_delete=CASCADE)
     # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
     date_taken = models.DateTimeField()
-    page_id = models.ForeignKey(Page, on_delete=CASCADE)
 
     class Meta:
         db_table = "reflections_taken"

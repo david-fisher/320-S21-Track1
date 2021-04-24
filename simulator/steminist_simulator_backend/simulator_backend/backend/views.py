@@ -147,40 +147,6 @@ def stakeholderPage(request):
         return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
 
 def reflection(request):
-    # DISCLAIMER: Due to the incomplete db schema this can be quite scuffed. If the database is fixed and newer functions
-    # are implemented correspondingly then please delete these comments
-
-    # It can be confusing on how the GET/POST method works so I will clarify:
-    # I assume that the corresponding Session/Version/Response row are generated and pre populated  upon the user start
-    # to work on ascenario and is unique to every user (i.e no 2 users can work on the same row as the other and
-    # different scenario that an user is working on wouldn't share the same row either)
-
-    # For GET method, the 'prompt' or topic will be stored in the 'choice' text field of the Response row since there is
-    # no appropiate field to store the prompt in. Therefore note to backend teams or database teams, whoever might
-    # be populate this field to add a '[PROMPT]' tag before the actual prompt for parsing and to the front-end team,
-    # the API will get rid of the tag before sending json response so you don't have to further discard anything more
-    # from it.
-
-    # For POST method, the 'response' will be added back in the the choice section with the opening tag '[RESPONSE]'.
-    # To front-end teams, this will be added in by this API so you don't have to add in anything. To backend teams or
-    # whoever will be handling the data, please keep this in mind as to get rid of them before starting your run on the
-    # data.
-
-    # Final thoughts:
-    # Database team, if you are reading this, I want a separate 'response' table that has the same fields as the current
-    # 'responses' table but with the 'CHOICE TEXT' changed into:
-    #
-    # PROMPT INTEGER
-    # RESPONSE TEXT
-    #
-    # with 'prompt' field linked to the primary key of another new table:
-    #
-    # TABLE prompts {
-    # PROMPT_ID INTEGER PK
-    # PROMPT_TEXT TEXT
-    # }
-    #
-    # , it will make the work on this part much easier. Thank you.
 
 
     try:
@@ -198,31 +164,20 @@ def reflection(request):
         try:
             version = md.Version.objects.get(version_id=versionID)
             session = md.Session.objects.get(user_id=userId, version_id=versionID)
-
-            # TODO: change this when there exists a proper reflection table, this is still using 'action' table for
-            # now
-            page = md.Page.objects.get(page_id=pageID, page_title=pageTitle, page_type='ACTION')
-            actionPage = md.ActionPage.objects.get(page_id=pageID)
-
-            # TODO: change this when there exists a proper prompt table to pull the prompts from
-            # Assuming this query can returns more than one objects since reflection can have more than 1 field, use
-            # filter
-            # Assuming this set of response objects are special than the 'action' 's, containing prompts instead of
-            # array of choices in the 'choice' column
-            responseObj = md.Response.objects.filter(session_id=session.session_id, version_id=version.version_id,
-                                                     page_id=pageID)
-            if len(responseObj) == 0:
-                raise ValueError('No reflection prompt found.')
+            page = md.Page.objects.get(page_id=pageID, page_title=pageTitle, page_type='REFLECTION')
+            reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID)
+            if len(reflectionQuestionObj) == 0:
+                raise ValueError('No reflection question found.')
 
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                   'message': 'No version found with the given versionId'})
-        except md.ActionPage.DoesNotExist or md.Page.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                  'message': 'No Action page found based on given page Id'})
         except md.Session.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
-                                                  'message': 'Session not found based on give params'})
+                                                  'message': 'Session not found based on given params'})
+        except md.Page.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                  'message': 'Page not found based on given params'})
         except ValueError as e:
             return JsonResponse(status=404,
                                 data={'status': 404, 'message': str(e)})
@@ -232,22 +187,11 @@ def reflection(request):
             prompt_message = page.body
             prompts = []
 
-            try:
-                for prompt in responseObj:
-                    prompt_question = str(prompt.choice)
-                    if '[PROMPT]' not in prompt_question:
-                        raise ValueError("No '[PROMPT]' tag in response, the response object queried is not intended "
-                                         "for Reflection purpose. Please contact backend/database about this.")
-                    elif '[RESPONSE]' in prompt_question:
-                        raise ValueError("'[RESPONSE]' tag in response, the prompt in the response object has already "
-                                         "been filled. Use GET /reflection/response to view the responded prompts.")
+            for prompt in reflectionQuestionObj:
+                prompt_id = prompt.rq_id
 
-                    prompt_question = prompt_question.replace('[PROMPT]', '')
-                    prompts.append({"prompt_id": int(prompt.response_id), "prompt": prompt_question})
-
-            except ValueError as e:
-                return JsonResponse({'status': 400, 'message': 'Invalid Response object query', 'error': str(e)},
-                                    content_type="application/json")
+                prompt_question = prompt.reflection_question
+                prompts.append({"prompt_id": int(prompt_id), "prompt": prompt_question})
 
             return JsonResponse({'status': 200, 'message': prompt_message, 'body': prompts},
                                 content_type="application/json")
@@ -259,27 +203,45 @@ def reflection(request):
             overwritten = False
 
             try:
-                if len(responses) != len(responseObj):
+                if len(responses) != len(reflectionQuestionObj):
                     raise ValueError('The number of responses is different from the number of prompts (%i compare to %i)'
-                                     %(len(responses), len(responseObj)))
+                                     %(len(responses), len(reflectionQuestionObj)))
 
                 # This loop and edits variable here is to not save changes to the Response row until everything passed
                 # and is valid
                 edits = []
                 for prompt_res in responses:
-                    editing_res = responseObj.get(response_id=prompt_res['prompt_id'])
+                    reflection_question = md.ReflectionQuestion.objects.get(rq_id=prompt_res['prompt_id'])
+                    if reflection_question not in reflectionQuestionObj:
+                        raise ValueError('The reflection questions specified in the response don\'t match with the '
+                                         'reflection questions specified in the params.')
 
-                    if '[PROMPT]' not in editing_res.choice:
-                        raise ValueError("No '[PROMPT]' tag in response, the response object queried is not intended "
-                                         "for Reflection purpose. Please contact backend/database about this.")
 
-                    if '[RESPONSE]' in editing_res.choice:
-                        # overwriting old response
-                        editing_res.choice = editing_res.choice.split('[RESPONSE]')[0] + '[RESPONSE]' + \
-                                             prompt_res['response']
+                    editing_res = md.ReflectionsTaken.objects.filter(rq_id=prompt_res['prompt_id'],
+                                                                     session_id=session.session_id,
+                                                                     course_id=session.course_id,
+                                                                     version_id=version, page_id=page)
+
+                    print(len(editing_res))
+                    # already exist, overwriting
+                    if len(editing_res) == 1:
+                        editing_res = editing_res[0]
+                        editing_res.reflections = prompt_res['response']
+                        editing_res.date_taken = datetime.now()
                         overwritten = True
+
+                    # first time, creating object
+                    elif len(editing_res) == 0:
+                        editing_res = md.ReflectionsTaken(reflections=prompt_res['response'],
+                                                          rq_id=reflection_question,
+                                                          session_id=session, course_id=session.course_id,
+                                                          version_id=version, date_taken=datetime.now(),
+                                                          page_id=page)
+
+                    # more than 1 object with the same param, error
                     else:
-                        editing_res.choice = editing_res.choice + '[RESPONSE]' + prompt_res['response']
+                        raise ValueError('There already existed more than one response with the specified parameters, '
+                                         'please report this problem.')
 
                     edits.append(editing_res)
 
@@ -288,9 +250,10 @@ def reflection(request):
                     edit.save()
 
             except ValueError as e:
+                # raise e
                 return JsonResponse({'status': 400, 'message': 'Invalid prompt response', 'err': str(e)},
                                     content_type="application/json")
-            except md.Response.DoesNotExist:
+            except md.ReflectionQuestion.DoesNotExist:
                 return JsonResponse({'status': 400, 'message': 'Invalid prompt response id, response not found.'},
                                      content_type="application/json")
 
@@ -322,21 +285,10 @@ def reflectionResponse(request):
             try:
                 version = md.Version.objects.get(version_id=versionID)
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
-
-                # TODO: change this when there exists a proper reflection table, this is still using 'action' table for
-                # now
-                page = md.Page.objects.get(page_id=pageID, page_title=pageTitle, page_type='ACTION')
-                actionPage = md.ActionPage.objects.get(page_id=pageID)
-
-                # TODO: change this when there exists a proper prompt table to pull the prompts from
-                # Assuming this query can returns more than one objects since reflection can have more than 1 field, use
-                # filter
-                # Assuming this set of response objects are special than the 'action' 's, containing prompts instead of
-                # array of choices in the 'choice' column
-                responseObj = md.Response.objects.filter(session_id=session.session_id, version_id=version.version_id,
-                                                         page_id=pageID)
-                if len(responseObj) == 0:
-                    raise ValueError('No reflection prompt found.')
+                page = md.Page.objects.get(page_id=pageID, page_title=pageTitle, page_type='REFLECTION')
+                reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID)
+                if len(reflectionQuestionObj) == 0:
+                    raise ValueError('No reflection question found.')
 
             except md.Version.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
@@ -355,28 +307,29 @@ def reflectionResponse(request):
             prompts = []
 
             try:
-                for prompt in responseObj:
-                    prompt_qa = str(prompt.choice)
-                    if '[PROMPT]' not in prompt_qa:
-                        raise ValueError(
-                            "No '[PROMPT]' tag in response, the response object queried is not intended "
-                            "for Reflection purpose. Please contact backend/database about this.")
+                for prompt in reflectionQuestionObj:
+                    prompt_question = prompt.reflection_question
 
-                    splited = prompt_qa.split('[RESPONSE]')
-                    prompt_question = splited[0].replace('[PROMPT]', '')
-                    if len(splited) == 2:
-                        prompt_response = splited[1]
+                    # in case multiple answer
+                    answered = md.ReflectionsTaken.objects.filter(rq_id=prompt.rq_id,
+                                                                  session_id=session.session_id,
+                                                                  course_id=session.course_id,
+                                                                  version_id=versionID)
+                    if len(answered) > 1:
+                        raise ValueError('Multiple response returned for prompt_id %i.' %(prompt.rq_id))
+                    elif len(answered) == 1:
+                        prompt_response = answered[0].reflections
                     else:
                         prompt_response = ''
 
-                    prompts.append({"prompt_id": int(prompt.response_id), "prompt": prompt_question, "response":
-                                     prompt_response})
+                    prompts.append({"prompt_id": int(prompt.rq_id), "prompt": prompt_question, "response":
+                                    prompt_response})
             except ValueError as e:
                 return JsonResponse({'status': 400, 'message': 'Invalid Response object query', 'error': str(e)},
                                     content_type="application/json")
 
             return JsonResponse({'status': 200, 'message': prompt_message, 'body': prompts},
-                                    content_type="application/json")
+                                content_type="application/json")
 
         except Exception as e:
             logging.exception('Exception thrown: Query Failed to retrieve Page')
