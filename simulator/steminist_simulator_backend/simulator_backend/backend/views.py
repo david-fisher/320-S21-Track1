@@ -19,7 +19,7 @@ from django.db import connection
 pageType = "STAKEHOLDERPAGE" # change this to whatever type you initialize for stakeholder page
 
 def index(request):
-    return HttpResponse("This is the API")
+    return HttpResponse("This API works")
 
 def readAttributes(request):
     try: 
@@ -302,7 +302,6 @@ def reflection(request):
             return JsonResponse({'status': 500, 'message': 'Exception thrown: Query Failed to retrieve Page', 'err': str(e)},
                                 content_type="application/json")
 
-
 def reflectionResponse(request):
     if request.method == 'GET':
         try:
@@ -368,7 +367,6 @@ def reflectionResponse(request):
             logging.exception('Exception thrown: Query Failed to retrieve Page')
             return JsonResponse({'status': 500, 'message': 'Exception thrown: Query Failed to retrieve Page',
                                  'err': str(e)}, content_type="application/json")
-
 
 def stakeholder(request):
     if request.method == "GET":
