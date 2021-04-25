@@ -35,6 +35,7 @@ python manage.py runserver
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
 - Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
+- Checkout this [link](https://www.getpostman.com/collections/d4f0f1fcd253d359e834) for our POSTMAN collection.
 
 
 ## If you run into errors with Postgres, it will be helpful to drop the steminist_backend database and start from scratch:
