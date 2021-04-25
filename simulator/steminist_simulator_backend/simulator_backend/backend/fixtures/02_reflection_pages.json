@@ -4,7 +4,7 @@
       "pk": 4,
       "fields": {
         "page_type": "REFLECTION",
-        "page_title": "INITIAL_REFLECTION",
+        "page_title": "INITIAL REFLECTION",
         "version_id": 1,
         "body": "Please response to each and every single question.",
         "next_page": 5,
@@ -35,7 +35,7 @@
       "pk": 7,
       "fields": {
         "page_type": "REFLECTION",
-        "page_title": "MIDDLE_REFLECTION",
+        "page_title": "MIDDLE REFLECTION",
         "version_id": 1,
         "body": "Please response to each and every single question.",
         "next_page": 8,
@@ -66,7 +66,7 @@
       "pk": 10,
       "fields": {
         "page_type": "REFLECTION",
-        "page_title": "FINAL_REFLECTION",
+        "page_title": "FINAL REFLECTION",
         "version_id": 1,
         "body": "Please response to each and every single question.",
         "next_page": 11,

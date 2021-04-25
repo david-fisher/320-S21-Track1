@@ -153,9 +153,6 @@ def reflection(request):
         versionID = int(request.GET['version_id'])
         pageID = int(request.GET['page_id'])
         userId = int(request.GET['user_id'])
-        pageTitle = request.GET['page_title']
-        if pageTitle not in ('INITIAL_REFLECTION', 'MIDDLE_REFLECTION', 'FINAL_REFLECTION'):
-            raise ValueError('Invalid pageTitle value.')
     except ValueError as e:
         return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
                              'error': str(e)}, content_type="application/json")
@@ -164,7 +161,10 @@ def reflection(request):
         try:
             version = md.Version.objects.get(version_id=versionID)
             session = md.Session.objects.get(user_id=userId, version_id=versionID)
-            page = md.Page.objects.get(page_id=pageID, page_title=pageTitle, page_type='REFLECTION')
+            page = md.Page.objects.get(page_id=pageID, page_type='REFLECTION')
+            pageTitle = page.page_title
+            if pageTitle not in ('INITIAL REFLECTION', 'MIDDLE REFLECTION', 'FINAL REFLECTION'):
+                raise ValueError('Error with page_title value. Page is not a reflection page.')
             reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID)
             if len(reflectionQuestionObj) == 0:
                 raise ValueError('No reflection question found.')
