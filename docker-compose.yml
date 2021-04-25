@@ -4,7 +4,7 @@ services:
     build:
       context: editor/frontend/ethisim
     ports:
-      - 3009:80
+      - 3009:3000
     depends_on:
       - backend-editor
     volumes:
@@ -22,7 +22,7 @@ services:
     build:
       context: simulator/frontend
     ports:
-      - 3002:80
+      - 3002:3000
     depends_on:
       - backend-simulator
     volumes:
@@ -40,7 +40,7 @@ services:
     build:
       context: landing page/welcome-login
     ports:
-      - 3007:80
+      - 3007:3000
     volumes:
       - ./landing page/welcome-login:/app
       - /app/node_modules

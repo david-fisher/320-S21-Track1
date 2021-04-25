@@ -87,10 +87,10 @@ export default function Wait() {
             getData()
             let bool = (Math.random() < 0.5);
             if (bool){
-                window.location.href = "http://localhost:3001";
+                window.location.href = "https://localhost:3001";
             }
             else{
-                window.location.href = "http://localhost:3000";
+                window.location.href = "https://localhost:3000";
             }
         }, 5000)
       }, [shouldFetch]);
