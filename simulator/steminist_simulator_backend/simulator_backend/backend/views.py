@@ -573,12 +573,6 @@ def conversation(request):
             print("Invalid Version ID")
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
 
-        # retrieve course ID
-        try:
-            courseID = int(request.GET['courseId'])
-        except Exception as ex:
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Course ID'})
-
         # retrieve stakeholder ID
         try:
             stakeholderID = int(request.GET['stakeholderId'])
@@ -598,14 +592,11 @@ def conversation(request):
             # check if version ID exists
             versionObj = md.Version.objects.get(version_id=versionID)
 
-            # check if course ID exists
-            courseObj = md.Course.objects.get(course_id=courseID)
-
             # check if stakeholder ID exists
             stakeholderObj = md.Stakeholder.objects.get(version_id=versionID, stakeholder_id=stakeholderID)
 
             # check if session ID exists
-            sessionQuerySet = md.Session.objects.filter(user_id=userID, version_id=versionID, course_id=courseID).order_by('session_id').values('session_id')
+            sessionQuerySet = md.Session.objects.filter(user_id=userID, version_id=versionID).order_by('session_id').values('session_id')
             if len(sessionQuerySet) == 0:
                 return JsonResponse(status=404, data={'status': 404, 'message': 'No Session ID found'})
 
@@ -622,7 +613,7 @@ def conversation(request):
                 resultData[key] = conversationObj.__dict__[key]
 
             # retrieve Conversation Had
-            conversationHadObj = md.ConversationsHad.objects.get(course_id=courseID, version_id=versionID, stakeholder_id=stakeholderID, conversation_id=conversationID, session_id__in=sessionQuerySet)
+            conversationHadObj = md.ConversationsHad.objects.get(version_id=versionID, stakeholder_id=stakeholderID, conversation_id=conversationID, session_id__in=sessionQuerySet)
             for key in ['score', 'date_taken']:
                 resultData[key] = conversationHadObj.__dict__[key]
 
@@ -662,13 +653,6 @@ def conversation(request):
             print("Invalid Conversation ID")
             return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Conversation ID'})
 
-        # retrieve Course ID
-        try:
-            courseID = int(request.GET['courseId'])
-        except Exception as ex:
-            print("Invalid Course ID")
-            return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Course ID'})
-
         # retrieve Session ID
         try:
             sessionID = int(request.GET['sessionId'])
@@ -690,15 +674,12 @@ def conversation(request):
             for key in ['conversation_id', 'question', 'response_id']:
                 resultData[key] = conversationObj.__dict__[key]
 
-            # check if course ID exists
-            courseObj = md.Course.objects.get(course_id=courseID)
-            
             # check if session ID exists
-            sessionObj = md.Session.objects.get(session_id=sessionID, course_id=courseID, version_id=versionID)
+            sessionObj = md.Session.objects.get(session_id=sessionID, version_id=versionID)
 
             # check if conversation ID has already been chosen
             try:
-                conversationHadObj = md.ConversationsHad.objects.get(session_id=sessionID, version_id=versionID, stakeholder_id=stakeholderID, conversation_id=conversationID, course_id=courseID)
+                conversationHadObj = md.ConversationsHad.objects.get(session_id=sessionID, version_id=versionID, stakeholder_id=stakeholderID, conversation_id=conversationID)
                 resultData['already_exist'] = True
             except md.ConversationsHad.DoesNotExist:
 
@@ -722,7 +703,7 @@ def conversation(request):
                     coverageScore += score['coverage_score']
 
                 # create new conversationHad object
-                conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, course_id=courseID, date_taken=datetime.now(), score=coverageScore)
+                conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, date_taken=datetime.now(), score=coverageScore)
                 conversationHadObj.save()
                 resultData['already_exist'] = False
             
