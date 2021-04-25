@@ -147,43 +147,39 @@ def stakeholderPage(request):
         return JsonResponse(status=200, data={'status': 200, 'message': 'succes', 'result': resultData})
 
 def reflection(request):
-
-
-    try:
-        versionID = int(request.GET['version_id'])
-        pageID = int(request.GET['page_id'])
-        userId = int(request.GET['user_id'])
-    except ValueError as e:
-        return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
-                             'error': str(e)}, content_type="application/json")
-
-    try:
+    # GET
+    if request.method == 'GET':
         try:
-            version = md.Version.objects.get(version_id=versionID)
-            session = md.Session.objects.get(user_id=userId, version_id=versionID)
-            page = md.Page.objects.get(page_id=pageID, page_type='REFLECTION')
-            pageTitle = page.page_title
-            if pageTitle not in ('INITIAL REFLECTION', 'MIDDLE REFLECTION', 'FINAL REFLECTION'):
-                raise ValueError('Error with page_title value. Page is not a reflection page.')
-            reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID)
-            if len(reflectionQuestionObj) == 0:
-                raise ValueError('No reflection question found.')
+            versionID = int(request.GET['version_id'])
+            pageID = int(request.GET['page_id'])
 
-        except md.Version.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                  'message': 'No version found with the given versionId'})
-        except md.Session.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                  'message': 'Session not found based on given params'})
-        except md.Page.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                  'message': 'Page not found based on given params'})
         except ValueError as e:
-            return JsonResponse(status=404,
-                                data={'status': 404, 'message': str(e)})
+            return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
+                                'error': str(e)}, content_type="application/json")
 
-        # GET
-        if request.method == 'GET':
+        try:
+            try:
+                version = md.Version.objects.get(version_id=versionID)
+                page = md.Page.objects.get(page_id=pageID, page_type='REFLECTION')
+                pageTitle = page.page_title
+                if pageTitle not in ('INITIAL REFLECTION', 'MIDDLE REFLECTION', 'FINAL REFLECTION'):
+                    raise ValueError('Error with page_title value. Page is not a reflection page.')
+                reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID).order_by('rq_id')
+
+                if len(reflectionQuestionObj) == 0:
+                    raise ValueError('No reflection question found.')
+
+            except md.Version.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404,
+                                                    'message': 'No version found with the given versionId'})
+            except md.Page.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404,
+                                                    'message': 'Page not found based on given params'})
+            except ValueError as e:
+                return JsonResponse(status=404,
+                                    data={'status': 404, 'message': str(e)})
+        
+            # GET
             prompt_message = page.body
             prompts = []
 
@@ -196,9 +192,49 @@ def reflection(request):
             return JsonResponse({'status': 200, 'message': prompt_message, 'body': prompts},
                                 content_type="application/json")
 
+        except Exception as e:
+            logging.exception('Exception thrown: Query Failed to retrieve Page')
+            return JsonResponse({'status': 500, 'message': 'Exception thrown: Query Failed to retrieve Page', 'err': str(e)},
+                                content_type="application/json")
 
-        # POST
-        elif request.method == 'POST':
+
+    # POST
+    elif request.method == 'POST':
+        try:
+            userId = int(request.GET['user_id'])
+            versionID = int(request.GET['version_id'])
+            pageID = int(request.GET['page_id'])
+
+        except ValueError as e:
+            return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
+                                'error': str(e)}, content_type="application/json")
+
+        try:
+            try:
+                version = md.Version.objects.get(version_id=versionID)
+                session = md.Session.objects.get(user_id=userId, version_id=versionID)
+                page = md.Page.objects.get(page_id=pageID, page_type='REFLECTION')
+                pageTitle = page.page_title
+                if pageTitle not in ('INITIAL REFLECTION', 'MIDDLE REFLECTION', 'FINAL REFLECTION'):
+                    raise ValueError('Error with page_title value. Page is not a reflection page.')
+                reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID).order_by('rq_id')
+
+                if len(reflectionQuestionObj) == 0:
+                    raise ValueError('No reflection question found.')
+
+            except md.Version.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404,
+                                                    'message': 'No version found with the given versionId'})
+            except md.Session.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404,
+                                                      'message': 'Session not found based on given params'})
+            except md.Page.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404,
+                                                    'message': 'Page not found based on given params'})
+            except ValueError as e:
+                return JsonResponse(status=404,
+                                    data={'status': 404, 'message': str(e)})
+
             responses = json.loads(request.body)['body']
             overwritten = False
 
@@ -222,7 +258,6 @@ def reflection(request):
                                                                      course_id=session.course_id,
                                                                      version_id=version, page_id=page)
 
-                    print(len(editing_res))
                     # already exist, overwriting
                     if len(editing_res) == 1:
                         editing_res = editing_res[0]
@@ -262,10 +297,10 @@ def reflection(request):
             else:
                 return JsonResponse({'status': 200, 'result': "Added reflection."}, content_type="application/json")
 
-    except Exception as e:
-        logging.exception('Exception thrown: Query Failed to retrieve Page')
-        return JsonResponse({'status': 500, 'message': 'Exception thrown: Query Failed to retrieve Page', 'err': str(e)},
-                            content_type="application/json")
+        except Exception as e:
+            logging.exception('Exception thrown: Query Failed to retrieve Page')
+            return JsonResponse({'status': 500, 'message': 'Exception thrown: Query Failed to retrieve Page', 'err': str(e)},
+                                content_type="application/json")
 
 
 def reflectionResponse(request):
@@ -274,9 +309,7 @@ def reflectionResponse(request):
             versionID = int(request.GET['version_id'])
             pageID = int(request.GET['page_id'])
             userId = int(request.GET['user_id'])
-            pageTitle = request.GET['page_title']
-            if pageTitle not in ('INITIAL_REFLECTION', 'MIDDLE_REFLECTION', 'FINAL_REFLECTION'):
-                raise ValueError('Invalid pageTitle value.')
+
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
                                  'error': str(e)}, content_type="application/json")
@@ -285,8 +318,8 @@ def reflectionResponse(request):
             try:
                 version = md.Version.objects.get(version_id=versionID)
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
-                page = md.Page.objects.get(page_id=pageID, page_title=pageTitle, page_type='REFLECTION')
-                reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID)
+                page = md.Page.objects.get(page_id=pageID, page_type='REFLECTION')
+                reflectionQuestionObj = md.ReflectionQuestion.objects.filter(page_id=pageID, version_id=versionID).order_by('rq_id')
                 if len(reflectionQuestionObj) == 0:
                     raise ValueError('No reflection question found.')
 
