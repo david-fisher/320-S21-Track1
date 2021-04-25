@@ -83,7 +83,8 @@ class Session(models.Model):
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
     date_started = models.DateTimeField()
-    is_finished = models.BooleanField()
+    is_finished = models.BooleanField(default=False)
+    most_recent_access = models.DateTimeField(default=None, null=True)
 
     class Meta:
         db_table = "sessions"

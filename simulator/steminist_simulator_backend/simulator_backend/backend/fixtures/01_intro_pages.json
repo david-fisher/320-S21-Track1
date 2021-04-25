@@ -50,18 +50,6 @@
         }
     },
     {
-        "model": "backend.Session",
-        "pk": 1,
-        "fields": {
-            "user_id": 1,
-            "scenario_id": 1,
-            "version_id": 1,
-            "course_id": 1,
-            "date_started": "2020-01-01",
-            "is_finished": false
-        }
-    },
-    {
         "model": "backend.Page",
         "pk": 1,
         "fields": {

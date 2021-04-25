@@ -67,6 +67,55 @@ def scenarios(request):
         print("Got all scenarios")
         return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
+def session(request):
+    if request.method == "POST":
+        userId = int(request.GET['userId'])
+        versionId = int(request.GET['versionId'])
+
+        # Check if there is a Version given the versionId 
+        try:
+            version = md.Version.objects.get(version_id=versionId)
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No version found with the given versionId'})
+        
+        # Check if there is a User given the userId 
+        try:
+            user = md.User.objects.get(user_id=userId)
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        try:
+            course = md.ClassAssignment.objects.get(scenario_id=version.scenario_id).course_id
+        except md.ClassAssignment.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'The given user cannot attempt the given scenario'})
+
+
+        message = None
+        # Obtain session field based on given params
+        try:
+            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
+            session.most_recent_access = datetime.now()
+            session.save()
+            message = 'Session resumed successfully.'
+        except md.Session.DoesNotExist:
+            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version, course_id=course,
+                                 date_started=datetime.now(), most_recent_access=datetime.now())
+            session.save()
+            message = 'Session created succesfully.'
+
+        responseObj = {}
+        responseObj["sessionId"] = session.session_id
+        responseObj["versionId"] = session.version_id_id
+        responseObj["mostRecentAccess"] = session.most_recent_access
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+
 def scenarioIntroduction(request):    
     versionID = int(request.GET['versionId'])
     pageID = int(request.GET['pageId'])
@@ -643,7 +692,7 @@ def conversation(request):
 
             # check if course ID exists
             courseObj = md.Course.objects.get(course_id=courseID)
-
+            
             # check if session ID exists
             sessionObj = md.Session.objects.get(session_id=sessionID, course_id=courseID, version_id=versionID)
 

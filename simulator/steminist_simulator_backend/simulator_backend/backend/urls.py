@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('shib/attributes', views.readAttributes, name='readAttributes'),
     path('scenarios', views.scenarios, name='scenarios'),
+    path('scenarios/session', views.session, name="startSession"),
     path('scenarios/intro', views.scenarioIntroduction, name='scenarioIntroduction'),
     path('scenarios/task', views.scenarioTask, name='scenarioTask'),
     path('scenarios/reflection', views.reflection, name='reflection'),
