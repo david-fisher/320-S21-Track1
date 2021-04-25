@@ -1,0 +1,64 @@
+[
+    {
+        "model": "backend.Page",
+        "pk": 5,
+        "fields": {
+            "page_type": "INITIALACTION",
+            "page_title": "Initial Action Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": -1,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPageChoice",
+        "pk": 1,
+        "fields": {
+            "page_id": 5,
+            "choice": "Approve project assignment.",
+            "result_page": 9
+        }
+    },
+    {
+        "model": "backend.ActionPageChoice",
+        "pk": 2,
+        "fields": {
+            "page_id": 5,
+            "choice": "Postpone and ask questions.",
+            "result_page": 6
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 8,
+        "fields": {
+            "page_type": "FINALACTION",
+            "page_title": "Final Action Page",
+            "version_id": 1,
+            "body": "Having talked to the stakeholders, what is your course of action?",
+            "next_page": 9,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.ActionPageChoice",
+        "pk": 3,
+        "fields": {
+            "page_id": 8,
+            "choice": "Approve project assignment.",
+            "result_page": 9
+        }
+    },
+    {
+        "model": "backend.ActionPageChoice",
+        "pk": 4,
+        "fields": {
+            "page_id": 8,
+            "choice": "Deny project assignment.",
+            "result_page": 9
+        }
+    }
+]

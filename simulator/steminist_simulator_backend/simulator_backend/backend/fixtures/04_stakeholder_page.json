@@ -1,0 +1,121 @@
+[
+    {
+        "model": "backend.Issue",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Test Issue",
+            "importance_score": 10
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Test Issue 2",
+            "importance_score": 30
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Elon Musk",
+            "description": "Very cool.",
+            "job": "CEO of Tesla",
+            "introduction": "",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 1,
+            "coverage_score": 1.3
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 2,
+            "coverage_score": 1.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 2,
+            "stakeholder_id": 1,
+            "coverage_score": 1.5
+        }
+    },
+    {
+        "model": "backend.Stakeholder",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Bill Gates",
+            "description": "Not that cool",
+            "job": "Founder of Microsoft",
+            "introduction": "",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 1,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "How do you like your coffee?",
+            "response_id": "I like a caramel frap."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 2,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "When will Tesla be driveless car?",
+            "response_id": "Soon enough *evil laugh*"
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 3,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What is your usual order at Dick's?",
+            "response_id": "2 Deluxe hold mayo, a Large Fries and strawberry shake"
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 4,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What is your thoughts on app secretly taking users' data?",
+            "response_id": "That's pure evil!"
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 6,
+        "fields": {
+            "page_type": "STAKEHOLDERPAGE",
+            "page_title": "Stakeholder Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": 7,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    }
+]
