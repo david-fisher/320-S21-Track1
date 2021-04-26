@@ -36,7 +36,7 @@ function ellipses(str, cutoff) {
 function Stakeholders({ pages, setPages, activePage, setActivePage }) {
   const [stakeholders, setStakeholders] = React.useState([])
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-  const [conversationLimit, setConversationLimit] = React.useState(1);
+  const [conversationLimit, setConversationLimit] = React.useState(2);
   const [stakeholdersDisabled, setStakeholdersDisabled] = React.useState({});
   const cardStyles = makeStyles({
     root: {
@@ -47,7 +47,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
       height: 125,
       //wordBreak: 'break-word',
       display:'flex',
-      borderRadius: '35px'
+      borderRadius: '35px',
     },
     name: {
       color: '#000000',
@@ -88,7 +88,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
   const createdCardStyles = cardStyles();
   const stakeholdersGrid = getStakeholdersGrid(stakeholders);
   
-  const endpointGet = '/scenarios/stakeholder?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID;
+  const endpointGet = '/scenarios/stakeholder/page?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID;
 
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
@@ -113,79 +113,12 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
     }
 
     function onFailure(err){
-      console.log('L');
+      console.log('Error');
     }
     get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
   }
   useEffect(getData, [shouldFetch]);
   
-  /* React.useEffect(() => {
-    (async () => {
-      await axios({
-        method: 'get',
-        url: BACK_URL + '/scenarios/stakeholder?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID,
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      }).then(response => {
-        setConversationLimit(response.data.conversation_limit)
-        const holders = response.data.stakeholders;
-        setStakeholders(holders);
-        setStakeholdersDisabled(prev => {
-          return holders.reduce((obj, stakeholder) => {
-            obj[stakeholder.stakeholder_id] = false;
-            return obj;
-          }, {});
-        });
-        setModalOpenToggles(prev => {
-          return holders.reduce((obj, stakeholder) => {
-            obj[stakeholder.id] = false;
-            return obj;
-          }, {});
-        });
-        // History 
-        axios({
-          method: 'get',
-          url: BACK_URL + '/scenarios/stakeholder?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID,
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        }).then(histResponse => {
-          const history = histResponse.data;
-          setNumStakeholderTalkedTo(history.length);
-          if (history.length >= response.data.conversation_limit) {
-            setStakeholdersDisabled(prev => {
-              return holders.reduce((obj, stakeholder) => {
-                obj[stakeholder.id] = true;
-                return obj
-              }, {});
-            });
-          } else {
-            setStakeholdersDisabled(prev => {
-              let newDisabled = {...prev};
-              holders.forEach(stakeholder => {
-                let containsID = false;
-                for (let i = 0; i < history.length; ++i){
-                  if (stakeholder.id === history[i].stakeholder_id){
-                    containsID = true;
-                  }
-                }
-                if (containsID) {
-                  newDisabled[stakeholder.id] = true;
-                }
-              });
-              return newDisabled;
-            });
-          }
-        }).catch(err => {
-          console.log(err);
-        });
-      }).catch(err => {
-        console.log(err);
-        alert(err);
-      });
-  })()
-  }, [scenarios]) */
 
   function getStakeholderCards(id, name, job, description, photo, styles) {
     
@@ -258,7 +191,10 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
                 <Button disabled={stakeholdersDisabled[id]} variant="contained" onClick={() => {
                   setCurrentStakeholder(prev => ({
                     name: name,
-                    id: id
+                    id: id,
+                    job: job,
+                    description: description,
+                    photo: photo
                   }));
                   
                   setStakeholdersDisabled(prev => { 
@@ -286,18 +222,18 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
                     }
                   }).catch(err => {
                     console.error(err);
-                    alert(err);
+                    alert(err); 
                   }) */
                   setShowStakeholders(false);
                   toggleModal(id, false);
-                  /* setGatheredInfo(infos => {
+                  setGatheredInfo(infos => {
                     let ind = infos.findIndex(info => info.pageId === PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS);
                     if (ind < 0) { ind = infos.length; }
                     let newInfos = [...infos];
                     newInfos.splice(ind, 0,
-                      { name: name, id: `stakeholder:${id}`, pageId: 'stakeholders'});
+                      { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: 'stakeholders'});
                     return newInfos;
-                  }); */
+                  });
                 }}>Speak to {name}</Button>
               </div>
           </DialogContent>
