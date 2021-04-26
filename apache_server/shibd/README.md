@@ -1,7 +1,7 @@
-# What is Shibboleth? 
+# About Shibboleth :  
 Shibboleth is an open-source, single sign-on login system provided under the Apache 2 license. It allows people to sign in using just one identity to various systems run by federations of different organizations or institutions. Thinking about our system, the organization being the University of Massachusetts Amherst.
 
-# Understanding Shibboleth and its Architecture
+# Understanding Shibboleth and its Architecture :
 1. Infrastructure based on SAML (Security Assertion Markup Language)
 2. SAML has 3 principle roles : 
 
@@ -13,7 +13,7 @@ Shibboleth is an open-source, single sign-on login system provided under the Apa
 	
 3. In the primary use case addressed by SAML, the principal requests a service from the service provider. The service provider requests and obtains an authentication assertion from the identity provider. On the basis of this assertion, the service provider can make an access control decision, that is, it can decide whether to perform the service for the connected principal
 
-# Setting up Shibboleth
+# Installing/Setting up Shibboleth :
 ### Note: all of the below applies for the OS of the virtual machine provided by CSCF, which is CentOS
 
 1. (Requires curl) Download the shibboleth repository by running the following command:
