@@ -1,3 +1,10 @@
+# Development
+
+1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
+2. Replace .env file with specified parameters
+3. Get localhost-shiboleth from slack and place it within the apache-server. This folder contains files which override shibboleth files found in the base image. These files are setup to allow the host to run only on ethisim1.cs.umass.edu.  These updated files allow the dev to run on a localhost.
+
+
 # How to use docker-compose to build and run the web application
 
 1. After cloning the repo to your local machine, update the .env file in the root directory of the project with the
