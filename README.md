@@ -18,6 +18,11 @@
 #### The following is a list of all the containers that are run after performing the steps outlined above along with their port mappings
 
 1. **frontend-landing-page** - this container can be accessed on http at http://localhost:3007, if using in conjunction with the shibd container, it should be accessed on https at https://localhost
+2. **frontend-editor** - this container can be accessed on http at http://localhost:3009, if using in conjunction with the shibd container, it should be accessed on https at https://localhost/editor
+3. **frontend-simulator** - this container can be accessed on http at http://localhost:3002, if using in conjunction with the shibd container, it should be accessed on https at https://localhost/simulator
+4. **backend-editor** - this container can be accessed on http at http://localhost:8001, if using in conjunction with the shibd container, it should be accessed on https at https://localhost:8000
+5. **backend-simulator** - this container can be accessed on http at http://localhost:7001, if using in conjunction with the shibd container, it should be accessed on https at https://localhost:7000
+6. **frontend-landing-page** - this container can be accessed on http at http://localhost:3007, if using in conjunction with the shibd container, it should be accessed on https at https://localhost
 
 ### Note
 #This is the file structure for this track
