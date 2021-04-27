@@ -6,7 +6,7 @@
             "page_type": "INITIALACTION",
             "page_title": "Initial Action Page",
             "version_id": 1,
-            "body": "",
+            "body": "You are assigned to work on an autonomous car project for your company. What you will do?",
             "next_page": -1,
             "x_coordinate": 0,
             "y_coordinate": 0
@@ -17,7 +17,7 @@
         "pk": 1,
         "fields": {
             "page_id": 5,
-            "choice": "Approve project assignment.",
+            "choice": "Approve project assignment and work on it immediately to save time.",
             "result_page": 9
         }
     },
@@ -26,7 +26,7 @@
         "pk": 2,
         "fields": {
             "page_id": 5,
-            "choice": "Postpone and ask questions.",
+            "choice": "Postpone and ask questions from stakeholders.",
             "result_page": 6
         }
     },
@@ -57,7 +57,7 @@
         "pk": 4,
         "fields": {
             "page_id": 8,
-            "choice": "Deny project assignment.",
+            "choice": "Refuse project assignment.",
             "result_page": 9
         }
     }

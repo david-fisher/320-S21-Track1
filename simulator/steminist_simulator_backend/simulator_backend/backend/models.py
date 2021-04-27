@@ -161,7 +161,7 @@ class Conversation(models.Model):
     conversation_id = models.AutoField(primary_key=True)
     stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
     question = models.TextField()
-    response_id = models.TextField()
+    conversation_response = models.TextField()
 
     class Meta:
         db_table = "conversations"
