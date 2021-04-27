@@ -9,12 +9,11 @@
 
 1. After following the steps outlined above, type _docker-compose up -d_ in your terminal window. The _-d_ argument ensures that the containers spin up in the background and the terminal instance can be further used to run other commands.
 2. Since we have 3 different frontend components configured in one docker-compose file, there's a possibility, albeit remote, that if we run _docker-compose up -d_, we end up getting a timeout error for the frontend services. To remedy that, restart docker and paste these 2 commands in your terminal window:
-###### _export DOCKER_CLIENT_TIMEOUT=120_
-###### _export COMPOSE_HTTP_TIMEOUT=120_
+      ###### _export DOCKER_CLIENT_TIMEOUT=120_
+      ###### _export COMPOSE_HTTP_TIMEOUT=120_
 
-The default timeout value is 60 and these commands will double it. It might need to be adjusted to an even higher value depending on your system.
-
-Run _docker-compose up -d_ again.
+      The default timeout value is 60 and these commands will double it. The timeout value might need to be adjusted to an even higher value depending on your system. 
+      Run _docker-compose up -d_ again.
 
 ### Once every component is built, the landing page will be accessible at http://localhost:3006
 
