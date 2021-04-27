@@ -467,33 +467,6 @@ def reflectionResponse(request):
             return JsonResponse({'status': 500, 'message': 'Exception thrown: Query Failed to retrieve Page',
                                  'err': str(e)}, content_type="application/json")
 
-def scenarioConclusion(request):
-    versionID = int(request.GET['versionId'])  
-    pageID = int(request.GET['pageId'])
-
-    if not isinstance(versionID, int):
-        print("Invalid version ID")
-        return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID'})
-    elif not isinstance(pageID, int):
-        print("Invalid page ID")
-        return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid page ID' })
-    else:
-        try:
-            scenarioConclustionQuerySet = md.Page.objects.filter(page_id=pageID, version_id=versionID)\
-                .values("version_id", "page_id", "page_title","scenario_id,", "body" )
-               
-            if len(scenarioConclustionQuerySet) == 0:
-                return JsonResponse(status=404, data={'status': 404,
-                                                      'message': 'Conclusion not found with given IDs'})
-            
-            resultData = list(scenarioConclustionQuerySet)
-        except Exception as ex:
-            logging.exception("Exception thrown: Query Failed to retrieve Page") 
-
-        print("Got scenario conclusions.")
-        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})  
-
-
 def stakeholder(request):
     if request.method == "GET":
         # retrieve version ID
