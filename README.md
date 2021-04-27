@@ -15,7 +15,9 @@
       The default timeout value is 60 and these commands will double it. The timeout value might need to be adjusted to an even higher value depending on your system. 
       Run _docker-compose up -d_ again.
 
-### Once every component is built, the landing page will be accessible at http://localhost:3006
+#### The following is a list of all the containers that are run after performing the steps outlined above along with their port mappings
+
+1. **frontend-landing-page** - this container can be accessed on http at http://localhost:3007, if using in conjunction with the shibd container, it should be accessed on https at https://localhost
 
 ### Note
 #This is the file structure for this track
