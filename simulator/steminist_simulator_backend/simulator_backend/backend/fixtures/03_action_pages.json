@@ -6,7 +6,7 @@
             "page_type": "INITIALACTION",
             "page_title": "Initial Action Page",
             "version_id": 1,
-            "body": "",
+            "body": "Based on what you have learned so far, do you want to approve the project now? Or do you feel like you need to postpone your decision and learn more from the stakeholders involved in this project?",
             "next_page": -1,
             "x_coordinate": 0,
             "y_coordinate": 0
