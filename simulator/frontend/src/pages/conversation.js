@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect } from "react";
 import {
   withStyles,
   Typography,
@@ -11,6 +11,7 @@ import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import HTMLRenderer from "./components/htmlRenderer";
 import { ScenariosContext } from "../Nav";
+import get from '../universalHTTPRequests/get';
 
 const TextTypography = withStyles({
   root: {
@@ -37,14 +38,35 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     const [monologue, setMonologue] = React.useState('');
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
-    React.useEffect(() => {
+    const endpointGet = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId="  + SCENARIO_ID + "&stakeholderId=" + stakeholder.id;
+
+    const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+      data: null,
+      loading: false,
+      error: null,
+    });
+    const [shouldFetch, setShouldFetch] = useState(0);
+
+    let getData = () => {
+      function onSuccess(response){
+        console.log(response.data)
+        setMonologue(prev => response.data.result[0].question);
+      };
+  
+      function onFailure(err){
+        console.log('L');
+      };
+      get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
+    };
+
+    useEffect(getData, [shouldFetch]);
+
+    /* React.useEffect(() => {
       axios({
         method: "get",
-        url: BACK_URL + "/scenarios/stakeholders/conversation",
+        url: 
         headers: {
-          scenarioID: scenarios.currentScenarioID,
-          studentID: STUDENT_ID,
-          stakeholderID: stakeholder.id
+           
         },
       })
       .then((response) => {
@@ -56,7 +78,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         console.log("err", err);
         alert(err);
       });
-    }, [scenarios]);
+    }, [scenarios]); */
   
     const classes = useStyles();
   
