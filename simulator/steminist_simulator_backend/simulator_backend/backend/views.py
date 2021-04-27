@@ -677,6 +677,12 @@ def conversation(request):
             # check if session ID exists
             sessionObj = md.Session.objects.get(session_id=sessionID, version_id=versionID)
 
+            try:
+                course = md.ClassAssignment.objects.get(scenario_id=versionObj.scenario_id).course_id
+            except md.ClassAssignment.DoesNotExist:
+                return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'The given user cannot attempt the given scenario'})
+
             # check if conversation ID has already been chosen
             try:
                 conversationHadObj = md.ConversationsHad.objects.get(session_id=sessionID, version_id=versionID, stakeholder_id=stakeholderID, conversation_id=conversationID)
@@ -703,7 +709,10 @@ def conversation(request):
                     coverageScore += score['coverage_score']
 
                 # create new conversationHad object
-                conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, date_taken=datetime.now(), score=coverageScore)
+                # TODO: remove course_id later once DB team approves
+                conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, 
+                                                         course_id=course.course_id, date_taken=datetime.now(), score=coverageScore)
+                                
                 conversationHadObj.save()
                 resultData['already_exist'] = False
             
