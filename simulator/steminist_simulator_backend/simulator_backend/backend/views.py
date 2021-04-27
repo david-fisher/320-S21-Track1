@@ -246,8 +246,8 @@ def reflection(request):
     # GET
     if request.method == 'GET':
         try:
-            versionID = int(request.GET['version_id'])
-            pageID = int(request.GET['page_id'])
+            versionID = int(request.GET['versionId'])
+            pageID = int(request.GET['pageId'])
 
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
@@ -297,9 +297,9 @@ def reflection(request):
     # POST
     elif request.method == 'POST':
         try:
-            userId = int(request.GET['user_id'])
-            versionID = int(request.GET['version_id'])
-            pageID = int(request.GET['page_id'])
+            userId = int(request.GET['userId'])
+            versionID = int(request.GET['versionId'])
+            pageID = int(request.GET['pageId'])
 
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
@@ -401,9 +401,9 @@ def reflection(request):
 def reflectionResponse(request):
     if request.method == 'GET':
         try:
-            versionID = int(request.GET['version_id'])
-            pageID = int(request.GET['page_id'])
-            userId = int(request.GET['user_id'])
+            versionID = int(request.GET['versionId'])
+            pageID = int(request.GET['pageId'])
+            userId = int(request.GET['userId'])
 
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
