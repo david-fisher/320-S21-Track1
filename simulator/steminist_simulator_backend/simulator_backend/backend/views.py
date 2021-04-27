@@ -53,21 +53,32 @@ def scenarios(request):
                                    .values('scenario_id')
             scenarioVersionQuerySet = md.Version.objects.filter(scenario_id__in=scenarioIdQuerySet)\
                                         .values('version_id', 'name', 'num_conversation', 'first_page', 
-                                                is_finished=F('scenario_id__is_finished'), date_created=F('scenario_id__date_created'))
+                                                date_created=F('scenario_id__date_created'))
 
             # If no scenarios with the given userId were found, return 404 error
             if len(scenarioVersionQuerySet) == 0:
                 return JsonResponse(status=404, data={'status': 404, 'message': 'Scenario not found with the given User ID'}, )
 
             resultData = list(scenarioVersionQuerySet)
-
+            for result in resultData:
+                versionId = result['version_id']
+                try:
+                    session = md.Session.objects.get(user_id=userObj.user_id, version_id = versionId)
+                    result['is_finished'] = session.is_finished
+                    result['date_started'] = session.date_started
+                    result['last_date_modified'] = session.most_recent_access
+                except md.Session.DoesNotExist:
+                    result['is_finished'] = False
+                    result['date_started'] = None
+                    result['last_date_modified'] = None
+            
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Scenario")
 
         print("Got all scenarios")
         return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
-def session(request):
+def startSession(request):
     if request.method == "POST":
         userId = int(request.GET['userId'])
         versionId = int(request.GET['versionId'])
@@ -112,6 +123,42 @@ def session(request):
         responseObj["mostRecentAccess"] = session.most_recent_access
         
         return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+
+def endSession(request):
+    if request.method == "POST":
+        userId = int(request.GET['userId'])
+        versionId = int(request.GET['versionId'])
+
+        # Check if there is a Version given the versionId 
+        try:
+            version = md.Version.objects.get(version_id=versionId)
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No version found with the given versionId'})
+        
+        # Check if there is a User given the userId 
+        try:
+            user = md.User.objects.get(user_id=userId)
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        try:
+            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
+            session.is_finished = True
+            session.save()
+        except md.Session.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'Session does not exist so it cannot be ended.'})
+
+        responseObj = {}
+        responseObj["sessionId"] = session.session_id
+        responseObj["mostRecentAccess"] = session.most_recent_access
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': 'Session successfully ended.'})
     
     elif request.method == "GET":
         return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
