@@ -71,7 +71,10 @@ def scenarios(request):
                     result['is_finished'] = False
                     result['date_started'] = None
                     result['last_date_modified'] = None
-            
+                scenarioID = md.Version.objects.get(version_id=versionId).scenario_id.scenario_id
+                courseName = md.ClassAssignment.objects.get(scenario_id=scenarioID).course_id.name
+                result['course_name'] = courseName
+
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Scenario")
 
