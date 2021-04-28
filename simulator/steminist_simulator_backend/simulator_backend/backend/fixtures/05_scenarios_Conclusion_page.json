@@ -19,7 +19,7 @@
             "page_id": 1,
 	    "page_title": "Conclusion",
             "version_id": 1,
-	    "scenario_id”:1,
+	    "scenario_id”: 1,
             "body": "The conlusion for scenario 1 is here. "
         }
     },
@@ -31,8 +31,8 @@
             "page_id": 2,
 	    "page_title": "Conclusion",
             "version_id": 2,
-	    "scenario_id”:2,
-            "body":  "The conlusion for scenario 2 is here.       
+	    "scenario_id”: 2,
+            "body":  "The conlusion for scenario 2 is here."       
 	}
     }
     ]
