@@ -16,7 +16,6 @@ from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework import mixins
 from . import permissions
-# DemographicsSerializer, StudentSerializer, ProfessorSerializer, ScenariosSerializer, allScenariosSerializer, Stakeholder_pageSerializer, StakeholdersSerializer, ConversationsSerializer
 
 # Stakeholders ViewSet
 class StakeholdersViewSet(viewsets.ModelViewSet):
@@ -95,12 +94,6 @@ class CoverageViewSet(viewsets.ModelViewSet):
 
     
 
-class DemographicsViewSet(viewsets.ModelViewSet):
-    queryset = demographics.objects.all()
-    permission_classes = [
-        permissions.IsFaculty
-    ]
-    serializer_class = DemographicsSerializer
 
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = Users.objects.all()
@@ -108,13 +101,6 @@ class UsersViewSet(viewsets.ModelViewSet):
         permissions.IsFaculty
     ]
     serializer_class = UserSerializer
-
-class ProfessorsViewSet(viewsets.ModelViewSet):
-    queryset = professors.objects.all()
-    permission_classes = [
-        permissions.IsFaculty
-    ]
-    serializer_class = ProfessorSerializer
 
 
 class ScenariosViewSet(viewsets.ModelViewSet):
@@ -161,31 +147,8 @@ class Reflection_QuestionsViewSet(viewsets.ModelViewSet):
     serializer_class = Reflection_questionsSerializer
 
 
-class ReflectionsTakenViewSet(viewsets.ModelViewSet):
-    queryset = reflections_taken.objects.all()
-    permission_class = [
-        permissions.IsFaculty
-    ]
-    serializer_class = ReflectionsTakenSerializer
-
-class ActionsTakenViewSet(viewsets.ModelViewSet):
-    queryset = actions_taken.objects.all()
-    permission_class = [
-        permissions.IsFaculty
-    ]
-    serializer_class = Actions_takenSerializer
-class ConversationsHadViewSet(viewsets.ModelViewSet):
-    queryset = conversations_had.objects.all()
-    permission_class = [
-        permissions.IsFaculty
-    ]
-    serializer_class = ConversationsHadSerializer
 
 
-class StudentsInViewSet(viewsets.ModelViewSet):
-    queryset = students_in.objects.all()
-    permission_class = [permissions.IsFaculty]
-    serializer_class = StudentsInSerializer
 
 
 class CoursesViewSet(viewsets.ModelViewSet):
@@ -194,10 +157,6 @@ class CoursesViewSet(viewsets.ModelViewSet):
     serializer_class = CoursesSerializer
 
 
-class ResponsesViewSet(viewsets.ModelViewSet):
-    queryset = responses.objects.all()
-    permission_classe = [permissions.IsFaculty]
-    serializer_class = ResponsesSerializer
 
 #this allows for filerting scenarios by professor_id
 class allScenariosViewSet(generics.ListAPIView):
@@ -206,13 +165,6 @@ class allScenariosViewSet(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['PROFESSOR', 'IS_FINISHED']
     
-# Scenarios_for ViewSet
-class Scenarios_forViewSet(viewsets.ModelViewSet):
-    queryset = scenarios_for.objects.all()
-    permissions_class = [
-        permissions.IsFaculty
-    ]
-    serializer_class = Scenarios_forSerializer
 
 class VersionsViewSet(viewsets.ModelViewSet):
     queryset = Versions.objects.all()
@@ -220,14 +172,6 @@ class VersionsViewSet(viewsets.ModelViewSet):
         permissions.IsFaculty
     ]
     serializer_class = VersionsSerializer
-
-# generic_page ViewSet
-class generic_pageViewSet(viewsets.ModelViewSet):
-    queryset = generic_pages.objects.all()
-    permissions_class = [
-        permissions.IsFaculty
-    ]
-    serializer_class = Generic_pageSerializer
 
 # Professors_teach ViewSet
 class Professors_teachViewSet(viewsets.ModelViewSet):
@@ -548,10 +492,6 @@ class Page_actionViewSet(generics.CreateAPIView):
     model = pages
     serializer_class = Pages_actionSerializer   
 
-class Page_genericViewSet(generics.CreateAPIView):
-    model = pages
-    serializer_class = Pages_genericSerializer
-
 class Page_StakeholderViewSet(generics.CreateAPIView):
     model = pages
     serializer_class = Pages_stakeholderSerializer
@@ -600,13 +540,6 @@ class pages_page(APIView):
         
         # Check page.PAGE_TYPE = 'GENERIC'
         if (page_type == 'G' or page_type == 'I'):
-            generic_query = generic_pages.objects.filter(PAGE = PAGE_ID).values()
-            page_data.update(
-                {
-                    "BODIES":generic_query
-                }
-            )
-
             return Response(page_data, status=status.HTTP_200_OK)
         
         # Check page.PAGE_TYPE = 'STAKEHOLDER'
@@ -918,53 +851,6 @@ class pages_page(APIView):
             
             return Response(data=page_data)
 
-# class student_info(APIView):
-#     def get(self, request, *args, **kwargs):
-#         SCENARIO = self.request.query_params.get('scenario_id')
-#         responses_query = responses.objects.filter(SCENARIO_id = SCENARIO).values()
-#         data = []
-#         for response in responses_query:
-#             demographics_query = demographics.objects.filter(STUDENT_id = response['STUDENT_id']).values()
-#             # demographic = []
-#             for dem in demographics_query:
-#                 student_query = students.objects.filter(STUDENT = dem['STUDENT_id']).values()
-#                 for x in student_query:
-#                     name = x['NAME']
-#             dem['NAME'] = name
-#             dem['DATE_TAKEN'] = response['DATE_TAKEN']
-#             data.append(dem)
-class student_info(APIView):
-    def get(self,request,*args,**kwargs):
-        SCENARIO = self.request.query_params.get('scenario_id')
-        responses_query = responses.objects.filter(SCENARIO_id=SCENARIO).values()
-        student_ids = []
-        data = []
-        for response in responses_query:
-            student = response['STUDENT_id']
-            if student not in student_ids:
-                date_taken = response['DATE_TAKEN']
-                student_ids.append(student)
-        for student in student_ids:
-            demographics_query = demographics.objects.filter(STUDENT_id = student).values()
-            for dem in demographics_query:
-                student_query = students.objects.filter(STUDENT = dem['STUDENT_id']).values()
-                for x in student_query:
-                    name = x['NAME']
-            dem['NAME'] = name
-            dem['DATE_TAKEN'] = date_taken
-            data.append(dem)
-
-                
-
-
-        # for demographic in demographics_query:
-        #     student_query = students.objects.filter(STUDENT = demographic['STUDENT_id']).values()
-        #     for x in student_query:
-        #         name = x['NAME']
-
-        #     demographic['NAME'] = name
-        #     data.append(demographic)
-        return Response(data)
 
 class coverages_page(APIView):
     def put(self, request, *args, **kwargs):
@@ -1288,61 +1174,4 @@ class coverages_page(APIView):
         )
 
         return Response(stkholder, status=status.HTTP_200_OK)
-
-
-
-class student_responses(APIView):
-    def get(self, request, *args, **kwargs):
-
-        #filter by scenario and student id 
-        SCENARIO = self.request.query_params.get('scenario_id')
-        STUDENT = self.request.query_params.get('student_id')
-        filterargs = {'SCENARIO_id':SCENARIO,'STUDENT_id':STUDENT}
-        responses_query = responses.objects.filter(**filterargs).values()
-        choice_array = []
-        choices_array = []
-        choices_dict = {}
-        #get the different actions
-        for response in responses_query:
-            #filter by page number 
-            name_query = pages.objects.filter(PAGE = response["ACTION_PAGE_id"]).values()
-
-            for name in name_query:
-                NAME = name['PAGE_TITLE']
-                TYPE = name['PAGE_TYPE']
-            choices_query = action_page_choices.objects.filter(PAGE = response["ACTION_PAGE_id"]).values()
-            for choice in choices_query:
-                choice_array.append(choice['CHOICE'])
-            chosen_query = responses.objects.filter(ACTION_PAGE_id = response["ACTION_PAGE_id"]).values()
-            for chose in chosen_query:
-                CHOSEN = chose['CHOICE']
-                DATE_TAKEN = chose['DATE_TAKEN']
-            #only if it is an action page
-            choices_dict = {"NAME": NAME, "CHOICES":choice_array, "CHOSEN": CHOSEN, "DATE_TAKEN": DATE_TAKEN }
-            choices_array.append(choices_dict)
-            choice_array = []
-        reflections_array = []
-        reflections_dict = {}
-        #get the different reflections
-        reflections_query = reflections_taken.objects.filter(**filterargs).values()
-        for reflection in reflections_query:
-            name_query = pages.objects.filter(PAGE = reflection["PAGE_id"]).values()
-            for name in name_query:
-                NAME = name['PAGE_TITLE']
-                TYPE = name['PAGE_TYPE']
-            ref_questions_query = reflection_question.objects.filter(PAGE = reflection["PAGE_id"]).values()
-            for question in ref_questions_query:
-                QUESTION = question['REFLECTION_QUESTION']
-            ref_answers_query = reflections_taken.objects.filter(PAGE = reflection["PAGE_id"]).values()
-            for answer in ref_answers_query:
-                REFLECTION = answer['REFLECTIONS']
-                DATE_TAKEN = answer['DATE_TAKEN_id']
-                #only if it is a reflection page 
-            reflections_dict = {"NAME": NAME, "QUESTION": QUESTION, "REFLECTION": REFLECTION, "DATE_TAKEN": DATE_TAKEN}
-            reflections_array.append(reflections_dict)
-        data_dict = {}
-        data_dict["Choices"] = choices_array
-        data_dict["Reflections"] = reflections_array
-        return Response(data_dict)
-
 
