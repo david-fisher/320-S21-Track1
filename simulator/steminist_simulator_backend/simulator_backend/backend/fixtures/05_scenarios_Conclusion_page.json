@@ -6,33 +6,33 @@
             "page_type": "Conclusion",
             "page_title": "ScenariosConclusion",
             "version_id": 1,
-            "body": "",
+            "body": "This page shows the conclusion of secenarios",
             "next_page": -1,
             "x_coordinate": 0,
             "y_coordinate": 0
         }
     },
     {
-        "model": "backend.Conclusion",
-        "pk": 1,
+        "model": "backend.Page",
+        "pk": 2,
         "fields": {
             "page_id": 1,
 	    "page_title": "Conclusion",
             "version_id": 1,
 	    "scenario_id”:1,
-            "body": ""
+            "body": "The conlusion for scenario 1 is here. "
         }
     },
     {
         
-        "model": "backend.Conclusion",
-        "pk": 2,
+        "model": "backend.Page",
+        "pk": 3,
         "fields": {
             "page_id": 2,
 	    "page_title": "Conclusion",
             "version_id": 2,
 	    "scenario_id”:2,
-            "body": ""        
+            "body":  "The conlusion for scenario 2 is here.       
 	}
     }
     ]
