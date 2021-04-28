@@ -1,0 +1,12 @@
+#!/bin/sh
+cd /shared/docker
+docker-compose down
+docker pull dacollins/ethisim:frontend-landing-page 
+docker pull dacollins/ethisim:frontend-editor
+docker pull dacollins/ethisim:frontend-simulator
+docker pull dacollins/ethisim:backend-editor
+docker pull dacollins/ethisim:backend-simulator
+docker-compose up -d
+#docker system prune -a --filter "until=168"
+exit
+exit -N
