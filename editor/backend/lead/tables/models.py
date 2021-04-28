@@ -29,7 +29,7 @@ class pages(models.Model):
     PAGE_TYPE = models.CharField(max_length = 2, choices = PAGE_CHOICES)
     PAGE_TITLE = models.CharField(max_length = 1000)
     PAGE_BODY = models.TextField()
-    SCENARIO = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name="pages1")
+    SCENARIO = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name="pages")
     VERSION = models.ForeignKey('versions', on_delete=models.CASCADE, null=True)
     NEXT_PAGE = models.ForeignKey('self', null=True, on_delete=models.DO_NOTHING)
     X_COORDINATE = models.IntegerField()
@@ -40,7 +40,7 @@ class pages(models.Model):
 class reflection_question(models.Model):
     class Meta:
         unique_together = (('PAGE'), ('REFLECTION_QUESTION'))
-    PAGE = models.ForeignKey('pages', on_delete = models.CASCADE, related_name="reflection_questions1")
+    PAGE = models.ForeignKey('pages', on_delete = models.CASCADE, related_name="reflection_questions")
     REFLECTION_QUESTION = models.TextField()
     RQ_ID = models.AutoField(primary_key=True, db_column="RQ_ID")
     VERSION = models.ForeignKey('versions', on_delete=models.CASCADE, db_column="VERSION_ID", null=True)
@@ -57,7 +57,7 @@ class stakeholders(models.Model):
     class Meta:
         unique_together = (('STAKEHOLDER'), ('VERSION'))
     STAKEHOLDER = models.AutoField(primary_key = True, editable = False)
-    SCENARIO = models.ForeignKey('scenarios', to_field = 'SCENARIO', on_delete = models.CASCADE, related_name="stakeholders20", default = 1)
+    SCENARIO = models.ForeignKey('scenarios', to_field = 'SCENARIO', on_delete = models.CASCADE, related_name="stakeholders", default = 1)
     VERSION = models.ForeignKey('versions', on_delete=models.CASCADE, db_column="VERSION_ID", null=True)
     NAME = models.CharField(max_length = 1000, default = "default")
     DESCRIPTION = models.TextField(default = "default")
@@ -70,7 +70,7 @@ class stakeholders(models.Model):
 class conversations(models.Model):
     class Meta:
         unique_together = (('STAKEHOLDER'), ('CONVERSATION'))
-    STAKEHOLDER = models.ForeignKey('stakeholders', on_delete = models.CASCADE, related_name="conversations1")
+    STAKEHOLDER = models.ForeignKey('stakeholders', on_delete = models.CASCADE, related_name="conversations")
     CONVERSATION = models.AutoField(default = None, primary_key = True)
     QUESTION = models.TextField(default = "default")
     RESPONSE = models.TextField(default = "default")
@@ -85,8 +85,8 @@ class courses(models.Model):
 class scenarios_for(models.Model):
     class Meta:
         unique_together = (('SCENARIO'), ('COURSE'), ('VERSION'))
-    SCENARIO = models.ForeignKey(scenarios, on_delete = models.CASCADE, related_name='scenarios_for1')
-    COURSE = models.ForeignKey('courses', on_delete = models.CASCADE, related_name='scenarios_for2')
+    SCENARIO = models.ForeignKey(scenarios, on_delete = models.CASCADE, related_name='scenarios_for')
+    COURSE = models.ForeignKey('courses', on_delete = models.CASCADE, related_name='courses')
     VERSION = models.IntegerField(default=1, editable=False, null=True)
 
 
@@ -115,7 +115,7 @@ class Users(models.Model):
 class Issues(models.Model):
     class Meta:
         unique_together = (('SCENARIO'),('ISSUE'),('VERSION'))
-    SCENARIO = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name = "scenario_id5", null = True)
+    SCENARIO = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name = "issues", null = True)
     ISSUE = models.AutoField(primary_key = True, editable = False)
     VERSION = models.ForeignKey('versions', on_delete=models.CASCADE, db_column="VERSION_ID", null=True)
     NAME = models.CharField(max_length = 1000)
@@ -125,7 +125,7 @@ class Issues(models.Model):
 class coverage(models.Model):
     class Meta:
         unique_together = (('STAKEHOLDER'),('ISSUE'))
-    STAKEHOLDER = models.ForeignKey('stakeholders', on_delete = models.CASCADE, related_name = "coverage2", null = True)
+    STAKEHOLDER = models.ForeignKey('stakeholders', on_delete = models.CASCADE, related_name = "coverages", null = True)
     ISSUE = models.ForeignKey('Issues', on_delete = models.CASCADE, related_name = "coverage1", null = True)
     # VERSION_ID = models.ForeignKey('stakeholders',on_delete = models.CASCADE, related_name = "coverage3", default = None)
     COVERAGE_SCORE = models.FloatField(validators = [MinValueValidator(0.0)])
@@ -134,7 +134,7 @@ class coverage(models.Model):
 class action_page_choices(models.Model):
     class Meta:
         unique_together = (('PAGE'),('CHOICE'))
-    PAGE = models.ForeignKey('pages',on_delete = models.CASCADE, related_name = 'action_page1')
+    PAGE = models.ForeignKey('pages',on_delete = models.CASCADE, related_name = 'action_page_choices')
     CHOICE = models.TextField()
     RESULT_PAGE = models.ForeignKey('pages',on_delete = models.CASCADE, related_name = 'action_page2', db_column="RESULT_PAGE", null=True)
     APC_ID = models.AutoField(db_column="APC_ID", primary_key=True)

@@ -109,6 +109,14 @@ class UserTypesViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = UserTypesSerializer
 
+
+class ScenariosForViewSet(viewsets.ModelViewSet):
+    queryset = scenarios_for.objects.all()
+    permission_classes = [
+        permissions.IsFaculty
+    ]
+    serializer_class = Scenarios_forSerializer
+
 class ScenariosViewSet(viewsets.ModelViewSet):
     queryset = scenarios.objects.all()
     permissions_classes = [
@@ -300,6 +308,11 @@ class logistics_page(APIView):
             print(for_serializer.errors)
         scenario_dict = ScenariosSerializer(scenarios.objects.get(SCENARIO = request.data['SCENARIO'])).data
         scenario_dict['COURSES'] = request.data['COURSES']
+
+        # If professor chooses to publish
+        if request.data.get("PUBLIC", False) and request.data.get("IS_FINISHED", False):
+            super_dict = SuperScenariosSerialializer(scenarios.objects.get(SCENARIO=request.data["SCENARIO"]))
+            print(json.dumps(super_dict.data))
         return Response(scenario_dict)
 
 #returns list of scenarios for given professor along with list of associated courses

@@ -116,3 +116,34 @@ class coverageSerializer(serializers.ModelSerializer):
     class Meta:
         model = coverage
         fields = ('STAKEHOLDER', 'ISSUE', 'COVERAGE_SCORE')
+
+class SuperScenariosForSerializer(serializers.ModelSerializer):
+    COURSE = CoursesSerializer(read_only=True)
+
+    class Meta:
+        model = scenarios_for
+        fields = ('SCENARIO', 'COURSE', 'VERSION')
+
+class SuperPagesSerializer(serializers.ModelSerializer):
+    reflection_questions = Reflection_questionsSerializer(many=True, read_only=True)
+    action_page_choices = Action_pageSerializer(many=True, read_only=True)
+    class Meta:
+        model = pages
+        fields = ('PAGE', 'PAGE_TYPE', 'PAGE_TITLE', 'PAGE_BODY', 
+        'SCENARIO', 'VERSION', 'NEXT_PAGE', 'X_COORDINATE', 'Y_COORDINATE', "reflection_questions"
+        , "action_page_choices")
+
+
+class SuperScenariosSerialializer(serializers.ModelSerializer):
+    user_id = UserSerializer
+    pages = SuperPagesSerializer(many=True, read_only=True)
+    stakeholders = StakeholdersSerializer(many=True, read_only=True)
+    conversations = ConversationsSerializer(many=True, read_only=True)
+    issues = IssuesSerializer(many=True, read_only=True)
+    coverages = coverageSerializer(many=True, read_only=True)
+    scenarios_for = SuperScenariosForSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = scenarios
+        fields = ("pages", "user_id", "SCENARIO", "NAME", 
+        "IS_FINISHED", "PUBLIC", "DATE_CREATED", "stakeholders", "conversations", "issues", "coverages", "scenarios_for")
