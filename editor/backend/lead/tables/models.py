@@ -77,11 +77,17 @@ class conversations(models.Model):
     SCENARIO_ID = models.ForeignKey('scenarios', to_field = 'SCENARIO', on_delete = models.CASCADE, related_name="stakeholders2", null=True, db_column="SCENARIO_ID")
 
 
-
-
 class courses(models.Model):
     COURSE = models.IntegerField(default=None, primary_key = True)
     NAME = models.CharField(max_length = 1000)
+
+
+class scenarios_for(models.Model):
+    class Meta:
+        unique_together = (('SCENARIO'), ('COURSE'), ('VERSION'))
+    SCENARIO = models.ForeignKey(scenarios, on_delete = models.CASCADE, related_name='scenarios_for1')
+    COURSE = models.ForeignKey('courses', on_delete = models.CASCADE, related_name='scenarios_for2')
+    VERSION = models.IntegerField(default=1, editable=False, null=True)
 
 
 class professors_teach(models.Model):   

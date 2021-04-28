@@ -7,6 +7,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = Users
         fields = '__all__'
 
+class UserTypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTypes
+        fields = '__all__'
+
 class ScenariosSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
     class Meta:
@@ -61,6 +66,11 @@ class allScenariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios
         fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'user')
+
+class Scenarios_forSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = scenarios_for
+        fields = ('SCENARIO', 'COURSE', 'VERSION')
 
 class VersionsSerializer(serializers.ModelSerializer):
     class Meta:

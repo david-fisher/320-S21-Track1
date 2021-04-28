@@ -11,7 +11,7 @@ from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register('api/users', UsersViewSet, 'users')
-router.register('api/user_types', UsersViewSet, 'user__types')
+router.register('api/user_types', UserTypesViewSet, 'user_types')
 router.register('api/courses', CoursesViewSet, 'courses')
 router.register('api/professors_teach', Professors_teachViewSet, 'professors_teach')
 router.register('api/scenarios', ScenariosViewSet, 'scenarios')
