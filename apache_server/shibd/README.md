@@ -45,7 +45,8 @@ Shibboleth is an open-source, single sign-on login system provided under the Apa
 
 	The output of this command should be: **Syntax OK**
 	
-# Important Shibboleth Files (should be located in /etc/shibboleth)
+# Configuring Shibboleth
+These files should be received from the identity provider (IdP), and should be put in /etc/shibboleth/, if necessary. 
 * shibboleth2.xml
 	* Most of the native service provider's configuration options are found here
 	* This is the main starting point for all changes and tasks excluding altering content rules on Apache
