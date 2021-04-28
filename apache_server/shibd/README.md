@@ -46,7 +46,9 @@ Shibboleth is an open-source, single sign-on login system provided under the Apa
 	The output of this command should be: **Syntax OK**
 	
 # Configuring Shibboleth
-These files should be received from the identity provider (IdP), and should be put in /etc/shibboleth/, if necessary. 
+
+These files should be received from the identity provider (IdP), and should be put in /etc/shibboleth/, if necessary.
+
 * shibboleth2.xml
 	* Most of the native service provider's configuration options are found here
 	* This is the main starting point for all changes and tasks excluding altering content rules on Apache
@@ -61,4 +63,5 @@ These files should be received from the identity provider (IdP), and should be p
 * sp-metadata.xml
 	* With regard to Shibboleth, metadata refers to configuration data used to provision an SP or IdP to communicate with each other
 	* sp-metadata.xml contains metadata about an SP, which you will give to an IdP.
-	
+
+To resolve the issue of being unable to use Shibboleth on different ports, you should set `UseCanonicalName On` while configuring Apache, in `httpd.conf`.
