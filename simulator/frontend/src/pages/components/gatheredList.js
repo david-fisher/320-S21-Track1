@@ -56,7 +56,15 @@ export default function InfoGatheredList({pages}) {
             });
           default:
             if (info.id.startsWith('stakeholder:')) {
-              return (<Typography>a cool stakeholder</Typography>);
+              return (
+              <Box>
+                <b>Occupation</b>
+                <Typography>{info.job}</Typography>
+                <br/>
+                <b>Description</b>
+                <Typography>{info.description}</Typography>
+              </Box>
+              );
             }
             return (<Typography>default</Typography>);
         }
