@@ -47,6 +47,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     }
 
     const [answer, setAnswer] = React.useState('');
+    const [questionAnswered, setQuestionAnswered] = React.useState(false);
     const [conversations, setConversations] = React.useState([]);
     const [selectedConversation, setSelectedConversation] = React.useState(-1);
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
@@ -61,6 +62,9 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     const [shouldFetch, setShouldFetch] = useState(0);
 
     let getData = () => {
+
+     
+
       function onSuccess(response){
         setConversations(response.data.result[1])
       };
@@ -71,7 +75,26 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
       get(setFetchConversationResponse, (endpointGet), onFailure, onSuccess);
     };
 
+    let checkQuestionAnswered = () => {
+      let endpoint = "/scenarios/conversation/had?versionId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&userId=1";
+      
+      function onSuccess(response){
+        console.log(response)
+        if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
+          setQuestionAnswered(true);
+          setSelectedConversation(response.data.result[0].conversation_id);
+          setAnswer(response.data.result[0].response_id);
+        }
+      }
+
+      function onFailure(err){
+        console.log('Error')
+      }
+
+      get(setFetchConversationResponse, (endpoint), onFailure, onSuccess);
+    } 
     useEffect(getData, [shouldFetch]);
+    useEffect(checkQuestionAnswered, [shouldFetch]);
 
     let postData = () => {
       function onSuccess(response){
@@ -87,8 +110,10 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
 
       
       post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, {
-        response_id: answer
+        response_id: answer,
+        already_exist: true
       })
+      setSelectedConversation(-1)
     }
     
     const handleToggle = (value) => () => {
@@ -97,6 +122,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     
     const handleSubmit = () => {
       postData();
+      
     };
 
     const handleChange = (e) => {
@@ -150,11 +176,12 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
                   const labelId = `question-${value.conversation_id}$`;
                 
                   return (
-                    <ListItem alignItems='center' key={value.conversation_id} role="listitem" button onClick={handleToggle(value.conversation_id)}>
+                    <ListItem alignItems='center' key={value.conversation_id} role="listitem" disabled={questionAnswered} button onClick={handleToggle(value.conversation_id)}>
                       <ListItemIcon>
                         <Checkbox
                           color='primary'
                           checked={selectedConversation === value.conversation_id}
+                          
                         />
                       </ListItemIcon>
                       <ListItemText id={labelId} primary={value.question} />
@@ -165,18 +192,19 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
             </Box>
             <TextField
               className={classes.textBox}
-              disabled={selectedConversation === -1}
+              disabled={selectedConversation === -1 || questionAnswered}
               id='text-box'
               label='Response'
               fullWidth
               multiline
+              value={answer}
               onChange={handleChange}
               variant="outlined"
             />
 
             <Button 
               style={{marginTop: '20px'}} 
-              disabled={selectedConversation === -1}
+              disabled={selectedConversation === -1 || questionAnswered}
               variant='outlined' 
               size='medium' 
               color='primary'

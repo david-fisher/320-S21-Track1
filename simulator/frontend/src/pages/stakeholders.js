@@ -38,6 +38,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [conversationLimit, setConversationLimit] = React.useState(2);
   const [stakeholdersDisabled, setStakeholdersDisabled] = React.useState({});
+  const [stakeholdersSelected, setStakeholdersSelected] = React.useState([]);
   const cardStyles = makeStyles({
     root: {
     },
@@ -53,6 +54,9 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
       color: '#000000',
       fontWeight: 'fontWeightBold',
       marginBottom: '-10px'
+    },
+    selected: {
+      borderRight: '6px solid lime'
     },
     background: {
       color: '#000000'
@@ -119,6 +123,27 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
   }
   useEffect(getData, [shouldFetch]);
   
+  let checkStakeholderVisited = () => {
+
+    let endpoint = "/scenarios/stakeholder/had?userId=" + STUDENT_ID + "&versionId=" + SCENARIO_ID;
+
+    function onSuccess(response){
+      let holders = response.data.result;
+      let selected = []
+      for(let i = 0; i < holders.length; ++i){
+        selected.push(holders[i].stakeholder_id)
+      }
+      setStakeholdersSelected(selected);
+    }
+
+    function onFailure(err){
+      console.log('Error');
+    }
+
+    get(setFetchScenariosResponse, (endpoint), onFailure, onSuccess);
+  }
+  useEffect(checkStakeholderVisited, [shouldFetch]);
+
 
   function getStakeholderCards(id, name, job, description, photo, styles) {
     
@@ -134,7 +159,14 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
     if (stakeholdersDisabled[id]) {
       cardClass = `${styles.card} ${styles.disabled}`;
       nameClass = descriptionClass = styles.disabled;
-    } else {
+    }
+    /* else if (stakeholdersSelected.includes(id)){
+      cardClass = `${styles.card} ${styles.selected}`;
+      nameClass = styles.name;
+      jobClass = styles.job;
+      descriptionClass = styles.background;
+    } */
+    else {
       cardClass = styles.card;
       nameClass = styles.name;
       jobClass = styles.job;
