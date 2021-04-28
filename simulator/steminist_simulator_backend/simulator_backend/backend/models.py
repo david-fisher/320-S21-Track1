@@ -156,16 +156,6 @@ class ConversationsHad(models.Model):
     class Meta:
         db_table = "conversations_had"
 
-
-class Conversation(models.Model):
-    conversation_id = models.AutoField(primary_key=True)
-    stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
-    question = models.TextField()
-    response_id = models.TextField()
-
-    class Meta:
-        db_table = "conversations"
-
 class GenericPage(models.Model):
     generic_page_id = models.AutoField(primary_key=True)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
