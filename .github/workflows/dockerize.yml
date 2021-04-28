@@ -1,8 +1,11 @@
 name: CI/CD
 
+concurrency: deployment
+
 on:
   push:
     branches: [ main ]
+
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,14 +33,12 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./landing page/welcome-login/
-          file: ./landing page/welcome-login/Dockerfile.prod
           push: true
           tags: dacollins/ethisim:frontend-landing-page
           cache-from: type=registery, ref=dacollins/ethisim:frontend-landing-page
           cache-to: type=inline
   
-  editor:
-
+  editor-frontend:
     runs-on: ubuntu-latest
     
     steps:
@@ -51,16 +52,29 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
 
-       #Build and push Editor Frontend image       
+      #Build and push Editor Frontend image       
       - name: build and push editor frontend
         uses: docker/build-push-action@v2
         with:
           context: ./editor/frontend/ethisim/
-          file: ./editor/frontend/ethisim/Dockerfile.prod
           push: true
           tags: dacollins/ethisim:frontend-editor
           cache-from: type=registery, ref=dacollins/ethisim:frontend-editor
           cache-to: type=inline
+
+  editor-backend:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+    
+      - name: docker login
+        run: |
+          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
 
       # Build and push Editor Backend image
       - name: build and push editor backend
@@ -72,57 +86,74 @@ jobs:
           cache-from: type=registery, ref=dacollins/ethisim:backend-editor
           cache-to: type=inline
 
-  simulator:
+  simulator-frontend:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      runs-on: ubuntu-latest
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+    
+      - name: docker login
+        run: |
+          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+
+      # Build and push Simulator Frontend image
+      - name: build and push simulator frontend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./simulator/frontend/
+          push: true
+          tags: dacollins/ethisim:frontend-simulator
+          cache-from: type=registery, ref=dacollins/ethisim:frontend-simulator
+          cache-to: type=inline
+
+  simulator-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
       
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+      - name: docker login
+        run: |
+          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
 
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v1
-        
-        - name: docker login
-          run: |
-            docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
-
-        # Build and push Simulator Frontend image
-        - name: build and push simulator frontend
-          uses: docker/build-push-action@v2
-          with:
-            context: ./simulator/frontend/
-            file: ./simulator/frontend/Dockerfile.prod
-            push: true
-            tags: dacollins/ethisim:frontend-simulator
-            cache-from: type=registery, ref=dacollins/ethisim:frontend-simulator
-            cache-to: type=inline
-        
         # Build and push Simulator Backend image
-        - name: build and push simulator backend
-          uses: docker/build-push-action@v2
-          with:
-            context: ./simulator/steminist_simulator_backend/
-            push: true
-            tags: dacollins/ethisim:backend-simulator
-            cache-from: type=registery, ref=dacollins/ethisim:backend-simulator
-            cache-to: type=inline
+      - name: build and push simulator backend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./simulator/goon-universe/
+          push: true
+          tags: dacollins/ethisim:backend-simulator
+          cache-from: type=registery, ref=dacollins/ethisim:backend-simulator
+          cache-to: type=inline
 
-  #deploys the application to CSCF servers          
   deploy:
-      needs: [landing-page, editor, simulator]
-      
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+    needs: [landing-page, editor-frontend, editor-backend, simulator-frontend, simulator-backend]
 
-        - name: install sshpass
-          run: | 
-            sudo apt-get install sshpass
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
+      - name: copy files into server
+        run: |
+          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/ethisim.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf.d/ethisim.conf
+          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/httpd.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf/httpd.conf
+
+      - name: Prep to deploy
+        run: | 
+          sudo apt-get install sshpass
+          chmod +x .github/scripts/server.sh
+          
         #login to the server using ssh
-        - name: log in to server
-          run: |
-            sshpass -p ${{ secrets.CSCF_SERVER_PASS }} ssh -tt -o StrictHostKeyChecking=no ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }} "docker-compose down && docker rmi kubernators_frontend:latest -f && docker pull dacollins/ethisim:frontend-landing-page && docker pull dacollins/ethisim:frontend-editor && docker pull dacollins/ethisim:frontend-simulator && docker-compose pull && docker-compose up -d"
+      - name: log in to server
+        run: |
+          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} ssh -tt -o StrictHostKeyChecking=no ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }} 'bash -s' < .github/scripts/server.sh
