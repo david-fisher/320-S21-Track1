@@ -143,10 +143,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: copy files into server
-        run: |
-          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/ethisim.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf.d/ethisim.conf
-          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/httpd.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf/httpd.conf
+      #- name: copy files into server
+        #run: |
+          #sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/ethisim.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf.d/ethisim.conf
+          #sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/httpd.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf/httpd.conf
 
       - name: Prep to deploy
         run: | 
