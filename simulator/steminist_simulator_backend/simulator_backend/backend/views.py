@@ -1000,7 +1000,7 @@ def radarPlot(request):
                 return JsonResponse(status=404, data={'status': 404,'message': 'No Session ID found'})
 
             # check if issue ID exist
-            issueQuerySet = md.Issue.objects.filter(version_id=versionID).values('issue_id', 'name').order_by('importance_score')
+            issueQuerySet = md.Issue.objects.filter(version_id=versionID).values('issue_id', 'name').order_by('-importance_score')
             if len(issueQuerySet) == 0:
                 return JsonResponse(status=404, data={'status': 404,'message': 'No Issue ID found'})
 
