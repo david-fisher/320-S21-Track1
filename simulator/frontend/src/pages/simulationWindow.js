@@ -1,4 +1,5 @@
 import React, { useState, createContext, useEffect, useContext } from "react";
+import { useLocation } from 'react-router-dom';
 import {Grid, Typography, Box, Button} from "@material-ui/core";
 import Stepper from "./components/stepper.js";
 import InfoGatheredList from "./components/gatheredList.js";
@@ -14,71 +15,77 @@ import Feedback from "./feedback.js";
 import { ScenariosContext } from "../Nav.js";
 import axios from "axios";
 import {BACK_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
+import { useParams } from 'react-router-dom';
 
 export const GatheredInfoContext = createContext();
 
-function SimulationWindow() {
+function SimulationWindow(props) {
+  const location = useLocation();
+  //console.log(props.location.data)
+  // let scenario_id = location.pathname.split('/').pop();
+  const scenario_id = props.location.data
+      ? props.location.data.version_id
+      : location.pathname.split('/').pop();
 
+  
   const [activePage, setActivePage] = useState("introduction");
   const [pages, setPages] = useState({
     introduction: { visited: true, completed: true, pageNumber: 0, html: (<Introduction />) },
-    projectAssignment: { visited: false, completed: true, pageNumber: 1, html: (<ProjectAssignment />) },
-    initialReflection: { visited: false, completed: true, pageNumber: 2, html: (<Reflection
+    projectAssignment: { visited: false, completed: true, pageNumber: 1, pid:0, html: (<ProjectAssignment />) },
+    initialReflection: { visited: false, completed: true, pageNumber: 2, pid:0, html: (<Reflection
       content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID="initialAction" prevPageID="projectAssignment" title="Reflect on Initial Information"/>) },
-    initialAction: { visited: false, completed: true, pageNumber: 3, html: (<Action
+    initialAction: { visited: false, completed: true, pageNumber: 3, pid:0, html: (<Action
       content_url="/scenarios/initialAction" nextPageID="gatheredInformation" prevPageID="initialReflection" title="Initial Action"/>) },
-    gatheredInformation: { visited: false, completed: false, pageNumber: 4, html: (<GatheredInformation />) },
-    stakeholders: { visited: false, completed: true, pageNumber: 5, html: (<Stakeholders />) },
-    middleReflection: { visited: false, completed: true, pageNumber: 6, html: (<Reflection
+    gatheredInformation: { visited: false, completed: false, pageNumber: 4, pid:0, html: (<GatheredInformation />) },
+    stakeholders: { visited: false, completed: true, pageNumber: 5,pid:0, html: (<Stakeholders />) },
+    middleReflection: { visited: false, completed: true, pageNumber: 6,pid:0, html: (<Reflection
       content_url="/scenarios/middleReflection" res_url="/scenarios/middleReflection/response"
       nextPageID="finalAction" prevPageID="stakeholders" title="Reflect on Stakeholder Information"/>) },
-    finalAction: { visited: false, completed: true, pageNumber: 7, html: (<Action
+    finalAction: { visited: false, completed: true, pageNumber: 7,pid:0, html: (<Action
       content_url="/scenarios/FinalAction" nextPageID="summary" prevPageID="middleReflection" title="Final Action"/>) },
-    summary: { visited: false, completed: false, pageNumber: 8, html: (<Summary />) },
-    feedback: { visited: false, completed: true, pageNumber: 9, html: (<Feedback />) },
-    finalReflection: { visited: false, completed: true, pageNumber: 10, html: (<Reflection
+    summary: { visited: false, completed: false, pageNumber: 8,pid:0, html: (<Summary />) },
+    feedback: { visited: false, completed: true, pageNumber: 9,pid:0, html: (<Feedback />) },
+    finalReflection: { visited: false, completed: true, pageNumber: 10,pid:0, html: (<Reflection
       content_url="/scenarios/finalReflection" res_url="/scenarios/finalReflection/response"
       nextPageID="conclusion" prevPageID="feedback" title="Reflect on Final Information"/>) },
-    conclusion:  { visited: false, completed: false, pageNumber: 11, html: (<Conclusion />) }
+    conclusion:  { visited: false, completed: false, pageNumber: 11,pid:0, html: (<Conclusion />) }
   });
 
 
   const infoIdsState = useState([]);
   const [scenarios, setScenarios] = useContext(ScenariosContext);
+  const { id } = useParams();
 
-  // Asynchronously initialize infoIdsState and scenarios
-  useEffect(() => {
-    // placeholder async function until redux is set up
-    async function imitateGetCompleteStakeholders() { return [] };// {name: 'Stakeholder 0', id: 's0'}] }
+  // // Asynchronously initialize infoIdsState and scenarios
+  // useEffect(() => {
+  //   // placeholder async function until redux is set up
+  //   async function imitateGetCompleteStakeholders() { return [] };// {name: 'Stakeholder 0', id: 's0'}] }
 
-    imitateGetCompleteStakeholders().then(stakeholders => {
-      infoIdsState[1](ids => {
-        return [
-          ...stakeholders.map(stakeholder => {
-            stakeholder.pageId = 'stakeholders';
-            return stakeholder;
-          })
-        ];
-      });
-    });
+  //   imitateGetCompleteStakeholders().then(stakeholders => {
+  //     infoIdsState[1](ids => {
+  //       return [
+  //         ...stakeholders.map(stakeholder => {
+  //           stakeholder.pageId = 'stakeholders';
+  //           return stakeholder;
+  //         })
+  //       ];
+  //     });
+  //   });
 
-      axios({
-        method: 'get',
-        url: BACK_URL + '/scenarios',
-        headers: {
-          studentID: STUDENT_ID,
-        }
-      }).then(response => {
-        setScenarios(prev => {
-          return {
-            scenarioList: response.data,
-            currentScenarioID: response.data[0].id
-          }
-        });
-      }).catch(err => {
-        console.error(err);
-      });
-  }, []) // only fire once
+  //     axios({
+  //       method: 'get',
+  //       url: BACK_URL + 'scenarios?userId=' + STUDENT_ID
+  //     }).then(response => {
+  //       setScenarios(prev => {
+  //         return {
+  //           scenarioList: response.data.body,
+  //           currentScenarioID: id
+  //         }
+  //       });
+  //     }).catch(err => {
+  //       console.error(err);
+  //     });
+  // }, []) // only fire once
 
   return (
     <div>
@@ -95,11 +102,14 @@ function SimulationWindow() {
                     pages: pages,
                     setPages: setPages,
                     activePage: activePage,
-                    setActivePage: setActivePage})}
+                    setActivePage: setActivePage,
+                    version_id: scenario_id,
+                    first_page: props.location.data.first_page,
+                    nid: props.location.data.next})}
             </Box>
             {DEV_MODE && (
               <Typography>
-                {"Scenarios:"} <br/>
+                <br/>
                 {scenarios.scenarioList && scenarios.scenarioList.map(scenario => {
                   return (<>
                     {Object.keys(scenario).map(key => ((<>{key}: {scenario[key]}<br/></>)))}

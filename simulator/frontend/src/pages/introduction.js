@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import {
   withStyles,
   Typography,
@@ -12,7 +12,10 @@ import axios from 'axios';
 import HTMLRenderer from './components/htmlRenderer';
 import { ScenariosContext } from "../Nav";
 import { GatheredInfoContext } from './simulationWindow';
+import get from '../universalHTTPRequests/get';
 
+
+ 
 const TextTypography = withStyles({
   root: {
     color: "#373a3c",
@@ -30,9 +33,57 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Introduction({ pages, setPages, activePage, setActivePage }) {
+function Introduction({ pages, setPages, activePage, setActivePage,version_id,first_page}) {
 
   const [gatheredInfo, setGatheredInfo] = React.useContext(GatheredInfoContext);
+  const [scenarios, setScenarios] = React.useContext(ScenariosContext);
+  
+  
+  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+first_page // Version hardcoded
+
+  const [intro, setIntro] = useState({     //temporary array of intro
+    intro_page: [{
+      title: " ",
+      body: " ",
+      next: 2,
+    }]
+  });
+
+  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  const [shouldFetch, setShouldFetch] = useState(0);
+
+  //Get Intro Page
+  let getData = () => {
+    function onSuccess(response) {
+      pages["projectAssignment"].pid = response.data.result.map((data)=> data.next_page)
+      
+      let ipage = response.data.result.map((data) => (
+        {
+          title: data.page_title,
+          body: data.body,
+          next: data.next_page,
+        }
+      ));
+      let ip = {
+        intro_page: ipage,
+      }
+      setIntro(ip);
+      debugger;
+    }
+
+    function onFailure() {
+      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      //setErrorBannerFade(true);
+    }
+    get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
+  };
+
+
+
 
   function goToProjectAssignment() {
     if (!pages.projectAssignment.visited) {
@@ -52,25 +103,11 @@ function Introduction({ pages, setPages, activePage, setActivePage }) {
   }
 
   const [introText, setIntroText] = React.useState('');
-  const [scenarios, setScenarios] = React.useContext(ScenariosContext);
+  
   const classes = useStyles();
+  
 
-  useEffect(() => {
-    // backend call
-    axios({
-      method: 'get',
-      url: BACK_URL + '/scenarios/intro',
-      headers: {
-        scenarioID: scenarios.currentScenarioID,
-        studentID: STUDENT_ID,
-      }
-    }).then(response => {
-      setIntroText(text => response.data[0].body_text);
-    }).catch((err)=>{
-      console.log("err",err);
-      //alert(err);
-    });
-  }, [scenarios])
+  useEffect(getData, [shouldFetch]);
 
   return (
     <div>
@@ -78,6 +115,7 @@ function Introduction({ pages, setPages, activePage, setActivePage }) {
         <Grid container direction="row" justify="center" alignItems="center">
           <TextTypography variant="h4" align="center" gutterBottom>
             Introduction
+            {scenarios.currentScenarioID}
           </TextTypography>
         </Grid>
       </Box>
@@ -93,21 +131,23 @@ function Introduction({ pages, setPages, activePage, setActivePage }) {
           {/*  <Button>Back</Button>*/}
         </Grid>
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button
-            variant="contained"
-            disableElevation
-            color="primary"
-            onClick={goToProjectAssignment}
-          >
-            Next
-          </Button>
+            <Button
+              variant="contained"
+              disableElevation
+              color="primary"
+              onClick={goToProjectAssignment}
+            >
+              Next
+            </Button>
         </Grid>
       </Grid>
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          <Box p={2} className={classes.textBox}>
-            <HTMLRenderer html={introText}/>
-          </Box>
+          {intro.intro_page.map(page => (
+            <Box p={2} className={classes.textBox}>
+              <p>{page.body}</p>
+            </Box>
+          ))}
         </Grid>
       </Grid>
     </div>
