@@ -93,10 +93,10 @@ WSGI_APPLICATION = 'lead.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['POSTGRESDB'],
-        'USER': os.environ['POSTGRESUSERNAME'],
-        'PASSWORD': os.environ['POSTGRESPASSWORD'],
-        'HOST': os.environ['POSTGRESHOST'],
+        'NAME': env('POSTGRESDB'),
+        'USER': env('POSTGRESUSERNAME'),
+        'PASSWORD': env('POSTGRESPASSWORD'),
+        'HOST': env('POSTGRESHOST'),
         'PORT': '5432'
     }
 }
