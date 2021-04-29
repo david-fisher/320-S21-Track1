@@ -49,7 +49,7 @@ def scenarios(request):
         try:
             userObj = md.User.objects.get(user_id=userId)
             courseIdQuerySet = md.Takes.objects.filter(user_id=userObj.user_id).values_list('course_id')
-            scenarioIdQuerySet = md.ClassAssignment.objects.filter(course_id__in=courseIdQuerySet)\
+            scenarioIdQuerySet = md.CourseAssignment.objects.filter(course_id__in=courseIdQuerySet)\
                                    .values('scenario_id')
             scenarioVersionQuerySet = md.Version.objects.filter(scenario_id__in=scenarioIdQuerySet)\
                                         .values('version_id', 'name', 'num_conversation', 'first_page', 
@@ -72,7 +72,7 @@ def scenarios(request):
                     result['date_started'] = None
                     result['last_date_modified'] = None
                 scenarioID = md.Version.objects.get(version_id=versionId).scenario_id.scenario_id
-                courseName = md.ClassAssignment.objects.get(scenario_id=scenarioID).course_id.name
+                courseName = md.CourseAssignment.objects.get(scenario_id=scenarioID).course_id.name
                 result['course_name'] = courseName
 
         except Exception as ex:
@@ -100,13 +100,6 @@ def startSession(request):
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
-        try:
-            course = md.ClassAssignment.objects.get(scenario_id=version.scenario_id).course_id
-        except md.ClassAssignment.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                'message': 'The given user cannot attempt the given scenario'})
-
-
         message = None
         # Obtain session field based on given params
         try:
@@ -115,7 +108,7 @@ def startSession(request):
             session.save()
             message = 'Session resumed successfully.'
         except md.Session.DoesNotExist:
-            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version, course_id=course,
+            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version,
                                  date_started=datetime.now(), most_recent_access=datetime.now())
             session.save()
             message = 'Session created succesfully.'
@@ -354,7 +347,6 @@ def reflection(request):
 
                     editing_res = md.ReflectionsTaken.objects.filter(rq_id=prompt_res['prompt_id'],
                                                                      session_id=session.session_id,
-                                                                     course_id=session.course_id,
                                                                      version_id=version, page_id=page)
 
                     # already exist, overwriting
@@ -368,7 +360,7 @@ def reflection(request):
                     elif len(editing_res) == 0:
                         editing_res = md.ReflectionsTaken(reflections=prompt_res['response'],
                                                           rq_id=reflection_question,
-                                                          session_id=session, course_id=session.course_id,
+                                                          session_id=session,
                                                           version_id=version, date_taken=datetime.now(),
                                                           page_id=page)
 
@@ -444,7 +436,6 @@ def reflectionResponse(request):
                     # in case multiple answer
                     answered = md.ReflectionsTaken.objects.filter(rq_id=prompt.rq_id,
                                                                   session_id=session.session_id,
-                                                                  course_id=session.course_id,
                                                                   version_id=versionID)
                     if len(answered) > 1:
                         raise ValueError('Multiple response returned for prompt_id %i.' %(prompt.rq_id))
@@ -728,8 +719,8 @@ def conversation(request):
             sessionObj = md.Session.objects.get(session_id=sessionID, version_id=versionID)
 
             try:
-                course = md.ClassAssignment.objects.get(scenario_id=versionObj.scenario_id).course_id
-            except md.ClassAssignment.DoesNotExist:
+                course = md.CourseAssignment.objects.get(scenario_id=versionObj.scenario_id).course_id
+            except md.CourseAssignment.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'The given user cannot attempt the given scenario'})
 
@@ -759,9 +750,8 @@ def conversation(request):
                     coverageScore += score['coverage_score']
 
                 # create new conversationHad object
-                # TODO: remove course_id later once DB team approves
                 conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, 
-                                                         course_id=course.course_id, date_taken=datetime.now(), score=coverageScore)
+                                                         date_taken=datetime.now(), score=coverageScore)
                                 
                 conversationHadObj.save()
                 resultData['already_exist'] = False
@@ -918,7 +908,6 @@ def action(request):
             # Obtain session field based on given params
             try:
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
-                course = session.course_id
             except md.Session.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'Session not found based on give params'})
@@ -939,7 +928,7 @@ def action(request):
             except md.Response.DoesNotExist:
                 # Add a response for the given choice
                 responseObj = md.Response(session_id=session, version_id=version, page_id=page,
-                                          date_taken=datetime.now(), course_id=course, choice=choiceObj.apc_id)
+                                          date_taken=datetime.now(), choice=choiceObj.apc_id)
             
                 responseObj.save()
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
@@ -977,7 +966,6 @@ def action(request):
             # Obtain session field based on given params
             try:
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
-                course = session.course_id
             except md.Session.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'Session not found based on give params'})
