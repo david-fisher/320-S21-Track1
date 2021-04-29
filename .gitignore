@@ -30,3 +30,5 @@ hs_err_pid*
 
 # localhost shibboleth directory
 apache_server/localhost-shibboleth/
+
+*.pyc
