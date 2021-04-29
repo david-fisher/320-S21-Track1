@@ -61,12 +61,6 @@ MIDDLEWARE = [
 ]
 CORS_ORIGIN_ALLOW_ALL = True # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3030',
-] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
-CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:3030',
-]
 
 ROOT_URLCONF = 'lead.urls'
 
@@ -92,36 +86,27 @@ WSGI_APPLICATION = 'lead.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ['POSTGRESDB'],
+        'USER': os.environ['POSTGRESUSERNAME'],
+        'PASSWORD': os.environ['POSTGRESPASSWORD'],
+        'HOST': os.environ['POSTGRESHOST'],
+        'PORT': '5432'
+    }
+}
+
 # DATABASES = {
 #     'default': {
-#         # 'ENGINE': 'django.db.backends.sqlite3',
-#         # 'NAME': BASE_DIR / 'db.sqlite3',
-
-#         # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #         'NAME': 'cnehcbso',
 #         'USER': 'cnehcbso',
 #         'PASSWORD': 'qy2xdb_zEcAZFOmY7fvQT1SddHRUhbCI',
 #         'HOST': 'raja.db.elephantsql.com',
 #         'PORT': '5432',
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         # 'NAME': os.environ['POSTGRESDB'],
-#         # 'USER': os.environ['POSTGRESUSERNAME'],
-#         # 'PASSWORD': os.environ['POSTGRESPASSWORD'],
-#         # 'HOST': os.environ['POSTGRESHOST'],
-#         # 'PORT': '5432'
 #     }
 # }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cnehcbso',
-        'USER': 'cnehcbso',
-        'PASSWORD': 'qy2xdb_zEcAZFOmY7fvQT1SddHRUhbCI',
-        'HOST': 'raja.db.elephantsql.com',
-        'PORT': '5432',
-    }
-}
 
 
 # Password validation
