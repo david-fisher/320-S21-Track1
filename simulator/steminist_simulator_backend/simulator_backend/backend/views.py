@@ -663,7 +663,7 @@ def conversation(request):
 
             # check if conversation ID exists
             conversationObj = md.Conversation.objects.get(stakeholder_id=stakeholderID, conversation_id=conversationID)
-            for key in ['conversation_id', 'question', 'response_id']:
+            for key in ['conversation_id', 'question', 'conversation_response']:
                 resultData[key] = conversationObj.__dict__[key]
 
             # retrieve Conversation Had
@@ -727,7 +727,7 @@ def conversation(request):
 
             # check if conversation ID exists
             conversationObj = md.Conversation.objects.get(stakeholder_id=stakeholderID, conversation_id=conversationID)
-            for key in ['conversation_id', 'question', 'response_id']:
+            for key in ['conversation_id', 'question', 'conversation_response']:
                 resultData[key] = conversationObj.__dict__[key]
 
             # check if session ID exists
@@ -832,7 +832,7 @@ def conversationHad(request):
                 return JsonResponse(status=404, data={'status': 404, 'message': 'No Conversation has been submitted'})
             for id in conversationHadQuerySet:
                 conversationObj = md.Conversation.objects.get(stakeholder_id=stakeholderID, conversation_id=id['conversation_id'])
-                conversation = {key: conversationObj.__dict__[key] for key in ('conversation_id', 'question', 'response_id')}
+                conversation = {key: conversationObj.__dict__[key] for key in ('conversation_id', 'question', 'conversation_response')}
                 resultData.append(conversation)
         
         except md.User.DoesNotExist:
