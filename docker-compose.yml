@@ -4,12 +4,12 @@ services:
     build:
       context: editor/frontend/ethisim
     ports:
-      - 3009:80
-    depends_on:
-      - backend-editor
+      - 3009:3000
     volumes:
       - ./editor/frontend/ethisim:/app
       - /app/node_modules
+    depends_on:
+      - backend-editor
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true # docker run -i
@@ -22,12 +22,12 @@ services:
     build:
       context: simulator/frontend
     ports:
-      - 3002:80
-    depends_on:
-      - backend-simulator
+      - 3002:3000
     volumes:
       - ./simulator/frontend:/app
       - /app/node_modules
+    depends_on:
+      - backend-simulator
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true # docker run -i
@@ -40,7 +40,7 @@ services:
     build:
       context: landing page/welcome-login
     ports:
-      - 3007:80
+      - 3007:3000
     volumes:
       - ./landing page/welcome-login:/app
       - /app/node_modules
@@ -114,6 +114,7 @@ services:
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - '320'
 

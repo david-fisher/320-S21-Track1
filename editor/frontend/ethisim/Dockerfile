@@ -16,9 +16,13 @@ RUN npm install react-scripts@3.4.1 -g --silent
 # add app
 COPY . ./
 
-RUN npm run build
+EXPOSE 3000
 
-FROM nginx:stable-alpine
-COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
+
+# RUN npm run build
+
+# FROM nginx:stable-alpine
+# COPY --from=build /app/build /usr/share/nginx/html
+# EXPOSE 80
+# CMD ["nginx", "-g", "daemon off;"]
