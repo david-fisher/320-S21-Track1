@@ -483,6 +483,9 @@ def stakeholder(request):
         
         resultData = []
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exists
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -505,6 +508,8 @@ def stakeholder(request):
             # return data
             resultData.append(stakeholder)
         
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except md.Stakeholder.DoesNotExist:
@@ -530,6 +535,9 @@ def stakeholderHad(request):
 
         resultData = []
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exist
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -547,6 +555,8 @@ def stakeholderHad(request):
                 stakeholder = {key: stakeholderObj.__dict__[key] for key in ('stakeholder_id', 'name', 'description', 'job', 'introduction', 'photopath')}
                 resultData.append(stakeholder)
         
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except Exception as ex:
@@ -630,6 +640,9 @@ def conversation(request):
         
         resultData = {}
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exists
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -658,6 +671,8 @@ def conversation(request):
             for key in ['score', 'date_taken']:
                 resultData[key] = conversationHadObj.__dict__[key]
 
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except md.Course.DoesNotExist:
@@ -797,6 +812,9 @@ def conversationHad(request):
 
         resultData = []
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exist
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -817,6 +835,8 @@ def conversationHad(request):
                 conversation = {key: conversationObj.__dict__[key] for key in ('conversation_id', 'question', 'response_id')}
                 resultData.append(conversation)
         
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except md.Stakeholder.DoesNotExist:
@@ -989,3 +1009,74 @@ def action(request):
 
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
+
+def radarPlot(request):
+    if request.method == 'GET':
+        # retrieve user ID
+        try:
+            userID = int(request.GET['userId'])
+        except Exception as ex:
+            return JsonResponse(status=400, message='Invalid User ID')
+        
+        # retrieve version ID
+        try:
+            versionID = int(request.GET['versionId'])
+        except Exception as ex:
+            return JsonResponse(status=400, message='Invalid Version ID')
+
+        resultData = []
+        try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
+            # check if version ID exist
+            versionObj = md.Version.objects.get(version_id=versionID)
+            
+            # check if session ID exist
+            sessionQuerySet = md.Session.objects.filter(user_id=userID, version_id=versionID).values('session_id')
+            if len(sessionQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Session ID found'})
+
+            # check if issue ID exist
+            issueQuerySet = md.Issue.objects.filter(version_id=versionID).values('issue_id', 'name').order_by('-importance_score')
+            if len(issueQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Issue ID found'})
+
+            # get all stakeholders
+            stakeholderQuerySet = md.Stakeholder.objects.filter(version_id=versionID).values('stakeholder_id')
+            if len(stakeholderQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Stakeholder ID found'})
+
+            
+            # check if stakeholders have been talked to
+            stakeholderHadQuerySet = md.ConversationsHad.objects.filter(session_id__in=sessionQuerySet, version_id=versionID).distinct('stakeholder_id').values('stakeholder_id')
+            if len(stakeholderHadQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'Stakeholder ID hasn\'t been submitted'})
+
+            issue_coverage = {}
+            for key in issueQuerySet:
+                issue_coverage[key['issue_id']] = {'name': key['name'], 'coverage': 0.0, 'total': 0.0, 'percentage': 0.0}
+            for issue in issueQuerySet:
+                issueName = issue['name']
+                issueID = issue['issue_id']
+                for stakeholder in stakeholderQuerySet:
+                    coverage = md.Coverage.objects.filter(issue_id=issueID, stakeholder_id=stakeholder['stakeholder_id']).values()
+                    if len(coverage) != 0:
+                        issue_coverage[issueID]['total'] += coverage[0]['coverage_score'] # add total
+                        if stakeholder in stakeholderHadQuerySet: # if stakeholder has been talked to, add coverage
+                            issue_coverage[issueID]['coverage'] += coverage[0]['coverage_score']
+                issue_coverage[issueID]['percentage'] = issue_coverage[issueID]['coverage'] / issue_coverage[issueID]['total'] * 100
+            
+            for key in issue_coverage.keys():
+                resultData.append(issue_coverage[key])
+
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,'message': 'No Version ID found'})
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Radar Plot")
+
+        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
+
+        
