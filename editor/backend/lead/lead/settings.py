@@ -13,7 +13,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 from corsheaders.defaults import default_headers
 import os
+import environ
 
+
+# Initialize environment variables:
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,10 +94,10 @@ WSGI_APPLICATION = 'lead.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['POSTGRESDB'],
-        'USER': os.environ['POSTGRESUSERNAME'],
-        'PASSWORD': os.environ['POSTGRESPASSWORD'],
-        'HOST': os.environ['POSTGRESHOST'],
+        'NAME': env('POSTGRESDB'),
+        'USER': env('POSTGRESUSERNAME'),
+        'PASSWORD': env('POSTGRESPASSWORD'),
+        'HOST': env('POSTGRESHOST'),
         'PORT': '5432'
     }
 }
