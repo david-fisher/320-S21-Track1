@@ -1,6 +1,7 @@
 import axios from "axios";
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
-import React from "react";
+import get from '../universalHTTPRequests/get';
+import React,{useEffect,useState} from "react";
 import {
   withStyles,
   Typography,
@@ -55,28 +56,11 @@ const dataText = [
 const mainText =
   "Part of your assignment is to identify specific companies who would be willing to provide data and also make recommendations for further data to collect, in order to refine the above list. Once the data is in hand, you will use it to improve the existing predictive model for cognitive decline, by incorporating new training features as appropriate.";
 
-function ProjectAssignment({ pages, setPages, activePage, setActivePage }) {
+function ProjectAssignment({ pages, setPages, activePage, setActivePage, version_id,nid }) {
 
   const [task, setTask] = React.useState("");
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
-  React.useEffect(() => {
-    axios({
-      method: "get",
-      url: BACK_URL + "/scenarios/task",
-      headers: {
-        scenarioID: scenarios.currentScenarioID,
-        studentID: STUDENT_ID,
-      },
-    })
-    .then((response) => {
-      setTask((text) => response.data[0].body_text);
-    })
-    .catch((err) => {
-      console.log("err", err);
-      alert(err);
-    });
-  }, [scenarios])
 
   const classes = useStyles();
   function goToIntroduction() {
@@ -119,6 +103,54 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage }) {
   let upperText = getUpperText(dataHeading, dataText);
   const textList = upperText.map((text) => <>{text}</>);
 
+
+  // MAKE API CALL
+  let pageId = pages[activePage].pid
+  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+(pageId)
+
+  const [project, setIntro] = useState({     //temporary array of intro
+    project_page: [{
+      title: " ",
+      body: " ",
+      next: 2,
+    }]
+  });
+
+  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  const [shouldFetch, setShouldFetch] = useState(0);
+
+  //Get PJ assignment Page
+  let getData = () => {
+    function onSuccess(response) {
+      pages["initialReflection"].pid = response.data.result.map((data)=> data.next_page)
+      let ppage = response.data.result.map((data) => (
+        {
+          title: data.page_title,
+          body: data.body,
+          next: data.next_page,
+        }
+      ));
+      let pp = {
+        project_page: ppage,
+      }
+      setIntro(pp);
+      debugger;
+    }
+
+    function onFailure() {
+      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      //setErrorBannerFade(true);
+    }
+    get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
+  };
+
+
+  useEffect(getData, [shouldFetch]);
+
   return (
     <div>
       <Grid container direction="row" justify="center" alignItems="center">
@@ -151,11 +183,14 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage }) {
       </Grid>
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          <Box p={2} className={classes.textBox}>
-            {/* <TextTypography variant="body1">{upperText}</TextTypography> */}
-            {/* <>{textList}</> */}
-            <HTMLRenderer html={task}/>
-          </Box>
+          {project.project_page.map(page => (
+            <Box p={2} className={classes.textBox}>
+              {/* <TextTypography variant="body1">{upperText}</TextTypography> */}
+              {/* <>{textList}</> */}
+              {/* <HTMLRenderer html={task}/> */}
+              <p>{page.body}</p>
+            </Box>
+          ))}
         </Grid>
       </Grid>
     </div>

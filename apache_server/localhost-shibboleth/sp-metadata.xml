@@ -1,0 +1,62 @@
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://localhost/shibboleth">
+  <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor>
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>
+MIIEADCCAmigAwIBAgIJALky0QgkzrseMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNV
+BAMTCWxvY2FsaG9zdDAeFw0yMTA0MTQwMDU1MzdaFw0zMTA0MTIwMDU1MzdaMBQx
+EjAQBgNVBAMTCWxvY2FsaG9zdDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoC
+ggGBAMW8usBBit5IU1c7gqJZoEcnxlGpXeL7XEhYnRIMU+0nARdvfVVLtics1uGg
+iAQBXn/qfWApG6IFOD8odVorEeUe6DYv+wgvBa0PZv0DzL3mi8cSHbxr7byrAsU8
+XEnJgWzYbhBWzCMqPILDPdC5oV+ATcYkO4Ke11LBueADysz8TKlESJvxNnPjnHaY
+4kqS/IMtsAABkDAUnBCIOoHAQvaTVsFLgqrotOWXvrUFfbcksAADm9Y+TdHH8XfQ
+3VUnWo+hnrQR3jgEd2lVB0yI7lcIxTqMsVB0O80i1ZiqwMybM9gJAlNMF7czcePh
+kNMH7RDE5kW/zSRwiIr4DTRhc03Vcdh7jyrYK3ARV/8b3HZ/xcnL2P+nlyB1gW5t
+zIEv0JAM20TTawJGh9f9vjMQTzAFp4B8rNGunvjbLIjDxjng9HAAuAd/0SMBPHBj
+i/MKyRlnI4IE9rogvZa//Zfd+usNss8CnkipJoHo7vgzE78jNoJpIcapxM3KuOUu
+UyP7QQIDAQABo1UwUzAyBgNVHREEKzApgglsb2NhbGhvc3SGHGh0dHBzOi8vbG9j
+YWxob3N0L3NoaWJib2xldGgwHQYDVR0OBBYEFN16vu/XBh/KjaBmoAEJxr8W3eAk
+MA0GCSqGSIb3DQEBCwUAA4IBgQAqP9OXm+rzhS5e8yZhd7eTkD7wjSeUOEUGzJ0f
+rwIZ0cc9eNDhTok0qaOQfTRleIbFUL6uMa/7xAiT74slUS7P5xlMeuSshnQsvmiX
+49qaqRhuHN8I34yzWYMSy0CQS1QDmDR52THgqtlomH6ovO+eX8HHTuTXhWlh+9pC
+c6Ph9z/KY5OY5wZZetmgnc/SFuoYcYGYUJrZne7w46f4kH8Rx0nVgjl1T5u2Et1M
+iTla9zT16HzyXrIzyT228G0SMDBnyKPg6C38Xk7ap9i6X9cGLdZywdvbpYebIO7A
+V4T4jPQktzQl4RMyBPwQidBfdUV/HYk7SwTcSPvv8RNryvi8tD8Cai1wCQyfCkZo
+Pk/VAjp7pSJX30U6vbeU3Aap1Qd2/tUhfalViYSDGbDXZCYMdC+SSaK09C4ntK6I
+OoRV1pS6jD9cFZNeCnsgZp3WclwA5gfLyjP2/b1DzhTMznvCw0E7z/fq9J5pkaZn
+g1d090w8NpH2TlJoMIMFARTgPV8=
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://localhost/Shibboleth.sso/SAML2/POST" index="1"/>
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://localhost/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://localhost/Shibboleth.sso/SAML2/Artifact" index="3"/>
+    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://localhost/Shibboleth.sso/SAML2/ECP" index="4"/>
+    <md:Extensions xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+    <mdui:UIInfo>
+      <mdui:DisplayName xml:lang="en">Ethisim</mdui:DisplayName>
+    </mdui:UIInfo>
+  </md:Extensions>
+</md:SPSSODescriptor>
+  <md:Organization>
+    <md:OrganizationName xml:lang="en">umass.edu</md:OrganizationName>
+    <md:OrganizationDisplayName xml:lang="en">umass.edu</md:OrganizationDisplayName>
+    <md:OrganizationURL xml:lang="en">https://localhost</md:OrganizationURL>
+  </md:Organization>
+  <md:ContactPerson contactType="administrative">
+    <md:GivenName></md:GivenName>
+    <md:SurName></md:SurName>
+    <md:EmailAddress></md:EmailAddress>
+  </md:ContactPerson>
+  <md:Extensions xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi">
+    <mdattr:EntityAttributes xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">
+    <saml:Attribute Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+      <saml:AttributeValue>http://umass.edu/category/campus</saml:AttributeValue>
+    </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </md:Extensions>
+</md:EntityDescriptor>
+
+

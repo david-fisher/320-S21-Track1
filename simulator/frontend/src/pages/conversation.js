@@ -6,13 +6,21 @@ import {
   Grid,
   Button,
   makeStyles,
+  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
+  TextField
 } from "@material-ui/core";
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import HTMLRenderer from "./components/htmlRenderer";
 import { ScenariosContext } from "../Nav";
 import get from '../universalHTTPRequests/get';
-
+import post from '../universalHTTPRequests/post';
 const TextTypography = withStyles({
   root: {
     color: "#373a3c",
@@ -21,7 +29,10 @@ const TextTypography = withStyles({
 })(Typography);
 
 const useStyles = makeStyles((theme) => ({
-  textBox: {
+  textBox:{
+    marginTop: theme.spacing(3),
+  },
+  oldTextBox: {
     overflowY: "auto",
     maxHeight: window.innerHeight * 0.6,
     marginTop: theme.spacing(4),
@@ -35,12 +46,15 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         setShowStakeholders(true);
     }
 
-    const [monologue, setMonologue] = React.useState('');
+    const [answer, setAnswer] = React.useState('');
+    const [questionAnswered, setQuestionAnswered] = React.useState(false);
+    const [conversations, setConversations] = React.useState([]);
+    const [selectedConversation, setSelectedConversation] = React.useState(-1);
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
-    const endpointGet = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId="  + SCENARIO_ID + "&stakeholderId=" + stakeholder.id;
+    const endpointGet = "/scenarios/conversation/page?versionId=" + SCENARIO_ID + "&scenarioId="  + SCENARIO_ID + "&stakeholderId=" + stakeholder.id;
 
-    const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+    const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
       loading: false,
       error: null,
@@ -48,46 +62,86 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     const [shouldFetch, setShouldFetch] = useState(0);
 
     let getData = () => {
+
+     
+
       function onSuccess(response){
-        console.log(response.data)
-        setMonologue(prev => response.data.result[0].question);
+        setConversations(response.data.result[1])
       };
   
       function onFailure(err){
-        console.log('L');
+        console.log('Error');
       };
-      get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
+      get(setFetchConversationResponse, (endpointGet), onFailure, onSuccess);
     };
 
-    useEffect(getData, [shouldFetch]);
+    let checkQuestionAnswered = () => {
+      let endpoint = "/scenarios/conversation/had?versionId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&userId=1";
+      
+      function onSuccess(response){
+        console.log(response)
+        if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
+          setQuestionAnswered(true);
+          setSelectedConversation(response.data.result[0].conversation_id);
+          setAnswer(response.data.result[0].response_id);
+        }
+      }
 
-    /* React.useEffect(() => {
-      axios({
-        method: "get",
-        url: 
-        headers: {
-           
-        },
-      })
-      .then((response) => {
-        console.log(response.data[0].conversation_text)
-        setMonologue(prev => response.data[0].conversation_text);
-        console.log(monologue)
-      })
-      .catch((err) => {
-        console.log("err", err);
-        alert(err);
-      });
-    }, [scenarios]); */
+      function onFailure(err){
+        console.log('Error')
+      }
+
+      get(setFetchConversationResponse, (endpoint), onFailure, onSuccess);
+    } 
+    useEffect(getData, [shouldFetch]);
+    useEffect(checkQuestionAnswered, [shouldFetch]);
+
+    let postData = () => {
+      function onSuccess(response){
+        console.log(response)
+      };
   
+      function onFailure(err){
+        console.log('Error');
+      };
+
+      let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&courseId=1&sessionId=1";
+
+
+      
+      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, {
+        response_id: answer,
+        already_exist: true
+      })
+      setSelectedConversation(-1)
+    }
+    
+    const handleToggle = (value) => () => {
+      setSelectedConversation(value);
+    };
+    
+    const handleSubmit = () => {
+      postData();
+      
+    };
+
+    const handleChange = (e) => {
+      console.log(e)
+      setAnswer(e.target.value);
+    }
     const classes = useStyles();
-  
     return (
       <div>
         <Box mt={5}>
-          <Grid container direction="row" justify="center" alignItems="center">
+          <Grid container direction="column" justify="center" alignItems="center">
+   
+            <Avatar style={{height:"100px", width:"100px"}} alt="Stakeholder Photo" size src={stakeholder.photo}/>
+
             <TextTypography variant="h4" align="center" gutterBottom>
               {stakeholder.name}
+            </TextTypography>
+            <TextTypography variant="h5" align="center" gutterBottom>
+              {stakeholder.job}
             </TextTypography>
           </Grid>
         </Box>
@@ -114,9 +168,49 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         </Grid>
         <Grid container spacing={2}>
           <Grid item lg={12}>
-            <Box p={2} className={classes.textBox}>
-              <HTMLRenderer html={monologue}/>
+            <Divider style={{ marginTop: '10px', marginBottom: '30px', height:'2px', backgroundColor:'black'}}/>
+            <Box align="center">
+              Select a Question to Answer
+              <List>
+                {conversations.map((value) => {
+                  const labelId = `question-${value.conversation_id}$`;
+                
+                  return (
+                    <ListItem alignItems='center' key={value.conversation_id} role="listitem" disabled={questionAnswered} button onClick={handleToggle(value.conversation_id)}>
+                      <ListItemIcon>
+                        <Checkbox
+                          color='primary'
+                          checked={selectedConversation === value.conversation_id}
+                          
+                        />
+                      </ListItemIcon>
+                      <ListItemText id={labelId} primary={value.question} />
+                    </ListItem>
+                    );
+                })}
+              </List>
             </Box>
+            <TextField
+              className={classes.textBox}
+              disabled={selectedConversation === -1 || questionAnswered}
+              id='text-box'
+              label='Response'
+              fullWidth
+              multiline
+              value={answer}
+              onChange={handleChange}
+              variant="outlined"
+            />
+
+            <Button 
+              style={{marginTop: '20px'}} 
+              disabled={selectedConversation === -1 || questionAnswered}
+              variant='outlined' 
+              size='medium' 
+              color='primary'
+              onClick={handleSubmit}>
+              Submit
+            </Button>
           </Grid>
         </Grid>
       </div>
