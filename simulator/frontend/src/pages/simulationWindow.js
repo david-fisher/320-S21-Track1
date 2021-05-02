@@ -51,7 +51,7 @@ function SimulationWindow(props) {
       content_url="/scenarios/finalReflection" res_url="/scenarios/finalReflection/response"
       nextPageID="conclusion" prevPageID="feedback" title="Reflect on Final Information"/>) },
     conclusion:  { visited: false, completed: false, pageNumber: 11,pid:0, html: (<Conclusion />) },
-    radarPlot: {visited: true, completed: true, pageNumber: 12, pid:0, html: (<Radar />) }
+    issueCoverage: {visited: true, completed: true, pageNumber: 12, pid:0, html: (<Radar />) }
   });
 
 
