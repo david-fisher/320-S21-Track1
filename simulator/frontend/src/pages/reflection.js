@@ -101,7 +101,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
   // MAKE API CALL
   let pageId = activePage
-  const endpointGet = '/scenarios/reflection?version_id=1'+'&page_id='+(activePage) // version id hardcoded
+  const endpointGet = '/scenarios/reflection?versionId=1'+'&pageId='+(activePage) // version id hardcoded
 
   const [reflection, setIntro] = useState({     //temporary array of reflection
     prompts: [],
