@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import Chart from 'chart.js';
-import { Button, Grid, Tab, Tabs, Box, Typography} from '@material-ui/core';
+import { Button, Grid, Tab, Tabs, Box, Typography, Table, TableCell, TableRow, TableHead, TableContainer, TableBody, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import PropTypes from 'prop-types';
 import get from '../universalHTTPRequests/get';
+
+const TextTypography = withStyles({
+    root: {
+        color: "#373a3c"
+    }
+})(Typography);
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -73,7 +79,8 @@ function Radar() {
     const chartContainer = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
     const [coverage, setCoverage] = useState([]);
-
+    const [value, setValue] = React.useState(0); 
+   
 
     const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + 1;
 
@@ -99,63 +106,70 @@ function Radar() {
 
     useEffect(getData, [shouldFetch]);
 
-    function colorLimit(value) {
-        if (value < 1.5) {
-            return "rgba(255, 0, 0, 0.2)"
+    function colorLimit(average) {
+        if (average >= 70) {
+            return "rgba(0, 128, 0, 0.2)"
         }
-        else if (value < 2.5) {
+        else if (average >= 40) {
             return "rgba(255, 255, 0, 0.2)"
         }
         else {
-            return "rgba(0, 128, 0, 0.2)"
+            return "rgba(255, 0, 0, 0.2)"
         }
     }
+    useEffect(() => {
+        createChart(coverage);
+    }, [value]);
 
-    function createChart(cov, num) {
-        let lbls = cov.map(x => x.name);
-        let vals = cov.map(x => x.percentage);
-        let config = {
-            type: 'radar',
-            data: {
-                labels: lbls,
-                datasets: [{
-                    label: "Your Coverage",
-                    backgroundColor: colorLimit(num),
-                    data: vals,
-                }]
-            },
-            options: {
-                elements: {
-                    line: {
-                        borderWidth: 3
-                    }
+    function createChart(cov) {
+        if(cov.length > 0){
+            let lbls = cov.map(x => x.name);
+            let vals = cov.map(x => x.percentage);
+            let average = vals.reduce((a, b) => a + b) / vals.length;
+            console.log(average)
+            let config = {
+                type: 'radar',
+                data: {
+                    labels: lbls,
+                    datasets: [{
+                        label: "Your Coverage",
+                        backgroundColor: colorLimit(average),
+                        data: vals,
+                    }]
                 },
-                scale: {
-                    pointLabels: {
-                        fontSize: 12
+                options: {
+                    elements: {
+                        line: {
+                            borderWidth: 3
+                        }
                     },
-                    ticks: {
-                        beginAtZero: true,
-                        max: 100,
-                        min: 0,
-                        stepSize: 20,
-                        callback: function (value, index, values) {
-                            return value + '%';
+                    scale: {
+                        pointLabels: {
+                            fontSize: 12
                         },
+                        ticks: {
+                            beginAtZero: true,
+                            max: 100,
+                            min: 0,
+                            stepSize: 20,
+                            callback: function (value, index, values) {
+                                return value + '%';
+                            },
 
-                    }
-                },
-                legend: {
-                    labels: {
-                        fontSize: 20,
+                        }
+                    },
+                    legend: {
+                        labels: {
+                            fontSize: 20,
+                        }
                     }
                 }
-            }
-        };
+            };
 
-        if (chartContainer && chartContainer.current) {
-            const newChartInstance = new Chart(chartContainer.current, config);
-            setChartInstance(newChartInstance);
+            if (chartContainer && chartContainer.current) {
+                const newChartInstance = new Chart(chartContainer.current, config);
+                setChartInstance(newChartInstance);
+                }
         }
     }
 
@@ -165,53 +179,71 @@ function Radar() {
             'aria-controls': `simple-tabpanel-${index}`,
         };
     }
-    const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
-        console.log(newValue);
         setValue(newValue);
-        createChart(coverage,5);
     };
-
+    
     return (
         <div>
-
-            <Grid container>
-                <Grid container direction="row" justify="center">
-                    <h3>Coverage Of Issues</h3>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Box mt={5}>
+                    <TextTypography variant="h4" align="center" gutterBottom>
+                        Coverage of Issues
+                    </TextTypography>
+                </Box>
+            </Grid>
+            <Grid container direction="row" justify="space-between">
+                <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
+                    <Button variant="contained" disableElevation >Back</Button>
                 </Grid>
-                <Grid container direction="row" justify="space-around">
-                    <Button
-                        variant="contained"
-                        disableElevation
-                    >
-                        Back
-          </Button>
-                    <Button variant="contained" color="primary" disableElevation>
-                        Next
-          </Button>
+                <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
+                    <Button variant="contained" disableElevation color="primary">Next</Button>
                 </Grid>
-                <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
-                    <StyledTab label="Radar View" {...a11yProps(0)} />
-                    <StyledTab label="List View" {...a11yProps(1)} />
-                </StyledTabs>
-                <Grid container direction="row" justify="center">
+            </Grid>
+            <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
+                <StyledTab label="Radar View" {...a11yProps(0)} />
+                <StyledTab label="List View" {...a11yProps(1)} />
+            </StyledTabs>
+            <Grid container direction="column" justify="center">
                 <TabPanel value={value} index={0}>
                     <div>
-                    <Grid container direction="row" justify="center">
-                        <canvas ref={chartContainer} id="coverage-plot" />
-                    </Grid>
+                        <Grid container direction="row" justify="center">
+                            <canvas ref={chartContainer} id="coverage-plot" />
+                        </Grid>
                     </div>
                 </TabPanel>
-                </Grid>
+            </Grid>
 
-                <Grid container direction="row" justify="center">
+            <Grid container direction="column" justify="center">
                 <TabPanel value={value} index={1}>
                     <Grid container direction="row" justify="center">
-                        Hey
+                        <TableContainer component={Paper}>
+                            <Table aria-label="simple table">
+                                <TableHead>
+                                <TableRow>
+                                    <TableCell>Issue</TableCell>
+                                    <TableCell align="right">Your Score</TableCell>
+                                    <TableCell align="right">Max Score</TableCell>
+                                    <TableCell align="right">Percentage&nbsp;(%)</TableCell>
+                                </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                {coverage.map((row) => (
+                                    <TableRow key={row.name}>
+                                    <TableCell component="th" scope="row">
+                                        {row.name}
+                                    </TableCell>
+                                    <TableCell align="right">{row.coverage}</TableCell>
+                                    <TableCell align="right">{row.total}</TableCell>
+                                    <TableCell align="right">{row.percentage.toFixed(2)}%</TableCell>
+                                    </TableRow>
+                                ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </Grid>
                 </TabPanel>
-                </Grid>
             </Grid>
         </div >
     );
