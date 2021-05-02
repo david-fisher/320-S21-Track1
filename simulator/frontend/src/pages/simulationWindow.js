@@ -12,11 +12,13 @@ import Action from "./action.js";
 import GatheredInformation from "./gatheredInformation.js";
 import Stakeholders from "./stakeholders.js";
 import Feedback from "./feedback.js";
+import Radar from "./radarPlot.js";
 import { ScenariosContext } from "../Nav.js";
 import axios from "axios";
 import {BACK_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
 import { useParams } from 'react-router-dom';
 import get from '../universalHTTPRequests/get';
+
 
 export const GatheredInfoContext = createContext();
 
@@ -50,7 +52,8 @@ function SimulationWindow(props) {
     // finalReflection: { visited: false, completed: true, pageNumber: 10,pid:0, html: (<Reflection
     //   content_url="/scenarios/finalReflection" res_url="/scenarios/finalReflection/response"
     //   nextPageID="conclusion" prevPageID="feedback" title="Reflect on Final Information"/>) },
-    // conclusion:  { visited: false, completed: false, pageNumber: 11,pid:0, html: (<Conclusion />) }
+    // conclusion:  { visited: false, completed: false, pageNumber: 11,pid:0, html: (<Conclusion />) 
+    // issueCoverage: {visited: false, completed: true, pageNumber: 12, pid:0, html: (<Radar />)}
   });
 
   const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage

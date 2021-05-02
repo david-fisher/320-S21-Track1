@@ -290,7 +290,7 @@ export default function Home() {
     <div className={classes.root}>
       <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
         <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
-        <StyledTab className={classes.tab} label="Completed Scenarios" {...a11yProps(1)} />
+        <StyledTab label="Completed Scenarios" {...a11yProps(1)} />
       </StyledTabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
