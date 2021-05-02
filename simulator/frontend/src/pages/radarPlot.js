@@ -107,14 +107,14 @@ function Radar() {
     useEffect(getData, [shouldFetch]);
 
     function colorLimit(average) {
-        if (average >= 70) {
-            return "rgba(0, 128, 0, 0.2)"
+        if (average >= 60) {
+            return "rgba(0, 128, 0, 0.2)"  // Green if average percentage above 60%
         }
-        else if (average >= 40) {
-            return "rgba(255, 255, 0, 0.2)"
+        else if (average >= 30) {
+            return "rgba(255, 255, 0, 0.2)" // Yellow if average percentage above 30%
         }
         else {
-            return "rgba(255, 0, 0, 0.2)"
+            return "rgba(255, 0, 0, 0.2)"   // Red if average percentage below 30%
         }
     }
     useEffect(() => {
