@@ -113,7 +113,6 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
           return obj;
         }, {});
       });
-      // need isVisited for stakeholder in endpoint
     }
 
     function onFailure(err){

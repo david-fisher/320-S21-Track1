@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles,Typography, Box, Grid, Button} from "@material-ui/core";
-import Radar from "./chart/chart";
+import RadarPlot from "./radarPlot.js";
 import ScrollableTabsButtonAuto from "./components/feedback_tabs";
 
 const TextTypography = withStyles({
@@ -54,7 +54,7 @@ function Feedback({pages, setPages, activePage, setActivePage}) {
       <Grid container spacing={2}>
         <Grid lg={12}>
           <Box m="2rem">
-            <Radar coverage={Coverage} summary={Summary_Value} />
+            <RadarPlot coverage={Coverage} summary={Summary_Value} />
           </Box>
           <TextTypography variant="body1">
             Artificial intelligence and machine learning technologies are
