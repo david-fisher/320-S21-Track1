@@ -3,7 +3,6 @@ import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import Summary from "./pages/summary";
 import Home from "./pages/home";
 import SimulationWindow from "./pages/simulationWindow";
-import RadarTest from "./pages/chartTest";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import './App.css';
 
@@ -19,7 +18,6 @@ function App() {
                 path="/simulation/:id"
                 render={(props) => <SimulationWindow {...props} />}
             />
-        <Route path="/chartTest" component={RadarTest} />
     </Router>
   );
 }

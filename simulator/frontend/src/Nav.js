@@ -2,7 +2,6 @@ import React from "react";
 import { DOMAIN } from './constants/config';
 import Summary from "./pages/summary";
 import Home from "./pages/home";
-import RadarTest from "./pages/chartTest";
 
 import {
   ThemeProvider,
@@ -62,10 +61,6 @@ const menuItems = [
   {
     listText: "Simulation Window",
     listPath: "/simulation",
-  },
-  {
-    listText: "Chart",
-    listPath: "/chartTest",
   },
 ];
 
@@ -132,7 +127,6 @@ function Nav() {
                 </ScenariosContext.Provider>}
             />
             <Route path="/chartTest" exact>
-              <RadarTest />
             </Route>
           </Switch>
           </ThemeProvider>
