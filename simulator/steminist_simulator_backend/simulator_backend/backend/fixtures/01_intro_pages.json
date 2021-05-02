@@ -83,7 +83,7 @@
             "page_title": "Project Task Assignment",
             "version_id": 1,
             "body": "In this project you will be working on two tasks.  Your first task will be to collect data and work with the team creating a level 4 autonomous AI model. This model needs to be fully autonomous with no human driver in most cases and should be able to simultaneously accelerate, steer, stop, navigate and park. You will be working on the accelerate and stop functionality.  Your second task will be to test the features you developed on a large range of data and scenarios and ultimately send it into production. ",
-            "next_page": 3,
+            "next_page": 4,
             "x_coordinate": 0,
             "y_coordinate": 0
         }

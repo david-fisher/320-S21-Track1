@@ -22,16 +22,14 @@ const TextTypography = withStyles({
 
 function Action({ pages, setPages, activePage, setActivePage, content_url, nextPageID, prevPageID, title }) {
   function goToPage(pageID) {
-    if (pages[pageID].completed) {
-      if (!pages[pageID].visited) {
-        setPages((prevPages) => {
-          let copy = { ...prevPages };
-          copy[pageID].visited = true;
-          return copy;
-        });
-      }
-      setActivePage((prevPage) => pageID);
+    if (!pages[pageID].visited) {
+      setPages((prevPages) => {
+        let copy = { ...prevPages };
+        copy[pageID].visited = true;
+        return copy;
+      });
     }
+    setActivePage((prevPage) => pageID);
   }
 
   const [actionQuestion, setActionQuestion, setActionChoices] = React.useState('');
@@ -81,8 +79,8 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
   //   });
   // }
    // MAKE API CALL
-   let pageId = parseInt(pages[activePage].pid)
-   const endpointGet = '/scenarios/action/prompt?versionId=1'+'&pageId='+(pageId+1) // version id hardcoded
+   let pageId = activePage
+   const endpointGet = '/scenarios/action/prompt?versionId=1'+'&pageId='+(activePage)// version id hardcoded
  
    const [action, setAction] = useState({     //temporary array of reflection
     
@@ -106,7 +104,7 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
    let getData = () => {
      function onSuccess(response) {
        // Right now hardcoded for middle reflection
-       pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
+       //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
  
        
        let ppage = ({
@@ -146,7 +144,7 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
       </Grid>
       <Grid container direction="row" justify="space-between">
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation onClick={() => goToPage(prevPageID)}>Back</Button>
+          <Button variant="contained" disableElevation onClick={() => goToPage(activePage-1)}>Back</Button>
         </Grid>
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
           <Button variant="contained" disableElevation color="primary" onClick={() => goToPage(nextPageID)} >Next</Button>

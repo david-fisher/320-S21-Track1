@@ -11,6 +11,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import HTMLRenderer from './components/htmlRenderer';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { ScenariosContext } from "../Nav";
 
 const TextTypography = withStyles({
@@ -28,6 +29,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     boxShadow: "0px 0px 2px",
   },
+  errorContainer: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
 }));
 
 const dataHeading = [
@@ -56,32 +63,34 @@ const dataText = [
 const mainText =
   "Part of your assignment is to identify specific companies who would be willing to provide data and also make recommendations for further data to collect, in order to refine the above list. Once the data is in hand, you will use it to improve the existing predictive model for cognitive decline, by incorporating new training features as appropriate.";
 
-function ProjectAssignment({ pages, setPages, activePage, setActivePage, version_id,nid }) {
+function ProjectAssignment({ pages, setPages, lastPage, activePage, setActivePage, version_id,nid }) {
 
   const [task, setTask] = React.useState("");
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-
+  const [value, setValue] = useState(activePage);
 
   const classes = useStyles();
-  function goToIntroduction() {
-    if (!pages.introduction.visited) {
+  function goToPrevPage() {
+    if (!pages[lastPage].visited) {
       setPages((prevPages) => {
         let copy = { ...prevPages };
-        copy.introduction.visited = true;
+        copy[lastPage].visited = true;
         return copy;
       });
     }
-    setActivePage((prevPage) => "introduction");
+    setActivePage((prevPage) => lastPage);
   }
   function goToInitialReflection() {
-    if (!pages.initialReflection.visited) {
+    if (!pages[project.project_page[0].next].visited) {
       setPages((prevPages) => {
         let copy = { ...prevPages };
-        copy.initialReflection.visited = true;
+        copy[activePage].completed = true;
+        copy[project.project_page[0].next].visited = true;
         return copy;
       });
     }
-    setActivePage((prevPage) => "initialReflection");
+    setActivePage((prevPage) => project.project_page[0].next);
+    setValue(project.project_page[0].next);
   }
 
   function getUpperText(headings, subtext) {
@@ -106,7 +115,7 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage, version
 
   // MAKE API CALL
   let pageId = pages[activePage].pid
-  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+(pageId)
+  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+(activePage)
 
   const [project, setIntro] = useState({     //temporary array of intro
     project_page: [{
@@ -126,7 +135,7 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage, version
   //Get PJ assignment Page
   let getData = () => {
     function onSuccess(response) {
-      pages["initialReflection"].pid = response.data.result.map((data)=> data.next_page)
+      //pages["initialReflection"].pid = response.data.result.map((data)=> data.next_page)
       let ppage = response.data.result.map((data) => (
         {
           title: data.page_title,
@@ -151,12 +160,32 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage, version
 
   useEffect(getData, [shouldFetch]);
 
+  if (fetchScenariosResponse.error) {
+    return (
+      <div className={classes.errorContainer}>
+        <Box mt={5}>
+          <Grid container direction="row" justify="center" alignItems="center">
+            <TextTypography variant="h4" align="center" gutterBottom>
+              Error fetching scenario data.
+            </TextTypography>
+          </Grid>
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={getData}
+        >
+          <RefreshIcon className={classes.iconRefreshLarge} />
+        </Button>
+      </div>)
+  }
+
   return (
     <div>
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
           <TextTypography variant="h4" align="center" gutterBottom>
-            Project Task Assignment
+            {project.project_page[0].title}
           </TextTypography>
         </Box>
       </Grid>
@@ -165,7 +194,7 @@ function ProjectAssignment({ pages, setPages, activePage, setActivePage, version
           <Button
             variant="contained"
             disableElevation
-            onClick={goToIntroduction}
+            onClick={goToPrevPage}
           >
             Back
           </Button>

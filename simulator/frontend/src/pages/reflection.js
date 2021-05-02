@@ -34,17 +34,16 @@ const useStyles = makeStyles((theme) => ({
 function Reflection({ pages, setPages, activePage, setActivePage,
   content_url, res_url,version_id, nextPageID, prevPageID , title}) {
 
+
   function goToPage(pageID) {
-    if (pages[pageID].completed) {
-      if (!pages[pageID].visited) {
-        setPages((prevPages) => {
-          let copy = { ...prevPages };
-          copy[pageID].visited = true;
-          return copy;
-        });
-      }
-      setActivePage((prevPage) => pageID);
+    if (!pages[pageID].visited) {
+      setPages((prevPages) => {
+        let copy = { ...prevPages };
+        copy[pageID].visited = true;
+        return copy;
+      });
     }
+    setActivePage((prevPage) => pageID);
   }
 
   const classes = useStyles();
@@ -101,8 +100,8 @@ function Reflection({ pages, setPages, activePage, setActivePage,
   // }
 
   // MAKE API CALL
-  let pageId = parseInt(pages[activePage].pid)
-  const endpointGet = '/scenarios/reflection?version_id=1'+'&page_id='+(pageId+1) // version id hardcoded
+  let pageId = activePage
+  const endpointGet = '/scenarios/reflection?version_id=1'+'&page_id='+(activePage) // version id hardcoded
 
   const [reflection, setIntro] = useState({     //temporary array of reflection
     prompts: [],
@@ -120,7 +119,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
   let getData = () => {
     function onSuccess(response) {
       // Right now hardcoded for initial action
-      pages["initialAction"].pid = parseInt(pages[activePage].pid)+1 // Set next page id
+      //pages["initialAction"].pid = parseInt(pages[activePage].pid)+1 // Set next page id
 
 
       let ppage = response.data.body.map((data) => (data));
@@ -155,7 +154,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
           <Button
             variant="contained"
             disableElevation
-            onClick={() => goToPage(prevPageID)}
+            onClick={() => goToPage(nextPageID-2)}
           >
             Back
           </Button>
