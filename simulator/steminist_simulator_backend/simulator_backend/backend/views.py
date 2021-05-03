@@ -22,11 +22,12 @@ def index(request):
     return HttpResponse("This API works")
 
 def publishScenario(request):
+    print(request.body)
     if request.method == "POST":
         jsonData = json.loads(request.body)
-
+        print(jsonData)
         try:
-            courseJSONObj = jsonData["Course"][0]
+            courseJSONObj = jsonData["Courses"][0]
             scenarioJSONObj = jsonData["Scenario"]
             pageJSONArr = jsonData["Pages"]
             stakeholderJSONArr = jsonData["Stakeholders"]
@@ -36,7 +37,9 @@ def publishScenario(request):
             coverageJSONArr = jsonData["Coverages"]
             reflectionQuestionJSONArr = jsonData["ReflectionQuestions"]
 
-        except KeyError:
+        except KeyError as e:
+            print("WEPIDJEAPODJ")
+            print(e)
             return JsonResponse(status=400, data={'status': 400, 'message': 'JSON body not in the correct format.'})
 
         # Save course model

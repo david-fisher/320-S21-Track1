@@ -402,9 +402,23 @@ class logistics_page(APIView):
                 } for stakeholder in super_dict["stakeholders"] for coverage in stakeholder["coverages"]
             ]
 
-            to_post_to = request.build_absolute_uri("backend/scenarios/publish").replace(":8000", ":7000")
+            to_dump["Conversations"] = [
+                {
+                    "stakeholder_id": conversation["STAKEHOLDER"],
+                    "conversation_id": conversation["CONVERSATION"],
+                    "conversation_response": conversation["RESPONSE"],
+                    "question": conversation["QUESTION"]
+                } for stakeholder in super_dict["stakeholders"] for conversation in stakeholder["conversations"]
+            ]
 
-            data = urllib.parse.urlencode(to_dump).encode()
+            to_post_to = request.build_absolute_uri("backend/scenarios/publish").replace(":8000", ":7000")
+            data = json.dumps(to_dump)
+            data = str(data)
+            print(data)
+            # Convert string to byte
+            data = data.encode('utf-8')
+
+            # data = urllib.parse.urlencode(to_dump).encode()
             req =  urllib.request.Request(to_post_to, data=data) # this will make the method "POST"
             resp = urllib.request.urlopen(req)
 
