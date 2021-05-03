@@ -26,10 +26,9 @@ def publishScenario(request):
         jsonData = json.loads(request.body)
 
         try:
-            courseJSONObj = jsonData["Course"]
+            courseJSONObj = jsonData["Course"][0]
             scenarioJSONObj = jsonData["Scenario"]
-            # courseAssignmentJSONObj = jsonData["CourseAssignment"]
-
+            courseAssignmentJSONObj = jsonData["CourseAssignment"]
             pageJSONArr = jsonData["Pages"]
             stakeholderJSONArr = jsonData["Stakeholders"]
             conversationJSONArr = jsonData["Conversations"]
@@ -57,16 +56,12 @@ def publishScenario(request):
                                    date_created=scenarioJSONObj['date_created'])
             scenario.save()
         
-        # # Save CourseAssignment model(Scenarios For)
-        # try:
-        #     scenario = md.CourseAssignment.objects.get(course_id=scenarioJSONObj['scenario_id'])
-
-        #     return JsonResponse(status=400, data={'status': 400, 'message': 'Scenario already exists.'}) 
-        # except md.Scenario.DoesNotExist:
-        #     scenario = md.Scenario(scenario_id=scenarioJSONObj['scenario_id'], user_id=scenarioJSONObj['user_id'],
-        #                            public=scenarioJSONObj['public'], is_finished=scenarioJSONObj['is_finished'],
-        #                            date_created=scenarioJSONObj['date_created'])
-        #     scenario.save()
+        # Save CourseAssignment model
+        try:
+            ca = md.CourseAssignment(course_id=course, scenario_id=scenario)
+            ca.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save CourseAssignment model(s)")
 
         newVersionId = md.Version.objects.count() + 1
 
