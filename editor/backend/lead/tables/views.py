@@ -16,6 +16,7 @@ from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework import mixins
 from . import permissions
+import urllib
 
 # Stakeholders ViewSet
 class StakeholdersViewSet(viewsets.ModelViewSet):
@@ -400,6 +401,14 @@ class logistics_page(APIView):
                     "coverage_score": coverage["COVERAGE_SCORE"]
                 } for stakeholder in super_dict["stakeholders"] for coverage in stakeholder["coverages"]
             ]
+
+            to_post_to = request.build_absolute_uri("backend/scenarios/publish").replace(":8000", ":7000")
+
+            data = urllib.parse.urlencode(to_dump).encode()
+            req =  urllib.request.Request(to_post_to, data=data) # this will make the method "POST"
+            resp = urllib.request.urlopen(req)
+
+
             print(json.dumps(to_dump))
 
         return Response(scenario_dict)
