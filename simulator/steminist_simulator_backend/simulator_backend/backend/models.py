@@ -29,7 +29,7 @@ class Takes(models.Model):
     
 class Scenario(models.Model):
     scenario_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField()
+    user_id = models.IntegerField(null=True)
     public = models.BooleanField()
     is_finished = models.BooleanField()
     date_created = models.DateField()
@@ -50,7 +50,7 @@ class Page(models.Model):
     page_title = models.CharField(blank=False, max_length=200)
     version_id = models.IntegerField()
     body = models.TextField()
-    next_page = models.IntegerField()  # references the next page
+    next_page = models.IntegerField(null=True)  # references the next page
     x_coordinate = models.IntegerField()
     y_coordinate = models.IntegerField()
 
@@ -61,7 +61,7 @@ class Version(models.Model):
     version_id = models.AutoField(primary_key=True)
     scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
     name = models.CharField(blank=False, max_length=500)
-    num_conversation = models.IntegerField()
+    num_conversation = models.IntegerField(null=True)
     first_page = models.ForeignKey(Page, on_delete=CASCADE)
 
     class Meta:
@@ -126,7 +126,7 @@ class Stakeholder(models.Model):
     description = models.TextField()
     job = models.TextField(blank=False)
     introduction = models.TextField()
-    photopath = models.TextField()
+    photopath = models.TextField(null=True)
 
     class Meta:
         db_table = "stakeholders"
