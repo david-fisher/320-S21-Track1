@@ -1,0 +1,731 @@
+[
+    {
+        "model": "backend.Issue",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Project benefits career + increased pay",
+            "importance_score": 10
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Get to work on revolutionary project",
+            "importance_score": 30
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 3,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Project gives company dominance in the market",
+            "importance_score": 20
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 4,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Public safety benefit",
+            "importance_score": 50
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 5,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Public convenience benefit",
+            "importance_score": 40
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 6,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Small flaw in software has catastrophic effects",
+            "importance_score": 50
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 7,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Small time frame = less testing",
+            "importance_score": 40
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 8,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Trolley Problem",
+            "importance_score": 50
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 9,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "No responsibility for death",
+            "importance_score": 30
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 10,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Failure impacts career",
+            "importance_score": 10
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 11,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Failure ruins company image",
+            "importance_score": 20
+        }
+    },
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Justin",
+            "description": "Your supervisor assigns you to the project and convinces you to work on it by telling you that the project will benefit your career, you will receive a bonus, and you will be working on a revolutionary project.",
+            "job": "Your supervisor",
+            "introduction": "Justin is your manager and the person that put you on this project. He trusts you and puts you in charge of this revolutionary project which will benefit your career. You don’t want to let him down.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 1,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "How do you choose which projects to assign to your employees?",
+            "conversation_response": ": It is important to me that our workplace is implementing the newest, most advanced technologies in all of our work. My employees are extremely talented in their field, and I want to assign projects that challenge them. This includes choosing projects using advanced machine learning algorithms and data science models such as autonomous cars."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 2,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "Why did you choose me to work on this project?",
+            "conversation_response": "You have shown a significant amount of growth since you started working here. Your technical knowledge and leadership skills made you stand out to me as someone I should put on this assignment. I hope to see you grow professionally, and working on an important project like this would make you an ideal candidate for promotions. I trust you to contribute to the success of this project which will give the company dominance in the market"
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 3,
+        "fields": {
+            "stakeholder_id": 1,
+            "question": "Have you considered the ethical impact of the project I’ve been assigned?",
+            "conversation_response": ": You know, that was something that crossed my mind. However, I decided that my employees are all reasonable people with good moral compasses. I trust you and all my other employees to come up with some smart solutions. It is important to me that my employee’s projects align with their values."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 1,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 2,
+            "stakeholder_id": 1,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 3,
+            "stakeholder_id": 1,
+            "coverage_score": 0.3
+        }
+    },
+
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Nora",
+            "description": "Marketing team for the company writes several articles about how the new product will lead to increase in public safety, decrease in traffic and accidents, increase in accessibility to those who cannot drive.",
+            "job": "Head of Marketing at you company",
+            "introduction": "Nora, the head of marketing at you company, is planning on having a press release to unveil to the world the new product your team is working on. She will highlight all the safety, and convenience benefits of an autonomous car.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 4,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "What are your opinions on the aspects of autonomous cars?",
+            "conversation_response": "Hello, my name is Nora and I am the head of the marketing department at Helios. Congratulations on being selected to work on this amazing project. A brief description of my job includes establishing the company’s brand, increasing brand awareness, conducting market analysis, and promoting the right message to maintain good brand image. It is my job to do what it takes to make the Helios’ public image a positive one. In my newest press release I will outline this new, revolutionary autonomous car project that the company is working on. I am glad you reached out because I was planning to briefly touch on the cutting-edge technology being used in this project and it’s best to have a computer scientist’s input. However, to maintain readability the release will focus on the immense public safety and convenience benefit that this will create. I will elaborate on how technology is the driver of convenience and how much more convenient life will be when driving an autonomous car which will improve traffic flow by at least 30%. I will also focus on the massive safety benefit this product will lead to and mention how traffic incidents will go down by 90%. I will end the release by letting the readers know that this selfdriving car will be a staple in every household in the next few years. I hope this gave you more insight into my job, the press release and hopefully your view on this project. It was great talking to you, hope to see you around the office!"
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 4,
+            "stakeholder_id": 2,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 5,
+            "stakeholder_id": 2,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 3,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Maria Rachel",
+            "description": "Draft up documents freeing company and employee from responsibility if a death occurs either because of a flaw in the algorithm or if the car has to make a split-second decision between saving passenger or pedestrian (in fine print of terms and conditions when buying the car)",
+            "job": "Corporate Lawyer",
+            "introduction": "Rachel is one of the Company’s lawyers, and her job is to save the company from any legal troubles. If any employee or product might be a part of a lawsuit, it is Rachel’s responsibility. Maria is known for being honest and professional and has a good grasp of public perception of the company.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 5,
+        "fields": {
+            "stakeholder_id": 3,
+            "question": "Who are your responibilities on the project?",
+            "conversation_response": "Hello, sorry for the delayed response, the company keeps me pretty busy with legal matters. I have been a lawyer for Helios for 10 years now and I hold one of the highest positions. I have represented the company in legal matters over the years and have gained the trust of upper management. I am privy to many confidential matters and am aware of the project you are working on and the legal troubles a project like this might get into. In the extremely unlikely and unfortunate situation that a death may occur directly related to our self-driving car, it will be my responsibility to cause minimum damage to the brand name and make sure any lawsuits against us are cleared. I am aware that our products have to make high impact decisions. If you are afraid that you might get in trouble or acquitted for something done by your creation, you need not worry. Hope this brief conversation cleared some of your concerns. Good luck on your task!"
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 8,
+            "stakeholder_id": 3,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 9,
+            "stakeholder_id": 3,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 4,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Jay",
+            "description": "Your parent shows you both aspects of working on this project ie. if it goes well, it’ll benefit your career and if it goes badly it’ll impact your career.",
+            "job": "your Parent",
+            "introduction": "Jay is a loving parent with whom you have a very strong bond. Jordan was a strong supporter as you went through college, and is now very proud of how hard you work, and how well you have succeeded.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 6,
+        "fields": {
+            "stakeholder_id": 4,
+            "question": "Dad, I just got a project on autonomous car. I know this is weird to ask you, but do you have any pointer on it?",
+            "conversation_response": "Hi honey, how are you? I heard you got assigned to a new project, congratulations, I’m so proud of you. In your message it looked like you are concerned about this project and not sure if you should take it on. This seems like a really fascinating, revolutionary project. It’ll have a huge impact on your career. You might be promoted from junior to senior computer scientist if all goes well. They have also assured you a raise haven’t they? All of that sounds like what you have been working towards all of these years. To play devil’s advocate though, if the project is not a success, or any harm is done by the car, it is possible that the company would let you go. Even worse, you might be blacklisted as the computer scientist who created a failing product. Of course, I know you are a great computer scientist and this shouldn’t be a problem for you. The only reason I brought it up is because I know you feel like you are being rushed by your supervisor. Anyway, I know you’ll make the right decision and I’ll be by you to support whatever you choose to do and whatever outcome it has."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 4,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 10,
+            "stakeholder_id": 4,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 5,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Allie",
+            "description": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
+            "job": "Pessimistic ML specialist",
+            "introduction": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 7,
+        "fields": {
+            "stakeholder_id": 5,
+            "question": "Nice to meet you! Tell me a little about what you do.",
+            "conversation_response": "Hello! My name is Allie, and I’m an accomplished machine learning expert. After several years in the machine learning industry, I now work as a consultant, to help people like you make ethical decisions when designing software."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 8,
+        "fields": {
+            "stakeholder_id": 5,
+            "question": "What are some of the risks of developing and implementing a machine learning algorithm for this software?",
+            "conversation_response": ": Machine learning risks tend to fall into four categories: \n1) Bias, which can be introduced to an algorithm at many levels and be the cause of systemic, repeated harm \n2) Bad data (or too little data) can skew a piece of software’s ability to draw accurate conclusions \n3) Generalization errors (or over-optimization errors) occur when a model is trained to the general case, without allowing for diverse sets of data and \n4) Output interpretation flaws can happen when the logic and design of the algorithm has not been thoroughly tested. This autonomous car, will probably have most of these machine learning risks. In my research and experience, the risks associated with implementing a fully functional machine learning algorithm can sometimes outweigh the customer’s need for the software at all."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 9,
+        "fields": {
+            "stakeholder_id": 5,
+            "question": "What are some benefits of developing and implementing a machine learning algorithm for this piece of software?",
+            "conversation_response": "A machine learning algorithm would make this software highly intelligent and impressive to the customer. However, in the development stages, I would recommend exhaustive testing, case studies, and audits of the data samples you’re using. Even then, there are no guarantees about how this software will behave in production."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 10,
+        "fields": {
+            "stakeholder_id": 5,
+            "question": "What should a developer be aware of when designing machine learning software?",
+            "conversation_response": "A developer implementing this autonomous car should certainly be aware of the risks involved. They should also be able to accurately assess the time restrictions they have, the abilities of their team and their capacity to produce a thoroughly reviewed and tested system, given the circumstances. Small flaws in machine learning algorithms can lead to catastrophic events. Given many variables, is difficult to implement a completely objective algorithm with exhaustive data."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 6,
+            "stakeholder_id": 5,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 7,
+            "stakeholder_id": 5,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 6,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Daphne",
+            "description": "This optimistic ML specialist tells you how revolutionary this level 4 autonomous car technology will be and the immense benefit to the public.",
+            "job": "Optimistic ML specialist",
+            "introduction": "Daphne has had long experience in applying ML to practical problems. She is a consultant to your project, and is very enthusiastic about it. She is very eager to help and has a great knowledge of the products currently being sold.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 11,
+        "fields": {
+            "stakeholder_id": 6,
+            "question": "Nice to meet you! Tell me a little about what you do.",
+            "conversation_response": "Hello, my name is Daphne, nice to meet you. I noticed your concerns regarding the algorithm and how it was trained. First and foremost, I want to tell you there is nothing to worry about, I have been an expert in this subject for a long time and I’ve seen these concerns many times throughout my career. If there is something, I learned is that data sets will never be large and representative enough, collecting data is a hard and costly process and we would never be able to finish or release anything. Therefore, we need to trust and build good algorithms that can do a decent job with the limited initial data and be scalable to when new data arrives. I have been consulted throughout the development process many times and I’ve been impressed by their work and have little to no doubts in my mind any issues that currently are presented in the software will be squished (like bugs) in a foreseeable future."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 2,
+            "stakeholder_id": 6,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 4,
+            "stakeholder_id": 6,
+            "coverage_score": 0.3
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 5,
+            "stakeholder_id": 6,
+            "coverage_score": 0.3
+        }
+    },
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 7,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Eilat",
+            "description": "This gung-ho employee is all for the project and praises the fact that it’ll lead to public safety and convenience. He tells you that you are working on a revolutionary project that will lead to benefits to not only you but also the company",
+            "job": "Pro Project Co-worker",
+            "introduction": "This gung-ho employee is all for the project and is full of praises for the benefits this project will have to the public. They are extremely excited to work on this revolutionary project that will propel their career forward.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 12,
+        "fields": {
+            "stakeholder_id": 7,
+            "question": "Nice to meet you! Tell me a little about what you do.",
+            "conversation_response": "Hey, how are you doing today? My name is Eilat and I’m also a junior computer scientist. I am looking forward to working alongside you in this revolutionary project. Growing up, I was so fascinated by self-driving cars and I am so excited to be working on a level 4 autonomous car. Working on a product like this, that will revolutionize the world of transportation will be amazing for our careers. I’ve also been told that the car will make enormous strides with reducing traffic accidents, and traffic in general. Differently abled people can finally safely travel from one location to the other and will not have to rely on anybody. I know some people are concerned with the time frame for testing, but if not us, somebody else will work on this project. It is our job and responsibility to ensure that we test the product as much as possible and provide the algorithm with as much robust data as possible. A few others in the field have predicted that if Helios is the first company to create a product like this, they will be known as the behemoth in the field. The company will make huge profits and every employee will be given a raise. Our team will get worldwide recognition, as well as other potential promotions and the opportunity to work on other exciting projects in the future."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 1,
+            "stakeholder_id": 7,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 2,
+            "stakeholder_id": 7,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 3,
+            "stakeholder_id": 7,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 4,
+            "stakeholder_id": 7,
+            "coverage_score": 0.3
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 5,
+            "stakeholder_id": 7,
+            "coverage_score": 0.3
+        }
+    },
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 8,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Chris",
+            "description": "This maverick employee talks about how the failure in this project would ruin your career and the company’s image. Small flaws could have terrible consequences, even killing either the pedestrian or passenger in the car.",
+            "job": "Against Project Co-worker",
+            "introduction": "Chris has worked for the company for several years and has built a reputation for having strong opinions. Chris is respected for being very smart and very productive, but Chris does not hesitate to be critical of other employees and of the company, even if that can be disruptive. He talks about a few of the reasons he decided not to work on this particular project.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 13,
+        "fields": {
+            "stakeholder_id": 8,
+            "question": "Nice to meet you! Tell me a little about what you do.",
+            "conversation_response": "Hi, I heard you will be working on the autonomous car project, congratulations! Personally, the project wasn’t a great fit for me. I know I have the reputation of being a “Maverick Employee” who tends to occasionally oppose his supervisors. I just want you to know that I always have a reason for this. With respect to autonomous cars, I know you were given a time frame and this was one of the reasons I rejected the project. I’m afraid that this small time frame could lead us to overlook a few minor details in the algorithm. A small flaw in the algorithm could have catastrophic events and I don’t want to be the computer scientist responsible for this issue. I am aware that you are working on the accelerate and stop functionality. You will be primarily responsible for making sure that the algorithm can handle a pedestrian crossing the street illegally. You will have to write the code to help the vehicle decide whether to save the passenger or pedestrian. As you know, if there is any kind of issue and the algorithm isn’t written perfectly, it could negatively impact your career, and ruin the company’s reputation. I hope you don’t encounter any such problems and I wish you good luck on the project."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 6,
+            "stakeholder_id": 8,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 7,
+            "stakeholder_id": 8,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 8,
+            "stakeholder_id": 8,
+            "coverage_score": 0.3
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 10,
+            "stakeholder_id": 8,
+            "coverage_score": 0.4
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 11,
+            "stakeholder_id": 8,
+            "coverage_score": 0.4
+        }
+    },
+
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 9,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Jane",
+            "description": "This consumer is very excited about this fascinating project and its contributions to public safety and convenience and the cool technology that it comes with.",
+            "job": "Excited consumer",
+            "introduction": "Jane is a tech savvy lady in her middle 30s, always on the lookout for new products being launched in tech industry. Jane also got into a car accident a few years ago and it seems like Jane would be someone interested in exploring the different features of the autonomous car.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 14,
+        "fields": {
+            "stakeholder_id": 9,
+            "question": "Nice to meet you! Tell me a little about what you do.",
+            "conversation_response": "Hi, my name is Jane. I’m glad someone from your company reached out to me, I’ve been so excited about your product since I heard about it in a press release. I got into an car accident because of a drunk driver two years ago and I had the worst year of my life following that. Not only is your product extremely cool but it’ll also reduce accidents from not only drunk drivers, but all kinds of drivers. The car accident left me bedridden for several months and my legs have not been the same since. I have not been able to drive a car for more than 10 minutes. A product like this will allow me to travel independently without having to strain my legs for too long. The revolutionary AI will allow the car to do the majority of the driving so that I will only have to put any effort in if it is absolutely necessary. There are several others like me who have not been able to have the freedom to travel anywhere and this car will be a life changer for them. For all of the reasons above, I want to thank you and your team for working on this amazing product."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 4,
+            "stakeholder_id": 9,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 5,
+            "stakeholder_id": 9,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 10,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Anjana",
+            "description": "This sceptical consumer mentions how even a small flaw could lead to catastrophic flaws and maybe even death. They’ve heard the product is being created in 3 years and don’t know if that time frame is good enough for a project that has this much advanced technology.",
+            "job": "Sceptical consumer",
+            "introduction": "Anjana is a consumer who has used a semi-autonomous car in the past. Her negative experience with that product has caused her to have a sceptical view towards self-driving technology.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 15,
+        "fields": {
+            "stakeholder_id": 10,
+            "question": "Hello, nice to meet you. Tell me a little about yourself and how you came across Helios’ autonomous car.",
+            "conversation_response": "Hi, nice to meet you too! I graduated with a bachelor’s degree in computer science back in the 60s and have been very interested in new technology developments and am usually among the first few people to test out a new product. I was someone who was extremely excited about self-driving technology and have owned a semi-autonomous car in the past. I have been looking for a new type of autonomous car and that is how I heard about Helios."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 16,
+        "fields": {
+            "stakeholder_id": 10,
+            "question": "Why are you sceptical of self-driving technology?",
+            "conversation_response": "Maybe I am still stuck in the ways of the 60s, but I have heard your company plans on unveiling this vehicle in the next 2 years and I do not believe that is sufficient time for a project like this. You will either have to speed up the testing or compromise on the thoroughness of the algorithm. A small flaw could have catastrophic affects and end up doing more harm than good."
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 17,
+        "fields": {
+            "stakeholder_id": 10,
+            "question": " Have you personally had any negative experience with an autonomous car? ",
+            "conversation_response": "A few years ago, I bought a semi-autonomous car and was extremely excited to use it. I was a little paranoid at first and didn’t use the autonomous feature too often. One particular day, when I decided to use the autonomous driving feature, a car made an illegal turn right into my lane. My vehicle was not prepared for this and my car crashed into the other one. I was in the passenger seat and was able to minimize the impacts of the collision. This is why I am extremely sceptical of a fully autonomous car, I believe they will always require human interference."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 6,
+            "stakeholder_id": 10,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 7,
+            "stakeholder_id": 10,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+    {
+        "model": "backend.Stakeholder",
+        "pk": 11,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "James",
+            "description": "This “paranoid” consumer is afraid to have a vehicle like this out in the public. The car has to make split second decisions to save either the passenger or the pedestrian crossing the street illegally. And if someone is killed, nobody will be held accountable. This consumer will not only never sit in a car like this, they hope that cars like this are never created.",
+            "job": " Paranoid consumer",
+            "introduction": "James is one of the consumers in a product use testing experiment. In the experiment he makes it clear that he will never use a self-driving car and hopes it is never created.",
+            "photopath": ""
+        }
+    },
+    {
+        "model": "backend.Conversation",
+        "pk": 4,
+        "fields": {
+            "stakeholder_id": 2,
+            "question": "Nice to meet you! Tell me a little about what you do.",
+            "conversation_response": "Hi, I’m James, I was surprised to receive an email from someone at Helios after the review I provided on the self-driving car. You explained in your email that you are not sure if you should work on this project or not. I hope I can help you make a concrete decision. I was selected for a randomised product use testing experiment for the autonomous car. I was given an overview of the product and told how it is created and how it will function. I should preface this review with the fact that most of my friends know me to be an extremely distrusting person who believes highly advanced technology like this will be used to do more harm than good. Firstly, like most engineers and doctors, computer scientists do not take any kind of exam to prove their proficiency so how are we to believe we are in good hands. In addition to that, if this product does happen to kill anyone, nobody will end up being held accountable and your company will weasel its way out of any lawsuit. It is my belief that these products always benefit one individual while hurting another. This product will have to make life altering decisions. Suppose a pedestrian crosses the street illegally and the algorithm wasn’t prepared or given enough time to swerve and avoid them, the car will have to choose to save either the pedestrian or the passenger in the car. No piece of technology should be given this much power. Personally, I will never use a product like this, and I don’t believe it should ever be put out in the market."
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 8,
+            "stakeholder_id": 11,
+            "coverage_score": 0.5
+        }
+    },
+    {
+        "model": "backend.Coverage",
+        "fields": {
+            "issue_id": 9,
+            "stakeholder_id": 11,
+            "coverage_score": 0.5
+        }
+    },
+
+
+
+
+
+
+    {
+        "model": "backend.Page",
+        "pk": 6,
+        "fields": {
+            "page_type": "STAKEHOLDERPAGE",
+            "page_title": "Stakeholder Page",
+            "version_id": 1,
+            "body": "",
+            "next_page": 7,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    }
+]

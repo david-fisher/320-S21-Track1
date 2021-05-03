@@ -1,0 +1,101 @@
+[
+    {
+        "model": "backend.Course",
+        "pk": 1,
+        "fields": {
+            "name": "CS320"
+        }
+    },
+    {
+        "model": "backend.ScenarioForUser",
+        "pk": 1,
+        "fields": {
+            "scenario_id": 1,
+            "version_id": 1,
+            "user_id": 1
+        }
+    },
+    {
+        "model": "backend.Scenario",
+        "pk": 1,
+        "fields": {
+            "user_id": 99,
+            "public": true,
+            "is_finished": false,
+            "date_created": "2020-01-01"
+        }
+    },
+    {
+        "model": "backend.CourseAssignment",
+        "pk": 1,
+        "fields": {
+            "course_id": 1,
+            "scenario_id": 1
+        }
+    },
+    {
+        "model": "backend.User",
+        "pk": 1,
+        "fields": {
+            "user_type_id": 1,
+            "access_level": 1
+        }
+    },
+    {
+        "model": "backend.Takes",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "course_id": 1
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 1,
+        "fields": {
+            "page_type": "PLAIN",
+            "page_title": "Quandary Statement",
+            "version_id": 1,
+            "body": "You have just been hired at Helios Inc as a junior computer scientist. The company is currently working on a level 4 autonomous car and you are placed on a team working towards creating the technology to make this happen. The company is up against a couple dozen others working towards this and the first company to create it will have the greatest profits and dominance in the market. Employees are given a time frame of two years and are informed that if they achieve this goal, they will be given huge bonuses and see a huge increase in their salaries. They are told that not only will they be working on a revolutionary project but will also make huge strides in their careers following the completion. Apart from that, these cars could improve road safety, ease traffic, and provide accessibility to those who cannot drive.  On the other hand, even a small flaw in the software could cause more harm than good. Given the fast approaching deadline, how much testing is enough when it comes to human lives and could having a deadline cause the developers to miss small issues. If the car has to make life altering decisions, such as the trolley program, to save either a pedestrian crossing the street illegally or the passengers in the car, who should it save. In addition to the previous point, if somebody is killed, who is to be blamed for this loss of human life.  Should you take this project on?",
+            "next_page": 2,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 2,
+        "fields": {
+            "page_type": "PLAIN",
+            "page_title": "Introduction",
+            "version_id": 1,
+            "body": "Helios Inc is an automotive manufacturing company. They design, manufacture, and distribute passenger vehicles and engines. The company is currently working on developing level 4 autonomous vehicle technology. Their motto, “A chariot for all” is influenced by the fact that they provide accessibility to those who cannot drive.  Autonomous cars, also known as self-driving cars, are referred to as such because they should be able to drive with little to no human interaction. To create these cars, computer scientists implement AI algorithms to automate the manual tasks done by a human. The AI essentially behaves as the brain of the car, making decisions such as when to break, accelerate, steer. They should be able to detect pedestrians, even if they are crossing the road illegally. They should detect cars around them and be able to navigate even if road rules suggest the car does not belong there. A perfectly created self-driving car like this could reduce traffic accidents by as much as 90% due to removing human error from the equation. It will also improve overall traffic flow by at least 35%.  There are 6 levels of autonomy which describe to what level the human or computer does work on the car. The higher the level, the more work done by the car itself with level 0 indicating no work and level 5 indicating a completely autonomous vehicle. Tesla autopilot and Cadillac super cruise are examples of Level 2. Audi’s A8L is said to have full Level 3 capabilities in some countries. Alphabet's Waymo, Magna, and Volvo (and Baidu) are currently working on creating a Level 4 autonomous vehicle. Experts predict a car like this will be available by 2024.  Helios Inc wants to be the first company to develop and distribute Level 4 self driving cars. This puts then on a race against a couple dozen companies trying to achieve the same goal. The success of this project would be revolutionary for the world of transportation and would present the company as a behemoth in the field. The company and all of the employees working on the project would stand to make huge profits and great strides in their careers.  You are a junior computer scientist who will be working with a team of software engineers, ML and AI specialists, and robotics engineers.",
+            "next_page": 3,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.Page",
+        "pk": 3,
+        "fields": {
+            "page_type": "PLAIN",
+            "page_title": "Project Task Assignment",
+            "version_id": 1,
+            "body": "In this project you will be working on two tasks.  Your first task will be to collect data and work with the team creating a level 4 autonomous AI model. This model needs to be fully autonomous with no human driver in most cases and should be able to simultaneously accelerate, steer, stop, navigate and park. You will be working on the accelerate and stop functionality.  Your second task will be to test the features you developed on a large range of data and scenarios and ultimately send it into production. ",
+            "next_page": 3,
+            "x_coordinate": 0,
+            "y_coordinate": 0
+        }
+    },
+    {
+        "model": "backend.Version",
+        "pk": 1,
+        "fields": {
+            "scenario_id": 1,
+            "name": "Autonomous Cars",
+            "num_conversation": 3,
+            "first_page": 1
+        }
+    }
+]

@@ -4,8 +4,8 @@ export default function ScenarioCard({title, course, date}) {       //scenario c
    return(
        <div>
            <h2>{title}</h2>
-           <h4>{course}</h4>
-           <p>{date}</p>
+           <h4>Course: {course}</h4>
+           <p>Assigned: {date}</p>
        </div>
    )
  

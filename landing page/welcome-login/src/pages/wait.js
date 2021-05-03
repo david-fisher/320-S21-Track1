@@ -20,6 +20,20 @@ import { Link as RouterLink } from 'react-router-dom';
 import Copyright from '../components/Copyright';
 import RedLogo from '../shared/RedLogo.png';
 
+let receivedData = 'Nothing'
+
+let test = async () => {
+    fetch('/backend/shib/attributes/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then(data => {return data})
+    return {'affliation': 'Student'};
+}
+
 const useStyles = makeStyles((theme) => ({
     container: {
         marginTop: theme.spacing(2),
@@ -81,29 +95,24 @@ export default function Wait() {
         });
     };
 
-    //Reload Page
-    useEffect(() => {
-        setTimeout(() => {
-            getData()
-            let bool = (Math.random() < 0.5);
-            if (bool){
-                window.location.href = "http://localhost:3001";
-            }
-            else{
-                window.location.href = "http://localhost:3000";
-            }
-        }, 5000)
-      }, [shouldFetch]);
-    //useEffect(getData, [shouldFetch]);
+    //reload page to right place
+    test()
+        .then((receivedData) => {
+            console.log('abc ');
+            console.log(receivedData);
+            window.location.href = receivedData.affliation === 'Student' ?  "/simulator" : receivedData.affliation === 'Employee'? '/editor' : null;
+        });
+
+
 
     if (fetchResponse.loading) {
         return (
             <Container component="main" maxWidth="xs">
-            <div>
-                <div style={{ marginTop: '100px' }}>
-                    <LoadingSpinner />
+                <div>
+                    <div style={{ marginTop: '100px' }}>
+                        <LoadingSpinner />
+                    </div>
                 </div>
-            </div>
             </Container>
         );
     }
@@ -111,25 +120,25 @@ export default function Wait() {
     if (fetchResponse.error) {
         return (
             <Container component="main" maxWidth="xs">
-            <div>
-                <div className={classes.issue}>
-                    <div className={classes.errorContainer}>
-                        <ErrorIcon className={classes.iconError} />
-                        <Typography align="center" variant="h3">
-                            Error in fetching Shibboleth status.
-                        </Typography>
-                    </div>
-                    <div className={classes.errorContainer}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={getData}
-                        >
-                            <RefreshIcon className={classes.iconRefreshLarge} />
-                        </Button>
+                <div>
+                    <div className={classes.issue}>
+                        <div className={classes.errorContainer}>
+                            <ErrorIcon className={classes.iconError} />
+                            <Typography align="center" variant="h3">
+                                Error in fetching Shibboleth status.
+                            </Typography>
+                        </div>
+                        <div className={classes.errorContainer}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={getData}
+                            >
+                                <RefreshIcon className={classes.iconRefreshLarge} />
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </div>
             </Container>
         );
     }
@@ -142,7 +151,7 @@ export default function Wait() {
                 </Container>
             );
         }
-        else{ 
+        else{
             return (
                 <Container component="main" maxWidth="xs">
                     <Redirect to='/simulator'  />
