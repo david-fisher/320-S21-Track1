@@ -28,7 +28,6 @@ def publishScenario(request):
         try:
             courseJSONObj = jsonData["Course"][0]
             scenarioJSONObj = jsonData["Scenario"]
-            courseAssignmentJSONObj = jsonData["CourseAssignment"]
             pageJSONArr = jsonData["Pages"]
             stakeholderJSONArr = jsonData["Stakeholders"]
             conversationJSONArr = jsonData["Conversations"]
