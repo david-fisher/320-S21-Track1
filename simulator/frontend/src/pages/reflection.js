@@ -13,6 +13,7 @@ import { ScenariosContext } from "../Nav";
 import get from '../universalHTTPRequests/get';
 import React,{useEffect,useState} from "react";
 import TextField from '@material-ui/core/TextField';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 const TextTypography = withStyles({
   root: {
@@ -29,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     boxShadow: "0px 0px 2px",
   },
+  errorContainer: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
 }));
 
 function Reflection({ pages, setPages, activePage, setActivePage,
@@ -140,12 +147,33 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
 
   useEffect(getData, [shouldFetch]);
+
+  if (fetchScenariosResponse.error) {
+    return (
+      <div className={classes.errorContainer}>
+        <Box mt={5}>
+          <Grid container direction="row" justify="center" alignItems="center">
+            <TextTypography variant="h4" align="center" gutterBottom>
+              Error fetching scenario data.
+            </TextTypography>
+          </Grid>
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={getData}
+        >
+          <RefreshIcon className={classes.iconRefreshLarge} />
+        </Button>
+      </div>)
+  }
+
   return (
     <div>
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
           <TextTypography variant="h4" align="center" gutterBottom>
-            {title}
+            Reflection
           </TextTypography>
         </Box>
       </Grid>

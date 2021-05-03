@@ -32,9 +32,9 @@ function SimulationWindow(props) {
   const version_id = scenario_id;
 
   
-  const [activePage, setActivePage] = useState("1");
+  const [activePage, setActivePage] = useState("2");
   const [pages, setPages] = useState({
-    1: { visited: true, completed: true, title: "Quandary Statement", pageNumber: 0, html: (<Introduction />) },
+    2: { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction />) },
     // projectAssignment: { visited: false, completed: true, pageNumber: 1, pid:0, html: (<ProjectAssignment />) },
     // initialReflection: { visited: false, completed: true, pageNumber: 2, pid:0, html: (<Reflection
     //   content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID="initialAction" prevPageID="projectAssignment" title="Reflect on Initial Information"/>) },
@@ -139,7 +139,6 @@ function SimulationWindow(props) {
         let endpoint = "/scenarios/task?versionId=1&pageId=" + next;
         get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2);
       }
-      console.log(next_page)
     }
     function onFailure() {
       //setErrorBannerMessage('Failed to get scenarios! Please try again.');

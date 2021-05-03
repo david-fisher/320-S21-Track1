@@ -63,7 +63,7 @@
   },
   {
       "model": "backend.Page",
-      "pk": 10,
+      "pk": 9,
       "fields": {
         "page_type": "REFLECTION",
         "page_title": "FINAL REFLECTION",
@@ -79,7 +79,7 @@
       "pk": 5,
       "fields": {
         "version_id": 1,
-        "page_id": 10,
+        "page_id": 9,
         "reflection_question": "How do you feel about the consequences of the decision you just made?"
       }
   }
