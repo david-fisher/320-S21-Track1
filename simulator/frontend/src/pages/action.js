@@ -144,7 +144,7 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
       } else if (npage[0].type === "REFLECTION"){
         next_html = (<Reflection content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders />);
+        next_html = (<Stakeholders prevPageID={activePage}/>);
       } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
         next_html = (<Action activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else {

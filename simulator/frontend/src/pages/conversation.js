@@ -83,7 +83,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
           setQuestionAnswered(true);
           setSelectedConversation(response.data.result[0].conversation_id);
-          setAnswer(response.data.result[0].response_id);
+          setAnswer(response.data.result[0].conversation_response);
         }
       }
 
@@ -105,14 +105,11 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         console.log('Error');
       };
 
-      let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&courseId=1&sessionId=1";
+      let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=1";
 
 
       
-      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, {
-        response_id: answer,
-        already_exist: true
-      })
+      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, undefined)
       setSelectedConversation(-1)
     }
     
@@ -122,7 +119,6 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     
     const handleSubmit = () => {
       postData();
-      
     };
 
     const handleChange = (e) => {

@@ -33,7 +33,7 @@ function ellipses(str, cutoff) {
   return newStr;
 }
 
-function Stakeholders({ pages, setPages, activePage, setActivePage }) {
+function Stakeholders({ pages, setPages, prevPageID, activePage, setActivePage }) {
   const [stakeholders, setStakeholders] = React.useState([])
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [conversationLimit, setConversationLimit] = React.useState(2);
@@ -146,7 +146,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
 
   function getStakeholderCards(id, name, job, description, photo, styles) {
     
-    const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = 'gatheredInformation';
+    const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = prevPageID;
     function toggleModal(id, toggle) {
       setModalOpenToggles(prev => {
         let newToggles = {...prev};
@@ -262,7 +262,7 @@ function Stakeholders({ pages, setPages, activePage, setActivePage }) {
                     if (ind < 0) { ind = infos.length; }
                     let newInfos = [...infos];
                     newInfos.splice(ind, 0,
-                      { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: 'stakeholders'});
+                      { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: activePage});
                     return newInfos;
                   });
                 }}>Speak to {name}</Button>
