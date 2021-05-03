@@ -379,7 +379,7 @@ class logistics_page(APIView):
                 } for page in super_dict["pages"] for reflection_question in page["reflection_questions"] 
             ]
 
-            to_dump["ClassAssignment"] = [
+            to_dump["CourseAssignment"] = [
                 {
                     "scenario_id": course["SCENARIO"],
                     "course_id": course["COURSE"]["COURSE"]
