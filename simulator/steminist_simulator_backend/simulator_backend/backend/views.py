@@ -53,7 +53,7 @@ def publishScenario(request):
         try:
             scenario = md.Scenario.objects.get(scenario_id=scenarioJSONObj['scenario_id']) 
         except md.Scenario.DoesNotExist:
-            scenario = md.Scenario(scenario_id=scenarioJSONObj['scenario_id'], user_id=scenarioJSONObj['user_id'],
+            scenario = md.Scenario(scenario_id=scenarioJSONObj['scenario_id'], user_id=None,
                                    public=scenarioJSONObj['public'], is_finished=scenarioJSONObj['is_finished'],
                                    date_created=scenarioJSONObj['date_created'])
             scenario.save()
