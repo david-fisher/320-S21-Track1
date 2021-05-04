@@ -33,6 +33,7 @@ function SimulationWindow(props) {
 
   
   const [activePage, setActivePage] = useState("2");
+  let numConversations = 0;
   const [pages, setPages] = useState({
     2: { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction />) },
     // projectAssignment: { visited: false, completed: true, pageNumber: 1, pid:0, html: (<ProjectAssignment />) },
@@ -57,6 +58,7 @@ function SimulationWindow(props) {
   });
 
   const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage
+  const endpointGetMeta = '/scenarios?userId=' + STUDENT_ID
   const infoIdsState = useState([]);
   const [scenarios, setScenarios] = useContext(ScenariosContext);
   const { id } = useParams();
@@ -94,6 +96,12 @@ function SimulationWindow(props) {
 
    //Get next page
    let getData = () => {
+    function onSuccess(response) {
+      let scen = response.data.result.filter(
+        (result) => result.version_id === version_id
+      );
+      numConversations = scen[0].num_conversation;
+    }
     function onSuccess1(response) {
         let next = response.data.result[0].next_page;
         let endpoint = "/scenarios/task?versionId=1&pageId=" + next;
@@ -115,9 +123,9 @@ function SimulationWindow(props) {
       } else if (npage[0].type === "REFLECTION"){
         next_html = (<Reflection content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next}/>);
+        next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
       } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Action numConversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else {
         next_html = (<Reflection activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
       }
@@ -144,6 +152,7 @@ function SimulationWindow(props) {
       //setErrorBannerMessage('Failed to get scenarios! Please try again.');
       //setErrorBannerFade(true);
     }
+    get(setFetchScenariosResponse, (endpointGetMeta), onFailure, onSuccess);
     get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess1);
   };
 

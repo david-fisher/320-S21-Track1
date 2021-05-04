@@ -29,13 +29,10 @@ const TextTypography = withStyles({
 })(Typography);
 
 const useStyles = makeStyles((theme) => ({
-  textBox:{
-    marginTop: theme.spacing(3),
-  },
-  oldTextBox: {
+  textBox: {
     overflowY: "auto",
+    marginTop:'3px',
     maxHeight: window.innerHeight * 0.6,
-    marginTop: theme.spacing(4),
     borderRadius: "5px",
     boxShadow: "0px 0px 2px",
   },
@@ -53,7 +50,6 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
     const endpointGet = "/scenarios/conversation/page?versionId=" + SCENARIO_ID + "&scenarioId="  + SCENARIO_ID + "&stakeholderId=" + stakeholder.id;
-    const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId=1'
 
     const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
@@ -80,11 +76,10 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
       let endpoint = "/scenarios/conversation/had?versionId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&userId=1";
       
       function onSuccess(response){
-        console.log(response)
         if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
           setQuestionAnswered(true);
           setSelectedConversation(response.data.result[0].conversation_id);
-          setAnswer(response.data.result[0].conversation_response);
+          setAnswer(response.data.result[0].response_id);
         }
       }
 
@@ -98,20 +93,22 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     useEffect(checkQuestionAnswered, [shouldFetch]);
 
     let postData = () => {
-      function startSess(response) {
-        //do nothing
-      }
       function onSuccess(response){
-        console.log(response)
+        setAnswer(response.data.result.response_id)
+
       };
   
       function onFailure(err){
         console.log('Error');
       };
 
-      let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=1";
-      post(setFetchConversationResponse, (endpointSess), onFailure, startSess)
-      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess)
+      let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&courseId=1&sessionId=1";
+
+
+      
+      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, {
+        already_exist: true
+      })
       setSelectedConversation(-1)
     }
     
@@ -121,6 +118,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     
     const handleSubmit = () => {
       postData();
+      setQuestionAnswered(true);
     };
 
     const handleChange = (e) => {
@@ -167,8 +165,8 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         <Grid container spacing={2}>
           <Grid item lg={12}>
             <Divider style={{ marginTop: '10px', marginBottom: '30px', height:'2px', backgroundColor:'black'}}/>
-            <Box align="center">
-              Select a Question to Answer
+            <Box align="left">
+              Select a Question to Answer:
               <List>
                 {conversations.map((value) => {
                   const labelId = `question-${value.conversation_id}$`;
@@ -187,27 +185,23 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
                     );
                 })}
               </List>
-            </Box>
-            <TextField
-              className={classes.textBox}
-              disabled={selectedConversation === -1 || questionAnswered}
-              id='text-box'
-              label='Response'
-              fullWidth
-              multiline
-              value={answer}
-              variant="outlined"
-            />
-
-            <Button 
-              style={{marginTop: '20px'}} 
+              <Button 
+              align="left"
+              style={{marginTop: '15px', marginBottom:'25px'}} 
               disabled={selectedConversation === -1 || questionAnswered}
               variant='outlined' 
               size='medium' 
               color='primary'
               onClick={handleSubmit}>
-              Submit
+              Select
             </Button>
+            </Box>
+            
+          <Box fontWeight={500}>Response</Box>
+          <Box p={2} className={classes.textBox}>
+            {answer}
+          </Box>
+            
           </Grid>
         </Grid>
       </div>

@@ -33,7 +33,7 @@ const TextTypography = withStyles({
   }
 })(Typography);
 
-function Action({ pages, setPages, activePage, setActivePage, content_url, nextPageID, prevPageID, title }) {
+function Action({ pages, setPages, activePage, numConversations, setActivePage, content_url, nextPageID, prevPageID, title }) {
   function goToPage(pageID) {
     if (!pages[pageID].visited) {
       setPages((prevPages) => {
@@ -144,9 +144,9 @@ function Action({ pages, setPages, activePage, setActivePage, content_url, nextP
       } else if (npage[0].type === "REFLECTION"){
         next_html = (<Reflection content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next}/>);
+        next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
       } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Action numConversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else {
         next_html = (<Reflection activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
       }

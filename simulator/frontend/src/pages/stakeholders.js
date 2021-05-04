@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import { makeStyles, withStyles, Typography, Box, Grid, Button,
-  Card, CardContent, Modal, Dialog, DialogContent, DialogContentText, Paper, Avatar } from "@material-ui/core";
+import {
+  makeStyles, withStyles, Typography, Box, Grid, Button,
+  Dialog, DialogContent, Paper, Avatar, Tab, Tabs
+} from "@material-ui/core";
 import { createMuiTheme, useTheme } from "@material-ui/core/styles";
 import { GatheredInfoContext } from './simulationWindow';
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
@@ -8,6 +10,7 @@ import axios from 'axios';
 import Conversation from './conversation';
 import { ScenariosContext } from "../Nav";
 import get from '../universalHTTPRequests/get';
+import PropTypes from 'prop-types';
 import { BorderStyle } from "@material-ui/icons";
 import './stakeholders.css';
 
@@ -33,21 +36,86 @@ function ellipses(str, cutoff) {
   return newStr;
 }
 
-function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, setActivePage }) {
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+const StyledTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    color: '#000',
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.pxToRem(18),
+    backgroundColor: 'white',
+    //backgroundColor: '#d9d9d9',
+    '&:hover': {
+      backgroundColor: '#8c8c8c',
+      color: 'white',
+      opacity: 1,
+      selected: {
+        backgroundColor: '#8c8c8c'
+      }
+
+    },
+  },
+}))((props) => <Tab disableRipple {...props} />);
+
+const StyledTabs = withStyles({
+  root: {
+
+  },
+
+  indicator: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    '& > span': {
+      maxWidth: 200,
+      width: '100%',
+      backgroundColor: '#881c1c',
+    },
+  },
+})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
+
+function Stakeholders({ pages, setPages, activePage, numConversations, prevPageID, nextPageID, setActivePage }) {
   const [stakeholders, setStakeholders] = React.useState([])
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-  const [conversationLimit, setConversationLimit] = React.useState(2);
+  const [conversationLimit, setConversationLimit] = React.useState(numConversations);
   const [stakeholdersDisabled, setStakeholdersDisabled] = React.useState({});
   const [stakeholdersSelected, setStakeholdersSelected] = React.useState([]);
+  const [selectedIds, setSelectedIds] = React.useState([]);
+
   const cardStyles = makeStyles({
     root: {
     },
-    
-    card:{
+
+    card: {
       width: 600,
       height: 125,
       //wordBreak: 'break-word',
-      display:'flex',
+      display: 'flex',
       borderRadius: '35px',
     },
     name: {
@@ -63,22 +131,22 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
     },
     job: {
       color: '#881c1c',
-      marginBottom:'10px'
+      marginBottom: '10px'
     },
     disabled: {
       backgroundColor: '#f9f9f9',
       color: '#c2c2c2'
     },
-    shdialog:{
+    shdialog: {
       backgroundColor: 'black',
       borderRadius: '35px'
     },
-    dialogName:{
+    dialogName: {
       color: '#000000',
       marginTop: '10px',
       marginBottom: '2px'
     },
-    dialogJob:{
+    dialogJob: {
       color: '#881c1c',
       marginBottom: '15px'
     },
@@ -90,8 +158,9 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
   const [currentStakeholder, setCurrentStakeholder] = React.useState({});
   const [numStakeholderTalkedTo, setNumStakeholderTalkedTo] = React.useState(0);
   const createdCardStyles = cardStyles();
-  const stakeholdersGrid = getStakeholdersGrid(stakeholders);
-  
+  const stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
+  const stakeholdersSelectedGrid = getStakeholdersGrid(stakeholdersSelected, true)
+
   const endpointGet = '/scenarios/stakeholder/page?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID;
 
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
@@ -101,9 +170,9 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
   });
   const [shouldFetch, setShouldFetch] = useState(0);
 
-  
+
   let getData = () => {
-    function onSuccess(response){
+    function onSuccess(response) {
       // setConversationLimit(...)
       let holders = response.data.result;
       setStakeholders(holders);
@@ -113,29 +182,35 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
           return obj;
         }, {});
       });
-    }
-
-    function onFailure(err){
+      // need isVisited for stakeholder in endpoint
+    } 
+    function onFailure(err) {
       console.log('Error');
     }
     get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
+
   }
   useEffect(getData, [shouldFetch]);
-  
+
   let checkStakeholderVisited = () => {
 
     let endpoint = "/scenarios/stakeholder/had?userId=" + STUDENT_ID + "&versionId=" + SCENARIO_ID;
 
-    function onSuccess(response){
+    function onSuccess(response) {
       let holders = response.data.result;
-      let selected = []
-      for(let i = 0; i < holders.length; ++i){
-        selected.push(holders[i].stakeholder_id)
+      setStakeholdersSelected(holders)
+      let ids = []
+      for (let i = 0; i < holders.length; ++i) {
+        setNumStakeholderTalkedTo(prev => {
+          return (prev + 1);
+        })
+        ids.push(holders[i].stakeholder_id);
       }
-      setStakeholdersSelected(selected);
+      setSelectedIds(ids)
+
     }
 
-    function onFailure(err){
+    function onFailure(err) {
       console.log('Error');
     }
 
@@ -145,11 +220,10 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
 
 
   function getStakeholderCards(id, name, job, description, photo, styles) {
-    
-    const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = prevPageID;
+    const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = 'gatheredInformation';
     function toggleModal(id, toggle) {
       setModalOpenToggles(prev => {
-        let newToggles = {...prev};
+        let newToggles = { ...prev };
         newToggles[id] = toggle;
         return newToggles;
       });
@@ -159,12 +233,6 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
       cardClass = `${styles.card} ${styles.disabled}`;
       nameClass = descriptionClass = styles.disabled;
     }
-    /* else if (stakeholdersSelected.includes(id)){
-      cardClass = `${styles.card} ${styles.selected}`;
-      nameClass = styles.name;
-      jobClass = styles.job;
-      descriptionClass = styles.background;
-    } */
     else {
       cardClass = styles.card;
       nameClass = styles.name;
@@ -173,21 +241,21 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
     }
     return (
       <>
-        <Button disabled={stakeholdersDisabled[id]} style={{textTransform: 'none'}} onClick={() => toggleModal(id, true)}>
+        <Button disabled={stakeholdersDisabled[id]} style={{ textTransform: 'none' }} onClick={() => toggleModal(id, true)}>
           <Paper elevation={2} className={cardClass}>
-            <div id="stakeholder-container" style={{display:"flex" , justifyContent:"center"}}>
-              <Avatar id="stakeholder-img" alt="Stakeholder Photo" src={photo}/>
+            <div id="stakeholder-container" style={{ display: "flex", justifyContent: "center" }}>
+              <Avatar id="stakeholder-img" alt="Stakeholder Photo" src={photo} />
             </div>
-            <div id="info-container" style={{flex: 1}}>
-            <Box fontSize="20px" fontWeight="fontWeightBold" className={nameClass} align='left'>
-              {name}
-            </Box> 
-            <Box fontWeight="fontWeightBold" className={jobClass} align='left'>
-              {job}
-            </Box> 
-            <Typography variant="body2" component="p" align='left' className={descriptionClass}>
-              {ellipses(description, 130)} 
-            </Typography>
+            <div id="info-container" style={{ flex: 1 }}>
+              <Box fontSize="20px" fontWeight="fontWeightBold" className={nameClass} align='left'>
+                {name}
+              </Box>
+              <Box fontWeight="fontWeightBold" className={jobClass} align='left'>
+                {job}
+              </Box>
+              <Typography variant="body2" component="p" align='left' className={descriptionClass}>
+                {ellipses(description, 130)}
+              </Typography>
             </div>
           </Paper>
         </Button>
@@ -195,98 +263,152 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
           PaperProps={{
             style: {
               width: '350px',
-              borderRadius:'30px'
+              borderRadius: '30px'
             },
           }}
           open={modalOpenToggles[id]}
           onClose={() => toggleModal(id, false)}
-          maxWidth= {'sm'}
-          fullWidth= {false}
-          >
+          maxWidth={'sm'}
+          fullWidth={false}
+        >
           <DialogContent>
-              <div style={{display:"flex" , justifyContent:"center"}}>
-                <Avatar style={{height:"150px", width:"150px"}} alt="Stakeholder Photo" size src={photo}/>
-              </div>
-              <Box fontSize="25px" fontWeight="fontWeightBold" className={classes.dialogName} align='center'>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Avatar style={{ height: "150px", width: "150px" }} alt="Stakeholder Photo" size src={photo} />
+            </div>
+            <Box fontSize="25px" fontWeight="fontWeightBold" className={classes.dialogName} align='center'>
               {name}
-              </Box> 
-              <Box fontSize="15px" fontWeight="fontWeightBold" className={classes.dialogJob} align='center'>
-                {job}
-              </Box> 
-              <Typography variant="body2" component="p" align='center' className={descriptionClass}>
-                {description}
-              </Typography>
-                <br/>
-                <br/>
-              <div style={{display:"flex" , justifyContent:"center"}}>
-                <Button disabled={stakeholdersDisabled[id]} variant="contained" onClick={() => {
-                  setCurrentStakeholder(prev => ({
-                    name: name,
-                    id: id,
-                    job: job,
-                    description: description,
-                    photo: photo
-                  }));
-                  
-                  setStakeholdersDisabled(prev => { 
-                    let newStakeholdersDisabled = {...prev};
-                    if (numStakeholderTalkedTo + 1 >= conversationLimit) {
-                      for (const id in newStakeholdersDisabled) {
-                        newStakeholdersDisabled[id] = true;
+            </Box>
+            <Box fontSize="15px" fontWeight="fontWeightBold" className={classes.dialogJob} align='center'>
+              {job}
+            </Box>
+            <Typography variant="body2" component="p" align='center' className={descriptionClass}>
+              {description}
+            </Typography>
+            <br />
+            <br />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button disabled={stakeholdersDisabled[id]} variant="contained" onClick={() => {
+                setCurrentStakeholder(prev => ({
+                  name: name,
+                  id: id,
+                  job: job,
+                  description: description,
+                  photo: photo
+                }));
+
+
+                if (!selectedIds.includes(id)) {
+                  setStakeholders(prev => {
+                    let holders = prev;
+                    for (let i = 0; i < holders.length; ++i) {
+                      if (holders[i].stakeholder_id === id) {
+                        let selectedHolder = holders[i];
+                        holders.splice(i, 1);
+
+                        setSelectedIds(prev => {
+                          if (!prev.includes(id))
+                            prev.push(id)
+                          return prev;
+                        });
+
+                        setStakeholdersSelected(prev => {
+                          let h = prev
+                          if (!h.some(item => (item.stakeholder_id === id)))
+                            h.push(selectedHolder)
+                          return h;
+                        });
+
+
                       }
-                    }else {
-                      newStakeholdersDisabled[id] = true;
+                    }
+
+                    return holders;
+                  });
+
+
+                  setStakeholdersDisabled(prev => {
+                    let newStakeholdersDisabled = { ...prev };
+                    if (numStakeholderTalkedTo + 1 >= conversationLimit) {
+                      for (const sID in newStakeholdersDisabled) {
+                        console.log(selectedIds)
+                        console.log(!selectedIds.includes(sID));
+                        if (!selectedIds.includes(sID)) {
+                          newStakeholdersDisabled[sID] = true;
+                        }
+                      }
                     }
                     return newStakeholdersDisabled;
                   });
+
+
                   setNumStakeholderTalkedTo(prev => {
                     return (prev + 1)
                   });
-                  
-                  /* axios({
-                    method: 'put',
-                    url: BACK_URL + '/scenarios/stakeholder?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID,
-                    data: {
-                      scenarioID: scenarios.currentScenarioID,
-                      studentID: STUDENT_ID,
-                      stakeholderID: id
-                    }
-                  }).catch(err => {
-                    console.error(err);
-                    alert(err); 
-                  }) */
-                  setShowStakeholders(false);
-                  toggleModal(id, false);
-                  setGatheredInfo(infos => {
-                    let ind = infos.findIndex(info => info.pageId === PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS);
-                    if (ind < 0) { ind = infos.length; }
-                    let newInfos = [...infos];
-                    newInfos.splice(ind, 0,
-                      { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: activePage});
-                    return newInfos;
-                  });
-                }}>Speak to {name}</Button>
-              </div>
+
+                  setStakeholdersDisabled(prev => {
+                    let newStakeholdersDisabled = { ...prev };
+                    selectedIds.map(val => {
+                      newStakeholdersDisabled[val] = false;
+                    })
+                    return newStakeholdersDisabled
+                  })
+                }
+
+                setShowStakeholders(false);
+                toggleModal(id, false);
+                /* setGatheredInfo(infos => {
+                  let ind = infos.findIndex(info => info.pageId === PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS);
+                  if (ind < 0) { ind = infos.length; }
+                  let newInfos = [...infos];
+                  newInfos.splice(ind, 0,
+                    { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: 'stakeholders'});
+                  return newInfos;
+                }); */
+              }}>Speak to {name}</Button>
+            </div>
           </DialogContent>
         </Dialog>
       </>
     )
   }
 
-  function getStakeholdersGrid(stakeholders) {
-    let items = stakeholders.map(stakeholder => getStakeholderCards(
-      stakeholder.stakeholder_id, stakeholder.name, stakeholder.job, stakeholder.description, stakeholder.photo, createdCardStyles));
-    return (
-      <div>
-        <Grid container spacing={3} justify={'center'}>
-          {items.map(item => ((
-            <Grid item>
-              {item}
-            </Grid>
-          )))}
-        </Grid>
-      </div>
-    )
+  function getStakeholdersGrid(stakeholders, selected) {
+    if (!selected) {
+      let stakeholdersNotSelected = stakeholders
+      for (let i = 0; i < stakeholdersNotSelected.length; ++i) {
+        if (selectedIds.includes(stakeholdersNotSelected[i].stakeholder_id)) {
+          stakeholdersNotSelected.splice(i, 1);
+        }
+      }
+      let items = stakeholdersNotSelected.map(stakeholder => getStakeholderCards(
+        stakeholder.stakeholder_id, stakeholder.name, stakeholder.job, stakeholder.description, stakeholder.photo, createdCardStyles));
+      return (
+        <div>
+          <Grid container spacing={3} justify={'center'}>
+            {items.map(item => ((
+              <Grid item>
+                {item}
+              </Grid>
+            )))}
+          </Grid>
+        </div>
+      )
+    }
+    else {
+      let items = stakeholdersSelected.map(stakeholder => getStakeholderCards(
+        stakeholder.stakeholder_id, stakeholder.name, stakeholder.job, stakeholder.description, stakeholder.photo, createdCardStyles));
+      return (
+        <div>
+          <Grid container spacing={3} justify={'center'}>
+            {items.map(item => ((
+              <Grid item>
+                {item}
+              </Grid>
+            )))}
+          </Grid>
+        </div>
+      )
+    }
   }
 
   function goToGatheredInformation() {
@@ -310,46 +432,77 @@ function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, set
     }
     setActivePage(prevPage => nextPageID)
   }
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <>
       {showStakeholders &&
         <div>
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Box mt={5}>
-            <TextTypography variant="h4" align="center" gutterBottom>
-              Stakeholders
+          <Grid container direction="row" justify="center" alignItems="center">
+            <Box mt={5}>
+              <TextTypography variant="h4" align="center" gutterBottom>
+                Stakeholders
             </TextTypography>
-          </Box>
-        </Grid>
-        <Grid container direction="row" justify="space-between">
-          <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-            <Button variant="contained" disableElevation onClick={goToGatheredInformation}>Back</Button>
-          </Grid>
-          <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-            <Button variant="contained" disableElevation color="primary" onClick={goToNextPage}>Next</Button>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item lg={12} md={12} sm={12}>
-            <Box m="1rem" align={'center'}>
-              <TextTypography>
-                You've spoken to <b>{numStakeholderTalkedTo} out of {conversationLimit}</b> stakeholders</TextTypography>
             </Box>
-            <TextTypography variant="body1" align="center">
-              {introText}
-            </TextTypography>
           </Grid>
-          <div style={{display:'flex', flex:'1', justifyContent:'center'}}>
-          {stakeholdersGrid}
-          </div>
-        </Grid>
-      </div>
+          <Grid container direction="row" justify="space-between">
+            <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
+              <Button variant="contained" disableElevation onClick={goToGatheredInformation}>Back</Button>
+            </Grid>
+            <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
+              <Button variant="contained" disableElevation color="primary" onClick={goToNextPage}>Next</Button>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item lg={12} md={12} sm={12}>
+              <Box m="1rem" align={'center'}>
+                <TextTypography>
+                  You've spoken to <b>{numStakeholderTalkedTo} out of {conversationLimit}</b> stakeholders</TextTypography>
+              </Box>
+              <TextTypography variant="body1" align="center">
+                {introText}
+              </TextTypography>
+            </Grid>
+            <Grid container direction="column">
+              <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="Tabs">
+                <StyledTab label="Available Stakeholders" {...a11yProps(0)} />
+                <StyledTab className={classes.tab} label="Spoken To Stakeholders" {...a11yProps(1)} />
+              </StyledTabs>
+              <TabPanel value={value} index={0}>
+                <Grid>
+                  <div style={{ display: 'flex', flex: '1', justifyContent: 'center' }}>
+                    {stakeholdersGrid}
+                  </div>
+                </Grid>
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <Grid>
+                  <div style={{ display: 'flex', flex: '1', justifyContent: 'center' }}>
+                    {stakeholdersSelectedGrid}
+                  </div>
+                </Grid>
+              </TabPanel>
+            </Grid>
+          </Grid>
+        </div>
       }
       {!showStakeholders &&
-        <Conversation stakeholder={currentStakeholder} showStakeholders={showStakeholders} setShowStakeholders={setShowStakeholders}/>
+        <Conversation stakeholder={currentStakeholder} showStakeholders={showStakeholders} setShowStakeholders={setShowStakeholders} />
       }
     </>
   );
 }
 
 export default Stakeholders;
+
