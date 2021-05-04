@@ -32,7 +32,46 @@ Since the react apps' source code is mounted as a volume on the respective conta
 
 # Production
  #### Preamble:
- Running the bundled software in a production environment requires a custom Apache+Shibboleth image that is used as a base image for the container that runs all different facets of the software. For the demo, the base image will be pulled from Dockerhub where it resides inside **_ikhurana/kbtesting_** repository under the name **_apache_**. **Team Kubernators**__ will provide instructions as well all the necessary files required to create the base image from scratch and how to use this base image to run the container in the production environment.
+ Running the bundled software in a production environment requires a custom Apache+Shibboleth image that is used as a base image for the container that runs all different facets of the software. For the demo, the base image will be pulled from Dockerhub where it resides inside **_ikhurana/kbtesting_** repository under the name **_apache_**. **_Team Kubernators_** will provide all the files necessary for the creation of the base image and outline steps that need to performed to successfully use this base image to run the container in the production environment.
+ 
+ #### Steps:
+ Choose a directory to clone the repo
+ Clone the Git repository https://github.com/david-fisher/320-S21-Track1. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
+Create a directory named "configuration" under the /EthiSim directory.
+Copy the directories "conf" and "conf.d" from the original path /etc/httpd to the /EthiSim/configuration directory.
+Copy the file "hosts" from the original path /etc/hosts to the /EthiSim/configuration Directory.
+Copy the file "security:shibboleth.repo" from the original path /etc/yum.repos.d to the  /EthiSim/configuration directory.
+Copy the directory "shibboleth" from the original path /etc/shibboleth to the /EthiSim/configuration directory.
+(Optional) Create a file named .htaccess in order to override the Apache routing with React routing. If the user does not want to override the Apache routing, then lines 10 and 11  (those that start with "COPY /.htaccess") from Dockerfile should be commented out with a "#" at the beginning of those lines.
+Run the command "docker build -t <repository_name>:<image_name> -f Dockerfile-base." where <repository_name> and <image_name> should be changed to the user's desired repository name and image name respectively. This command will build the Docker Image.
+Run the command "docker push <repository_name>:<image_name>" where <repository_name> and <image_name> should be identical to those in Step 9. This command will push the image to Docker Hub.
+Open the Dockerfile and replace the first line with "FROM <repository_name>:<image_name>" where <repository_name> and <image_name> should be identical to those in Steps 9 and 10.
+Create a directory named "ssl" under the /EthiSim directory.
+Copy all of the necessary SSL certificates to the /EthiSim/ssl directory.
+Open the "Dockerfile" file and update the source for the COPY commands in lines 5, 6, and 7 with the names of the SSL certificates placed in the /EthiSim/ssl directory at Step 13.
+The EthiSim software will now be up and running at the url specified in the docker-compose-production.yml file
+
+
+
+In order to edit the dockerfile 
+If the default base image repo is not used, the FROM command should be updated with the base image repo to use.
+Open the dockerfile of the project container
+Add ssl protocol keys for https
+Edit .htaccess file
+.env file
+Replace parameters with your particular database
+
+
+
+
+In order to edit the dockerfile 
+If the default base image repo is not used, the FROM command should be updated with the base image repo to use.
+Open the dockerfile of the project container
+Add ssl protocol keys for https
+Edit .htaccess file
+.env file
+Replace parameters with your particular database
+
  
 #### Note
 ##### This is the file structure for this track
