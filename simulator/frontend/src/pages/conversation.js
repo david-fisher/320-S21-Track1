@@ -79,7 +79,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
           setQuestionAnswered(true);
           setSelectedConversation(response.data.result[0].conversation_id);
-          setAnswer(response.data.result[0].response_id);
+          setAnswer(response.data.result[0].conversation_response);
         }
       }
 
@@ -94,7 +94,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
 
     let postData = () => {
       function onSuccess(response){
-        setAnswer(response.data.result.response_id)
+        setAnswer(response.data.result.conversation_response)
 
       };
   

@@ -117,6 +117,9 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
       //wordBreak: 'break-word',
       display: 'flex',
       borderRadius: '35px',
+      '&:hover': {
+        backgroundColor: '#f3e4e3'
+      }
     },
     name: {
       color: '#000000',
@@ -188,12 +191,10 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
       console.log('Error');
     }
     get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
-
   }
   useEffect(getData, [shouldFetch]);
 
   let checkStakeholderVisited = () => {
-
     let endpoint = "/scenarios/stakeholder/had?userId=" + STUDENT_ID + "&versionId=" + SCENARIO_ID;
 
     function onSuccess(response) {
@@ -207,7 +208,17 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
         ids.push(holders[i].stakeholder_id);
       }
       setSelectedIds(ids)
-
+      if(holders.length === numConversations){
+        setStakeholdersDisabled(prev => {
+          for(var key of Object.keys(prev)){
+            if(!ids.includes(parseInt(key))){
+              prev[key] = true
+            }
+          }
+          return prev;
+        });
+      }
+      stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
     }
 
     function onFailure(err) {
@@ -216,10 +227,12 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
 
     get(setFetchScenariosResponse, (endpoint), onFailure, onSuccess);
   }
-  useEffect(checkStakeholderVisited, [shouldFetch]);
+
+  useEffect(checkStakeholderVisited, [conversationLimit]);
 
 
   function getStakeholderCards(id, name, job, description, photo, styles) {
+
     const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = 'gatheredInformation';
     function toggleModal(id, toggle) {
       setModalOpenToggles(prev => {
@@ -330,8 +343,6 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
                     let newStakeholdersDisabled = { ...prev };
                     if (numStakeholderTalkedTo + 1 >= conversationLimit) {
                       for (const sID in newStakeholdersDisabled) {
-                        console.log(selectedIds)
-                        console.log(!selectedIds.includes(sID));
                         if (!selectedIds.includes(sID)) {
                           newStakeholdersDisabled[sID] = true;
                         }
