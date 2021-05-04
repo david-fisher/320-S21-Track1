@@ -33,7 +33,7 @@ function ellipses(str, cutoff) {
   return newStr;
 }
 
-function Stakeholders({ pages, setPages, prevPageID, activePage, setActivePage }) {
+function Stakeholders({ pages, setPages, prevPageID, nextPageID, activePage, setActivePage }) {
   const [stakeholders, setStakeholders] = React.useState([])
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [conversationLimit, setConversationLimit] = React.useState(2);
@@ -300,15 +300,15 @@ function Stakeholders({ pages, setPages, prevPageID, activePage, setActivePage }
     setActivePage(prevPage => 'gatheredInformation')
   }
 
-  function goToMiddleReflection() {
-    if (!pages.middleReflection.visited) {
+  function goToNextPage() {
+    if (!pages[nextPageID].visited) {
       setPages(prevPages => {
         let copy = { ...prevPages };
-        copy.middleReflection.visited = true;
+        copy[nextPageID].visited = true;
         return copy;
       });
     }
-    setActivePage(prevPage => 'middleReflection')
+    setActivePage(prevPage => nextPageID)
   }
   return (
     <>
@@ -326,7 +326,7 @@ function Stakeholders({ pages, setPages, prevPageID, activePage, setActivePage }
             <Button variant="contained" disableElevation onClick={goToGatheredInformation}>Back</Button>
           </Grid>
           <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-            <Button variant="contained" disableElevation color="primary" onClick={goToMiddleReflection}>Next</Button>
+            <Button variant="contained" disableElevation color="primary" onClick={goToNextPage}>Next</Button>
           </Grid>
         </Grid>
         <Grid container spacing={2}>

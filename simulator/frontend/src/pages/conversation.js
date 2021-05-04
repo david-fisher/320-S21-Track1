@@ -53,6 +53,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
     const endpointGet = "/scenarios/conversation/page?versionId=" + SCENARIO_ID + "&scenarioId="  + SCENARIO_ID + "&stakeholderId=" + stakeholder.id;
+    const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId=1'
 
     const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
@@ -97,6 +98,9 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     useEffect(checkQuestionAnswered, [shouldFetch]);
 
     let postData = () => {
+      function startSess(response) {
+        //do nothing
+      }
       function onSuccess(response){
         console.log(response)
       };
@@ -106,10 +110,8 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
       };
 
       let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=1";
-
-
-      
-      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, undefined)
+      post(setFetchConversationResponse, (endpointSess), onFailure, startSess)
+      post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess)
       setSelectedConversation(-1)
     }
     
@@ -194,7 +196,6 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
               fullWidth
               multiline
               value={answer}
-              onChange={handleChange}
               variant="outlined"
             />
 
