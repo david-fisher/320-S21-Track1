@@ -43,7 +43,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
 
   function goToPage(pageID) {
-    if (pages[activePage].pageNumber === pages.length + 1){
+    if (pages[activePage].pageNumber === pages.length){
       console.log("This is the last page!");
       return;
     }
