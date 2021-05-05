@@ -35,7 +35,7 @@ const TextTypography = withStyles({
   }
 })(Typography);
 
-function Action({ pages, setPages, activePage, numConversations, setActivePage, content_url, nextPageID, prevPageID, title }) {
+function Action({ pages, setPages, activePage, numConversations, setActivePage, version_id, content_url, nextPageID, prevPageID, title }) {
   function goToPage(pageID) {
     if (!pages[pageID].visited) {
       setPages((prevPages) => {
@@ -97,10 +97,10 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
   // }
    // MAKE API CALL
    let pageId = activePage
-   const endpointGet = '/scenarios/action/prompt?versionId=1'+'&pageId='+(activePage)// version id hardcoded
-   const endpointGet2 = '/scenarios/action?versionId='+1+'&pageId='+(activePage)+'&userId='+STUDENT_ID
-   const endpointPost = '/scenarios/action?versionId=1'+'&pageId='+(activePage)
-   const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId=1'
+   const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
+   const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
+   const endpointPost = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)
+   const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+version_id
  
    const [action, setAction] = useState({     //temporary array of reflection
     
@@ -171,7 +171,7 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
       });
       if(npage[0].next !== undefined){
         let next = npage[0].next;
-        let endpoint = "/scenarios/task?versionId=1&pageId=" + next;
+        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
         get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2);
       }
     }
@@ -204,7 +204,7 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
         setNextPage((cur) => response.data.result.next_page);
         setChosenAction((cur) => response.data.result.choice);
       }
-      let endpoint = "/scenarios/task?versionId=1&pageId=" + response.data.result.next_page;
+      let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + response.data.result.next_page;
       get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2)
     }
      get(setFetchActionResponse, (endpointGet), onFailure, onSuccess);
@@ -226,7 +226,7 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
       console.log(body.next);
       setNextPage((cur) => body.next);
       setChosenAction((cur) => selectedAction);
-      let endpoint = "/scenarios/task?versionId=1&pageId=" + body.next;
+      let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + body.next;
       get(setFetchActionResponse, endpoint, onFailure, onSuccess2);
     }
     function onFailure() {

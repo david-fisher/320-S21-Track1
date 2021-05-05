@@ -10,10 +10,9 @@ function App() {
   return (
     <Router>
         <Route exact path="/">
-            <Redirect to="/home" />
+            <Redirect to="/simulator" />
         </Route>
-        <Route path="/home" component={Home} />
-        <Route path="/summary" component={Summary} />
+        <Route path="/simulator" component={Home} />
         <Route
                 path="/simulation/:id"
                 render={(props) => <SimulationWindow {...props} />}
