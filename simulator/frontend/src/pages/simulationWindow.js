@@ -105,7 +105,7 @@ function SimulationWindow(props) {
       ));
       let next_html = (<Introduction activePage={npage[0].id}/>);
       if(npage[0].type === "PLAIN"){
-        next_html = (<ProjectAssignment lastPage={1}/>);
+        next_html = (<ProjectAssignment prevPageID={activePage}/>);
       } else if (npage[0].type === "REFLECTION"){
         next_html = (<Reflection content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){

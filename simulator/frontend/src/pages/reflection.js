@@ -43,6 +43,10 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
 
   function goToPage(pageID) {
+    if (pages[activePage].pageNumber === pages.length + 1){
+      console.log("This is the last page!");
+      return;
+    }
     if (!pages[pageID].visited) {
       setPages((prevPages) => {
         let copy = { ...prevPages };
@@ -59,52 +63,6 @@ function Reflection({ pages, setPages, activePage, setActivePage,
   const [prompts, setPrompts] = React.useState([]);
   const [promptResponses, setPromptResponses] = React.useState({});
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-
-  // React.useEffect(() => {
-  //   (async () => {
-  //     await axios({
-  //       method: 'get',
-  //       url: BACK_URL + content_url,
-  //       headers: {
-  //         scenarioID: scenarios.currentScenarioID
-  //       }
-  //     }).then(response => {
-  //       setBodyText(response.data.body_text);
-  //       setPrompts(prev => response.data.prompts);
-  //     }).catch(err => {
-  //       console.log(err);
-  //       alert(err);
-  //     });
-
-  //     axios({
-  //       method: 'get',
-  //       url: BACK_URL + res_url,
-  //       headers: {
-  //         scenarioID: scenarios.currentScenarioID,
-  //         studentID: STUDENT_ID
-  //       }
-  //     }).then(response => {
-  //       setPromptResponses(response.data.reduce((prev, curr) => {
-  //         prev[curr.prompt_num] = curr.response;
-  //         return prev;
-  //       }, {}));
-  //     }).catch(err => {
-  //       console.log(err);
-  //     });
-  //   })();
-  // }, [scenarios, activePage]);
-
-  // async function handleResponse(data) {
-  //   await axios({
-  //     url: BACK_URL + content_url,
-  //     method: 'put',
-  //     data: {
-  //       scenarioID: scenarios.currentScenarioID,
-  //       studentID: STUDENT_ID,
-  //       data: data
-  //     }
-  //   });
-  // }
 
   // MAKE API CALL
   let pageId = activePage
@@ -182,7 +140,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
           <Button
             variant="contained"
             disableElevation
-            onClick={() => goToPage(nextPageID-2)}
+            onClick={() => goToPage(prevPageID)}
           >
             Back
           </Button>

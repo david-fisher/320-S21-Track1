@@ -63,7 +63,7 @@ const dataText = [
 const mainText =
   "Part of your assignment is to identify specific companies who would be willing to provide data and also make recommendations for further data to collect, in order to refine the above list. Once the data is in hand, you will use it to improve the existing predictive model for cognitive decline, by incorporating new training features as appropriate.";
 
-function ProjectAssignment({ pages, setPages, lastPage, activePage, setActivePage, version_id,nid }) {
+function ProjectAssignment({ pages, setPages, prevPageID, activePage, setActivePage, version_id,nid }) {
 
   const [task, setTask] = React.useState("");
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
@@ -71,14 +71,14 @@ function ProjectAssignment({ pages, setPages, lastPage, activePage, setActivePag
 
   const classes = useStyles();
   function goToPrevPage() {
-    if (!pages[lastPage].visited) {
+    if (!pages[prevPageID].visited) {
       setPages((prevPages) => {
         let copy = { ...prevPages };
-        copy[lastPage].visited = true;
+        copy[prevPageID].visited = true;
         return copy;
       });
     }
-    setActivePage((prevPage) => lastPage);
+    setActivePage((prevPage) => prevPageID);
   }
   function goToInitialReflection() {
     if (!pages[project.project_page[0].next].visited) {

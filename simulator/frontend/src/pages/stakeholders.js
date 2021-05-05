@@ -422,15 +422,15 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
     }
   }
 
-  function goToGatheredInformation() {
-    if (!pages.gatheredInformation.visited) {
+  function goToPrevPage() {
+    if (!pages[prevPageID].visited) {
       setPages(prevPages => {
         let copy = { ...prevPages };
-        copy.gatheredInformation.visited = true;
+        copy[prevPageID].visited = true;
         return copy;
       });
     }
-    setActivePage(prevPage => 'gatheredInformation')
+    setActivePage(prevPage => prevPageID)
   }
 
   function goToNextPage() {
@@ -469,7 +469,7 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
           </Grid>
           <Grid container direction="row" justify="space-between">
             <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-              <Button variant="contained" disableElevation onClick={goToGatheredInformation}>Back</Button>
+              <Button variant="contained" disableElevation onClick={goToPrevPage}>Back</Button>
             </Grid>
             <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
               <Button variant="contained" disableElevation color="primary" onClick={goToNextPage}>Next</Button>
