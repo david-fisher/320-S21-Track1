@@ -130,13 +130,15 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
       <div>
         <Box mt={5}>
           <Grid container direction="column" justify="center" alignItems="center">
-   
+            <TextTypography variant="h4" align="center" gutterBottom>
+              Conversation
+            </TextTypography>
             <Avatar style={{height:"100px", width:"100px"}} alt="Stakeholder Photo" size src={stakeholder.photo}/>
 
-            <TextTypography variant="h4" align="center" gutterBottom>
+            <TextTypography variant="h5" align="center" gutterBottom>
               {stakeholder.name}
             </TextTypography>
-            <TextTypography variant="h5" align="center" gutterBottom>
+            <TextTypography variant="h6" align="center" gutterBottom>
               {stakeholder.job}
             </TextTypography>
           </Grid>
@@ -166,7 +168,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
           <Grid item lg={12}>
             <Divider style={{ marginTop: '10px', marginBottom: '30px', height:'2px', backgroundColor:'black'}}/>
             <Box align="left">
-              Select a Question to Answer:
+              Select a Question to Ask:
               <List>
                 {conversations.map((value) => {
                   const labelId = `question-${value.conversation_id}$`;
