@@ -46,6 +46,7 @@ def scenarios(request):
         print("Invalid user ID")
         return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid User ID: ' + str(userId)})
     else:
+        resultData= []
         try:
             userObj = md.User.objects.get(user_id=userId)
             courseIdQuerySet = md.Takes.objects.filter(user_id=userObj.user_id).values_list('course_id')
@@ -163,6 +164,8 @@ def scenarioIntroduction(request):
     versionID = int(request.GET['versionId'])
     pageID = int(request.GET['pageId'])
 
+    resultData = []
+
     if not isinstance(versionID, int):
         print("Invalid version ID")
         return JsonResponse(status=400, data={'status': 400, 'message': 'Invalid Version ID: ' + str(versionID)})
@@ -181,6 +184,7 @@ def scenarioIntroduction(request):
             resultData = list(scenarioIntroQuerySet)
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Page")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Query Failed to retrieve Page'})
 
         print("Got scenario introduction.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
@@ -188,6 +192,8 @@ def scenarioIntroduction(request):
 def scenarioTask(request):
     versionID = int(request.GET['versionId'])
     pageID = int(request.GET['pageId'])
+
+    resultData = []
 
     if not isinstance(versionID, int):
         print("Invalid Version ID")
@@ -207,6 +213,7 @@ def scenarioTask(request):
             resultData = list(scenarioTaskQuerySet)
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Page")
+            return JsonResponse(status=400, data={'status': 400, 'message': 'Query Failed to retrieve Page'})
 
         print("Got scenario task.")
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
