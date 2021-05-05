@@ -1,4 +1,6 @@
 Options -MultiViews
 RewriteEngine On
+# React should not rewrite shibboleth urls.
+RewriteCond %{REQUEST_URI} !Shibboleth\.sso
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.html [QSA,L]
