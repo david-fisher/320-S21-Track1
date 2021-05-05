@@ -43,11 +43,10 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
 
   function goToPage(pageID) {
-    if (pages[activePage].pageNumber === pages.length){
+    if (pages[activePage].pageNumber === Object.keys(pages).length){
       console.log("This is the last page!");
-      return;
     }
-    if (!pages[pageID].visited) {
+    else if (!pages[pageID].visited) {
       setPages((prevPages) => {
         let copy = { ...prevPages };
         copy[pageID].visited = true;
@@ -66,7 +65,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
   // MAKE API CALL
   let pageId = activePage
-  const endpointGet = '/scenarios/reflection?versionId=1'+'&pageId='+(activePage) // version id hardcoded
+  const endpointGet = '/scenarios/reflection?versionId='+version_id+'&pageId='+(activePage) 
 
   const [reflection, setIntro] = useState({     //temporary array of reflection
     prompts: [],

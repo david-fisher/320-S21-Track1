@@ -112,6 +112,8 @@ function SimulationWindow(props) {
         next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
       } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
         next_html = (<Action numConversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+      } else if (npage[0].type === "CONCLUSION"){
+        next_html = (<Conclusion prevPageID={activePage}/>);
       } else {
         next_html = (<Reflection activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
       }

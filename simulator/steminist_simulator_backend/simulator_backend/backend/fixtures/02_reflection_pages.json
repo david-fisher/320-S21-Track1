@@ -75,6 +75,19 @@
       }
   },
   {
+	  "model": "backend.Page",
+	  "pk": 11,
+	  "fields": {
+		  "page_type": "CONCLUSION",
+		  "page_title": "Conclusion",
+		  "version_id": 1,
+		  "body": "This is the body of the scenario conclusion.",
+		  "next_page": -1,
+		  "x_coordinate": 0,
+		  "y_coordinate": 0
+	  }
+  },
+  {
       "model": "backend.ReflectionQuestion",
       "pk": 5,
       "fields": {
