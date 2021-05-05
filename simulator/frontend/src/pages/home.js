@@ -264,27 +264,27 @@ export default function Home() {
     );
   }
 
-  if (fetchScenariosResponse.error) {
-    return (
-      <div>
-        <div className={classes.issue}>
-          <div className={classes.errorContainer}>
-            <ErrorIcon className={classes.iconError} />
-            <Typography align="center" variant="h3">
-              Error in fetching Scenarios.
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getData}
-            >
-              <RefreshIcon className={classes.iconRefreshLarge} />
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (fetchScenariosResponse.error) {
+  //   return (
+  //     <div>
+  //       <div className={classes.issue}>
+  //         <div className={classes.errorContainer}>
+  //           <ErrorIcon className={classes.iconError} />
+  //           <Typography align="center" variant="h3">
+  //             Error in fetching Scenarios.
+  //           </Typography>
+  //           <Button
+  //             variant="contained"
+  //             color="primary"
+  //             onClick={getData}
+  //           >
+  //             <RefreshIcon className={classes.iconRefreshLarge} />
+  //           </Button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className={classes.root}>
@@ -309,7 +309,7 @@ export default function Home() {
                 <Button
                     component={Link}
                     to={{
-                        pathname: '/simulation/'+scenario.first_page,
+                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
                         data: scenario,
                     }}
                     className={classes.button}

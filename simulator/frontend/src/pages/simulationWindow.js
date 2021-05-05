@@ -17,6 +17,7 @@ import { ScenariosContext } from "../Nav.js";
 import axios from "axios";
 import {BACK_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
 import { useParams } from 'react-router-dom';
+import LoadingSpinner from './components/LoadingSpinner';
 import get from '../universalHTTPRequests/get';
 
 
@@ -29,33 +30,17 @@ function SimulationWindow(props) {
   const scenario_id = props.location.data
       ? props.location.data.version_id
       : location.pathname.split('/').pop();
+  const first_page = props.location.data
+      ? props.location.data.first_page
+      : location.pathname.split('/').pop();
   const version_id = scenario_id;
 
   
-  const [activePage, setActivePage] = useState("2");
+  const [activePage, setActivePage] = useState(first_page);
   let numConversations = 0;
-  const [pages, setPages] = useState({
-    2: { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction />) },
-    // projectAssignment: { visited: false, completed: true, pageNumber: 1, pid:0, html: (<ProjectAssignment />) },
-    // initialReflection: { visited: false, completed: true, pageNumber: 2, pid:0, html: (<Reflection
-    //   content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID="initialAction" prevPageID="projectAssignment" title="Reflect on Initial Information"/>) },
-    // initialAction: { visited: false, completed: true, pageNumber: 3, pid:0, html: (<Action
-    //   content_url="/scenarios/initialAction" nextPageID="gatheredInformation" prevPageID="initialReflection" title="Initial Action"/>) },
-    // gatheredInformation: { visited: false, completed: false, pageNumber: 4, pid:0, html: (<GatheredInformation />) },
-    // stakeholders: { visited: false, completed: true, pageNumber: 5,pid:0, html: (<Stakeholders />) },
-    // middleReflection: { visited: false, completed: true, pageNumber: 6,pid:0, html: (<Reflection
-    //   content_url="/scenarios/middleReflection" res_url="/scenarios/middleReflection/response"
-    //   nextPageID="finalAction" prevPageID="stakeholders" title="Reflect on Stakeholder Information"/>) },
-    // finalAction: { visited: false, completed: true, pageNumber: 7,pid:0, html: (<Action
-    //   content_url="/scenarios/FinalAction" nextPageID="summary" prevPageID="middleReflection" title="Final Action"/>) },
-    // summary: { visited: false, completed: false, pageNumber: 8,pid:0, html: (<Summary />) },
-    // feedback: { visited: false, completed: true, pageNumber: 9,pid:0, html: (<Feedback />) },
-    // finalReflection: { visited: false, completed: true, pageNumber: 10,pid:0, html: (<Reflection
-    //   content_url="/scenarios/finalReflection" res_url="/scenarios/finalReflection/response"
-    //   nextPageID="conclusion" prevPageID="feedback" title="Reflect on Final Information"/>) },
-    // conclusion:  { visited: false, completed: false, pageNumber: 11,pid:0, html: (<Conclusion />) 
-    // issueCoverage: {visited: false, completed: true, pageNumber: 12, pid:0, html: (<Radar />)}
-  });
+  let initial_pages = {};
+  initial_pages[first_page] = { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction />) }
+  const [pages, setPages] = useState(initial_pages);
 
   const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage
   const endpointGetMeta = '/scenarios?userId=' + STUDENT_ID
@@ -101,6 +86,7 @@ function SimulationWindow(props) {
         (result) => result.version_id === version_id
       );
       numConversations = scen[0].num_conversation;
+      console.log(scen[0].first_page);
     }
     function onSuccess1(response) {
         let next = response.data.result[0].next_page;
@@ -157,6 +143,16 @@ function SimulationWindow(props) {
   };
 
   useEffect(getData, [shouldFetch]);
+
+  // if (fetchScenariosResponse.loading || activePage === -1) {
+  //   return (
+  //     <div>
+  //       <div style={{ marginTop: '100px' }}>
+  //         <LoadingSpinner />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
