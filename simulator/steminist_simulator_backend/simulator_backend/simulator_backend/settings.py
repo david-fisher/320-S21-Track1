@@ -97,7 +97,7 @@ DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'OPTIONS': {
-            'options': '-c search_path=steminists'
+            'options': '-c search_path=steminist'
         },
         'NAME': env('DATABASE_NAME'),
         'USER': env('DATABASE_USER'),
