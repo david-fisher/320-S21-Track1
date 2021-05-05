@@ -46,7 +46,7 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   
   
-  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+activePage // Version hardcoded
+  const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage // Version hardcoded
 
   const [intro, setIntro] = useState({     //temporary array of intro
     intro_page: [{
@@ -113,6 +113,7 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
   
 
   useEffect(getData, [shouldFetch]);
+  
 
   if (fetchScenariosResponse.error) {
     return (
