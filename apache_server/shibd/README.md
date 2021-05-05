@@ -47,7 +47,7 @@ Shibboleth is an open-source, single sign-on login system provided under the Apa
 	
 # Configuring Shibboleth
 
-These files should be received from the identity provider (IdP), and should be put in /etc/shibboleth/, if necessary.
+These files should be received from the identity provider (IdP), and present in /etc/shibboleth/.
 
 * shibboleth2.xml
 	* Most of the native service provider's configuration options are found here
