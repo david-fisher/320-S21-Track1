@@ -1,28 +1,31 @@
 from rest_framework import serializers
 from .models import *
-# demographics, students, professors, scenarios, stakeholder_page, stakeholders, conversations
 
-class DemographicsSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = demographics
-        fields = ('STUDENT', 'AGE', 'GRADE', 'GENDER', 'RACE', 'MAJOR')
+        model = Users
+        fields = '__all__'
 
-
-class StudentSerializer(serializers.ModelSerializer):
+class UserTypesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = students
-        fields = ('STUDENT', 'NAME')
-
-class ProfessorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = professors
-        fields = ('PROFESSOR', 'NAME')
-
+        model = UserTypes
+        fields = '__all__'
 
 class ScenariosSerializer(serializers.ModelSerializer):
+    user_id = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'VERSION', 'NAME', 'IS_FINISHED', 'PUBLIC', 'NUM_CONVERSATION', 'PROFESSOR')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PUBLIC', 'user_id', 'DATE_CREATED')
+
+    def create(self, validated_data):
+        user_id = validated_data.pop('user_id')
+        user = Users.objects.get(pk=user_id.pk)
+        scen = scenarios.objects.create(**validated_data)
+        scen.user_id = user.pk
+        scen.save()
+        return scen
+
 
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,8 +39,8 @@ class Stakeholder_pageSerializer(serializers.ModelSerializer):
 
 class Reflection_questionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = reflection_questions
-        fields = ('PAGE', 'REFLECTION_QUESTION')
+        model = reflection_question
+        fields = "__all__"
 
 
 class StakeholdersSerializer(serializers.ModelSerializer):
@@ -50,23 +53,7 @@ class ConversationsSerializer(serializers.ModelSerializer):
         model = conversations
         fields = ('STAKEHOLDER', 'CONVERSATION', 'QUESTION', 'RESPONSE')
 
-class ReflectionsTakenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = reflections_taken
-        fields = '__all__'
 
-
-
-class ConversationsHadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = conversations_had
-        fields = '__all__'
-
-
-class StudentsInSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = students_in
-        fields = ('STUDENT', 'COURSE')
 
 
 class CoursesSerializer(serializers.ModelSerializer):
@@ -75,31 +62,25 @@ class CoursesSerializer(serializers.ModelSerializer):
         fields = ('COURSE', 'NAME')
 
 
-class ResponsesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = responses
-        fields = '__all__'
-
-
 class allScenariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PROFESSOR')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'user')
 
 class Scenarios_forSerializer(serializers.ModelSerializer):
     class Meta:
         model = scenarios_for
         fields = ('SCENARIO', 'COURSE', 'VERSION')
 
-class Generic_pageSerializer(serializers.ModelSerializer):
+class VersionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = generic_page
-        fields = ('PAGE', 'BODY')
+        model = Versions
+        fields = '__all__'
 
 class Professors_teachSerializer(serializers.ModelSerializer):
     class Meta:
         model = professors_teach
-        fields = ('PROFESSOR', 'COURSE')
+        fields = ('USER_ID', 'COURSE')
 
 class IssuesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,7 +89,7 @@ class IssuesSerializer(serializers.ModelSerializer):
 
 class Action_pageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = action_page
+        model = action_page_choices
         fields = '__all__'
 
 
@@ -125,12 +106,6 @@ class Pages_actionSerializer(serializers.ModelSerializer):
         model = pages
         fields = '__all__'
 
-class Pages_genericSerializer(serializers.ModelSerializer):
-    generic_page = Generic_pageSerializer()
-    class Meta:
-        model = pages
-        fields = '__all__'
-
 class Pages_stakeholderSerializer(serializers.ModelSerializer):
     stakeholder_page = Stakeholder_pageSerializer()
     class Meta:
@@ -142,7 +117,38 @@ class coverageSerializer(serializers.ModelSerializer):
         model = coverage
         fields = ('STAKEHOLDER', 'ISSUE', 'COVERAGE_SCORE')
 
-class Actions_takenSerializer(serializers.ModelSerializer):
+class SuperStakeholdersSerializer(serializers.ModelSerializer):
+    coverages = coverageSerializer(many=True, read_only=True)
     class Meta:
-        model = actions_taken
+        model = stakeholders
         fields = '__all__'
+
+class SuperScenariosForSerializer(serializers.ModelSerializer):
+    COURSE = CoursesSerializer(read_only=True)
+
+    class Meta:
+        model = scenarios_for
+        fields = ('SCENARIO', 'COURSE', 'VERSION')
+
+class SuperPagesSerializer(serializers.ModelSerializer):
+    reflection_questions = Reflection_questionsSerializer(many=True, read_only=True)
+    action_page_choices = Action_pageSerializer(many=True, read_only=True)
+    class Meta:
+        model = pages
+        fields = ('PAGE', 'PAGE_TYPE', 'PAGE_TITLE', 'PAGE_BODY', 
+        'SCENARIO', 'VERSION', 'NEXT_PAGE', 'X_COORDINATE', 'Y_COORDINATE', "reflection_questions"
+        , "action_page_choices")
+
+
+class SuperScenariosSerialializer(serializers.ModelSerializer):
+    user_id = UserSerializer
+    pages = SuperPagesSerializer(many=True, read_only=True)
+    stakeholders = SuperStakeholdersSerializer(many=True, read_only=True)
+    conversations = ConversationsSerializer(many=True, read_only=True)
+    issues = IssuesSerializer(many=True, read_only=True)
+    scenarios_for = SuperScenariosForSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = scenarios
+        fields = ("pages", "user_id", "SCENARIO", "NAME", 
+        "IS_FINISHED", "PUBLIC", "DATE_CREATED", "stakeholders", "conversations", "issues", "scenarios_for")

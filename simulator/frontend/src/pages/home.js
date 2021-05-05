@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useContext } from "react";
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import '../App.css';
 import deleteReq from '../universalHTTPRequests/delete';
@@ -12,7 +13,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import CodeButton from './components/classCodeDialog';
 import ProgressBar from './components/progressBar';
-import { STUDENT_ID } from './../constants/config';
+import { STUDENT_ID,changeID } from './../constants/config';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,11 +133,14 @@ export default function Home() {
   //post returns new id of scenario, when you concatenating to array set the id to that
   const [menuCourseItems, setMenuCourseItems] = useState([]);
   const [open, setOpen] = useState(false);
-  const [scenarios, setScenarios] = useState({     //temporary array of scenarios
+  const [scenarioList, setScenarioList] = useState({     //temporary array of scenarios
       incompleteScenarios: [
         {
           title: " ",
           course: " ",
+          num_conversations: 0,
+          is_finished: false,
+          first_page: 0,
           date: " ",
           completed: 10,
           max: 10,
@@ -145,6 +149,9 @@ export default function Home() {
       completeScenarios: [
         {
           title: " ",
+          num_conversations: 0,
+          is_finished: true,
+          first_page: 0,
           course: " ",
           date: " ",
           completed: 10,
@@ -157,6 +164,9 @@ export default function Home() {
     loading: false,
     error: false,
   });
+
+
+  
   // // eslint-disable-next-line
   // const [fetchCourseResponse, setFetchCourseResponse] = useState({
   //     data: null,
@@ -170,25 +180,37 @@ export default function Home() {
   //Get Scenario
   let getData = () => {
     function onSuccess(response) {
-      let incomplete = response.data.result.map((data) => (
+      let incomplete = response.data.result.filter(
+        (data) => !data.is_finished
+      );
+      let complete = response.data.result.filter(
+          (data) => data.is_finished
+      );
+      incomplete = incomplete.map((data) => (
         {
           title: data.name,
-          course: data.num_conversation,
-          date: data.version_id
+          num_conversations: data.num_conversation,
+          is_finished: data.is_finished,
+          date: data.date_created,
+          version_id: data.version_id,
+          first_page: data.first_page
         }
       ));
-      let complete = response.data.result.map((data) => (
+      complete = complete.map((data) => (
         {
           title: data.name,
-          course: data.num_conversation,
-          date: data.version_id
+          num_conversations: data.num_conversation,
+          is_finished: data.is_finished,
+          date: data.date_created,
+          version_id: data.version_id,
+          first_page: data.first_page
         }
       ));
       let scen = {
         incompleteScenarios: incomplete,
         completeScenarios: complete
       };
-      setScenarios(scen);
+      setScenarioList(scen);
       debugger;
     }
 
@@ -275,15 +297,30 @@ export default function Home() {
           <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
             <h1>To-Do</h1>
           </Grid>
-          {scenarios.incompleteScenarios.map(scenario => (
+          {scenarioList.incompleteScenarios.map(scenario => (
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   title={scenario.title}
-                  course={scenario.course}
+                  // course={scenario.course}
+                  course  = 'PLACEHOLDER'
                   date={scenario.date}
                 />
-                <Button className={classes.button}>Select Scenario</Button>
+                <Button
+                    component={Link}
+                    to={{
+                        pathname: '/simulation/'+scenario.first_page,
+                        data: scenario,
+                    }}
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                >Select Scenario</Button>
+                {/* <Button onClick={() => {
+                  changeID(scenario.version_id)
+                  //TEMPORARY SOLUTION
+                  window.location.href="/simulation";
+                }} className={classes.button}>Select Scenario</Button> */}
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
@@ -296,17 +333,17 @@ export default function Home() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid container spacing={2} className={classes.grid}>     {/*completed scenarios section*/}
+        <Grid container spacing={2} className={classes.grid}>     {/*completed scenarioList section*/}
           <Grid item xs={12}>
             <h1>Completed</h1>
           </Grid>
-          {scenarios.completeScenarios.map(scenario => (
+          {scenarioList.completeScenarios.map(scenario => (
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   title={scenario.title}
-                  course={scenario.course}
-                  date={scenario.date}
+                  // course={scenario.course}
+                  // date={scenario.date}
                 />
                 <Button className={classes.button}>Select Scenario</Button>
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}

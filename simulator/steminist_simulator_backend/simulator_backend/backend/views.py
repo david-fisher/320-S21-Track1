@@ -21,6 +21,146 @@ pageType = "STAKEHOLDERPAGE" # change this to whatever type you initialize for s
 def index(request):
     return HttpResponse("This API works")
 
+def publishScenario(request):
+    print(request.body)
+    if request.method == "POST":
+        jsonData = json.loads(request.body)
+        print(jsonData)
+        try:
+            courseJSONObj = jsonData["Courses"][0]
+            scenarioJSONObj = jsonData["Scenario"]
+            pageJSONArr = jsonData["Pages"]
+            stakeholderJSONArr = jsonData["Stakeholders"]
+            conversationJSONArr = jsonData["Conversations"]
+            actionPageChoiceJSONArr = jsonData["ActionPageChoices"]
+            issueJSONArr = jsonData["Issues"]
+            coverageJSONArr = jsonData["Coverages"]
+            reflectionQuestionJSONArr = jsonData["ReflectionQuestions"]
+
+        except KeyError as e:
+            print("WEPIDJEAPODJ")
+            print(e)
+            return JsonResponse(status=400, data={'status': 400, 'message': 'JSON body not in the correct format.'})
+
+        # Save course model
+        try:
+            course = md.Course.objects.get(course_id=courseJSONObj['course_id'])
+        except md.Course.DoesNotExist:
+            course = md.Course(course_id=courseJSONObj['course_id'], name=courseJSONObj['name'])
+            course.save()
+
+        # Save scenario model
+        try:
+            scenario = md.Scenario.objects.get(scenario_id=scenarioJSONObj['scenario_id']) 
+        except md.Scenario.DoesNotExist:
+            scenario = md.Scenario(scenario_id=scenarioJSONObj['scenario_id'], user_id=None,
+                                   public=scenarioJSONObj['public'], is_finished=scenarioJSONObj['is_finished'],
+                                   date_created=scenarioJSONObj['date_created'])
+            scenario.save()
+        
+        # Save CourseAssignment model
+        try:
+            ca = md.CourseAssignment(course_id=course, scenario_id=scenario)
+            ca.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save CourseAssignment model(s)")
+
+        newVersionId = md.Version.objects.count() + 1
+
+        # Save page models
+        firstPage = None
+        try:
+            currentPageId = scenarioJSONObj['FirstPage']
+            while (currentPageId != None):
+                pageJsonObj = pageJSONArr[str(currentPageId)]
+
+                page = md.Page(page_id=pageJsonObj["page_id"], page_type=pageJsonObj["page_type"], page_title=pageJsonObj["page_title"],
+                               version_id=newVersionId, body=pageJsonObj["body"], next_page=pageJsonObj["next_page"],
+                               x_coordinate=pageJsonObj["x_coordinate"], y_coordinate=pageJsonObj["y_coordinate"])
+
+                # Store instance of first page in a variable
+                if (page.page_id == scenarioJSONObj['FirstPage']):
+                    firstPage = page
+
+                page.save()
+                currentPageId = page.next_page
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Page model(s)")
+
+        # Save version model
+        try:
+            version = md.Version(version_id=newVersionId, scenario_id=scenario, name=scenarioJSONObj['name'],
+                                 first_page=firstPage)
+            version.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Version model")
+
+        # Save stakeholder models
+        try:
+            for stakholderObj in stakeholderJSONArr:
+                stakeholder = md.Stakeholder(stakeholder_id=stakholderObj["stakeholder_id"], version_id=version,
+                                             scenario_id=scenario, name=stakholderObj["name"],
+                                             description=stakholderObj["description"], job=stakholderObj["job"],
+                                             introduction=stakholderObj["introduction"], photopath=stakholderObj["photopath"])
+                stakeholder.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Stakeholder model(s)")
+
+        # Save conversation models
+        try:
+            for conversationObj in conversationJSONArr:
+                stakeholder = md.Stakeholder.objects.get(stakeholder_id=conversationObj["stakeholder_id"])
+                conversation = md.Conversation(conversation_id=conversationObj["conversation_id"], stakeholder_id=stakeholder,
+                                               question=conversationObj["question"], conversation_response=conversationObj["conversation_response"])
+                conversation.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Conversation model(s)")
+                
+        # Save ActionPageChoice models
+        try:
+            for apcObj in actionPageChoiceJSONArr:
+                page = md.Page.objects.get(page_id=apcObj["page_id"])
+                apc = md.ActionPageChoice(apc_id=apcObj["apc_id"], page_id=page,
+                                          choice=apcObj["choice"], result_page=apcObj["result_page"])
+                apc.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save ActionPageChoice model(s)")
+
+        # Save Issue models
+        try:
+            for issueObj in issueJSONArr:
+                issue = md.Issue(issue_id=issueObj["issue_id"], version_id=version,
+                                 scenario_id=scenario, name=issueObj["name"], importance_score=issueObj["importance_score"])
+                issue.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Issue model(s)")
+
+        # Save Coverage models
+        try:
+            for covObj in coverageJSONArr:
+                stakeholder = md.Stakeholder.objects.get(stakeholder_id=covObj["stakeholder_id"])
+                issue = md.Issue.objects.get(issue_id=covObj["issue_id"])
+                coverage = md.Coverage(stakeholder_id=stakeholder, issue_id=issue,
+                                       coverage_score=covObj["coverage_score"])
+                coverage.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Coverage model(s)")
+
+        # Save ReflectionQuestion models
+        try:
+            for rqObj in reflectionQuestionJSONArr:
+                page = md.Page.objects.get(page_id=rqObj["page_id"])
+                reflectionQuestion = md.ReflectionQuestion(rq_id=rqObj["rq_id"], version_id=version, page_id=page,
+                                                           reflection_question=rqObj["reflection_question"])
+                reflectionQuestion.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save ReflectionQuestion model(s)")
+
+
+        return JsonResponse(status=200, data={'status': 200, 'message': 'Scenario successfully published to scenario simulator.',
+                                              'result': None})
+
+
 def readAttributes(request):
     try: 
         resultData = {
@@ -49,17 +189,31 @@ def scenarios(request):
         try:
             userObj = md.User.objects.get(user_id=userId)
             courseIdQuerySet = md.Takes.objects.filter(user_id=userObj.user_id).values_list('course_id')
-            scenarioIdQuerySet = md.ClassAssignment.objects.filter(course_id__in=courseIdQuerySet)\
+            scenarioIdQuerySet = md.CourseAssignment.objects.filter(course_id__in=courseIdQuerySet)\
                                    .values('scenario_id')
             scenarioVersionQuerySet = md.Version.objects.filter(scenario_id__in=scenarioIdQuerySet)\
                                         .values('version_id', 'name', 'num_conversation', 'first_page', 
-                                                is_finished=F('scenario_id__is_finished'), date_created=F('scenario_id__date_created'))
+                                                date_created=F('scenario_id__date_created'))
 
             # If no scenarios with the given userId were found, return 404 error
             if len(scenarioVersionQuerySet) == 0:
                 return JsonResponse(status=404, data={'status': 404, 'message': 'Scenario not found with the given User ID'}, )
 
             resultData = list(scenarioVersionQuerySet)
+            for result in resultData:
+                versionId = result['version_id']
+                try:
+                    session = md.Session.objects.get(user_id=userObj.user_id, version_id = versionId)
+                    result['is_finished'] = session.is_finished
+                    result['date_started'] = session.date_started
+                    result['last_date_modified'] = session.most_recent_access
+                except md.Session.DoesNotExist:
+                    result['is_finished'] = False
+                    result['date_started'] = None
+                    result['last_date_modified'] = None
+                scenarioID = md.Version.objects.get(version_id=versionId).scenario_id.scenario_id
+                courseName = md.CourseAssignment.objects.get(scenario_id=scenarioID).course_id.name
+                result['course_name'] = courseName
 
         except Exception as ex:
             logging.exception("Exception thrown: Query Failed to retrieve Scenario")
@@ -67,7 +221,49 @@ def scenarios(request):
         print("Got all scenarios")
         return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
-def session(request):
+def startSession(request):
+    if request.method == "POST":
+        userId = int(request.GET['userId'])
+        versionId = int(request.GET['versionId'])
+
+        # Check if there is a Version given the versionId 
+        try:
+            version = md.Version.objects.get(version_id=versionId)
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No version found with the given versionId'})
+        
+        # Check if there is a User given the userId 
+        try:
+            user = md.User.objects.get(user_id=userId)
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        message = None
+        # Obtain session field based on given params
+        try:
+            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
+            session.most_recent_access = datetime.now()
+            session.save()
+            message = 'Session resumed successfully.'
+        except md.Session.DoesNotExist:
+            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version,
+                                 date_started=datetime.now(), most_recent_access=datetime.now())
+            session.save()
+            message = 'Session created succesfully.'
+
+        responseObj = {}
+        responseObj["sessionId"] = session.session_id
+        responseObj["versionId"] = session.version_id_id
+        responseObj["mostRecentAccess"] = session.most_recent_access
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+
+def endSession(request):
     if request.method == "POST":
         userId = int(request.GET['userId'])
         versionId = int(request.GET['versionId'])
@@ -87,31 +283,18 @@ def session(request):
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            course = md.ClassAssignment.objects.get(scenario_id=version.scenario_id).course_id
-        except md.ClassAssignment.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                'message': 'The given user cannot attempt the given scenario'})
-
-
-        message = None
-        # Obtain session field based on given params
-        try:
             session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
-            session.most_recent_access = datetime.now()
+            session.is_finished = True
             session.save()
-            message = 'Session resumed successfully.'
         except md.Session.DoesNotExist:
-            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version, course_id=course,
-                                 date_started=datetime.now(), most_recent_access=datetime.now())
-            session.save()
-            message = 'Session created succesfully.'
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'Session does not exist so it cannot be ended.'})
 
         responseObj = {}
         responseObj["sessionId"] = session.session_id
-        responseObj["versionId"] = session.version_id_id
         responseObj["mostRecentAccess"] = session.most_recent_access
         
-        return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
+        return JsonResponse(status=200, data={'status': 200, 'message': 'Session successfully ended.'})
     
     elif request.method == "GET":
         return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
@@ -199,8 +382,8 @@ def reflection(request):
     # GET
     if request.method == 'GET':
         try:
-            versionID = int(request.GET['version_id'])
-            pageID = int(request.GET['page_id'])
+            versionID = int(request.GET['versionId'])
+            pageID = int(request.GET['pageId'])
 
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
@@ -250,9 +433,9 @@ def reflection(request):
     # POST
     elif request.method == 'POST':
         try:
-            userId = int(request.GET['user_id'])
-            versionID = int(request.GET['version_id'])
-            pageID = int(request.GET['page_id'])
+            userId = int(request.GET['userId'])
+            versionID = int(request.GET['versionId'])
+            pageID = int(request.GET['pageId'])
 
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
@@ -304,7 +487,6 @@ def reflection(request):
 
                     editing_res = md.ReflectionsTaken.objects.filter(rq_id=prompt_res['prompt_id'],
                                                                      session_id=session.session_id,
-                                                                     course_id=session.course_id,
                                                                      version_id=version, page_id=page)
 
                     # already exist, overwriting
@@ -318,7 +500,7 @@ def reflection(request):
                     elif len(editing_res) == 0:
                         editing_res = md.ReflectionsTaken(reflections=prompt_res['response'],
                                                           rq_id=reflection_question,
-                                                          session_id=session, course_id=session.course_id,
+                                                          session_id=session,
                                                           version_id=version, date_taken=datetime.now(),
                                                           page_id=page)
 
@@ -354,9 +536,9 @@ def reflection(request):
 def reflectionResponse(request):
     if request.method == 'GET':
         try:
-            versionID = int(request.GET['version_id'])
-            pageID = int(request.GET['page_id'])
-            userId = int(request.GET['user_id'])
+            versionID = int(request.GET['versionId'])
+            pageID = int(request.GET['pageId'])
+            userId = int(request.GET['userId'])
 
         except ValueError as e:
             return JsonResponse({'status': 400, 'message': 'Invalid versionID, pageID, userID or pageTitle',
@@ -394,7 +576,6 @@ def reflectionResponse(request):
                     # in case multiple answer
                     answered = md.ReflectionsTaken.objects.filter(rq_id=prompt.rq_id,
                                                                   session_id=session.session_id,
-                                                                  course_id=session.course_id,
                                                                   version_id=versionID)
                     if len(answered) > 1:
                         raise ValueError('Multiple response returned for prompt_id %i.' %(prompt.rq_id))
@@ -442,6 +623,9 @@ def stakeholder(request):
         
         resultData = []
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exists
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -464,6 +648,8 @@ def stakeholder(request):
             # return data
             resultData.append(stakeholder)
         
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except md.Stakeholder.DoesNotExist:
@@ -489,6 +675,9 @@ def stakeholderHad(request):
 
         resultData = []
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exist
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -506,6 +695,8 @@ def stakeholderHad(request):
                 stakeholder = {key: stakeholderObj.__dict__[key] for key in ('stakeholder_id', 'name', 'description', 'job', 'introduction', 'photopath')}
                 resultData.append(stakeholder)
         
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except Exception as ex:
@@ -589,6 +780,9 @@ def conversation(request):
         
         resultData = {}
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exists
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -609,7 +803,7 @@ def conversation(request):
 
             # check if conversation ID exists
             conversationObj = md.Conversation.objects.get(stakeholder_id=stakeholderID, conversation_id=conversationID)
-            for key in ['conversation_id', 'question', 'response_id']:
+            for key in ['conversation_id', 'question', 'conversation_response']:
                 resultData[key] = conversationObj.__dict__[key]
 
             # retrieve Conversation Had
@@ -617,6 +811,8 @@ def conversation(request):
             for key in ['score', 'date_taken']:
                 resultData[key] = conversationHadObj.__dict__[key]
 
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except md.Course.DoesNotExist:
@@ -671,15 +867,15 @@ def conversation(request):
 
             # check if conversation ID exists
             conversationObj = md.Conversation.objects.get(stakeholder_id=stakeholderID, conversation_id=conversationID)
-            for key in ['conversation_id', 'question', 'response_id']:
+            for key in ['conversation_id', 'question', 'conversation_response']:
                 resultData[key] = conversationObj.__dict__[key]
 
             # check if session ID exists
             sessionObj = md.Session.objects.get(session_id=sessionID, version_id=versionID)
 
             try:
-                course = md.ClassAssignment.objects.get(scenario_id=versionObj.scenario_id).course_id
-            except md.ClassAssignment.DoesNotExist:
+                course = md.CourseAssignment.objects.get(scenario_id=versionObj.scenario_id).course_id
+            except md.CourseAssignment.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'The given user cannot attempt the given scenario'})
 
@@ -709,9 +905,8 @@ def conversation(request):
                     coverageScore += score['coverage_score']
 
                 # create new conversationHad object
-                # TODO: remove course_id later once DB team approves
                 conversationHadObj = md.ConversationsHad(session_id=sessionObj, version_id=versionObj, stakeholder_id=stakeholderObj, conversation_id=conversationID, 
-                                                         course_id=course.course_id, date_taken=datetime.now(), score=coverageScore)
+                                                         date_taken=datetime.now(), score=coverageScore)
                                 
                 conversationHadObj.save()
                 resultData['already_exist'] = False
@@ -757,6 +952,9 @@ def conversationHad(request):
 
         resultData = []
         try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
             # check if version ID exist
             versionObj = md.Version.objects.get(version_id=versionID)
 
@@ -774,9 +972,11 @@ def conversationHad(request):
                 return JsonResponse(status=404, data={'status': 404, 'message': 'No Conversation has been submitted'})
             for id in conversationHadQuerySet:
                 conversationObj = md.Conversation.objects.get(stakeholder_id=stakeholderID, conversation_id=id['conversation_id'])
-                conversation = {key: conversationObj.__dict__[key] for key in ('conversation_id', 'question', 'response_id')}
+                conversation = {key: conversationObj.__dict__[key] for key in ('conversation_id', 'question', 'conversation_response')}
                 resultData.append(conversation)
         
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
         except md.Version.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404, 'message': 'No Version ID found'})
         except md.Stakeholder.DoesNotExist:
@@ -868,7 +1068,6 @@ def action(request):
             # Obtain session field based on given params
             try:
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
-                course = session.course_id
             except md.Session.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'Session not found based on give params'})
@@ -889,7 +1088,7 @@ def action(request):
             except md.Response.DoesNotExist:
                 # Add a response for the given choice
                 responseObj = md.Response(session_id=session, version_id=version, page_id=page,
-                                          date_taken=datetime.now(), course_id=course, choice=choiceObj.apc_id)
+                                          date_taken=datetime.now(), choice=choiceObj.apc_id)
             
                 responseObj.save()
                 response = {key: responseObj.__dict__[key] for key in ('response_id', 'date_taken', 'choice')}
@@ -927,7 +1126,6 @@ def action(request):
             # Obtain session field based on given params
             try:
                 session = md.Session.objects.get(user_id=userId, version_id=versionID)
-                course = session.course_id
             except md.Session.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                     'message': 'Session not found based on give params'})
@@ -951,3 +1149,74 @@ def action(request):
 
         except Exception as ex:
              logging.exception("Exception thrown: Query Failed to retrieve Page")
+
+def radarPlot(request):
+    if request.method == 'GET':
+        # retrieve user ID
+        try:
+            userID = int(request.GET['userId'])
+        except Exception as ex:
+            return JsonResponse(status=400, message='Invalid User ID')
+        
+        # retrieve version ID
+        try:
+            versionID = int(request.GET['versionId'])
+        except Exception as ex:
+            return JsonResponse(status=400, message='Invalid Version ID')
+
+        resultData = []
+        try:
+            # check if user ID exist 
+            userObj = md.User.objects.get(user_id=userID)
+
+            # check if version ID exist
+            versionObj = md.Version.objects.get(version_id=versionID)
+            
+            # check if session ID exist
+            sessionQuerySet = md.Session.objects.filter(user_id=userID, version_id=versionID).values('session_id')
+            if len(sessionQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Session ID found'})
+
+            # check if issue ID exist
+            issueQuerySet = md.Issue.objects.filter(version_id=versionID).values('issue_id', 'name').order_by('-importance_score')
+            if len(issueQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Issue ID found'})
+
+            # get all stakeholders
+            stakeholderQuerySet = md.Stakeholder.objects.filter(version_id=versionID).values('stakeholder_id')
+            if len(stakeholderQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Stakeholder ID found'})
+
+            
+            # check if stakeholders have been talked to
+            stakeholderHadQuerySet = md.ConversationsHad.objects.filter(session_id__in=sessionQuerySet, version_id=versionID).distinct('stakeholder_id').values('stakeholder_id')
+            if len(stakeholderHadQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'Stakeholder ID hasn\'t been submitted'})
+
+            issue_coverage = {}
+            for key in issueQuerySet:
+                issue_coverage[key['issue_id']] = {'name': key['name'], 'coverage': 0.0, 'total': 0.0, 'percentage': 0.0}
+            for issue in issueQuerySet:
+                issueName = issue['name']
+                issueID = issue['issue_id']
+                for stakeholder in stakeholderQuerySet:
+                    coverage = md.Coverage.objects.filter(issue_id=issueID, stakeholder_id=stakeholder['stakeholder_id']).values()
+                    if len(coverage) != 0:
+                        issue_coverage[issueID]['total'] += coverage[0]['coverage_score'] # add total
+                        if stakeholder in stakeholderHadQuerySet: # if stakeholder has been talked to, add coverage
+                            issue_coverage[issueID]['coverage'] += coverage[0]['coverage_score']
+                issue_coverage[issueID]['percentage'] = issue_coverage[issueID]['coverage'] / issue_coverage[issueID]['total'] * 100
+            
+            for key in issue_coverage.keys():
+                resultData.append(issue_coverage[key])
+
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,'message': 'No Version ID found'})
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Radar Plot")
+
+        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
+
+        

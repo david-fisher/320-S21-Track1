@@ -26,7 +26,7 @@
         }
     },
     {
-        "model": "backend.ClassAssignment",
+        "model": "backend.CourseAssignment",
         "pk": 1,
         "fields": {
             "course_id": 1,

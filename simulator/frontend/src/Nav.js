@@ -97,22 +97,7 @@ function Nav() {
                       Home
                     </Button>
                   </Link>
-                  {/* <Link className={classes.link} to="/summary">
-                    <Button className={classes.title} color="inherit">
-                    Summary
-                    </Button>
-                  </Link> */}
-                  <Link className={classes.link} to="/simulation">
-                    <Button className={classes.title} color="inherit">
-                      Simulation Window
-                    </Button>
-                  </Link>
-                  {/* <Link className={classes.link} to="/chartTest">
-                    <Button className={classes.title} color="inherit">
-                      Chart
-                    </Button>
-                    onClick={() => window.location.href = landingPage} color="inherit">LogOut
-                  </Link> */}
+
                 </Typography>
                 <Button
 
@@ -128,16 +113,24 @@ function Nav() {
             renders the first one that matches the current URL. */}
           <Switch>
             <Route path="/" exact>
-              <Home />
+                <Home />
             </Route>
             <Route path="/summary" exact>
               <Summary />
             </Route>
-            <Route path="/simulation" exact>
+            {/* <Route path="/simulation/:id" exact>
               <ScenariosContext.Provider value={scenariosState}>
                 <SimulationWindow />
               </ScenariosContext.Provider>
-            </Route>
+            </Route> */}
+            <Route
+                path="/simulation/:id"
+                
+                render={(props) => 
+                <ScenariosContext.Provider value={scenariosState}>
+                  <SimulationWindow {...props} />
+                </ScenariosContext.Provider>}
+            />
             <Route path="/chartTest" exact>
               <RadarTest />
             </Route>

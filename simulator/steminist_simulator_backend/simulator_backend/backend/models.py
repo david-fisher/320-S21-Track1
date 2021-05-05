@@ -29,7 +29,7 @@ class Takes(models.Model):
     
 class Scenario(models.Model):
     scenario_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField()
+    user_id = models.IntegerField(null=True)
     public = models.BooleanField()
     is_finished = models.BooleanField()
     date_created = models.DateField()
@@ -37,12 +37,12 @@ class Scenario(models.Model):
     class Meta:
         db_table = "scenarios"
 
-class ClassAssignment(models.Model):
+class CourseAssignment(models.Model):
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
     scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
 
     class Meta:
-        db_table = "class_assignment"
+        db_table = "course_assignment"
 
 class Page(models.Model):
     page_id = models.AutoField(primary_key=True)
@@ -50,7 +50,7 @@ class Page(models.Model):
     page_title = models.CharField(blank=False, max_length=200)
     version_id = models.IntegerField()
     body = models.TextField()
-    next_page = models.IntegerField()  # references the next page
+    next_page = models.IntegerField(null=True)  # references the next page
     x_coordinate = models.IntegerField()
     y_coordinate = models.IntegerField()
 
@@ -61,7 +61,7 @@ class Version(models.Model):
     version_id = models.AutoField(primary_key=True)
     scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
     name = models.CharField(blank=False, max_length=500)
-    num_conversation = models.IntegerField()
+    num_conversation = models.IntegerField(null=True)
     first_page = models.ForeignKey(Page, on_delete=CASCADE)
 
     class Meta:
@@ -81,7 +81,6 @@ class Session(models.Model):
     user_id = models.IntegerField()
     scenario_id = models.ForeignKey(Scenario, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
     date_started = models.DateTimeField()
     is_finished = models.BooleanField(default=False)
     most_recent_access = models.DateTimeField(default=None, null=True)
@@ -91,7 +90,6 @@ class Session(models.Model):
 
 class SessionTime(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     date_taken = models.DateTimeField()
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
@@ -114,7 +112,6 @@ class Response(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
     date_taken = models.DateTimeField()
     choice = models.TextField()
 
@@ -129,7 +126,7 @@ class Stakeholder(models.Model):
     description = models.TextField()
     job = models.TextField(blank=False)
     introduction = models.TextField()
-    photopath = models.TextField()
+    photopath = models.TextField(null=True)
 
     class Meta:
         db_table = "stakeholders"
@@ -138,14 +135,13 @@ class Conversation(models.Model):
     conversation_id = models.AutoField(primary_key=True)
     stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
     question = models.TextField()
-    response_id = models.TextField()
+    conversation_response = models.TextField()
 
     class Meta:
         db_table = "conversations"
 
 class ConversationsHad(models.Model):
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
-    course_id = models.IntegerField()
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
     date_taken = models.DateTimeField()
@@ -155,23 +151,6 @@ class ConversationsHad(models.Model):
 
     class Meta:
         db_table = "conversations_had"
-
-
-class Conversation(models.Model):
-    conversation_id = models.AutoField(primary_key=True)
-    stakeholder_id = models.ForeignKey(Stakeholder, on_delete=CASCADE)
-    question = models.TextField()
-    response_id = models.TextField()
-
-    class Meta:
-        db_table = "conversations"
-
-class GenericPage(models.Model):
-    generic_page_id = models.AutoField(primary_key=True)
-    page_id = models.ForeignKey(Page, on_delete=CASCADE)
-
-    class Meta:
-        db_table = "generic_page"
 
 class ActionPageChoice(models.Model):
     apc_id = models.AutoField(primary_key=True)
@@ -236,7 +215,6 @@ class ReflectionsTaken(models.Model):
     reflections = models.TextField()
     rq_id = models.ForeignKey(ReflectionQuestion, on_delete=CASCADE)
     session_id = models.ForeignKey(Session, on_delete=CASCADE)
-    course_id = models.ForeignKey(Course, on_delete=CASCADE)
     version_id = models.ForeignKey(Version, on_delete=CASCADE)
     page_id = models.ForeignKey(Page, on_delete=CASCADE)
     # date_taken = models.ForeignKey(Responses.date_taken, on_delete=CASCADE)
