@@ -51,19 +51,6 @@
     },
     {
         "model": "backend.Page",
-        "pk": 1,
-        "fields": {
-            "page_type": "PLAIN",
-            "page_title": "Quandary Statement",
-            "version_id": 1,
-            "body": "You have just been hired at Helios Inc as a junior computer scientist. The company is currently working on a level 4 autonomous car and you are placed on a team working towards creating the technology to make this happen. The company is up against a couple dozen others working towards this and the first company to create it will have the greatest profits and dominance in the market. Employees are given a time frame of two years and are informed that if they achieve this goal, they will be given huge bonuses and see a huge increase in their salaries. They are told that not only will they be working on a revolutionary project but will also make huge strides in their careers following the completion. Apart from that, these cars could improve road safety, ease traffic, and provide accessibility to those who cannot drive.  On the other hand, even a small flaw in the software could cause more harm than good. Given the fast approaching deadline, how much testing is enough when it comes to human lives and could having a deadline cause the developers to miss small issues. If the car has to make life altering decisions, such as the trolley program, to save either a pedestrian crossing the street illegally or the passengers in the car, who should it save. In addition to the previous point, if somebody is killed, who is to be blamed for this loss of human life.  Should you take this project on?",
-            "next_page": 2,
-            "x_coordinate": 0,
-            "y_coordinate": 0
-        }
-    },
-    {
-        "model": "backend.Page",
         "pk": 2,
         "fields": {
             "page_type": "PLAIN",
@@ -83,7 +70,7 @@
             "page_title": "Project Task Assignment",
             "version_id": 1,
             "body": "In this project you will be working on two tasks.  Your first task will be to collect data and work with the team creating a level 4 autonomous AI model. This model needs to be fully autonomous with no human driver in most cases and should be able to simultaneously accelerate, steer, stop, navigate and park. You will be working on the accelerate and stop functionality.  Your second task will be to test the features you developed on a large range of data and scenarios and ultimately send it into production. ",
-            "next_page": 3,
+            "next_page": 4,
             "x_coordinate": 0,
             "y_coordinate": 0
         }
@@ -95,7 +82,7 @@
             "scenario_id": 1,
             "name": "Autonomous Cars",
             "num_conversation": 3,
-            "first_page": 1
+            "first_page": 2
         }
     }
 ]

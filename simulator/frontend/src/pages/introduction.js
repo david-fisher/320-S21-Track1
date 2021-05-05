@@ -12,6 +12,7 @@ import axios from 'axios';
 import HTMLRenderer from './components/htmlRenderer';
 import { ScenariosContext } from "../Nav";
 import { GatheredInfoContext } from './simulationWindow';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import get from '../universalHTTPRequests/get';
 
 
@@ -31,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     boxShadow: "0px 0px 2px",
   },
+  errorContainer: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
 }));
 
 function Introduction({ pages, setPages, activePage, setActivePage,version_id,first_page}) {
@@ -39,7 +46,7 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   
   
-  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+first_page // Version hardcoded
+  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+activePage // Version hardcoded
 
   const [intro, setIntro] = useState({     //temporary array of intro
     intro_page: [{
@@ -58,9 +65,7 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
 
   //Get Intro Page
   let getData = () => {
-    function onSuccess(response) {
-      pages["projectAssignment"].pid = response.data.result.map((data)=> data.next_page)
-      
+    function onSuccess(response) {      
       let ipage = response.data.result.map((data) => (
         {
           title: data.page_title,
@@ -85,21 +90,21 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
 
 
 
-  function goToProjectAssignment() {
-    if (!pages.projectAssignment.visited) {
+  function goToNextPage() {
+    if (!pages[intro.intro_page[0].next].visited) {
       setPages((prevPages) => {
         let copy = { ...prevPages };
-        copy.projectAssignment.visited = true;
+        copy[activePage].completed = true;
+        copy[intro.intro_page[0].next].visited = true;
         return copy;
       });
       setGatheredInfo(infos => {
         let newInfos = [...infos];
-        newInfos.push({id: 'page', name: 'Project Assignment', pageId: 'projectAssignment'});
+        newInfos.push({id: 'page', name: intro.intro_page[0].title, pageId: activePage});
         return newInfos;
       });
     }
-    setActivePage((prevPage) => "projectAssignment");
-
+    setActivePage((prevPage) => intro.intro_page[0].next);
   }
 
   const [introText, setIntroText] = React.useState('');
@@ -109,13 +114,32 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
 
   useEffect(getData, [shouldFetch]);
 
+  if (fetchScenariosResponse.error) {
+    return (
+      <div className={classes.errorContainer}>
+        <Box mt={5}>
+          <Grid container direction="row" justify="center" alignItems="center">
+            <TextTypography variant="h4" align="center" gutterBottom>
+              Error fetching scenario data.
+            </TextTypography>
+          </Grid>
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={getData}
+        >
+          <RefreshIcon className={classes.iconRefreshLarge} />
+        </Button>
+      </div>)
+  }
+
   return (
     <div>
       <Box mt={5}>
         <Grid container direction="row" justify="center" alignItems="center">
           <TextTypography variant="h4" align="center" gutterBottom>
-            Introduction
-            {scenarios.currentScenarioID}
+            {intro.intro_page[0].title}
           </TextTypography>
         </Grid>
       </Box>
@@ -135,7 +159,7 @@ function Introduction({ pages, setPages, activePage, setActivePage,version_id,fi
               variant="contained"
               disableElevation
               color="primary"
-              onClick={goToProjectAssignment}
+              onClick={goToNextPage}
             >
               Next
             </Button>

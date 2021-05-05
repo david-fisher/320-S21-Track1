@@ -16,6 +16,7 @@ from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework import mixins
 from . import permissions
+import urllib
 
 # Stakeholders ViewSet
 class StakeholdersViewSet(viewsets.ModelViewSet):
@@ -311,8 +312,119 @@ class logistics_page(APIView):
 
         # If professor chooses to publish
         if request.data.get("PUBLIC", False) and request.data.get("IS_FINISHED", False):
-            super_dict = SuperScenariosSerialializer(scenarios.objects.get(SCENARIO=request.data["SCENARIO"]))
-            print(json.dumps(super_dict.data))
+            super_dict = SuperScenariosSerialializer(scenarios.objects.get(SCENARIO=request.data["SCENARIO"])).data
+            print(json.dumps(super_dict))
+            to_dump = dict()
+            to_dump["Scenario"] = {
+                "scenario_id": super_dict["SCENARIO"],
+                "name": super_dict["NAME"],
+                "public": super_dict["PUBLIC"],
+                "is_finished": super_dict["IS_FINISHED"],
+                "date_created": super_dict["DATE_CREATED"],
+            }
+            
+            to_dump["Scenario"]["FirstPage"] = next(page["PAGE"] for page in super_dict["pages"] if page["PAGE_TITLE"] == "Introduction")
+            
+            to_dump["Pages"] = {
+                page["PAGE"]: {
+                    "page_id": page["PAGE"],
+                    "page_type": page["PAGE_TYPE"],
+                    "page_title": page["PAGE_TITLE"],
+                    "next_page": page["NEXT_PAGE"],
+                    "body": page["PAGE_BODY"],
+                    "x_coordinate": page["X_COORDINATE"],
+                    "y_coordinate": page["Y_COORDINATE"],
+                    "version_id": page["VERSION"]
+                } for page in super_dict["pages"]
+            }
+
+            to_dump["Stakeholders"] = [
+                {
+                    "stakeholder_id": stakeholder["STAKEHOLDER"],
+                    "name": stakeholder["NAME"],
+                    "photopath": stakeholder["PHOTO"],
+                    "scenario_id": stakeholder["SCENARIO"],
+                    "description": stakeholder["DESCRIPTION"],
+                    "introduction": stakeholder["INTRODUCTION"],
+                    "job": stakeholder["JOB"],
+                    "version_id": stakeholder["VERSION"]
+                } for stakeholder in super_dict["stakeholders"]
+            ]
+
+            to_dump["Issues"] = [
+                {
+                    "issue_id": issue["ISSUE"],
+                    "version_id": issue["VERSION"],
+                    "scenario_id": issue["SCENARIO"],
+                    "importance_score": issue["IMPORTANCE_SCORE"],
+                    "name": issue["NAME"]
+                } for issue in super_dict["issues"]
+            ]
+
+            to_dump["ActionPageChoices"] = [
+                {
+                    "apc_id": action_page_choice["APC_ID"],
+                    "page_id": action_page_choice["PAGE"],
+                    "choice": action_page_choice["CHOICE"],
+                    "result_page": action_page_choice["RESULT_PAGE"],
+                } for page in super_dict["pages"] for action_page_choice in page["action_page_choices"] 
+            ]
+
+
+            to_dump["ReflectionQuestions"] = [
+                {
+                    "rq_id": reflection_question["RQ_ID"],
+                    "page_id": reflection_question["PAGE"],
+                    "version_id": reflection_question["VERSION"],
+                    "reflection_question": reflection_question["REFLECTION_QUESTION"],
+                } for page in super_dict["pages"] for reflection_question in page["reflection_questions"] 
+            ]
+
+            to_dump["CourseAssignment"] = [
+                {
+                    "scenario_id": course["SCENARIO"],
+                    "course_id": course["COURSE"]["COURSE"]
+                } for course in super_dict["scenarios_for"]
+            ]
+
+            to_dump["Courses"] = [
+                {
+                    "name": course["COURSE"]["NAME"],
+                    "course_id": course["COURSE"]["COURSE"]
+                } for course in super_dict["scenarios_for"]
+            ]
+
+            to_dump["Coverages"] = [
+                {
+                    "stakeholder_id": coverage["STAKEHOLDER"],
+                    "issue_id": coverage["ISSUE"],
+                    "coverage_score": coverage["COVERAGE_SCORE"]
+                } for stakeholder in super_dict["stakeholders"] for coverage in stakeholder["coverages"]
+            ]
+
+            to_dump["Conversations"] = [
+                {
+                    "stakeholder_id": conversation["STAKEHOLDER"],
+                    "conversation_id": conversation["CONVERSATION"],
+                    "conversation_response": conversation["RESPONSE"],
+                    "question": conversation["QUESTION"]
+                } for stakeholder in super_dict["stakeholders"] for conversation in stakeholder["conversations"]
+            ]
+
+            to_post_to = request.build_absolute_uri("backend/scenarios/publish").replace(":8000", ":7000")
+            data = json.dumps(to_dump)
+            data = str(data)
+            print(data)
+            # Convert string to byte
+            data = data.encode('utf-8')
+
+            # data = urllib.parse.urlencode(to_dump).encode()
+            req =  urllib.request.Request(to_post_to, data=data) # this will make the method "POST"
+            resp = urllib.request.urlopen(req)
+
+
+            print(json.dumps(to_dump))
+
         return Response(scenario_dict)
 
 #returns list of scenarios for given professor along with list of associated courses

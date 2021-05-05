@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81febbd9-2e79-45d6-ae5f-b384d7162738" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/editor/frontend/ethisim/src/Constants/Config.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/frontend/ethisim/src/Constants/Config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/landing page/welcome-login/src/components/HomepageComponents/HomepageNavBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/landing page/welcome-login/src/components/HomepageComponents/HomepageNavBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator/frontend/src/pages/conversation.js" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/frontend/src/pages/conversation.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +67,8 @@
       <workItem from="1619367900697" duration="1750000" />
       <workItem from="1619374511923" duration="1772000" />
       <workItem from="1619376490463" duration="9971000" />
+      <workItem from="1619992608339" duration="8000" />
+      <workItem from="1620066885718" duration="598000" />
     </task>
     <servers />
   </component>

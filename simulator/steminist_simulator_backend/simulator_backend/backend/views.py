@@ -21,6 +21,146 @@ pageType = "STAKEHOLDERPAGE" # change this to whatever type you initialize for s
 def index(request):
     return HttpResponse("This API works")
 
+def publishScenario(request):
+    print(request.body)
+    if request.method == "POST":
+        jsonData = json.loads(request.body)
+        print(jsonData)
+        try:
+            courseJSONObj = jsonData["Courses"][0]
+            scenarioJSONObj = jsonData["Scenario"]
+            pageJSONArr = jsonData["Pages"]
+            stakeholderJSONArr = jsonData["Stakeholders"]
+            conversationJSONArr = jsonData["Conversations"]
+            actionPageChoiceJSONArr = jsonData["ActionPageChoices"]
+            issueJSONArr = jsonData["Issues"]
+            coverageJSONArr = jsonData["Coverages"]
+            reflectionQuestionJSONArr = jsonData["ReflectionQuestions"]
+
+        except KeyError as e:
+            print("WEPIDJEAPODJ")
+            print(e)
+            return JsonResponse(status=400, data={'status': 400, 'message': 'JSON body not in the correct format.'})
+
+        # Save course model
+        try:
+            course = md.Course.objects.get(course_id=courseJSONObj['course_id'])
+        except md.Course.DoesNotExist:
+            course = md.Course(course_id=courseJSONObj['course_id'], name=courseJSONObj['name'])
+            course.save()
+
+        # Save scenario model
+        try:
+            scenario = md.Scenario.objects.get(scenario_id=scenarioJSONObj['scenario_id']) 
+        except md.Scenario.DoesNotExist:
+            scenario = md.Scenario(scenario_id=scenarioJSONObj['scenario_id'], user_id=None,
+                                   public=scenarioJSONObj['public'], is_finished=scenarioJSONObj['is_finished'],
+                                   date_created=scenarioJSONObj['date_created'])
+            scenario.save()
+        
+        # Save CourseAssignment model
+        try:
+            ca = md.CourseAssignment(course_id=course, scenario_id=scenario)
+            ca.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save CourseAssignment model(s)")
+
+        newVersionId = md.Version.objects.count() + 1
+
+        # Save page models
+        firstPage = None
+        try:
+            currentPageId = scenarioJSONObj['FirstPage']
+            while (currentPageId != None):
+                pageJsonObj = pageJSONArr[str(currentPageId)]
+
+                page = md.Page(page_id=pageJsonObj["page_id"], page_type=pageJsonObj["page_type"], page_title=pageJsonObj["page_title"],
+                               version_id=newVersionId, body=pageJsonObj["body"], next_page=pageJsonObj["next_page"],
+                               x_coordinate=pageJsonObj["x_coordinate"], y_coordinate=pageJsonObj["y_coordinate"])
+
+                # Store instance of first page in a variable
+                if (page.page_id == scenarioJSONObj['FirstPage']):
+                    firstPage = page
+
+                page.save()
+                currentPageId = page.next_page
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Page model(s)")
+
+        # Save version model
+        try:
+            version = md.Version(version_id=newVersionId, scenario_id=scenario, name=scenarioJSONObj['name'],
+                                 first_page=firstPage)
+            version.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Version model")
+
+        # Save stakeholder models
+        try:
+            for stakholderObj in stakeholderJSONArr:
+                stakeholder = md.Stakeholder(stakeholder_id=stakholderObj["stakeholder_id"], version_id=version,
+                                             scenario_id=scenario, name=stakholderObj["name"],
+                                             description=stakholderObj["description"], job=stakholderObj["job"],
+                                             introduction=stakholderObj["introduction"], photopath=stakholderObj["photopath"])
+                stakeholder.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Stakeholder model(s)")
+
+        # Save conversation models
+        try:
+            for conversationObj in conversationJSONArr:
+                stakeholder = md.Stakeholder.objects.get(stakeholder_id=conversationObj["stakeholder_id"])
+                conversation = md.Conversation(conversation_id=conversationObj["conversation_id"], stakeholder_id=stakeholder,
+                                               question=conversationObj["question"], conversation_response=conversationObj["conversation_response"])
+                conversation.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Conversation model(s)")
+                
+        # Save ActionPageChoice models
+        try:
+            for apcObj in actionPageChoiceJSONArr:
+                page = md.Page.objects.get(page_id=apcObj["page_id"])
+                apc = md.ActionPageChoice(apc_id=apcObj["apc_id"], page_id=page,
+                                          choice=apcObj["choice"], result_page=apcObj["result_page"])
+                apc.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save ActionPageChoice model(s)")
+
+        # Save Issue models
+        try:
+            for issueObj in issueJSONArr:
+                issue = md.Issue(issue_id=issueObj["issue_id"], version_id=version,
+                                 scenario_id=scenario, name=issueObj["name"], importance_score=issueObj["importance_score"])
+                issue.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Issue model(s)")
+
+        # Save Coverage models
+        try:
+            for covObj in coverageJSONArr:
+                stakeholder = md.Stakeholder.objects.get(stakeholder_id=covObj["stakeholder_id"])
+                issue = md.Issue.objects.get(issue_id=covObj["issue_id"])
+                coverage = md.Coverage(stakeholder_id=stakeholder, issue_id=issue,
+                                       coverage_score=covObj["coverage_score"])
+                coverage.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save Coverage model(s)")
+
+        # Save ReflectionQuestion models
+        try:
+            for rqObj in reflectionQuestionJSONArr:
+                page = md.Page.objects.get(page_id=rqObj["page_id"])
+                reflectionQuestion = md.ReflectionQuestion(rq_id=rqObj["rq_id"], version_id=version, page_id=page,
+                                                           reflection_question=rqObj["reflection_question"])
+                reflectionQuestion.save()
+        except Exception as ex:
+            logging.exception("Exception thrown: Failed to save ReflectionQuestion model(s)")
+
+
+        return JsonResponse(status=200, data={'status': 200, 'message': 'Scenario successfully published to scenario simulator.',
+                                              'result': None})
+
+
 def readAttributes(request):
     try: 
         resultData = {

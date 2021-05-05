@@ -6,7 +6,7 @@
         "page_type": "REFLECTION",
         "page_title": "INITIAL REFLECTION",
         "version_id": 1,
-        "body": "Please response to each and every single question.",
+        "body": "Please respond to each and every single question.",
         "next_page": 5,
         "x_coordinate": 0,
         "y_coordinate": 0
@@ -37,7 +37,7 @@
         "page_type": "REFLECTION",
         "page_title": "MIDDLE REFLECTION",
         "version_id": 1,
-        "body": "Please response to each and every single question.",
+        "body": "Please respond to each and every single question.",
         "next_page": 8,
         "x_coordinate": 0,
         "y_coordinate": 0
@@ -63,23 +63,36 @@
   },
   {
       "model": "backend.Page",
-      "pk": 10,
+      "pk": 9,
       "fields": {
         "page_type": "REFLECTION",
         "page_title": "FINAL REFLECTION",
         "version_id": 1,
-        "body": "Please response to each and every single question.",
+        "body": "Please respond to each and every single question.",
         "next_page": 11,
         "x_coordinate": 0,
         "y_coordinate": 0
       }
   },
   {
+	  "model": "backend.Page",
+	  "pk": 11,
+	  "fields": {
+		  "page_type": "CONCLUSION",
+		  "page_title": "Conclusion",
+		  "version_id": 1,
+		  "body": "This is the body of the scenario conclusion.",
+		  "next_page": -1,
+		  "x_coordinate": 0,
+		  "y_coordinate": 0
+	  }
+  },
+  {
       "model": "backend.ReflectionQuestion",
       "pk": 5,
       "fields": {
         "version_id": 1,
-        "page_id": 10,
+        "page_id": 9,
         "reflection_question": "How do you feel about the consequences of the decision you just made?"
       }
   }

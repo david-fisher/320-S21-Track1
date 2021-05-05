@@ -35,11 +35,7 @@ export default function SimpleMenu() {
             >
                 <MenuItem
                     onClick={() =>
-                        (window.location.href =
-                            DOMAIN +
-                            (process.env.NODE_ENV === 'production'
-                                ? '/'
-                                : ':3006'))
+                        (window.location.href = DOMAIN + (process.env.NODE_ENV === 'production' ? '/Shibboleth.sso/Logout?return=/' : ':3006'))
                     }
                     component={Link}
                     to={{
