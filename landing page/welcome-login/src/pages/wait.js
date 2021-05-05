@@ -23,7 +23,7 @@ import RedLogo from '../shared/RedLogo.png';
 let receivedData = 'Nothing'
 
 let test = async () => {
-    fetch('/backend/shib/attributes/', {
+    fetch('/backend/shib/attributes', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
