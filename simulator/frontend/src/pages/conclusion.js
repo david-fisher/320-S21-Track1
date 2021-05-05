@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import { ScenariosContext } from "../Nav";
+import get from '../universalHTTPRequests/get';
 
 
 const TextTypography = withStyles({
@@ -15,7 +16,7 @@ const TextTypography = withStyles({
 
 const questions = [{text: "We would appreciate receiving any comments that you have on this online ethics simulation: ", id: 1}];
 
-function Conclusion({pages, setPages, activePage, setActivePage}) {
+function Conclusion({pages, setPages, prevPageID, activePage, setActivePage}) {
   const [body,setBody] = useState('');
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   useEffect(() => {
@@ -36,15 +37,15 @@ function Conclusion({pages, setPages, activePage, setActivePage}) {
   }, [scenarios])
 
 
-  function goToFinalReflection(){
-    if (!pages.finalReflection.visited) {
+  function goToPrevPage(){
+    if (!pages[prevPageID].visited) {
       setPages(prevPages => {
         let copy = {...prevPages};
-        copy.finalReflection.visited = true;
+        copy[prevPageID].visited = true;
         return copy;
       });
     }
-    setActivePage(prevPage => 'finalReflection')
+    setActivePage(prevPage => prevPageID)
   }
 
   let history = useHistory();
@@ -63,7 +64,7 @@ function Conclusion({pages, setPages, activePage, setActivePage}) {
       </Grid>
       <Grid container direction="row" justify="space-between">
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation onClick={goToFinalReflection}>Back</Button>
+          <Button variant="contained" disableElevation onClick={goToPrevPage}>Back</Button>
         </Grid>
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
           {/*<Button variant="outlined">Next</Button>*/}

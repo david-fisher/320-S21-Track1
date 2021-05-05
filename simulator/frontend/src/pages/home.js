@@ -264,33 +264,33 @@ export default function Home() {
     );
   }
 
-  if (fetchScenariosResponse.error) {
-    return (
-      <div>
-        <div className={classes.issue}>
-          <div className={classes.errorContainer}>
-            <ErrorIcon className={classes.iconError} />
-            <Typography align="center" variant="h3">
-              Error in fetching Scenarios.
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getData}
-            >
-              <RefreshIcon className={classes.iconRefreshLarge} />
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (fetchScenariosResponse.error) {
+  //   return (
+  //     <div>
+  //       <div className={classes.issue}>
+  //         <div className={classes.errorContainer}>
+  //           <ErrorIcon className={classes.iconError} />
+  //           <Typography align="center" variant="h3">
+  //             Error in fetching Scenarios.
+  //           </Typography>
+  //           <Button
+  //             variant="contained"
+  //             color="primary"
+  //             onClick={getData}
+  //           >
+  //             <RefreshIcon className={classes.iconRefreshLarge} />
+  //           </Button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className={classes.root}>
       <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
         <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
-        <StyledTab className={classes.tab} label="Completed Scenarios" {...a11yProps(1)} />
+        <StyledTab label="Completed Scenarios" {...a11yProps(1)} />
       </StyledTabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
@@ -309,7 +309,7 @@ export default function Home() {
                 <Button
                     component={Link}
                     to={{
-                        pathname: '/simulation/'+scenario.first_page,
+                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
                         data: scenario,
                     }}
                     className={classes.button}

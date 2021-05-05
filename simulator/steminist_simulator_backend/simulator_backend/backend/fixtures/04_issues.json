@@ -1,0 +1,112 @@
+[
+    {
+        "model": "backend.Issue",
+        "pk": 1,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Project benefits career + increased pay",
+            "importance_score": 10
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 2,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Get to work on revolutionary project",
+            "importance_score": 30
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 3,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Project gives company dominance in the market",
+            "importance_score": 20
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 4,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Public safety benefit",
+            "importance_score": 50
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 5,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Public convenience benefit",
+            "importance_score": 40
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 6,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Small flaw in software has catastrophic effects",
+            "importance_score": 50
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 7,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Small time frame = less testing",
+            "importance_score": 40
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 8,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Trolley Problem",
+            "importance_score": 50
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 9,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "No responsibility for death",
+            "importance_score": 30
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 10,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Failure impacts career",
+            "importance_score": 10
+        }
+    },
+    {
+        "model": "backend.Issue",
+        "pk": 11,
+        "fields": {
+            "version_id": 1,
+            "scenario_id": 1,
+            "name": "Failure ruins company image",
+            "importance_score": 20
+        }
+    }
+]

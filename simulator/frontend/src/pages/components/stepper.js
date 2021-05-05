@@ -10,7 +10,6 @@ import {
   Button,
   Box,
 } from "@material-ui/core";
-import ProgressBar from './progressBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,14 +46,7 @@ function getSteps(pages, navigatePageFunc) {
   let keys = Object.keys(pages);
 
   for (let i = 0; i < keys.length; i++) {
-    let buttonName = keys[i].charAt(0);
-    for (let j = 1; j < keys[i].length - 1; j++) {
-      if (keys[i].charAt(j) == keys[i].charAt(j).toUpperCase()) {
-        buttonName += " ";
-      }
-      buttonName += keys[i].charAt(j);
-    }
-    buttonName += keys[i].charAt(keys[i].length - 1);
+    let buttonName = pages[keys[i]].title;
     if (pages[keys[i]].visited === false) {
       stepArr.push(<Button disabled>{buttonName}</Button>);
     } else {
@@ -78,34 +70,32 @@ function getStepContent(step) {
 }
 
 export default function VerticalLinearStepper(props) {
-  //<Stepper activePage={activePage} pages={pages} />
+  // <Stepper activePage={activePage} pages={pages} />
   const classes = useStyles();
   // eslint-disable-next-line
   const [activeStep, setActiveStep] = React.useState(props.pages[props.activePage].pageNumber);
   
 
-  function navigatePage(pageName){
-    if(props.pages[pageName].completed){
-      if (!props.pages[pageName].visited) {
+  function navigatePage(pageID){
+    //if(props.pages[pageID].completed){
+      if (!props.pages[pageID].visited) {
         props.setPages(prevPages => {
           let copy = {...prevPages};
-          copy[pageName].visited = true;
+          copy[pageID].visited = true;
           return copy;
         });
       }
-      props.setActivePage(pageName)
-    }
+      props.setActivePage(pageID)
+    //}
   }
 
   const steps = getSteps(props.pages, navigatePage);
   return (
     <div className={classes.root}>
       <Box mt={3} ml={1}>
-      <ProgressBar completed={4} max={10} size={20}/>           {/*store pages completed and max pages*/}
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => (
-            <Step
-              key={index}
+            <Step key={label}
               classes={{
                 root: classes.step,
                 completed: classes.completed,
@@ -124,7 +114,7 @@ export default function VerticalLinearStepper(props) {
                 {label}
               </StepLabel>
               <StepContent>
-                <Typography>{getStepContent(index)}</Typography>
+                <Typography>{}</Typography>
                 <div className={classes.actionsContainer}>
                   <div></div>
                 </div>
