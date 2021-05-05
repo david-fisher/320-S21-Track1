@@ -83,7 +83,7 @@ function Radar() {
     const [value, setValue] = React.useState(0); 
    
 
-    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + version_id;
+    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + 1;
 
     const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
         data: null,
@@ -187,21 +187,6 @@ function Radar() {
     
     return (
         <div>
-            <Grid container direction="row" justify="center" alignItems="center">
-                <Box mt={5}>
-                    <TextTypography variant="h4" align="center" gutterBottom>
-                        Coverage of Issues
-                    </TextTypography>
-                </Box>
-            </Grid>
-            <Grid container direction="row" justify="space-between">
-                <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-                    <Button variant="contained" disableElevation >Back</Button>
-                </Grid>
-                <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-                    <Button variant="contained" disableElevation color="primary">Next</Button>
-                </Grid>
-            </Grid>
             <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
                 <StyledTab label="Radar View" {...a11yProps(0)} />
                 <StyledTab label="List View" {...a11yProps(1)} />

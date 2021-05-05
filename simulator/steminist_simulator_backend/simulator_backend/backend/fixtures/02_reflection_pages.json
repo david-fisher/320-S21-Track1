@@ -69,10 +69,23 @@
         "page_title": "FINAL REFLECTION",
         "version_id": 1,
         "body": "Please respond to each and every single question.",
-        "next_page": 11,
+        "next_page": 10,
         "x_coordinate": 0,
         "y_coordinate": 0
       }
+  },
+  {
+	  "model": "backend.Page",
+	  "pk": 10,
+	  "fields": {
+		  "page_type": "FEEDBACK",
+		  "page_title": "Feedback Page",
+		  "version_id": 1,
+		  "body": "This is the feedback page.",
+		  "next_page": 11,
+		  "x_coordinate": 0,
+		  "y_coordinate": 0
+	  }
   },
   {
 	  "model": "backend.Page",

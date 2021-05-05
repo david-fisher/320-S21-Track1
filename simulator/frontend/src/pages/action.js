@@ -9,6 +9,7 @@ import Introduction from "./introduction.js";
 import ProjectAssignment from "./projectAssignment.js";
 import Reflection from "./reflection.js";
 import Conclusion from "./conclusion.js";
+import Feedback from "./feedback.js";
 import GatheredInformation from "./gatheredInformation.js";
 import Stakeholders from "./stakeholders.js";
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -150,6 +151,8 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
         next_html = (<Action numConversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "CONCLUSION"){
         next_html = (<Conclusion prevPageID={activePage}/>);
+      } else if (npage[0].type === "FEEDBACK"){
+        next_html = (<Feedback prevPageID={activePage} nextPageID={npage[0].next}/>);
       } else {
         next_html = (<Reflection activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
       }
