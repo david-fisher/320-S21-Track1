@@ -32,17 +32,21 @@ Since the react apps' source code is mounted as a volume on the respective conta
 
 # Production
  #### Preamble:
- Running the bundled software in a production environment requires a custom Apache+Shibboleth image that is used as a base image for the container that runs all different facets of the software. For the demo, the base image will be pulled from Dockerhub where it resides inside **_ikhurana/kbtesting_** repository under the name **_apache_**. **_Team Kubernators_** will provide all the files necessary for the creation of the base image and outline steps that need to performed to successfully use this base image to run the container in the production environment.
+ Running the bundled software in a production environment requires a custom Apache+Shibboleth image that is used as a base image for the container that runs all different facets of the software. For the purpose of Demo or Die, the base image will be pulled from Dockerhub where it resides inside **_ikhurana/kbtesting_** repository under the name **_apache_**. **_Team Kubernators_** will provide all the files necessary for the creation of the base image as well as outline steps that need to be performed to successfully use this base image to run the container in the production environment. This guide assumes that you have successfully installed and configured Apache and Shibboleth on your production server.
  
  #### Steps:
- Choose a directory to clone the repo
- Clone the Git repository https://github.com/david-fisher/320-S21-Track1. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
-Create a directory named "configuration" under the /EthiSim directory.
-Copy the directories "conf" and "conf.d" from the original path /etc/httpd to the /EthiSim/configuration directory.
-Copy the file "hosts" from the original path /etc/hosts to the /EthiSim/configuration Directory.
-Copy the file "security:shibboleth.repo" from the original path /etc/yum.repos.d to the  /EthiSim/configuration directory.
-Copy the directory "shibboleth" from the original path /etc/shibboleth to the /EthiSim/configuration directory.
-(Optional) Create a file named .htaccess in order to override the Apache routing with React routing. If the user does not want to override the Apache routing, then lines 10 and 11  (those that start with "COPY /.htaccess") from Dockerfile should be commented out with a "#" at the beginning of those lines.
+1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1 to your local machine.
+2. Copy the Dockerfile and the docker-compose.yml file from the root directory of the project to any directory on your production server. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
+
+##### The following steps need to performed on the production server
+3. Create a directory named "configuration" under the /EthiSim directory.
+4. Copy the directories "conf" and "conf.d" from the original path /etc/httpd to the /EthiSim/configuration directory.
+5. Copy the file "hosts" from the original path /etc/hosts to the /EthiSim/configuration Directory.
+6. Copy the file "security:shibboleth.repo" from the original path /etc/yum.repos.d to the  /EthiSim/configuration directory.
+7. Copy the directory "shibboleth" from the original path /etc/shibboleth to the /EthiSim/configuration directory.
+8. (Optional) Create a file named .htaccess in order to override the Apache routing with React routing. If the user does not want to override the Apache routing, then lines 10 and 11  (those that start with "COPY /.htaccess") in the Dockerfile present in the /EthiSim directory should be commented out.
+
+##### The following steps give a quick rundown on how to create the base image. For the purpose of Demo or Die, Team Kubernators will be using the base image stored on Dockerhub at the location mentioned earlier.v 
 Run the command "docker build -t <repository_name>:<image_name> -f Dockerfile-base." where <repository_name> and <image_name> should be changed to the user's desired repository name and image name respectively. This command will build the Docker Image.
 Run the command "docker push <repository_name>:<image_name>" where <repository_name> and <image_name> should be identical to those in Step 9. This command will push the image to Docker Hub.
 Open the Dockerfile and replace the first line with "FROM <repository_name>:<image_name>" where <repository_name> and <image_name> should be identical to those in Steps 9 and 10.
