@@ -11,6 +11,7 @@ import { BACK_URL, STUDENT_ID, SCENARIO_ID }from "../constants/config";
 import axios from 'axios';
 import { ScenariosContext } from "../Nav";
 import get from '../universalHTTPRequests/get';
+import post from '../universalHTTPRequests/post';
 import React,{useEffect,useState} from "react";
 import TextField from '@material-ui/core/TextField';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -64,8 +65,8 @@ function Reflection({ pages, setPages, activePage, setActivePage,
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
   // MAKE API CALL
-  let pageId = activePage
-  const endpointGet = '/scenarios/reflection?versionId='+version_id+'&pageId='+(activePage) 
+  let pageId = activePage;
+  const endpointGet = '/scenarios/reflection/response?versionId='+version_id+'&pageId='+(activePage)+'&userId=' + STUDENT_ID;
 
   const [reflection, setIntro] = useState({     //temporary array of reflection
     prompts: [],
@@ -101,8 +102,23 @@ function Reflection({ pages, setPages, activePage, setActivePage,
     }
     get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
   };
+  
+  const endpointPost = '/scenarios/reflection?versionId=' + version_id + '&pageId=' + activePage + '&userId=' + STUDENT_ID;
+  
+  let postData = () => {
+    function onSuccess(response) {
+      console.log(response);
+    }
 
+    function onFailure() {
+      console.log('Error')
+    }
+    let data = {
+      body: reflection.prompts
+    }
 
+    post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
+  }
   useEffect(getData, [shouldFetch]);
 
   if (fetchScenariosResponse.error) {
@@ -123,6 +139,18 @@ function Reflection({ pages, setPages, activePage, setActivePage,
           <RefreshIcon className={classes.iconRefreshLarge} />
         </Button>
       </div>)
+  }
+
+  let updateResponse = (e, prompt_id) => {  
+    setIntro( prev => {
+    for(let i = 0; i < prev.prompts.length; ++i){ 
+      if(prev.prompts[i].prompt_id === prompt_id){
+        prev.prompts[i].response = e.target.value;
+        break;
+      }
+    }
+    return prev;
+    })
   }
 
   return (
@@ -172,8 +200,9 @@ function Reflection({ pages, setPages, activePage, setActivePage,
                         id="outlined-multiline-static"
                         label="Answer"
                         multiline
+                        defaultValue={prompt.response}
                         variant="outlined"
-
+                        onChange={(e) => {updateResponse(e,prompt.prompt_id)}}
                 />
             </Box>
           ))}
@@ -182,7 +211,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
               variant="contained"
               color='primary'
               justify='right'
-              // onClick={} TODO ---> add post function
+              onClick={postData} 
             >
               Save answers
             </Button> 
@@ -216,6 +245,6 @@ function Reflection({ pages, setPages, activePage, setActivePage,
       </Grid>
     </div>
   );
-}
+            }
 
 export default Reflection;

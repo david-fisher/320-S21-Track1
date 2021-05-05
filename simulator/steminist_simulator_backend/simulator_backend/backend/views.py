@@ -416,7 +416,7 @@ def reflectionResponse(request):
             except md.Version.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                       'message': 'No version found with the given versionId'})
-            except md.ActionPage.DoesNotExist or md.Page.DoesNotExist:
+            except md.Page.DoesNotExist:
                 return JsonResponse(status=404, data={'status': 404,
                                                       'message': 'No Action page found based on given page Id'})
             except md.Session.DoesNotExist:
