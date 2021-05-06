@@ -193,7 +193,8 @@ export default function Home() {
           is_finished: data.is_finished,
           date: data.date_created,
           version_id: data.version_id,
-          first_page: data.first_page
+          first_page: data.first_page, 
+          course: data.course_name
         }
       ));
       complete = complete.map((data) => (
@@ -201,9 +202,10 @@ export default function Home() {
           title: data.name,
           num_conversations: data.num_conversation,
           is_finished: data.is_finished,
-          date: data.date_created,
+          date: data.last_date_modified,
           version_id: data.version_id,
-          first_page: data.first_page
+          first_page: data.first_page,
+          course: data.course_name
         }
       ));
       let scen = {
@@ -301,9 +303,9 @@ export default function Home() {
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
+                  finished={false}
                   title={scenario.title}
-                  // course={scenario.course}
-                  course  = 'PLACEHOLDER'
+                  course = {scenario.course}
                   date={scenario.date}
                 />
                 <Button
@@ -341,9 +343,10 @@ export default function Home() {
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
+                  finished={true}
                   title={scenario.title}
-                  // course={scenario.course}
-                  // date={scenario.date}
+                  course={scenario.course}
+                  date={scenario.date}
                 />
                 <Button
                     component={Link}
@@ -354,7 +357,7 @@ export default function Home() {
                     className={classes.button}
                     variant="contained"
                     color="primary"
-                >Select Scenario</Button>
+                >Review Scenario</Button>
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
