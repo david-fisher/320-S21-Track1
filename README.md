@@ -58,7 +58,18 @@ Since the react apps' source code is mounted as a volume on the respective conta
 
 After performing all of the steps mentioned above, type **_docker-compose up -d_** on your production server from the **_/EthiSim_** directory to run the bundled software.
 
- 
+# CI/CD
+#### Preamble
+This github repository has a continuous integration workflow configured in the form of a github action. This workflow builds the software and deploys it on a production enviroment to allow for developers to see how their changes will look when the entire application is up and running. This workflow runs automatically when there is a merge to the main branch of this repository, but it can also be triggered manually from the actions tab. The workflow is contained in the .github folder at the root of this repo.  The workflow performs the following steps when it is run:
+
+1. Check to see if any instance of this workflow is running, if yes wait for already running workflows to finish
+2. Build docker images for each component of the software (simulator frontend/backend, editor frontend/backend, and landing-page)
+3. Push those built images to dockerhub to the repository dacollins/ethisim
+4. Log in to the production server
+5. Stop the currently running application and remove its container
+6. Pull newly built images from dacollins/ethisim
+7. Rebuild the application with the updated images
+
 #### Note
 ##### This is the file structure for this track
 
