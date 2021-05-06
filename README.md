@@ -60,7 +60,7 @@ After performing all of the steps mentioned above, type **_docker-compose up -d_
 
 # CI/CD
 #### Preamble
-This github repository has a continuous integration worklow configured in the form of a github action. This workflow builds the software and deploys it on a production enviroment to allow for developers to see how their changes will look when the entire application is up and running. This workflow runs automatically when there is a merge to the main branch of this repository, but it can also be triggered manually from the actions tab. The worklow is contained in the .github folder at the root of this repo.  The worklflow performs the following steps when it is run:
+This github repository has a continuous integration workflow configured in the form of a github action. This workflow builds the software and deploys it on a production enviroment to allow for developers to see how their changes will look when the entire application is up and running. This workflow runs automatically when there is a merge to the main branch of this repository, but it can also be triggered manually from the actions tab. The workflow is contained in the .github folder at the root of this repo.  The workflow performs the following steps when it is run:
 
 1. Check to see if any instance of this workflow is running, if yes wait for already running workflows to finish
 2. Build docker images for each component of the software (simulator frontend/backend, editor frontend/backend, and landing-page)
