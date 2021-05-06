@@ -19,22 +19,29 @@ const questions = [{text: "We would appreciate receiving any comments that you h
 function Conclusion({pages, setPages, prevPageID, version_id, activePage, setActivePage}) {
   const [body,setBody] = useState('');
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-  useEffect(() => {
-    // backend call
-    axios({
-      method: 'get',
-      url: BACK_URL + '/scenarios/conclusion',
-      headers: {
-        scenarioID: scenarios.currentScenarioID,
-        studentID: STUDENT_ID,
-      }
-    }).then(response => {
-      setBody(text => response.data[0].body_text);
-    }).catch((err)=>{
-      console.log("err",err);
-      //alert(err);
-    });
-  }, [scenarios])
+  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  const [shouldFetch, setShouldFetch] = useState(0);
+
+  // useEffect(() => {
+  //   // backend call
+  //   axios({
+  //     method: 'get',
+  //     url: BACK_URL + '/scenarios/conclusion',
+  //     headers: {
+  //       scenarioID: scenarios.currentScenarioID,
+  //       studentID: STUDENT_ID,
+  //     }
+  //   }).then(response => {
+  //     setBody(text => response.data[0].body_text);
+  //   }).catch((err)=>{
+  //     console.log("err",err);
+  //     //alert(err);
+  //   });
+  // }, [scenarios])
 
   const endpointSess = '/scenarios/session/end?userId='+STUDENT_ID+'&versionId='+version_id
 

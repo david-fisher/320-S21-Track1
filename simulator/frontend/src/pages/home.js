@@ -303,6 +303,7 @@ export default function Home() {
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
+                  finished={false}
                   title={scenario.title}
                   course = {scenario.course}
                   date={scenario.date}
@@ -342,6 +343,7 @@ export default function Home() {
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
+                  finished={true}
                   title={scenario.title}
                   course={scenario.course}
                   date={scenario.date}
@@ -355,7 +357,7 @@ export default function Home() {
                     className={classes.button}
                     variant="contained"
                     color="primary"
-                >Select Scenario</Button>
+                >Review Scenario</Button>
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
