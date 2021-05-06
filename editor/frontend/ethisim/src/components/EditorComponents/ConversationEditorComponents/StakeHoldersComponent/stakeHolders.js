@@ -12,9 +12,10 @@ StakeHolderFields.propTypes = {
     stakeHolders: PropTypes.any,
     setStakeHolders: PropTypes.any,
     scenario: PropTypes.number,
+    version: PropTypes.number,
 };
 
-export default function StakeHolderFields({ scenario }) {
+export default function StakeHolderFields({ scenario, version }) {
     const [didGetSHs, setDidGetSHs] = useState(false);
 
     /*
@@ -135,6 +136,7 @@ export default function StakeHolderFields({ scenario }) {
 
         var data = JSON.stringify({
             SCENARIO: scenario,
+            VERSION: 1,
         });
 
         var config = {
@@ -167,21 +169,19 @@ export default function StakeHolderFields({ scenario }) {
     const saveStakeHolders = (e) => {
         var data = [...stakeHolders];
 
-        for(var i = 0; i < data.length; i++){
+        for (var i = 0; i < data.length; i++) {
             var form = new FormData();
-            var id; 
+            var id;
             var item = data[i];
-            for(var key in item){
-                if(key === 'STAKEHOLDER'){
+            for (var key in item) {
+                if (key === 'STAKEHOLDER') {
                     id = item[key];
                     form.append(key, item[key]);
-                }
-                else if(key === 'PHOTO'){
-                    if(item[key] instanceof File){
+                } else if (key === 'PHOTO') {
+                    if (item[key] instanceof File) {
                         form.append(key, item[key]);
                     }
-                }
-                else{
+                } else {
                     form.append(key, item[key]);
                 }
             }
@@ -193,10 +193,12 @@ export default function StakeHolderFields({ scenario }) {
                 },
                 data: form,
             };
-    
+
             axios(config)
                 .then(function (response) {
-                    setSuccessBannerMessage('Successfully saved the stakeholders!');
+                    setSuccessBannerMessage(
+                        'Successfully saved the stakeholders!'
+                    );
                     setSuccessBannerFade(true);
                 })
                 .catch(function (error) {
@@ -292,6 +294,7 @@ export default function StakeHolderFields({ scenario }) {
                         bio={stakeHolder.DESCRIPTION}
                         photo={stakeHolder.PHOTO}
                         mainConvo={stakeHolder.INTRODUCTION}
+                        version={stakeHolder.VERSION}
                         stakeHolders={stakeHolders}
                         setStakeHolders={setStakeHolders}
                     />

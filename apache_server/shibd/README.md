@@ -45,11 +45,23 @@ Shibboleth is an open-source, single sign-on login system provided under the Apa
 
 	The output of this command should be: **Syntax OK**
 	
-# Important Shibboleth Files (should be located in /etc/shibboleth)
-*shibboleth2.xml
+# Configuring Shibboleth
+
+These files should be received from the identity provider (IdP), and present in /etc/shibboleth/.
+
+* shibboleth2.xml
 	* Most of the native service provider's configuration options are found here
+	* This is the main starting point for all changes and tasks excluding altering content rules on Apache
 	* The primary configuration file consists of an `<SPConfig>` element that contains one each of several other top-level elements, each representing a category of SP configuration, and optional extensions.
-*attribute-map.xml
-*sp-key.pem
-*sp-cert.pem
-*sp-metadata.xml
+* attribute-map.xml
+	* Maps incoming SAML Attributes and/or NameID Formats into local variable/header names within the SP
+	* Tells the Shibboleth software which attribute types exists in a federation and how to decode and present that information to applications
+* sp-key.pem, sp-cert.pem
+	* The SP uses a public/private key pair to sign its messages sent to the IdP, and to decode messages sent to it from the IdP. The IdP uses its own public/private key pair to sign its messages sent to the SP, so the SP can verify the message is genuine.
+	* In each case, SPs and IdPs need to be able to verify the certificate offered by the other. This is managed through the exchange of metadata through the federation. The certificates of all the IdPs and SPs in the federation are collected together and signed by the federation's key.
+	* The standard SP install creates a suitable key and self-signed certificate (in the same directory as shibboleth2.xml) called sp-key.pem and sp-cert.pem and configures shibboleth2.xml to use them.
+* sp-metadata.xml
+	* With regard to Shibboleth, metadata refers to configuration data used to provision an SP or IdP to communicate with each other
+	* sp-metadata.xml contains metadata about an SP, which you will give to an IdP.
+
+To resolve the issue of being unable to use Shibboleth on different ports, you should set `UseCanonicalName On` while configuring Apache, in `httpd.conf`.

@@ -20,6 +20,7 @@ urlpatterns = [
     path('scenarios/conversation/had', views.conversationHad, name='conversationHad'),
     path('scenarios/action/prompt', views.actionPrompt, name='scenarioActionPrompt'),
     path('scenarios/action', views.action, name='scenarioAction'),
-    path('scenarios/radar', views.radarPlot, name='radarPlot')
+    path('scenarios/radar', views.radarPlot, name='radarPlot'),
+    path('scenarios/publish', views.publishScenario, name='publishScenario')
 ]
 

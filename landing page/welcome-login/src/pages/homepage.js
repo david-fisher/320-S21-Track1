@@ -97,8 +97,8 @@ function StudentAccess() {
         <div>
             <Container className={classes.studentButtonsContainer}>
                 <Button
-                    component={Link}
-                    to={'/wait'}
+                    //component={Link}
+                    //to={'/wait'}
                     className={classes.accessButton}
                     variant="contained"
                     color="primary"
@@ -108,8 +108,8 @@ function StudentAccess() {
                     </Typography>
                 </Button>
                 <Button
-                    component={Link}
-                    to={'/wait'}
+                    //component={Link}
+                    //to={'/wait'}
                     className={classes.accessButton}
                     variant="contained"
                     color="primary"
@@ -121,7 +121,7 @@ function StudentAccess() {
             </Container>
             <Container className={classes.studentButtonsContainer}>
                 <Button
-                    onClick={() => window.location.href = DOMAIN + DOMAIN + ((process.env.NODE_ENV === 'production') ? '/simulator' : ':3001')}
+                    //onClick={() => window.location.href = DOMAIN + DOMAIN + ((process.env.NODE_ENV === 'production') ? '/simulator' : ':3001')}
                     className={classes.guestButton}
                     variant="contained"
                     color="gray"
