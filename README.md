@@ -46,35 +46,17 @@ Since the react apps' source code is mounted as a volume on the respective conta
 7. Copy the directory "shibboleth" from the original path /etc/shibboleth to the /EthiSim/configuration directory.
 8. (Optional) Create a file named .htaccess in order to override the Apache routing with React routing. If the user does not want to override the Apache routing, then lines 10 and 11  (those that start with "COPY /.htaccess") in the Dockerfile present in the /EthiSim directory should be commented out.
 
-##### The following steps give a quick rundown on how to create the base image. For the purpose of Demo or Die, Team Kubernators will be using the base image stored on Dockerhub at the location mentioned earlier.v 
-Run the command "docker build -t <repository_name>:<image_name> -f Dockerfile-base." where <repository_name> and <image_name> should be changed to the user's desired repository name and image name respectively. This command will build the Docker Image.
-Run the command "docker push <repository_name>:<image_name>" where <repository_name> and <image_name> should be identical to those in Step 9. This command will push the image to Docker Hub.
-Open the Dockerfile and replace the first line with "FROM <repository_name>:<image_name>" where <repository_name> and <image_name> should be identical to those in Steps 9 and 10.
-Create a directory named "ssl" under the /EthiSim directory.
-Copy all of the necessary SSL certificates to the /EthiSim/ssl directory.
-Open the "Dockerfile" file and update the source for the COPY commands in lines 5, 6, and 7 with the names of the SSL certificates placed in the /EthiSim/ssl directory at Step 13.
-The EthiSim software will now be up and running at the url specified in the docker-compose-production.yml file
+##### The following steps give a quick rundown on how to create the base image. These steps also need to be performed on the server. For the purpose of Demo or Die, _Team Kubernators_ will be using the base image stored on Dockerhub at the location mentioned earlier.
 
+1. Run the command "**_docker build -t <repository_name>:<image_name> -f Dockerfile-base ._**" where **_<repository_name>_** and **_<image_name>_** should be changed to the user's desired repository name and image name respectively. This command will build the Docker Image.
+2. Run the command "**_docker push <repository_name>:<image_name>_**" where _**<repository_name>**_ and **_<image_name>_** should be identical to those in the step above. This command will push the image to Docker Hub.
+3. Open the Dockerfile and replace the first line with "**_FROM <repository_name>:<image_name>_**" where **_<repository_name>_** and **_<image_name>_** should be identical to those in the above steps. 
+4. Create a directory named "**_ssl_**" under the _**/EthiSim**_ directory.
+5. Copy all of the necessary SSL certificates to the _**/EthiSim/ssl**_ directory.
+6. Open the **_Dockerfile_** file and update the source for the **COPY** commands in lines 5, 6, and 7 with the names of the SSL certificates placed in the _**/EthiSim/ssl**_ directory.
+7. Open the **_docker-compose.yml_** file located in the **_/ethiSim_** directory and update the environment variables that being passed to the container with the appropriate credentials.
 
-
-In order to edit the dockerfile 
-If the default base image repo is not used, the FROM command should be updated with the base image repo to use.
-Open the dockerfile of the project container
-Add ssl protocol keys for https
-Edit .htaccess file
-.env file
-Replace parameters with your particular database
-
-
-
-
-In order to edit the dockerfile 
-If the default base image repo is not used, the FROM command should be updated with the base image repo to use.
-Open the dockerfile of the project container
-Add ssl protocol keys for https
-Edit .htaccess file
-.env file
-Replace parameters with your particular database
+After performing all of the steps mentioned above, type **_docker-compose up -d_** on your production server from the **_/EthiSim_** directory to run the bundled software.
 
  
 #### Note
