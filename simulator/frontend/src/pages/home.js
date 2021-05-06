@@ -327,11 +327,11 @@ export default function Home() {
               </Paper>
             </Grid>
           ))}
-          <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
+          {/* <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
             <Box m={2} pt={3}>
               <CodeButton />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>

@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 function Reflection({ pages, setPages, activePage, setActivePage,
   content_url, res_url,version_id, nextPageID, prevPageID , title}) {
 
-
   function goToPage(pageID) {
     if (pages[activePage].pageNumber === Object.keys(pages).length){
       console.log("This is the last page!");
@@ -59,6 +58,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
 
   const classes = useStyles();
 
+  const [savedAnswers, setSavedAnswers] = React.useState(false);
   const [bodyText, setBodyText] = React.useState('');
   const [prompts, setPrompts] = React.useState([]);
   const [promptResponses, setPromptResponses] = React.useState({});
@@ -92,6 +92,9 @@ function Reflection({ pages, setPages, activePage, setActivePage,
         prompts: ppage,
         message: response.data.message
       }
+      if(pp.prompts[0].response.length > 1){
+        setSavedAnswers(true);
+      }
       setIntro(pp);
       debugger;
     }
@@ -118,6 +121,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
     }
 
     post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
+    setSavedAnswers((cur) => true);
   }
   useEffect(getData, [shouldFetch]);
 
@@ -175,7 +179,7 @@ function Reflection({ pages, setPages, activePage, setActivePage,
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
           <Button
             variant="contained"
-            // disabled // Add to disable and enable buttons
+            disabled={!savedAnswers}
             disableElevation
             color="primary"
             onClick={()=>goToPage(nextPageID)}
