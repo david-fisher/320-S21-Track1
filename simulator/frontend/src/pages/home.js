@@ -193,7 +193,8 @@ export default function Home() {
           is_finished: data.is_finished,
           date: data.date_created,
           version_id: data.version_id,
-          first_page: data.first_page
+          first_page: data.first_page, 
+          course: data.course_name
         }
       ));
       complete = complete.map((data) => (
@@ -201,9 +202,10 @@ export default function Home() {
           title: data.name,
           num_conversations: data.num_conversation,
           is_finished: data.is_finished,
-          date: data.date_created,
+          date: data.last_date_modified,
           version_id: data.version_id,
-          first_page: data.first_page
+          first_page: data.first_page,
+          course: data.course_name
         }
       ));
       let scen = {
@@ -302,8 +304,7 @@ export default function Home() {
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   title={scenario.title}
-                  // course={scenario.course}
-                  course  = 'PLACEHOLDER'
+                  course = {scenario.course}
                   date={scenario.date}
                 />
                 <Button
@@ -342,8 +343,8 @@ export default function Home() {
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   title={scenario.title}
-                  // course={scenario.course}
-                  // date={scenario.date}
+                  course={scenario.course}
+                  date={scenario.date}
                 />
                 <Button
                     component={Link}
