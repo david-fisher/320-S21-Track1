@@ -5,7 +5,7 @@
         "fields": {
             "page_type": "STAKEHOLDERPAGE",
             "page_title": "Stakeholder Page",
-            "version_id": 1,
+            "version_id": 1000,
             "body": "",
             "next_page": 7,
             "x_coordinate": 0,
@@ -16,7 +16,7 @@
         "model": "backend.Stakeholder",
         "pk": 1,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Justin",
             "description": "Your supervisor assigns you to the project and convinces you to work on it by telling you that the project will benefit your career, you will receive a bonus, and you will be working on a revolutionary project.",
@@ -29,7 +29,7 @@
         "model": "backend.Stakeholder",
         "pk": 4,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Jay",
             "description": "Your parent shows you both aspects of working on this project ie. if it goes well, it’ll benefit your career and if it goes badly it’ll impact your career.",
@@ -42,7 +42,7 @@
         "model": "backend.Stakeholder",
         "pk": 2,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Nora",
             "description": "Marketing team for the company writes several articles about how the new product will lead to increase in public safety, decrease in traffic and accidents, increase in accessibility to those who cannot drive.",
@@ -55,7 +55,7 @@
         "model": "backend.Stakeholder",
         "pk": 3,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Maria Rachel",
             "description": "Draft up documents freeing company and employee from responsibility if a death occurs either because of a flaw in the algorithm or if the car has to make a split-second decision between saving passenger or pedestrian (in fine print of terms and conditions when buying the car)",
@@ -68,7 +68,7 @@
         "model": "backend.Stakeholder",
         "pk": 5,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Allie",
             "description": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
@@ -81,7 +81,7 @@
         "model": "backend.Stakeholder",
         "pk": 6,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Daphne",
             "description": "This optimistic ML specialist tells you how revolutionary this level 4 autonomous car technology will be and the immense benefit to the public.",
@@ -94,7 +94,7 @@
         "model": "backend.Stakeholder",
         "pk": 7,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Eilat",
             "description": "This gung-ho employee is all for the project and praises the fact that it’ll lead to public safety and convenience. He tells you that you are working on a revolutionary project that will lead to benefits to not only you but also the company",
@@ -107,7 +107,7 @@
         "model": "backend.Stakeholder",
         "pk": 8,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Chris",
             "description": "This maverick employee talks about how the failure in this project would ruin your career and the company’s image. Small flaws could have terrible consequences, even killing either the pedestrian or passenger in the car.",
@@ -120,7 +120,7 @@
         "model": "backend.Stakeholder",
         "pk": 9,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Jane",
             "description": "This consumer is very excited about this fascinating project and its contributions to public safety and convenience and the cool technology that it comes with.",
@@ -133,7 +133,7 @@
         "model": "backend.Stakeholder",
         "pk": 10,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "Anjana",
             "description": "This sceptical consumer mentions how even a small flaw could lead to catastrophic flaws and maybe even death. They’ve heard the product is being created in 3 years and don’t know if that time frame is good enough for a project that has this much advanced technology.",
@@ -146,7 +146,7 @@
         "model": "backend.Stakeholder",
         "pk": 11,
         "fields": {
-            "version_id": 1,
+            "version_id": 1000,
             "scenario_id": 1,
             "name": "James",
             "description": "This “paranoid” consumer is afraid to have a vehicle like this out in the public. The car has to make split second decisions to save either the passenger or the pedestrian crossing the street illegally. And if someone is killed, nobody will be held accountable. This consumer will not only never sit in a car like this, they hope that cars like this are never created.",

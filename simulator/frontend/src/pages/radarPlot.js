@@ -75,15 +75,14 @@ const StyledTabs = withStyles({
     },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
-function Radar() {
+function Radar({version_id}) {
     const chartContainer = useRef(null);
     const [chartInstance, setChartInstance] = useState(null);
-    const [version_id, set_version_id] = useState(0);
     const [coverage, setCoverage] = useState([]);
     const [value, setValue] = React.useState(0); 
    
 
-    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + 1;
+    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + version_id;
 
     const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
         data: null,
