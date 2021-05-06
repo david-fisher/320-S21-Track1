@@ -99,7 +99,7 @@ const StyledTabs = withStyles({
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
-function Stakeholders({ pages, setPages, activePage, numConversations, prevPageID, nextPageID, setActivePage }) {
+function Stakeholders({ pages, session_id, setPages, version_id, activePage, numConversations, prevPageID, nextPageID, setActivePage }) {
   const [stakeholders, setStakeholders] = React.useState([])
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [conversationLimit, setConversationLimit] = React.useState(numConversations);
@@ -164,7 +164,7 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
   const stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
   const stakeholdersSelectedGrid = getStakeholdersGrid(stakeholdersSelected, true)
 
-  const endpointGet = '/scenarios/stakeholder/page?versionId=' + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID;
+  const endpointGet = '/scenarios/stakeholder/page?versionId=' + version_id + "&scenarioId=" + version_id;
 
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
@@ -195,7 +195,7 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
   useEffect(getData, [shouldFetch]);
 
   let checkStakeholderVisited = () => {
-    let endpoint = "/scenarios/stakeholder/had?userId=" + STUDENT_ID + "&versionId=" + SCENARIO_ID;
+    let endpoint = "/scenarios/stakeholder/had?userId=" + STUDENT_ID + "&versionId=" + version_id;
 
     function onSuccess(response) {
       let holders = response.data.result;
@@ -233,7 +233,7 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
 
   function getStakeholderCards(id, name, job, description, photo, styles) {
 
-    const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = 'gatheredInformation';
+    const PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS = prevPageID;
     function toggleModal(id, toggle) {
       setModalOpenToggles(prev => {
         let newToggles = { ...prev };
@@ -509,7 +509,7 @@ function Stakeholders({ pages, setPages, activePage, numConversations, prevPageI
         </div>
       }
       {!showStakeholders &&
-        <Conversation stakeholder={currentStakeholder} showStakeholders={showStakeholders} setShowStakeholders={setShowStakeholders} />
+        <Conversation session={session_id} stakeholder={currentStakeholder} showStakeholders={showStakeholders} version_id={version_id} setShowStakeholders={setShowStakeholders} />
       }
     </>
   );

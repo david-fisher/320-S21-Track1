@@ -19,29 +19,33 @@ import {BACK_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
 import { useParams } from 'react-router-dom';
 import LoadingSpinner from './components/LoadingSpinner';
 import get from '../universalHTTPRequests/get';
+import post from '../universalHTTPRequests/post';
 
 
 export const GatheredInfoContext = createContext();
 
 function SimulationWindow(props) {
   const location = useLocation();
-  //console.log(props.location.data)
-  // let scenario_id = location.pathname.split('/').pop();
+
+
+  let pathArray = location.pathname.split( '/' );
   const scenario_id = props.location.data
       ? props.location.data.version_id
-      : location.pathname.split('/').pop();
+      : pathArray[pathArray.length - 2];
   const first_page = props.location.data
       ? props.location.data.first_page
-      : location.pathname.split('/').pop();
+      : pathArray[pathArray.length - 1];
   const version_id = scenario_id;
 
   
   const [activePage, setActivePage] = useState(first_page);
   let numConversations = 0;
+  let sessionID = 1;
   let initial_pages = {};
-  initial_pages[first_page] = { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction />) }
+  initial_pages[first_page] = { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction version_id={version_id}/>) }
   const [pages, setPages] = useState(initial_pages);
 
+  const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+version_id
   const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage
   const endpointGetMeta = '/scenarios?userId=' + STUDENT_ID
   const infoIdsState = useState([]);
@@ -81,16 +85,19 @@ function SimulationWindow(props) {
 
    //Get next page
    let getData = () => {
+    function startSess(response) {
+      sessionID = response.data.result.sessionId;
+    }
     function onSuccess(response) {
       let scen = response.data.result.filter(
-        (result) => result.version_id === version_id
+        (result) => result.version_id === scenario_id
       );
       numConversations = scen[0].num_conversation;
       console.log(scen[0].first_page);
     }
     function onSuccess1(response) {
         let next = response.data.result[0].next_page;
-        let endpoint = "/scenarios/task?versionId=1&pageId=" + next;
+        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
         get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2)
     }
     function onSuccess2(response) {
@@ -105,19 +112,19 @@ function SimulationWindow(props) {
       ));
       let next_html = (<Introduction activePage={npage[0].id}/>);
       if(npage[0].type === "PLAIN"){
-        next_html = (<ProjectAssignment prevPageID={activePage}/>);
+        next_html = (<ProjectAssignment version_id={scenario_id} prevPageID={activePage}/>);
       } else if (npage[0].type === "REFLECTION"){
-        next_html = (<Reflection content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Reflection version_id={scenario_id} content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
+        next_html = (<Stakeholders session_id={sessionID} version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
       } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action numConversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Action sessionId={sessionID} conversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "CONCLUSION"){
-        next_html = (<Conclusion prevPageID={activePage}/>);
+        next_html = (<Conclusion version_id={scenario_id} prevPageID={activePage}/>);
       } else if (npage[0].type === "FEEDBACK"){
-        next_html = (<Feedback prevPageID={activePage} nextPageID={npage[0].next}/>);
+        next_html = (<Feedback version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next}/>);
       } else {
-        next_html = (<Reflection activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Reflection version_id={scenario_id} activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
       }
       let len = Object.keys(pages).length
       let next_page = {
@@ -134,7 +141,7 @@ function SimulationWindow(props) {
       });
       if(npage[0].next !== undefined){
         let next = npage[0].next;
-        let endpoint = "/scenarios/task?versionId=1&pageId=" + next;
+        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
         get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2);
       }
     }
@@ -142,6 +149,7 @@ function SimulationWindow(props) {
       //setErrorBannerMessage('Failed to get scenarios! Please try again.');
       //setErrorBannerFade(true);
     }
+    post(setFetchScenariosResponse, (endpointSess), onFailure, startSess);
     get(setFetchScenariosResponse, (endpointGetMeta), onFailure, onSuccess);
     get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess1);
   };

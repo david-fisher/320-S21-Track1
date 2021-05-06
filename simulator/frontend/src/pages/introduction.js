@@ -40,11 +40,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Introduction({ pages, setPages, activePage, setActivePage,version_id,first_page}) {
+function Introduction({ pages, setPages, activePage, setActivePage, version_id,first_page}) {
 
   const [gatheredInfo, setGatheredInfo] = React.useContext(GatheredInfoContext);
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-  
   
   const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage // Version hardcoded
 

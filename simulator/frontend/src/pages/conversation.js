@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
+function Conversation({ session, showStakeholders, setShowStakeholders, stakeholder, version_id}) {
     function goToStakeholders() {
         setShowStakeholders(true);
     }
@@ -49,7 +49,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     const [selectedConversation, setSelectedConversation] = React.useState(-1);
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
-    const endpointGet = "/scenarios/conversation/page?versionId=" + SCENARIO_ID + "&scenarioId="  + SCENARIO_ID + "&stakeholderId=" + stakeholder.id;
+    const endpointGet = "/scenarios/conversation/page?versionId=" + version_id + "&scenarioId="  + version_id + "&stakeholderId=" + stakeholder.id;
 
     const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
@@ -73,7 +73,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
     };
 
     let checkQuestionAnswered = () => {
-      let endpoint = "/scenarios/conversation/had?versionId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&userId=1";
+      let endpoint = "/scenarios/conversation/had?versionId=" + version_id + "&stakeholderId=" + stakeholder.id + "&userId=" + STUDENT_ID;
       
       function onSuccess(response){
         if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
@@ -102,7 +102,7 @@ function Conversation({ showStakeholders, setShowStakeholders, stakeholder }) {
         console.log('Error');
       };
 
-      let endpointPost = "/scenarios/conversation?versionId=" + SCENARIO_ID + "&scenarioId=" + SCENARIO_ID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&courseId=1&sessionId=1";
+      let endpointPost = "/scenarios/conversation?versionId=" + version_id + "&scenarioId=" + version_id + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=" + session;
 
 
       

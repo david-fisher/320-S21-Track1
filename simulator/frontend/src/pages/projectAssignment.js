@@ -63,11 +63,12 @@ const dataText = [
 const mainText =
   "Part of your assignment is to identify specific companies who would be willing to provide data and also make recommendations for further data to collect, in order to refine the above list. Once the data is in hand, you will use it to improve the existing predictive model for cognitive decline, by incorporating new training features as appropriate.";
 
-function ProjectAssignment({ pages, setPages, prevPageID, activePage, setActivePage, version_id,nid }) {
+function ProjectAssignment({ pages, setPages, prevPageID, activePage, setActivePage, version_id, nid }) {
 
   const [task, setTask] = React.useState("");
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [value, setValue] = useState(activePage);
+
 
   const classes = useStyles();
   function goToPrevPage() {
@@ -115,7 +116,7 @@ function ProjectAssignment({ pages, setPages, prevPageID, activePage, setActiveP
 
   // MAKE API CALL
   let pageId = pages[activePage].pid
-  const endpointGet = '/scenarios/task?versionId=1'+'&pageId='+(activePage)
+  const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+(activePage)
 
   const [project, setIntro] = useState({     //temporary array of intro
     project_page: [{

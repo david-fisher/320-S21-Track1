@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from "react";
+import { useLocation } from 'react-router-dom';
 import { makeStyles, withStyles, Typography, Box, Button, Grid } from "@material-ui/core";
 import Checkbox from "./components/checkbox";
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
@@ -35,7 +36,16 @@ const TextTypography = withStyles({
   }
 })(Typography);
 
-function Action({ pages, setPages, activePage, numConversations, setActivePage, version_id, content_url, nextPageID, prevPageID, title }) {
+function Action({ pages, sessionId, setPages, activePage, conversations, setActivePage, content_url, nextPageID, prevPageID, title }) {
+
+  const location = useLocation();
+
+
+  let pathArray = location.pathname.split( '/' );
+  const scenario_id = pathArray[pathArray.length - 2];
+  const first_page = pathArray[pathArray.length - 1];
+  const version_id = scenario_id;
+
   function goToPage(pageID) {
     if (!pages[pageID].visited) {
       setPages((prevPages) => {
@@ -46,6 +56,7 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
     }
     setActivePage((prevPage) => pageID);
   }
+
 
   const [actionQuestion, setActionQuestion, setActionChoices] = React.useState('');
   const [questionID, setQuestionID] = React.useState('');
@@ -142,19 +153,19 @@ function Action({ pages, setPages, activePage, numConversations, setActivePage, 
       ));
       let next_html = (<Introduction activePage={npage[0].id}/>);
       if(npage[0].type === "PLAIN"){
-        next_html = (<ProjectAssignment lastPage={1}/>);
+        next_html = (<ProjectAssignment version_id={scenario_id} lastPage={activePage}/>);
       } else if (npage[0].type === "REFLECTION"){
-        next_html = (<Reflection content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Reflection version_id={scenario_id} content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
+        next_html = (<Stakeholders session_id={sessionId} version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next} numConversations={conversations}/>);
       } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action numConversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Action sessionId={sessionId} version_id={scenario_id} conversations={conversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "CONCLUSION"){
-        next_html = (<Conclusion prevPageID={activePage}/>);
+        next_html = (<Conclusion version_id={scenario_id} prevPageID={activePage}/>);
       } else if (npage[0].type === "FEEDBACK"){
-        next_html = (<Feedback prevPageID={activePage} nextPageID={npage[0].next}/>);
+        next_html = (<Feedback version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next}/>);
       } else {
-        next_html = (<Reflection activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
+        next_html = (<Reflection version_id={scenario_id} activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
       }
       let len = Object.keys(pages).length
       let next_page = {

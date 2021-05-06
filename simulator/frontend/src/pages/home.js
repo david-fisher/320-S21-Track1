@@ -264,27 +264,27 @@ export default function Home() {
     );
   }
 
-  // if (fetchScenariosResponse.error) {
-  //   return (
-  //     <div>
-  //       <div className={classes.issue}>
-  //         <div className={classes.errorContainer}>
-  //           <ErrorIcon className={classes.iconError} />
-  //           <Typography align="center" variant="h3">
-  //             Error in fetching Scenarios.
-  //           </Typography>
-  //           <Button
-  //             variant="contained"
-  //             color="primary"
-  //             onClick={getData}
-  //           >
-  //             <RefreshIcon className={classes.iconRefreshLarge} />
-  //           </Button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (fetchScenariosResponse.error) {
+    return (
+      <div>
+        <div className={classes.issue}>
+          <div className={classes.errorContainer}>
+            <ErrorIcon className={classes.iconError} />
+            <Typography align="center" variant="h3">
+              Error in fetching Scenarios.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={getData}
+            >
+              <RefreshIcon className={classes.iconRefreshLarge} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={classes.root}>
@@ -345,7 +345,16 @@ export default function Home() {
                   // course={scenario.course}
                   // date={scenario.date}
                 />
-                <Button className={classes.button}>Select Scenario</Button>
+                <Button
+                    component={Link}
+                    to={{
+                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
+                        data: scenario,
+                    }}
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                >Select Scenario</Button>
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
