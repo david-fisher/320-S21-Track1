@@ -26,7 +26,7 @@ export default function Body(props) {
                 setOptions={{
                     width: '100%',
                     height: 400,
-                    placeholder: 'Enter body of component...',
+                    placeholder: 'Enter in body for your page...',
                     buttonList: [
                         ['font', 'fontSize', 'formatBlock'],
                         ['paragraphStyle', 'blockquote'],

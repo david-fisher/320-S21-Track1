@@ -21,6 +21,7 @@ export default function Title(props) {
     const setTitle = props.setTitle;
     const error = props.error;
     const errorMessage = props.errorMessage;
+    const disabled = props.disabled;
 
     let handleChange = (content) => {
         setTitle(content.target.value);
@@ -28,7 +29,7 @@ export default function Title(props) {
 
     return (
         <div className={classes.root}>
-            <Typography variant="h4">Scenario Page Name</Typography>
+            <Typography variant="h4">Page Name</Typography>
             {error ? (
                 <TextField
                     error
@@ -42,6 +43,7 @@ export default function Title(props) {
                     value={title}
                     onChange={handleChange}
                     name="title"
+                    disabled={disabled}
                 />
             ) : (
                 <TextField
@@ -54,6 +56,7 @@ export default function Title(props) {
                     value={title}
                     onChange={handleChange}
                     name="title"
+                    disabled={disabled}
                 />
             )}
         </div>

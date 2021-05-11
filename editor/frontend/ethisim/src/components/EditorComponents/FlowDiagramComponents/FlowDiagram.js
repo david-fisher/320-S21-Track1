@@ -183,11 +183,11 @@ export default function FlowDiagram({ scenario_ID }) {
                         elements
                     );
                 }
-            } else if (currentElement.NEXT_PAGE) {
+            } else if (currentElement.NEXT_PAGE_id) {
                 elements = addEdge(
                     {
                         source: currentElement.id.toString(),
-                        target: currentElement.NEXT_PAGE.toString(),
+                        target: currentElement.NEXT_PAGE_id.toString(),
                     },
                     elements
                 );
@@ -200,6 +200,7 @@ export default function FlowDiagram({ scenario_ID }) {
     let getData = () => {
         setUnsaved(false);
         function onSuccess(resp) {
+            console.log(resp.data);
             setElements(addEdges(positionElements(resp.data)));
         }
         function onError(resp) {
@@ -366,7 +367,7 @@ export default function FlowDiagram({ scenario_ID }) {
             }
             return array;
         }, []);
-
+        console.log(updatedElements);
         put(
             setElementsPUT,
             endpointPUT + scenarioID,

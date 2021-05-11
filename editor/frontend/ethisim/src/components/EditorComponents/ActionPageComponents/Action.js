@@ -263,7 +263,7 @@ export default function Action(props) {
                 />
             </div>
             <Typography align="center" variant="h2">
-                Action Component
+                Action Page
             </Typography>
             <Title
                 title={title}

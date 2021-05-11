@@ -8,22 +8,35 @@ import {
     Typography,
     makeStyles,
 } from '@material-ui/core';
-import EditedSunEditor from '../../components/EditedSunEditor';
+import AddNewPageSunEditor from '../../components/AddNewPageSunEditor';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
+    containerRow: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
+    mainContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        overflow: 'hidden',
+    },
     menuButton: {
         margin: theme.spacing(2),
     },
     addButton: {
-        margin: theme.spacing(2),
-        float: 'right',
+        width: '100%',
+        maxWidth: '450px',
+        margin: theme.spacing(1),
         textTransform: 'unset',
     },
     selectMenu: {
-        minWidth: 200,
-        magin: theme.spacing(5),
+        minWidth: '200px',
+        marginLeft: theme.spacing(2),
     },
 }));
 
@@ -92,79 +105,78 @@ export default function AddNewScenarioPageDialogBody(props) {
     };
 
     return (
-        <div>
-            <Grid container direction="row" justify="flex-start">
-                <Grid item xs={4}>
-                    <Typography variant="h6">Page Type</Typography>
-                    <Select
-                        className={classes.selectMenu}
-                        id="Scenario-Page-Type-Menu"
-                        labelId="Scenario-Page-Type-Menu"
-                        value={pageType}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={'Generic'} onClick={handleClose}>
-                            Generic Component
-                        </MenuItem>
-                        <MenuItem value={'Action'} onClick={handleClose}>
-                            Action Component
-                        </MenuItem>
-                        <MenuItem value={'Reflection'} onClick={handleClose}>
-                            Reflection Component
-                        </MenuItem>
-                    </Select>
-                </Grid>
-                <Grid item xs={8}>
-                    {errorName ? (
-                        <TextField
-                            error
-                            helperText={errorNameText}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="New Scenario Page Name"
-                            label="Scenario Page Name"
-                            id="scenariopageAdder"
-                            onChange={(e) => setPageName(e.target.value)}
-                        ></TextField>
-                    ) : (
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="New Scenario Page Name"
-                            label="Scenario Page Name"
-                            id="scenariopageAdder"
-                            onChange={(e) => setPageName(e.target.value)}
-                        ></TextField>
-                    )}
-                    <EditedSunEditor
-                        text={pageBody}
-                        setText={setPageBody}
-                    ></EditedSunEditor>
-                    {errorBody ? (
-                        <Typography
-                            style={{ marginLeft: 15 }}
-                            variant="caption"
-                            display="block"
-                            color="error"
-                        >
-                            Page body cannot be empty.
-                        </Typography>
-                    ) : null}
-                    <Button
-                        className={classes.addButton}
-                        variant="contained"
-                        color="primary"
-                        onClick={createNewPage}
-                    >
-                        <AddIcon />
-                        Add Scenario Page
-                    </Button>
-                </Grid>
-            </Grid>
+        <div className={classes.mainContainer}>
+            <div className={classes.containerRow}>
+                <Typography variant="h6">Page Type:</Typography>
+                <Select
+                    className={classes.selectMenu}
+                    id="Scenario-Page-Type-Menu"
+                    labelId="Scenario-Page-Type-Menu"
+                    value={pageType}
+                    onChange={handleChange}
+                >
+                    <MenuItem value={'Generic'} onClick={handleClose}>
+                        Generic Page
+                    </MenuItem>
+                    <MenuItem value={'Action'} onClick={handleClose}>
+                        Action Page
+                    </MenuItem>
+                    <MenuItem value={'Reflection'} onClick={handleClose}>
+                        Reflection Page
+                    </MenuItem>
+                </Select>
+            </div>
+            {errorName ? (
+                <TextField
+                    error
+                    helperText={errorNameText}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="New Page Name"
+                    label="Page Name"
+                    id="scenariopageAdder"
+                    onChange={(e) => setPageName(e.target.value)}
+                ></TextField>
+            ) : (
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="New Page Name"
+                    label="Page Name"
+                    id="scenariopageAdder"
+                    onChange={(e) => setPageName(e.target.value)}
+                ></TextField>
+            )}
+
+            <AddNewPageSunEditor
+                text={pageBody}
+                setText={setPageBody}
+            ></AddNewPageSunEditor>
+            {errorBody ? (
+                <Typography
+                    style={{ marginLeft: 15 }}
+                    variant="caption"
+                    display="block"
+                    color="error"
+                >
+                    Page body cannot be empty.
+                </Typography>
+            ) : null}
+            <div className={classes.containerRow}>
+                <Button
+                    className={classes.addButton}
+                    variant="contained"
+                    color="primary"
+                    onClick={createNewPage}
+                >
+                    <AddIcon />
+                    Add New Page
+                </Button>
+            </div>
         </div>
     );
 }

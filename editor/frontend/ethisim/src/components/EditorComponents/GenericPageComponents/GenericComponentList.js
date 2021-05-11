@@ -14,11 +14,11 @@ export default function GenericComponentList() {
     return (
         <div>
             <Typography align="center" variant="h2">
-                Generic Component List
+                Generic Page List
             </Typography>
             {components}
             <Button variant="contained" onClick={addComponent}>
-                Add Generic Component
+                Add Generic Page
             </Button>
         </div>
     );

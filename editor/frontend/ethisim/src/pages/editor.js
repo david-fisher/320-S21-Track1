@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
         borderStyle: 'solid',
         borderColor: 'white',
         border: 2,
+        textTransform: 'unset',
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -190,7 +191,7 @@ export default function Editor(props) {
     const [scenarioComponents, setScenarioComponents] = useState([]);
     const [scenarioComponent, setScenarioComponent] = useState(null);
     const [showEditor, setShowEditor] = useState(false);
-    const [addNewPageIndex, setAddNewPageIndex] = useState(null);
+    const [addNewPageId, setAddNewPageId] = useState(null);
     const [currentPageID, setCurrentPageID] = useState(-1);
 
     let handleLogisticsGet = function handleLogisticsGet() {
@@ -266,13 +267,9 @@ export default function Editor(props) {
                 }
             }
             setScenarioComponents(initialComponents);
-            if (addNewPageIndex) {
-                handlePageGet(
-                    setGetValues,
-                    initialComponents[addNewPageIndex].id,
-                    initialComponents
-                );
-                setAddNewPageIndex(null);
+            if (addNewPageId) {
+                handlePageGet(setGetValues, addNewPageId, initialComponents);
+                setAddNewPageId(null);
             } else {
                 setScenarioComponent(initialComponents[0].component);
             }
@@ -502,7 +499,7 @@ export default function Editor(props) {
             let postReqBody;
 
             function onSuccess(resp) {
-                setAddNewPageIndex(scenarioComponents.length);
+                setAddNewPageId(resp.data.PAGE);
                 setShouldFetch(shouldFetch + 1);
             }
 

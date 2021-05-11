@@ -3,12 +3,12 @@ import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import PropTypes from 'prop-types';
 
-EditedSunEditor.propTypes = {
+AddNewPageSunEditor.propTypes = {
     setText: PropTypes.any,
     text: PropTypes.string,
 };
 
-export default function EditedSunEditor({ setText, text }) {
+export default function AddNewPageSunEditor({ setText, text }) {
     let handleChange = (content) => {
         setText(content);
     };
@@ -19,8 +19,8 @@ export default function EditedSunEditor({ setText, text }) {
                 setContents={text}
                 setOptions={{
                     width: '100%',
-                    height: 150,
-                    placeholder: 'Enter in Introduction for Scenario Page...',
+                    height: 250,
+                    placeholder: 'Enter in body for your new scenario page...',
                     buttonList: [
                         ['font', 'fontSize', 'formatBlock'],
                         ['paragraphStyle', 'blockquote'],

@@ -221,17 +221,22 @@ export default function IssueEntryField({
     return (
         <div>
             {unsaved ? (
-                <Typography variant="h6" align="center" color="error">
+                <Typography
+                    style={{ marginLeft: '20px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
                     Unsaved
                 </Typography>
             ) : null}
-            <Box display="flex" flexDirection="row" p={1} m={1}>
-                <Box p={2}>
+            <Box display="flex" flexDirection="row">
+                <Box p={1}>
                     {errorName ? (
                         <TextField
                             error
                             helperText={errorNameText}
-                            style={{ width: '65%' }}
+                            style={{ width: '63%' }}
                             id="outlined-text"
                             label="Issue"
                             value={issueName}
@@ -242,7 +247,7 @@ export default function IssueEntryField({
                         />
                     ) : (
                         <TextField
-                            style={{ width: '65%' }}
+                            style={{ width: '63%' }}
                             id="outlined-text"
                             label="Issue"
                             value={issueName}
@@ -256,7 +261,7 @@ export default function IssueEntryField({
                         <TextField
                             error
                             helperText={errorScoreText}
-                            style={{ width: '35%' }}
+                            style={{ width: '37%' }}
                             margin="normal"
                             id="outlined-number"
                             label="Importance Factor"
@@ -268,7 +273,7 @@ export default function IssueEntryField({
                         />
                     ) : (
                         <TextField
-                            style={{ width: '35%' }}
+                            style={{ width: '37%' }}
                             margin="normal"
                             id="outlined-number"
                             label="Importance Factor"
@@ -280,7 +285,7 @@ export default function IssueEntryField({
                         />
                     )}
                 </Box>
-                <Box p={1}>
+                <Box>
                     <div>
                         <Button
                             className={classes.button}

@@ -302,21 +302,21 @@ const mockGenericComponent = {
     type: 'Generic',
     id: 5,
     title: 'Introduction',
-    body: 'Sample Introduction for Generic Component',
+    body: 'Sample Introduction for Generic Page',
 };
 
 const mockReflectionComponent = {
     type: 'Reflection',
     id: 6,
     title: 'Initial Reflection',
-    body: 'Sample Introduction for Reflection Component',
+    body: 'Sample Introduction for Reflection Page',
 };
 
 const mockActionComponent = {
     type: 'Action',
     id: 7,
     title: 'Initial Action',
-    body: 'Sample Introduction for Action Component',
+    body: 'Sample Introduction for Action Page',
 };
 
 const mockUnfinishedScenario = {

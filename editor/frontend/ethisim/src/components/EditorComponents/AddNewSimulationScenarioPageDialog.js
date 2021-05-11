@@ -18,11 +18,8 @@ const useStyles = makeStyles((theme) => ({
         top: theme.spacing(5),
     },
     exitOutButton: {
-        margin: theme.spacing(2),
         marginLeft: 'auto',
         float: 'right',
-        border: '3px solid',
-        borderColor: theme.palette.primary.light,
     },
 }));
 
@@ -40,43 +37,39 @@ export default function AddNewSimulationScenarioPageDialog(props) {
     const { title, setOpenPopup, addPage, openPopup } = data;
 
     return (
-        <div>
-            <Dialog
-                open={openPopup}
-                maxWidth="md"
-                classes={{ paper: classes.dialogWrapper }}
-            >
-                <DialogTitle
-                    disableTypography={true}
+        <Dialog
+            open={openPopup}
+            fullWidth={true}
+            maxWidth="md"
+            classes={{ paper: classes.dialogWrapper }}
+        >
+            <DialogTitle disableTypography={true} style={{ display: 'flex' }}>
+                <Typography
+                    variant="h5"
+                    align="center"
+                    component="div"
                     style={{ display: 'flex' }}
                 >
-                    <Typography
-                        variant="h3"
-                        align="center"
-                        component="div"
-                        style={{ display: 'flex' }}
-                    >
-                        {title}
-                    </Typography>
-                    <Button
-                        className={classes.exitOutButton}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            setOpenPopup(false);
-                        }}
-                    >
-                        <HighlightOffIcon />
-                    </Button>
-                </DialogTitle>
+                    {title ? title : 'Add New Page'}
+                </Typography>
+                <Button
+                    className={classes.exitOutButton}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setOpenPopup(false);
+                    }}
+                >
+                    <HighlightOffIcon />
+                </Button>
+            </DialogTitle>
 
-                <DialogContent dividers>
-                    <AddNewScenarioPageDialogBody
-                        addPage={addPage}
-                        setOpenPopup={setOpenPopup}
-                    ></AddNewScenarioPageDialogBody>
-                </DialogContent>
-            </Dialog>
-        </div>
+            <DialogContent dividers>
+                <AddNewScenarioPageDialogBody
+                    addPage={addPage}
+                    setOpenPopup={setOpenPopup}
+                ></AddNewScenarioPageDialogBody>
+            </DialogContent>
+        </Dialog>
     );
 }

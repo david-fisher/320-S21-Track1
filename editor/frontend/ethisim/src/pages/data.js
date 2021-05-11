@@ -84,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
         borderStyle: 'solid',
         borderColor: 'white',
         border: 2,
+        textTransform: 'unset',
     },
     title: {
         textAlign: 'center',

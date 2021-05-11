@@ -202,6 +202,7 @@ export default function Introduction(props) {
                 setTitle={setTitle}
                 error={errorTitle}
                 errorMessage={errorTitleText}
+                disabled={true}
             />
             <Body
                 body={bodyText}

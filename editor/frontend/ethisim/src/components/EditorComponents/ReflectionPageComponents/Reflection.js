@@ -248,7 +248,7 @@ export default function Reflection(props) {
                 />
             </div>
             <Typography align="center" variant="h2">
-                Reflection Component
+                Reflection Page
             </Typography>
             <Title
                 title={title}

@@ -195,7 +195,7 @@ export default function Generic(props) {
                 />
             </div>
             <Typography align="center" variant="h2">
-                Generic Component
+                Generic Page
             </Typography>
             <Title
                 title={title}
