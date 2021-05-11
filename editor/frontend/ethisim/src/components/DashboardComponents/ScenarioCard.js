@@ -22,12 +22,18 @@ import ShareButton from './ShareButton';
 
 const useStyles = makeStyles((theme) => ({
     scenarioContainer: {
-        minHeight: '100px',
-        minWidth: '200px',
+        marginRight: '10px',
         backgroundColor: theme.palette.primary.light,
         borderStyle: 'solid',
         borderColor: theme.palette.primary.light,
         border: 2,
+        borderRadius: '2%',
+    },
+    topHalfContainer: {
+        backgroundColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.light,
+        borderRadius: 0,
+        boxShadow: 'none',
     },
     buttonContainer: {
         borderStyle: 'solid',
@@ -208,9 +214,9 @@ export default function ScenarioCard({
     );
 
     return (
-        <Grid key={scenarioID} item xs>
-            <Card>
-                <CardContent className={classes.scenarioContainer}>
+        <Grid className={classes.scenarioContainer} key={scenarioID} xs>
+            <Card className={classes.topHalfContainer}>
+                <CardContent>
                     <Typography variant="h6" display="block" noWrap>
                         {scenarioName}
                     </Typography>

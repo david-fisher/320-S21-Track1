@@ -28,7 +28,7 @@ import DashboardNavBar from '../components/DashboardComponents/DashboardNavbar';
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        marginTop: theme.spacing(11),
+        marginTop: theme.spacing(9),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -60,7 +60,8 @@ const useStyles = makeStyles((theme) => ({
     },
     border: {
         borderStyle: 'none none solid none',
-        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(4),
     },
 }));
 
@@ -475,7 +476,9 @@ export default function Dashboard() {
                     errorMessage={errorBannerMessage}
                 />
                 <div className={classes.border}>
-                    <Typography variant="h3">Unfinished Scenarios</Typography>
+                    <Typography variant="h3">
+                        Scenarios in Development
+                    </Typography>
                 </div>
                 <Grid
                     container
@@ -488,7 +491,7 @@ export default function Dashboard() {
                     <AddNewScenarioCard onClick={handleClickOpen} />
                 </Grid>
                 <div className={classes.border}>
-                    <Typography variant="h3">Finished Scenarios</Typography>
+                    <Typography variant="h3">Published Scenarios</Typography>
                 </div>
                 <Grid
                     container

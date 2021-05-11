@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
     addNewScenarioContainer: {
-        height: '100%',
+        minHeight: '100%',
         borderStyle: 'dashed',
         borderColor: theme.palette.primary.main,
         border: 3,
-        borderRadius: 3,
+        borderRadius: '2%',
         padding: 0,
     },
     addNewScenarioButton: {
@@ -35,33 +35,32 @@ export default function AddNewScenarioCard({ onClick }) {
     const classes = useStyles();
 
     return (
-        <Grid key="createNewScenarioButton" item xs>
-            <Container className={classes.addNewScenarioContainer} fixed={true}>
-                <Button
-                    className={classes.addNewScenarioButton}
-                    onClick={onClick}
+        <Grid
+            className={classes.addNewScenarioContainer}
+            key="createNewScenarioButton"
+            xs
+        >
+            <Button className={classes.addNewScenarioButton} onClick={onClick}>
+                <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
                 >
-                    <Grid
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <AddIcon className={classes.addIcon} />
-                        </Grid>
-                        <Grid item>
-                            <Typography
-                                className={classes.addNewScenarioText}
-                                variant="h6"
-                                noWrap
-                            >
-                                Create New Scenario
-                            </Typography>
-                        </Grid>
+                    <Grid item>
+                        <AddIcon className={classes.addIcon} />
                     </Grid>
-                </Button>
-            </Container>
+                    <Grid item>
+                        <Typography
+                            className={classes.addNewScenarioText}
+                            variant="h6"
+                            noWrap
+                        >
+                            Create New Scenario
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Button>
         </Grid>
     );
 }
