@@ -179,6 +179,8 @@ export default function Data(props) {
                             pathname: '/dashboard',
                         }}
                         className={classes.exitButton}
+                        variant="contained"
+                        color="primary"
                     >
                         <WhiteTextTypography noWrap>
                             Return to Dashboard

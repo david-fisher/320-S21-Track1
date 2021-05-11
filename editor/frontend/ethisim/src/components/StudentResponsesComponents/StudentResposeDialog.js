@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
         borderColor: 'white',
         border: 2,
     },
+    hideMenuButton: {
+        borderRadius: 0,
+    },
     menuButton: {
         marginRight: theme.spacing(2),
     },
@@ -200,7 +203,10 @@ export default function Data({ open, selectedResponseData, handleClose }) {
                         paper: classes.drawerPaper,
                     }}
                 >
-                    <IconButton onClick={handleDrawerClose}>
+                    <IconButton
+                        className={classes.hideMenuButton}
+                        onClick={handleDrawerClose}
+                    >
                         {theme.direction === 'ltr' ? (
                             <ChevronLeftIcon />
                         ) : (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Avatar, Button} from '@material-ui/core';
+import { Avatar, Button } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -14,7 +14,6 @@ import './stakeHolder.css';
 import QuestionFields from './StakeHolderQuestions/questions';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
-import shemptylogo from './shemptylogo.png';
 import PropTypes from 'prop-types';
 import SuccessBanner from './../../../Banners/SuccessBanner';
 import ErrorBanner from './../../../Banners/ErrorBanner';
@@ -31,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
     input: {
         display: 'none',
     },
-    label:{
-        color:'#808080',
-        fontSize: 15
-    }
+    label: {
+        color: '#808080',
+        fontSize: 15,
+    },
 }));
 
 const styles = (theme) => ({
@@ -95,7 +94,7 @@ export default function StakeHolder({
     job,
     photo,
     stakeHolders,
-    setStakeHolders
+    setStakeHolders,
 }) {
     const classes = useStyles();
 
@@ -106,11 +105,11 @@ export default function StakeHolder({
     const [stakeHolderName, setStakeHolderName] = useState(name);
     const [stakeHolderJob, setStakeHolderJob] = useState(job);
     const [stakeHolderBiography, setStakeHolderBiography] = useState(bio);
-    const [stakeHolderPhoto, setStakeHolderPhoto] = useState(photo); // Image object to be uploaded on save 
+    const [stakeHolderPhoto, setStakeHolderPhoto] = useState(photo); // Image object to be uploaded on save
     const [stakeHolderConversation, setStakeHolderConversation] = useState(
         mainConvo
     );
-    const[displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
+    const [displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
     const [issues, setIssues] = useState([]);
     const [qRData, setQRData] = useState([]);
     const [isLoading, setLoading] = useState(false);
@@ -219,9 +218,10 @@ export default function StakeHolder({
         );
     };
 
-    const onUploadPhoto = (e) => { // Uses PUT request to upload photo to database
+    const onUploadPhoto = (e) => {
+        // Uses PUT request to upload photo to database
         var image = e.target.files[0];
-        var url = URL.createObjectURL(image)
+        var url = URL.createObjectURL(image);
         setdisplayedPhoto(url);
         setStakeHolderPhoto(image);
         updateStakeholderInfo(
@@ -230,7 +230,7 @@ export default function StakeHolder({
             stakeHolderBiography,
             stakeHolderConversation,
             image
-            );
+        );
     };
 
     function updateStakeholderInfo(shname, shjob, shbio, shconvo, shphoto) {
@@ -320,10 +320,10 @@ export default function StakeHolder({
                     onChange={onChangeJob}
                 />
             </div>
-            
-            <Avatar id="SHimg" src={displayedPhoto}/>
-             
-            <label id="upl"> 
+
+            <Avatar id="SHimg" src={displayedPhoto} />
+
+            <label id="upl">
                 <Button
                     variant="contained"
                     color="primary"
@@ -338,50 +338,58 @@ export default function StakeHolder({
                         hidden
                         onChange={onUploadPhoto}
                     />
-                </Button>   
+                </Button>
             </label>
-             
+
             <div id="Bio">
-                <Typography className={classes.label} variant="h6" color="initial">
+                <Typography
+                    className={classes.label}
+                    variant="h6"
+                    color="initial"
+                >
                     Biography
                 </Typography>
                 <div onClick={handleClickOpenBio}>
                     <SunEditor
-                                setContents={bio}
-                                disable={true}
-                                showToolbar={false}
-                                setOptions={{
-                                    width: 500,
-                                    height: 1,
-                                    placeholder:
-                                        'Enter the biography of the stakeholder...',
-                                    resizingBar: false,
-                                    showPathLabel: false,
-                                    }}
-                                onChange={handleChangeBiography}
-                            />
+                        setContents={bio}
+                        disable={true}
+                        showToolbar={false}
+                        setOptions={{
+                            width: 500,
+                            height: 1,
+                            placeholder:
+                                'Enter the biography of the stakeholder...',
+                            resizingBar: false,
+                            showPathLabel: false,
+                        }}
+                        onChange={handleChangeBiography}
+                    />
                 </div>
             </div>
 
             <div id="MainConversationField">
-                <Typography className={classes.label} variant="h6" color="initial">
+                <Typography
+                    className={classes.label}
+                    variant="h6"
+                    color="initial"
+                >
                     Main Conversation
                 </Typography>
                 <div onClick={handleClickOpenMainConvo}>
                     <SunEditor
-                                setContents={mainConvo}
-                                disable={true}
-                                showToolbar={false}
-                                setOptions={{
-                                    width: 500,
-                                    height: 1,
-                                    placeholder:
-                                        'Enter the main conversation of the stakeholder...',
-                                    resizingBar: false,
-                                    showPathLabel: false,
-                                    }}
-                                onChange={handleChangeConversation}
-                            />
+                        setContents={mainConvo}
+                        disable={true}
+                        showToolbar={false}
+                        setOptions={{
+                            width: 500,
+                            height: 1,
+                            placeholder:
+                                'Enter the main conversation of the stakeholder...',
+                            resizingBar: false,
+                            showPathLabel: false,
+                        }}
+                        onChange={handleChangeConversation}
+                    />
                 </div>
             </div>
             <div id="DeleteButton">
@@ -439,7 +447,7 @@ export default function StakeHolder({
                                 width: '100%',
                                 height: 400,
                                 placeholder:
-                                'Enter the biography of the stakeholder...',
+                                    'Enter the biography of the stakeholder...',
                                 buttonList: [
                                     ['font', 'fontSize', 'formatBlock'],
                                     ['paragraphStyle', 'blockquote'],
@@ -604,7 +612,7 @@ export default function StakeHolder({
                             setOptions={{
                                 height: 400,
                                 placeholder:
-                                'Enter the main conversation of the stakeholder...',
+                                    'Enter the main conversation of the stakeholder...',
                                 buttonList: [
                                     ['font', 'fontSize', 'formatBlock'],
                                     ['paragraphStyle', 'blockquote'],

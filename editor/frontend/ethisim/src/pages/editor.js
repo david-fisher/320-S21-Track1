@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
         border: 2,
         textTransform: 'unset',
     },
+    hideMenuButton: {
+        borderRadius: '2%',
+    },
     menuButton: {
         marginRight: theme.spacing(2),
     },
@@ -617,7 +620,10 @@ export default function Editor(props) {
                         paper: classes.drawerPaper,
                     }}
                 >
-                    <IconButton onClick={handleDrawerClose}>
+                    <IconButton
+                        className={classes.hideMenuButton}
+                        onClick={handleDrawerClose}
+                    >
                         {theme.direction === 'ltr' ? (
                             <ChevronLeftIcon />
                         ) : (
@@ -684,6 +690,8 @@ export default function Editor(props) {
 
                     <Button
                         component={Link}
+                        variant="contained"
+                        color="primary"
                         to={{
                             pathname: '/dashboard',
                         }}
