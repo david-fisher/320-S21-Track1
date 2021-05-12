@@ -165,20 +165,20 @@ export default function FlowDiagram({ scenario_ID }) {
                     throw 'Action incomplete';
                 }
                 //Only 2 action options
-                if (currentElement.ACTION[0].RESULT_PAGE) {
+                if (currentElement.ACTION[0].RESULT_PAGE_id) {
                     elements = addEdge(
                         {
                             source: currentElement.id.toString() + '__a',
-                            target: currentElement.ACTION[0].RESULT_PAGE.toString(),
+                            target: currentElement.ACTION[0].RESULT_PAGE_id.toString(),
                         },
                         elements
                     );
                 }
-                if (currentElement.ACTION[1].RESULT_PAGE) {
+                if (currentElement.ACTION[1].RESULT_PAGE_id) {
                     elements = addEdge(
                         {
                             source: currentElement.id.toString() + '__b',
-                            target: currentElement.ACTION[1].RESULT_PAGE.toString(),
+                            target: currentElement.ACTION[1].RESULT_PAGE_id.toString(),
                         },
                         elements
                     );
