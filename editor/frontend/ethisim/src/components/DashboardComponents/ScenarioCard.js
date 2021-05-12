@@ -8,7 +8,7 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 import PropTypes from 'prop-types';
 
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import DeleteEntireScenarioWarning from '../DeleteWarnings/DeleteEntireScenarioWarning';
+import DeleteEntireScenarioWarning from '../WarningDialogs/DeleteEntireScenarioWarning';
 
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';

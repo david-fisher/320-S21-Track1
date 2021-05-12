@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import GenericDeleteWarning from '../DeleteWarnings/GenericDeleteWarning';
+import GenericDeleteWarning from '../WarningDialogs/GenericDeleteWarning';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles((theme) => ({

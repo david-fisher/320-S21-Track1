@@ -37,7 +37,7 @@ export default function DeleteEntireScenarioWarning(props) {
             aria-describedby="alert-dialog-slide-description"
         >
             <DialogTitle id="alert-dialog-slide-title">
-                {'Are you sure you want to delete this?'}
+                {'Are you sure you want to exit?'}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">

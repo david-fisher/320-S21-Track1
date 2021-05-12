@@ -1,48 +1,31 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
-import htmlToText from 'html-to-text';
 import PropTypes from 'prop-types';
-import GenericDeleteWarning from '../../WarningDialogs/GenericDeleteWarning';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 
-let handleChange = (content) => {
-    //TODO Implement
+Body.propTypes = {
+    body: PropTypes.string.isRequired,
+    setBody: PropTypes.any.isRequired,
+    error: PropTypes.bool,
+    errorMessage: PropTypes.string,
 };
 
-const useStyles = makeStyles((theme) => ({
-    margin: {
-        margin: theme.spacing(0.5),
-        marginTop: theme.spacing(0),
-        height: '5vh',
-        textTransform: 'unset',
-    },
-}));
+export default function Body(props) {
+    const { body, setBody, error, errorMessage } = props;
 
-InformationItem.propTypes = {
-    onDelete: PropTypes.any.isRequired,
-    iItem: PropTypes.any.isRequired,
-    data: PropTypes.any.isRequired,
-};
-
-export default function InformationItem(props) {
-    InformationItem.propTypes = props.data;
-    const classes = useStyles();
-    //Warning to Delete information Item
-    const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
+    let handleChange = (content) => {
+        setBody(content);
     };
 
     return (
         <div>
             <SunEditor
+                setContents={body}
                 setOptions={{
                     width: '100%',
-                    height: '200px',
-                    placeholder: 'Enter body for information item...',
+                    height: 400,
+                    placeholder: 'Enter in body for your page...',
                     buttonList: [
                         ['font', 'fontSize', 'formatBlock'],
                         ['paragraphStyle', 'blockquote'],
@@ -63,9 +46,9 @@ export default function InformationItem(props) {
                         ['table', 'link', 'image', 'video', 'audio'],
                         ['fullScreen', 'showBlocks', 'codeView'],
                         ['preview'],
-                        // (min-width: 1000px)
+                        // (min-width: 800px)
                         [
-                            '%1000',
+                            '%800',
                             [
                                 ['undo', 'redo'],
                                 [
@@ -113,9 +96,9 @@ export default function InformationItem(props) {
                                 ],
                             ],
                         ],
-                        // (min-width: 875px)
+                        // (min-width: 600px)
                         [
-                            '%875',
+                            '%600',
                             [
                                 ['undo', 'redo'],
                                 [
@@ -170,39 +153,16 @@ export default function InformationItem(props) {
                 }}
                 onChange={handleChange}
             />
-
-            <Box
-                display="flex"
-                flexDirection="row"
-                p={1}
-                m={1}
-                bgcolor="background.paper"
-            >
-                <Box p={1}>
-                    <div>
-                        <Button
-                            className={classes.margin}
-                            variant="contained"
-                            color="primary"
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            className={classes.margin}
-                            variant="contained"
-                            color="primary"
-                            onClick={handleClickOpen}
-                        >
-                            Delete
-                        </Button>
-                        <GenericDeleteWarning
-                            remove={() => props.onDelete(props.iItem.id)}
-                            setOpen={setOpen}
-                            open={open}
-                        />
-                    </div>
-                </Box>
-            </Box>
+            {error ? (
+                <Typography
+                    style={{ marginLeft: 15 }}
+                    variant="caption"
+                    display="block"
+                    color="error"
+                >
+                    {errorMessage}
+                </Typography>
+            ) : null}
         </div>
     );
 }

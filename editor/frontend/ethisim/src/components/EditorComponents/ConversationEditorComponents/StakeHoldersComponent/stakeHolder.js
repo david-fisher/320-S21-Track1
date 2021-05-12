@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Avatar, Button, Box } from '@material-ui/core';
+import { Avatar, Button, Box, DialogTitle } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -12,12 +11,15 @@ import { withStyles } from '@material-ui/core/styles';
 import BasicTable from './table';
 import QuestionFields from './StakeHolderQuestions/questions';
 import SunEditor from 'suneditor-react';
+import Body from './SunEditor';
 import 'suneditor/dist/css/suneditor.min.css';
 import PropTypes from 'prop-types';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import SuccessBanner from './../../../Banners/SuccessBanner';
 import ErrorBanner from './../../../Banners/ErrorBanner';
 //import LoadingSpinner from './../../../LoadingSpinner';
-import GenericDeleteWarning from '../../../DeleteWarnings/GenericDeleteWarning';
+import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
+import GenericUnsavedWarning from '../../../WarningDialogs/GenericUnsavedWarning';
 import { baseURL } from './../../../../Constants/Config';
 import put from './../../../../universalHTTPRequests/put';
 
@@ -51,6 +53,19 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         textTransform: 'unset',
     },
+    dialog: {
+        overflowX: 'hidden',
+    },
+    dialogWrapper: {
+        padding: theme.spacing(2),
+        position: 'absolute',
+        top: theme.spacing(5),
+    },
+    exitOutButton: {
+        margin: theme.spacing(1),
+        marginLeft: 'auto',
+        float: 'right',
+    },
     input: {
         display: 'none',
     },
@@ -71,24 +86,6 @@ const styles = (theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
-    return (
-        <MuiDialogTitle disableTypography className={classes.root} {...other}>
-            <Typography variant="h6">{children}</Typography>
-            {onClose ? (
-                <IconButton
-                    aria-label="close"
-                    className={classes.closeButton}
-                    onClick={onClose}
-                >
-                    <CloseIcon />
-                </IconButton>
-            ) : null}
-        </MuiDialogTitle>
-    );
 });
 
 const DialogContent = withStyles((theme) => ({
@@ -142,6 +139,7 @@ export default function StakeHolder({
     const [issues, setIssues] = useState([]);
     const [qRData, setQRData] = useState([]);
     const [isLoading, setLoading] = useState(false);
+    const [errorBody, setErrorBody] = useState(false);
     const [stakeHolderPUT, setStakeHolderPUT] = useState({
         data: null,
         loading: false,
@@ -157,12 +155,26 @@ export default function StakeHolder({
         STAKEHOLDER: id,
         VERSION: version,
     });
+    const [unsavedMainConvo, setUnsavedMainConvo] = useState(false);
+    const [unsavedBio, setUnsavedBio] = useState(false);
+    const [generalUnsaved, setGeneralUnsaved] = useState(false);
+
     var axios = require('axios');
 
     //Warning for Deleteing a Conversation
-    const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
+    const [openDeleteWarningDialog, setOpenDeleteWarningDialog] = useState(
+        false
+    );
+    const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(
+        false
+    );
+
+    const handleOpenDeleteWarningDialog = () => {
+        setOpenDeleteWarningDialog(true);
+    };
+
+    const handleOpenUnsavedWarningDialog = () => {
+        setOpenUnsavedWarningDialog(true);
     };
 
     //for success and error banners
@@ -194,26 +206,16 @@ export default function StakeHolder({
         setOpenBio(true);
     };
     const handleCloseBio = () => {
-        updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
-            stakeHolderBiography,
-            stakeHolderConversation,
-            stakeHolderPhoto
-        );
+        setUnsavedBio(false);
+        setOpenUnsavedWarningDialog(false);
         setOpenBio(false);
     };
     const handleClickOpenMainConvo = () => {
         setOpenMainConvo(true);
     };
     const handleCloseMainConvo = () => {
-        updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
-            stakeHolderBiography,
-            stakeHolderConversation,
-            stakeHolderPhoto
-        );
+        setUnsavedMainConvo(false);
+        setOpenUnsavedWarningDialog(false);
         setOpenMainConvo(false);
     };
 
@@ -221,6 +223,7 @@ export default function StakeHolder({
         getIssues();
     };
     const handleClosePointSelection = () => {
+        setOpenUnsavedWarningDialog(false);
         setOpenPointSelection(false);
     };
 
@@ -228,18 +231,34 @@ export default function StakeHolder({
         getQRs();
     };
     const handleCloseQuestions = () => {
+        setOpenUnsavedWarningDialog(false);
         setOpenQuestions(false);
     };
 
     let handleChangeBiography = (content, editor) => {
+        setUnsavedBio(true);
         setStakeHolderBiography(content);
+        updateStakeholderInfo(
+            stakeHolderName,
+            stakeHolderJob,
+            content,
+            stakeHolderConversation
+        );
     };
 
     let handleChangeConversation = (content, editor) => {
+        setUnsavedMainConvo(true);
         setStakeHolderConversation(content);
+        updateStakeholderInfo(
+            stakeHolderName,
+            stakeHolderJob,
+            stakeHolderBiography,
+            content
+        );
     };
 
     const onChangeName = (e) => {
+        setGeneralUnsaved(true);
         setStakeHolderName(e.target.value);
         updateStakeholderInfo(
             e.target.value,
@@ -251,6 +270,7 @@ export default function StakeHolder({
     };
 
     const onChangeJob = (e) => {
+        setGeneralUnsaved(true);
         setStakeHolderJob(e.target.value);
         updateStakeholderInfo(
             stakeHolderName,
@@ -263,6 +283,7 @@ export default function StakeHolder({
 
     const onUploadPhoto = (e) => {
         // Uses PUT request to upload photo to database
+        setGeneralUnsaved(true);
         var image = e.target.files[0];
         var url = URL.createObjectURL(image);
         setdisplayedPhoto(url);
@@ -353,6 +374,9 @@ export default function StakeHolder({
 
     const saveStakeHolders = (e) => {
         function onSuccess(resp) {
+            setGeneralUnsaved(false);
+            setUnsavedBio(false);
+            setUnsavedMainConvo(false);
             setSuccessBannerMessage('Successfully saved the stakeholders!');
             setSuccessBannerFade(true);
         }
@@ -446,7 +470,6 @@ export default function StakeHolder({
                                     resizingBar: false,
                                     showPathLabel: false,
                                 }}
-                                onChange={handleChangeBiography}
                             />
                         </div>
                     </div>
@@ -495,7 +518,7 @@ export default function StakeHolder({
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleClickOpen}
+                        onClick={handleOpenDeleteWarningDialog}
                         className={classes.button}
                     >
                         Delete
@@ -503,8 +526,8 @@ export default function StakeHolder({
 
                     <GenericDeleteWarning
                         remove={() => removeStakeHolder(id)}
-                        setOpen={setOpen}
-                        open={open}
+                        setOpen={setOpenDeleteWarningDialog}
+                        open={openDeleteWarningDialog}
                     />
                 </div>
 
@@ -535,163 +558,70 @@ export default function StakeHolder({
                 onClose={handleCloseBio}
                 aria-labelledby="customized-dialog-title"
                 open={openBio}
-                maxWidth={false}
+                maxWidth="lg"
+                fullWidth={true}
+                className={classes.dialog}
             >
-                <div style={{ width: 900 }}>
+                <GenericUnsavedWarning
+                    func={handleCloseBio}
+                    setOpen={setOpenUnsavedWarningDialog}
+                    open={openUnsavedWarningDialog}
+                />
+                <div>
                     <DialogTitle
-                        id="customized-dialog-title"
-                        onClose={handleCloseBio}
+                        disableTypography={true}
+                        style={{ display: 'flex' }}
                     >
-                        Biography
+                        <Typography
+                            variant="h5"
+                            align="center"
+                            component="div"
+                            style={{ display: 'flex' }}
+                        >
+                            Biography
+                        </Typography>
+                        <div className={classes.containerRow}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={saveStakeHolders}
+                                className={classes.button}
+                                style={{ marginRight: '10px' }}
+                            >
+                                Save
+                            </Button>
+                        </div>
+                        <Button
+                            className={classes.exitOutButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={
+                                unsavedBio
+                                    ? handleOpenUnsavedWarningDialog
+                                    : handleCloseBio
+                            }
+                        >
+                            <HighlightOffIcon />
+                        </Button>
                     </DialogTitle>
-                    <DialogContent>
-                        <SunEditor
-                            setContents={bio}
-                            setOptions={{
-                                width: '100%',
-                                height: 400,
-                                placeholder:
-                                    'Enter the biography of the stakeholder...',
-                                buttonList: [
-                                    ['font', 'fontSize', 'formatBlock'],
-                                    ['paragraphStyle', 'blockquote'],
-                                    [
-                                        'bold',
-                                        'underline',
-                                        'italic',
-                                        'strike',
-                                        'subscript',
-                                        'superscript',
-                                    ],
-                                    ['fontColor', 'hiliteColor', 'textStyle'],
-                                    '/',
-                                    ['undo', 'redo'],
-                                    ['removeFormat'],
-                                    ['outdent', 'indent'],
-                                    [
-                                        'align',
-                                        'horizontalRule',
-                                        'list',
-                                        'lineHeight',
-                                    ],
-                                    [
-                                        'table',
-                                        'link',
-                                        'image',
-                                        'video',
-                                        'audio',
-                                    ],
-                                    ['fullScreen', 'showBlocks', 'codeView'],
-                                    ['preview'],
-                                    [
-                                        '%1000',
-                                        [
-                                            ['undo', 'redo'],
-                                            [
-                                                ':p-More Paragraph-default.more_paragraph',
-                                                'font',
-                                                'fontSize',
-                                                'formatBlock',
-                                                'paragraphStyle',
-                                                'blockquote',
-                                            ],
-                                            [
-                                                'bold',
-                                                'underline',
-                                                'italic',
-                                                'strike',
-                                            ],
-                                            [
-                                                ':t-More Text-default.more_text',
-                                                'subscript',
-                                                'superscript',
-                                                'fontColor',
-                                                'hiliteColor',
-                                                'textStyle',
-                                            ],
-                                            ['removeFormat'],
-                                            ['outdent', 'indent'],
-                                            [
-                                                ':e-More Line-default.more_horizontal',
-                                                'align',
-                                                'horizontalRule',
-                                                'list',
-                                                'lineHeight',
-                                            ],
-                                            [
-                                                '-right',
-                                                ':i-More Misc-default.more_vertical',
-                                                'fullScreen',
-                                                'showBlocks',
-                                                'codeView',
-                                                'preview',
-                                            ],
-                                            [
-                                                '-right',
-                                                ':r-More Rich-default.more_plus',
-                                                'table',
-                                                'link',
-                                                'image',
-                                                'video',
-                                                'audio',
-                                            ],
-                                        ],
-                                    ],
-                                    [
-                                        '%875',
-                                        [
-                                            ['undo', 'redo'],
-                                            [
-                                                ':p-More Paragraph-default.more_paragraph',
-                                                'font',
-                                                'fontSize',
-                                                'formatBlock',
-                                                'paragraphStyle',
-                                                'blockquote',
-                                            ],
-                                            [
-                                                ':t-More Text-default.more_text',
-                                                'bold',
-                                                'underline',
-                                                'italic',
-                                                'strike',
-                                                'subscript',
-                                                'superscript',
-                                                'fontColor',
-                                                'hiliteColor',
-                                                'textStyle',
-                                                'removeFormat',
-                                            ],
-                                            [
-                                                ':e-More Line-default.more_horizontal',
-                                                'outdent',
-                                                'indent',
-                                                'align',
-                                                'horizontalRule',
-                                                'list',
-                                                'lineHeight',
-                                            ],
-                                            [
-                                                ':r-More Rich-default.more_plus',
-                                                'table',
-                                                'link',
-                                                'image',
-                                                'video',
-                                                'audio',
-                                            ],
-                                            [
-                                                '-right',
-                                                ':i-More Misc-default.more_vertical',
-                                                'fullScreen',
-                                                'showBlocks',
-                                                'codeView',
-                                                'preview',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            }}
-                            onChange={handleChangeBiography}
+                    <DialogContent className={classes.dialog}>
+                        {unsavedBio ? (
+                            <Typography
+                                style={{ marginLeft: '30px' }}
+                                variant="h6"
+                                align="center"
+                                color="error"
+                            >
+                                Unsaved
+                            </Typography>
+                        ) : null}
+                        <Body
+                            body={bio}
+                            setBody={handleChangeBiography}
+                            error={errorBody}
+                            errorMessage={
+                                'Stakeholder biography cannot be empty'
+                            }
                         />
                     </DialogContent>
                 </div>
@@ -700,163 +630,71 @@ export default function StakeHolder({
             <Dialog
                 onClose={handleCloseMainConvo}
                 aria-labelledby="customized-dialog-title"
-                maxWidth={false}
+                maxWidth="lg"
+                fullWidth={true}
                 open={openMainConvo}
+                className={classes.dialog}
             >
-                <div style={{ width: 900 }}>
+                <GenericUnsavedWarning
+                    func={handleCloseMainConvo}
+                    setOpen={setOpenUnsavedWarningDialog}
+                    open={openUnsavedWarningDialog}
+                />
+                <div>
                     <DialogTitle
-                        id="customized-dialog-title"
-                        onClose={handleCloseMainConvo}
+                        disableTypography={true}
+                        style={{ display: 'flex' }}
                     >
-                        Main Coversation
+                        <Typography
+                            variant="h5"
+                            align="center"
+                            component="div"
+                            style={{ display: 'flex' }}
+                        >
+                            Main Conversation
+                        </Typography>
+                        <div className={classes.containerRow}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={saveStakeHolders}
+                                className={classes.button}
+                                style={{ marginRight: '30px' }}
+                            >
+                                Save
+                            </Button>
+                        </div>
+                        <Button
+                            className={classes.exitOutButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={
+                                unsavedMainConvo
+                                    ? handleOpenUnsavedWarningDialog
+                                    : handleCloseMainConvo
+                            }
+                        >
+                            <HighlightOffIcon />
+                        </Button>
                     </DialogTitle>
-                    <DialogContent>
-                        <SunEditor
-                            setContents={mainConvo}
-                            setOptions={{
-                                height: 400,
-                                placeholder:
-                                    'Enter the main conversation of the stakeholder...',
-                                buttonList: [
-                                    ['font', 'fontSize', 'formatBlock'],
-                                    ['paragraphStyle', 'blockquote'],
-                                    [
-                                        'bold',
-                                        'underline',
-                                        'italic',
-                                        'strike',
-                                        'subscript',
-                                        'superscript',
-                                    ],
-                                    ['fontColor', 'hiliteColor', 'textStyle'],
-                                    '/',
-                                    ['undo', 'redo'],
-                                    ['removeFormat'],
-                                    ['outdent', 'indent'],
-                                    [
-                                        'align',
-                                        'horizontalRule',
-                                        'list',
-                                        'lineHeight',
-                                    ],
-                                    [
-                                        'table',
-                                        'link',
-                                        'image',
-                                        'video',
-                                        'audio',
-                                    ],
-                                    ['fullScreen', 'showBlocks', 'codeView'],
-                                    ['preview'],
-                                    [
-                                        '%1000',
-                                        [
-                                            ['undo', 'redo'],
-                                            [
-                                                ':p-More Paragraph-default.more_paragraph',
-                                                'font',
-                                                'fontSize',
-                                                'formatBlock',
-                                                'paragraphStyle',
-                                                'blockquote',
-                                            ],
-                                            [
-                                                'bold',
-                                                'underline',
-                                                'italic',
-                                                'strike',
-                                            ],
-                                            [
-                                                ':t-More Text-default.more_text',
-                                                'subscript',
-                                                'superscript',
-                                                'fontColor',
-                                                'hiliteColor',
-                                                'textStyle',
-                                            ],
-                                            ['removeFormat'],
-                                            ['outdent', 'indent'],
-                                            [
-                                                ':e-More Line-default.more_horizontal',
-                                                'align',
-                                                'horizontalRule',
-                                                'list',
-                                                'lineHeight',
-                                            ],
-                                            [
-                                                '-right',
-                                                ':i-More Misc-default.more_vertical',
-                                                'fullScreen',
-                                                'showBlocks',
-                                                'codeView',
-                                                'preview',
-                                            ],
-                                            [
-                                                '-right',
-                                                ':r-More Rich-default.more_plus',
-                                                'table',
-                                                'link',
-                                                'image',
-                                                'video',
-                                                'audio',
-                                            ],
-                                        ],
-                                    ],
-                                    [
-                                        '%875',
-                                        [
-                                            ['undo', 'redo'],
-                                            [
-                                                ':p-More Paragraph-default.more_paragraph',
-                                                'font',
-                                                'fontSize',
-                                                'formatBlock',
-                                                'paragraphStyle',
-                                                'blockquote',
-                                            ],
-                                            [
-                                                ':t-More Text-default.more_text',
-                                                'bold',
-                                                'underline',
-                                                'italic',
-                                                'strike',
-                                                'subscript',
-                                                'superscript',
-                                                'fontColor',
-                                                'hiliteColor',
-                                                'textStyle',
-                                                'removeFormat',
-                                            ],
-                                            [
-                                                ':e-More Line-default.more_horizontal',
-                                                'outdent',
-                                                'indent',
-                                                'align',
-                                                'horizontalRule',
-                                                'list',
-                                                'lineHeight',
-                                            ],
-                                            [
-                                                ':r-More Rich-default.more_plus',
-                                                'table',
-                                                'link',
-                                                'image',
-                                                'video',
-                                                'audio',
-                                            ],
-                                            [
-                                                '-right',
-                                                ':i-More Misc-default.more_vertical',
-                                                'fullScreen',
-                                                'showBlocks',
-                                                'codeView',
-                                                'preview',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            }}
-                            onChange={handleChangeConversation}
+                    <DialogContent className={classes.dialog}>
+                        {unsavedMainConvo ? (
+                            <Typography
+                                style={{ marginLeft: '30px' }}
+                                variant="h6"
+                                align="center"
+                                color="error"
+                            >
+                                Unsaved
+                            </Typography>
+                        ) : null}
+                        <Body
+                            body={mainConvo}
+                            setBody={handleChangeConversation}
+                            error={errorBody}
+                            errorMessage={
+                                'Stakeholder biography cannot be empty'
+                            }
                         />
                     </DialogContent>
                 </div>

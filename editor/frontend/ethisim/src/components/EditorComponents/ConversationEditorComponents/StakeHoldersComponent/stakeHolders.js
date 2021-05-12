@@ -68,6 +68,12 @@ export default function StakeHolderFields({ scenario, version }) {
         error: null,
     });
     const [stakeHolders, setStakeHolders] = useState([]);
+    const setStakeHolder = (arr) => {
+        setFetchedStakeholders({
+            ...fetchedStakeholders,
+            data: arr,
+        });
+    };
     //used to track if we are waiting on a HTTP GET/POST/PUT request
     //not needed for DELETE
 
@@ -75,16 +81,13 @@ export default function StakeHolderFields({ scenario, version }) {
     // will eventually know which scenario to get stakeholders from once scenario_id is passed
     // from baseURL + 'stakeholder?scenario_id=' + scenario_id
     function getExistingStakeHolders() {
-        function onSuccess(resp) {
-            setStakeHolders(resp.data);
-        }
         function onError(resp) {
             setErrorBannerMessage(
                 'Failed to get Stakeholders! Please try again.'
             );
             setErrorBannerFade(true);
         }
-        get(setFetchedStakeholders, endpointGET + scenario, onError, onSuccess);
+        get(setFetchedStakeholders, endpointGET + scenario, onError);
     }
 
     useEffect(getExistingStakeHolders, []);
@@ -273,22 +276,24 @@ export default function StakeHolderFields({ scenario, version }) {
             </div>
             */}
             <form id="form">
-                {stakeHolders.map((stakeHolder) => (
-                    <StakeHolder
-                        key={stakeHolder.STAKEHOLDER}
-                        removeStakeHolder={removeStakeHolder}
-                        id={stakeHolder.STAKEHOLDER}
-                        name={stakeHolder.NAME}
-                        job={stakeHolder.JOB}
-                        bio={stakeHolder.DESCRIPTION}
-                        photo={stakeHolder.PHOTO}
-                        mainConvo={stakeHolder.INTRODUCTION}
-                        version={stakeHolder.VERSION}
-                        stakeHolders={stakeHolders}
-                        setStakeHolders={setStakeHolders}
-                        scenario={scenario}
-                    />
-                ))}
+                {fetchedStakeholders.data
+                    ? fetchedStakeholders.data.map((stakeHolder) => (
+                          <StakeHolder
+                              key={stakeHolder.STAKEHOLDER}
+                              removeStakeHolder={removeStakeHolder}
+                              id={stakeHolder.STAKEHOLDER}
+                              name={stakeHolder.NAME}
+                              job={stakeHolder.JOB}
+                              bio={stakeHolder.DESCRIPTION}
+                              photo={stakeHolder.PHOTO}
+                              mainConvo={stakeHolder.INTRODUCTION}
+                              version={stakeHolder.VERSION}
+                              stakeHolders={fetchedStakeholders.data}
+                              setStakeHolders={setStakeHolders}
+                              scenario={scenario}
+                          />
+                      ))
+                    : null}
             </form>
             <SuccessBanner
                 successMessage={successBannerMessage}
