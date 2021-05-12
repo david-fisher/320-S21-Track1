@@ -200,7 +200,6 @@ export default function FlowDiagram({ scenario_ID }) {
     let getData = () => {
         setUnsaved(false);
         function onSuccess(resp) {
-            console.log(resp.data);
             setElements(addEdges(positionElements(resp.data)));
         }
         function onError(resp) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Avatar, Button } from '@material-ui/core';
+import { Avatar, Button, Box } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -10,22 +10,46 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import BasicTable from './table';
-import './stakeHolder.css';
 import QuestionFields from './StakeHolderQuestions/questions';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import PropTypes from 'prop-types';
 import SuccessBanner from './../../../Banners/SuccessBanner';
 import ErrorBanner from './../../../Banners/ErrorBanner';
-import LoadingSpinner from './../../../LoadingSpinner';
+//import LoadingSpinner from './../../../LoadingSpinner';
 import GenericDeleteWarning from '../../../DeleteWarnings/GenericDeleteWarning';
 import { baseURL } from './../../../../Constants/Config';
+import put from './../../../../universalHTTPRequests/put';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
             margin: theme.spacing(1),
         },
+    },
+    containerRow: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
+    containerColumn: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        flexDirection: 'column',
+    },
+    image: {
+        width: '80%',
+        height: '80%',
+    },
+    spacing: {
+        margin: theme.spacing(1),
+    },
+    button: {
+        margin: theme.spacing(1),
+        textTransform: 'unset',
     },
     input: {
         display: 'none',
@@ -83,8 +107,11 @@ StakeHolder.propTypes = {
     photo: PropTypes.any,
     stakeHolders: PropTypes.any,
     setStakeHolders: PropTypes.func,
+    scenario: PropTypes.number,
+    version: PropTypes.number,
 };
 
+const endpointPUT = '/api/stakeholders/';
 export default function StakeHolder({
     name,
     bio,
@@ -95,6 +122,8 @@ export default function StakeHolder({
     photo,
     stakeHolders,
     setStakeHolders,
+    scenario,
+    version,
 }) {
     const classes = useStyles();
 
@@ -113,7 +142,21 @@ export default function StakeHolder({
     const [issues, setIssues] = useState([]);
     const [qRData, setQRData] = useState([]);
     const [isLoading, setLoading] = useState(false);
-
+    const [stakeHolderPUT, setStakeHolderPUT] = useState({
+        data: null,
+        loading: false,
+        error: null,
+    });
+    const [stakeHolderObj, setStakeHolderObj] = useState({
+        DESCRIPTION: bio,
+        INTRODUCTION: mainConvo,
+        JOB: job,
+        NAME: name,
+        PHOTO: photo,
+        SCENARIO: scenario,
+        STAKEHOLDER: id,
+        VERSION: version,
+    });
     var axios = require('axios');
 
     //Warning for Deleteing a Conversation
@@ -247,6 +290,14 @@ export default function StakeHolder({
                 return sh;
             })
         );
+        setStakeHolderObj({
+            ...stakeHolderObj,
+            NAME: shname,
+            JOB: shjob,
+            DESCRIPTION: shbio,
+            INTRODUCTION: shconvo,
+            PHOTO: shphoto,
+        });
     }
 
     function getQRs() {
@@ -300,131 +351,184 @@ export default function StakeHolder({
             });
     }
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
+    const saveStakeHolders = (e) => {
+        function onSuccess(resp) {
+            setSuccessBannerMessage('Successfully saved the stakeholders!');
+            setSuccessBannerFade(true);
+        }
+        function onError(resp) {
+            setErrorBannerMessage(
+                'Failed to save Stakeholders! Please try again.'
+            );
+            setErrorBannerFade(true);
+        }
+        put(
+            setStakeHolderPUT,
+            endpointPUT + id + '/',
+            onError,
+            onSuccess,
+            stakeHolderObj
+        );
+    };
+
+    /*
+        if (stakeHolderPUT.loading || isLoading) {
+            return <LoadingSpinner />;
+        }
+    */
 
     return (
         <div id="parent">
-            <div id="SHname">
-                <TextField
-                    label="StakeHolder Name"
-                    value={stakeHolderName}
-                    onChange={onChangeName}
-                />
-            </div>
-            <div id="SHjob">
-                <TextField
-                    label="StakeHolder Job"
-                    value={stakeHolderJob}
-                    onChange={onChangeJob}
-                />
-            </div>
-
-            <Avatar id="SHimg" src={displayedPhoto} />
-
-            <label id="upl">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    component="span"
-                    style={{ textTransform: 'unset' }}
-                >
-                    Select Image
-                    <input
-                        accept="image/jpeg, image/png"
-                        type="file"
-                        multiple={false}
-                        hidden
-                        onChange={onUploadPhoto}
+            <div className={classes.containerRow}>
+                <div id="SHname" className={classes.spacing}>
+                    <TextField
+                        label="StakeHolder Name"
+                        value={stakeHolderName}
+                        onChange={onChangeName}
                     />
-                </Button>
-            </label>
-
-            <div id="Bio">
-                <Typography
-                    className={classes.label}
-                    variant="h6"
-                    color="initial"
-                >
-                    Biography
-                </Typography>
-                <div onClick={handleClickOpenBio}>
-                    <SunEditor
-                        setContents={bio}
-                        disable={true}
-                        showToolbar={false}
-                        setOptions={{
-                            width: 500,
-                            height: 1,
-                            placeholder:
-                                'Enter the biography of the stakeholder...',
-                            resizingBar: false,
-                            showPathLabel: false,
-                        }}
-                        onChange={handleChangeBiography}
+                </div>
+                <div id="SHjob" className={classes.spacing}>
+                    <TextField
+                        label="StakeHolder Job"
+                        value={stakeHolderJob}
+                        onChange={onChangeJob}
                     />
                 </div>
             </div>
 
-            <div id="MainConversationField">
-                <Typography
-                    className={classes.label}
-                    variant="h6"
-                    color="initial"
+            <Box display="flex" flexDirection="row">
+                <Box
+                    p={1}
+                    className={classes.containerColumn}
+                    style={{ width: '25%' }}
                 >
-                    Main Conversation
-                </Typography>
-                <div onClick={handleClickOpenMainConvo}>
-                    <SunEditor
-                        setContents={mainConvo}
-                        disable={true}
-                        showToolbar={false}
-                        setOptions={{
-                            width: 500,
-                            height: 1,
-                            placeholder:
-                                'Enter the main conversation of the stakeholder...',
-                            resizingBar: false,
-                            showPathLabel: false,
-                        }}
-                        onChange={handleChangeConversation}
+                    <Avatar
+                        id="SHimg"
+                        src={displayedPhoto}
+                        className={classes.image}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        component="span"
+                        className={classes.button}
+                    >
+                        Select Image
+                        <input
+                            accept="image/jpeg, image/png"
+                            type="file"
+                            multiple={false}
+                            hidden
+                            onChange={onUploadPhoto}
+                        />
+                    </Button>
+                </Box>
+
+                <Box p={1} style={{ width: '75%' }}>
+                    <div id="Bio">
+                        <Typography
+                            className={classes.label}
+                            variant="h6"
+                            color="initial"
+                        >
+                            Biography
+                        </Typography>
+                        <div onClick={handleClickOpenBio}>
+                            <SunEditor
+                                setContents={bio}
+                                disable={true}
+                                showToolbar={false}
+                                setOptions={{
+                                    width: 500,
+                                    height: 1,
+                                    placeholder:
+                                        'Enter the biography of the stakeholder...',
+                                    resizingBar: false,
+                                    showPathLabel: false,
+                                }}
+                                onChange={handleChangeBiography}
+                            />
+                        </div>
+                    </div>
+
+                    <div id="MainConversationField">
+                        <Typography
+                            className={classes.label}
+                            variant="h6"
+                            color="initial"
+                        >
+                            Main Conversation
+                        </Typography>
+                        <div onClick={handleClickOpenMainConvo}>
+                            <SunEditor
+                                setContents={mainConvo}
+                                disable={true}
+                                showToolbar={false}
+                                setOptions={{
+                                    width: 500,
+                                    height: 1,
+                                    placeholder:
+                                        'Enter the main conversation of the stakeholder...',
+                                    resizingBar: false,
+                                    showPathLabel: false,
+                                }}
+                                onChange={handleChangeConversation}
+                            />
+                        </div>
+                    </div>
+                </Box>
+            </Box>
+
+            <div className={classes.containerRow}>
+                <div id="SaveButton">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={saveStakeHolders}
+                        className={classes.button}
+                    >
+                        Save
+                    </Button>
+                </div>
+
+                <div id="DeleteButton">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleClickOpen}
+                        className={classes.button}
+                    >
+                        Delete
+                    </Button>
+
+                    <GenericDeleteWarning
+                        remove={() => removeStakeHolder(id)}
+                        setOpen={setOpen}
+                        open={open}
                     />
                 </div>
-            </div>
-            <div id="DeleteButton">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClickOpen}
-                >
-                    Delete
-                </Button>
 
-                <GenericDeleteWarning
-                    remove={() => removeStakeHolder(id)}
-                    setOpen={setOpen}
-                    open={open}
-                />
-            </div>
-            <div id="PointButton">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClickOpenPointSelection}
-                >
-                    Point Selection
-                </Button>
-            </div>
+                <div id="PointButton">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleClickOpenPointSelection}
+                        className={classes.button}
+                    >
+                        Point Selection
+                    </Button>
+                </div>
 
-            <div id="stakequestion">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClickOpenQuestions}
-                >
-                    View Questions
-                </Button>
+                <div id="stakequestion">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleClickOpenQuestions}
+                        className={classes.button}
+                    >
+                        View Questions
+                    </Button>
+                </div>
             </div>
 
             <Dialog
