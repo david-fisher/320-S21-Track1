@@ -15,9 +15,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 QuestionField.propTypes = {
-    key: PropTypes.number,
     id: PropTypes.number,
     removeQuestion: PropTypes.any.isRequired,
+    setError: PropTypes.any,
+    setUnsaved: PropTypes.any,
     question: PropTypes.string,
     response: PropTypes.string,
     QRs: PropTypes.any,
@@ -25,9 +26,10 @@ QuestionField.propTypes = {
 };
 
 export default function QuestionField({
-    key,
     id,
     removeQuestion,
+    setUnsaved,
+    setError,
     question,
     response,
     QRs,
@@ -49,17 +51,22 @@ export default function QuestionField({
         );
     }
 
-    const onChangeQuestion = (e) => {
-        setQuestionValue(e.target.value);
-        updateQRs(e.target.value, responseValue);
-    };
     //Used for delete Warning Popup window
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const onChangeQuestion = (e) => {
+        setError(false);
+        setUnsaved(true);
+        setQuestionValue(e.target.value);
+        updateQRs(e.target.value, responseValue);
+    };
+
     const onChangeResponse = (e) => {
+        setError(false);
+        setUnsaved(true);
         setResponseValue(e.target.value);
         updateQRs(questionValue, e.target.value);
     };
@@ -103,6 +110,7 @@ export default function QuestionField({
                         variant="contained"
                         color="primary"
                         onClick={handleClickOpen}
+                        style={{ textTransform: 'unset' }}
                     >
                         Delete
                     </Button>

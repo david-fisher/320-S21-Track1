@@ -57,6 +57,7 @@ export default function QuestionFields({
                 onClick={addQuestion}
                 variant="contained"
                 color="primary"
+                style={{ textTransform: 'unset' }}
             >
                 Add Question
             </Button>

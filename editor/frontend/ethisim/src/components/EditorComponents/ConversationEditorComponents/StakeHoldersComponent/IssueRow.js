@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 
 // eslint-disable-next-line
 const useStyles = makeStyles((theme) => ({
@@ -16,11 +15,12 @@ const useStyles = makeStyles((theme) => ({
 
 IssueRow.propTypes = {
     name: PropTypes.string,
-    score: PropTypes.number,
+    score: PropTypes.any,
     issue_number: PropTypes.number,
     scenario: PropTypes.number,
     issues: PropTypes.any,
     setIssues: PropTypes.any,
+    setUnsaved: PropTypes.any,
 };
 
 export default function IssueRow({
@@ -29,6 +29,7 @@ export default function IssueRow({
     issue_number,
     issues,
     setIssues,
+    setUnsaved,
 }) {
     const [issueScore, setIssueScore] = useState(score);
 
@@ -45,30 +46,21 @@ export default function IssueRow({
     }
 
     const onChangeScore = (e) => {
+        setUnsaved(true);
         setIssueScore(e.target.value);
         updateIssueScore(e.target.value);
     };
 
     return (
-        <div>
-            <TableRow key={issue_number}>
-                <TableCell component="th" scope="row">
-                    <TextField
-                        id="filled"
-                        defaultValue={name}
-                        variant="filled"
-                    />
-                </TableCell>
-
-                <TableCell>
-                    <TextField
-                        id="filled"
-                        defaultValue={issueScore}
-                        variant="filled"
-                        onChange={onChangeScore}
-                    />
-                </TableCell>
-            </TableRow>
-        </div>
+        <TableCell style={{ width: '100%' }}>
+            <TextField
+                id="filled"
+                defaultValue={issueScore}
+                variant="filled"
+                onChange={onChangeScore}
+                placeholder="0-5"
+                style={{ width: '100%' }}
+            />
+        </TableCell>
     );
 }

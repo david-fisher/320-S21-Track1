@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -7,14 +7,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import './table.css';
 import PropTypes from 'prop-types';
-import SuccessBanner from './../../../Banners/SuccessBanner';
-import ErrorBanner from './../../../Banners/ErrorBanner';
 import IssueRow from './IssueRow';
-import LoadingSpinner from './../../../LoadingSpinner';
-import { baseURL } from './../../../../Constants/Config';
+import put from '../../../../universalHTTPRequests/put';
 
 const useStyles = makeStyles({
     table: {
@@ -25,78 +22,78 @@ const useStyles = makeStyles({
 BasicTable.propTypes = {
     stakeholder_id: PropTypes.number,
     passed_issues: PropTypes.any,
+    setSuccessBannerFade: PropTypes.any,
+    setSuccessBannerMessage: PropTypes.any,
+    setErrorBannerFade: PropTypes.any,
+    setErrorBannerMessage: PropTypes.any,
+    setUnsaved: PropTypes.any,
+    unsaved: PropTypes.any,
 };
 
-export default function BasicTable({ stakeholder_id, passed_issues }) {
+export default function BasicTable({
+    setSuccessBannerFade,
+    setSuccessBannerMessage,
+    setErrorBannerFade,
+    setErrorBannerMessage,
+    setUnsaved,
+    unsaved,
+    stakeholder_id,
+    passed_issues,
+}) {
     //used to track if we are waiting on a HTTP GET/POST/PUT request
     //not needed for DELETE
-    const [isLoading, setLoading] = useState(false);
-
-    //for success and error banners
-    const [successBannerMessage, setSuccessBannerMessage] = useState('');
-    const [successBannerFade, setSuccessBannerFade] = useState(false);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setSuccessBannerFade(false);
-        }, 1000);
-
-        return () => clearTimeout(timeout);
-    }, [successBannerFade]);
-
-    const [errorBannerMessage, setErrorBannerMessage] = useState('');
-    const [errorBannerFade, setErrorBannerFade] = useState(false);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setErrorBannerFade(false);
-        }, 1000);
-
-        return () => clearTimeout(timeout);
-    }, [errorBannerFade]);
-
     const [issues, setIssues] = useState(passed_issues);
 
     const classes = useStyles();
 
+    const [error, setError] = useState(false);
+    // eslint-disable-next-line
+    const [putValue, setPut] = useState({
+        data: null,
+        loading: true,
+        error: null,
+    });
     const handleSave = (e) => {
         if (!checkTime(setCurrentTime, currentTime)) {
             return;
         }
-        setLoading(true);
-
-        var axios = require('axios');
-
         var data = [...issues];
+        const checkInvalidScore = (obj) => {
+            let issueScore = obj.COVERAGE_SCORE
+                ? Number(obj.COVERAGE_SCORE)
+                : null;
+            return (
+                !obj.COVERAGE_SCORE ||
+                isNaN(issueScore) ||
+                issueScore.toString().indexOf('.') !== -1 ||
+                issueScore > 5 ||
+                issueScore < 0
+            );
+        };
+
+        if (data.some(checkInvalidScore)) {
+            setError(true);
+            return;
+        }
         data = data.map((i) => {
-            delete i.NAME;
             return i;
         });
 
-        var config = {
-            method: 'put',
-            url: baseURL + '/multi_coverage?STAKEHOLDER=' + stakeholder_id,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data,
-        };
-
-        axios(config)
-            .then(function (response) {
-                setSuccessBannerMessage(
-                    'Successfully saved the issues for this stakeholder!'
-                );
-                setSuccessBannerFade(true);
-            })
-            .catch(function (error) {
-                setErrorBannerMessage(
-                    'Failed to save the issues for this stakeholder! Please try again.'
-                );
-                setErrorBannerFade(true);
-            });
-
-        setLoading(false);
+        const endpointPUT = '/multi_coverage?STAKEHOLDER=' + stakeholder_id;
+        function onSuccess() {
+            setUnsaved(false);
+            setSuccessBannerMessage(
+                'Successfully saved the issues for this stakeholder!'
+            );
+            setSuccessBannerFade(true);
+        }
+        function onFailure() {
+            setErrorBannerMessage(
+                'Failed to save the issues for this stakeholder! Please try again.'
+            );
+            setErrorBannerFade(true);
+        }
+        put(setPut, endpointPUT, onFailure, onSuccess, data);
     };
 
     /*
@@ -127,10 +124,6 @@ export default function BasicTable({ stakeholder_id, passed_issues }) {
         return ret;
     }
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <div>
             <Button
@@ -138,24 +131,52 @@ export default function BasicTable({ stakeholder_id, passed_issues }) {
                 variant="contained"
                 color="primary"
                 onClick={handleSave}
+                style={{ textTransform: 'unset' }}
             >
                 Save Changes
             </Button>
+            {unsaved ? (
+                <Typography
+                    style={{ marginLeft: '30px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
+                    Unsaved
+                </Typography>
+            ) : null}
+            {error ? (
+                <Typography
+                    style={{ marginLeft: '5px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
+                    Scores must be an integer between 0 and 5.
+                </Typography>
+            ) : null}
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Issue</TableCell>
-                            <TableCell>Score</TableCell>
-                            <TableCell align="right"></TableCell>
+                            <TableCell style={{ width: '50%' }}>
+                                Issue
+                            </TableCell>
+                            <TableCell align="left">Score</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {issues.map((i) => (
                             <TableRow key={i.ISSUE}>
+                                <TableCell component="th" scope="row">
+                                    <Typography variant="h6">
+                                        {i.NAME}
+                                    </Typography>
+                                </TableCell>
                                 <IssueRow
                                     name={i.NAME}
                                     score={i.COVERAGE_SCORE}
+                                    setUnsaved={setUnsaved}
                                     issue_number={i.ISSUE}
                                     issues={issues}
                                     setIssues={setIssues}
@@ -165,14 +186,6 @@ export default function BasicTable({ stakeholder_id, passed_issues }) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <SuccessBanner
-                successMessage={successBannerMessage}
-                fade={successBannerFade}
-            />
-            <ErrorBanner
-                errorMessage={errorBannerMessage}
-                fade={errorBannerFade}
-            />
         </div>
     );
 }

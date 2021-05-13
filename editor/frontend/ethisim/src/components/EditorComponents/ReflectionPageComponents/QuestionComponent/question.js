@@ -63,6 +63,7 @@ export default function QuestionField({
                             variant="contained"
                             color="primary"
                             onClick={handleClickOpen}
+                            style={{ textTransform: 'unset' }}
                         >
                             Delete
                         </Button>

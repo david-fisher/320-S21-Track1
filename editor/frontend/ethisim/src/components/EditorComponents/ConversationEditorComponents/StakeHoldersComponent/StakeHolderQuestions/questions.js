@@ -1,146 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import QuestionField from './question';
-import Button from '@material-ui/core/Button';
-import './questions.css';
+import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import SuccessBanner from './../../../../Banners/SuccessBanner';
-import ErrorBanner from './../../../../Banners/ErrorBanner';
-import LoadingSpinner from './../../../../LoadingSpinner';
-import { baseURL } from './../../../../../Constants/Config';
+import deleteReq from '../../../../../universalHTTPRequests/delete';
+import put from '../../../../../universalHTTPRequests/put';
+import post from '../../../../../universalHTTPRequests/post';
 
 QuestionFields.propTypes = {
     qrs: PropTypes.any,
     stakeholder_id: PropTypes.number,
+    setSuccessBannerFade: PropTypes.any,
+    setSuccessBannerMessage: PropTypes.any,
+    setErrorBannerFade: PropTypes.any,
+    setErrorBannerMessage: PropTypes.any,
+    setUnsaved: PropTypes.any,
+    unsaved: PropTypes.any,
 };
 
-export default function QuestionFields({ qrs, stakeholder_id }) {
-    //used to track if we are waiting on a HTTP GET/POST/PUT request
-    //not needed for DELETE
-    const [isLoading, setLoading] = useState(false);
-    var axios = require('axios');
-
-    //for success and error banners
-    const [successBannerMessage, setSuccessBannerMessage] = useState('');
-    const [successBannerFade, setSuccessBannerFade] = useState(false);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setSuccessBannerFade(false);
-        }, 1000);
-
-        return () => clearTimeout(timeout);
-    }, [successBannerFade]);
-
-    const [errorBannerMessage, setErrorBannerMessage] = useState('');
-    const [errorBannerFade, setErrorBannerFade] = useState(false);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setErrorBannerFade(false);
-        }, 1000);
-
-        return () => clearTimeout(timeout);
-    }, [errorBannerFade]);
-
+export default function QuestionFields({
+    setSuccessBannerFade,
+    setSuccessBannerMessage,
+    setErrorBannerFade,
+    setErrorBannerMessage,
+    setUnsaved,
+    unsaved,
+    qrs,
+    stakeholder_id,
+}) {
+    const [error, setError] = useState(false);
     const [QRs, setQRs] = useState(qrs);
 
+    // eslint-disable-next-line
+    const [putValue, setPut] = useState({
+        data: null,
+        loading: true,
+        error: null,
+    });
     const handleSave = (e) => {
-        var axios = require('axios');
-        var data = QRs;
-
-        var config = {
-            method: 'put',
-            url: baseURL + '/multi_conv?STAKEHOLDER=' + stakeholder_id,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data,
-        };
-
-        axios(config)
-            .then(function (response) {
-                setSuccessBannerMessage(
-                    'Successfully saved the conversations for this stakeholder!'
-                );
-                setSuccessBannerFade(true);
-            })
-            .catch(function (error) {
-                setErrorBannerMessage(
-                    'Failed to save the conversations for this stakeholder! Please try again.'
-                );
-                setErrorBannerFade(true);
-            });
+        const endpointPUT = '/multi_conv?STAKEHOLDER=' + stakeholder_id;
+        const checkIfEmpty = (obj) =>
+            !obj.QUESTION ||
+            !obj.QUESTION.trim() ||
+            !obj.RESPONSE ||
+            !obj.RESPONSE.trim();
+        if (QRs.some(checkIfEmpty)) {
+            setError(true);
+            return;
+        }
+        setError(false);
+        function onSuccess() {
+            setUnsaved(false);
+            setSuccessBannerFade(true);
+            setSuccessBannerMessage(
+                'Successfully saved stakeholder question and answers!'
+            );
+        }
+        function onFailure() {
+            setErrorBannerMessage('Failed to save! Please try again.');
+            setErrorBannerFade(true);
+        }
+        put(setPut, endpointPUT, onFailure, onSuccess, QRs);
     };
 
+    // eslint-disable-next-line
+    const [postValue, setPost] = useState({
+        data: null,
+        loading: true,
+        error: null,
+    });
     const addQuestion = (e) => {
         if (!checkTime(setCurrentTime, currentTime)) {
             return;
         }
-        setLoading(true);
-
-        var data = JSON.stringify({ STAKEHOLDER: stakeholder_id });
-
-        var config = {
-            method: 'post',
-            url: baseURL + '/api/conversations/',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data,
-        };
-
-        axios(config)
-            .then(function (response) {
-                const newQRs = [...QRs, response.data];
-                setQRs(newQRs);
-                setSuccessBannerMessage('Successfully created a conversation!');
-                setSuccessBannerFade(true);
-            })
-            .catch(function (error) {
-                setErrorBannerMessage(
-                    'Failed to create a conversation! Please try again.'
-                );
-                setErrorBannerFade(true);
-            });
-
-        setLoading(false);
+        const endpointPOST = '/api/conversations/';
+        var data = { STAKEHOLDER: stakeholder_id };
+        function onSuccess(resp) {
+            console.log(resp);
+            const newQRs = [...QRs, resp.data];
+            setQRs(newQRs);
+            setSuccessBannerMessage('Successfully created a conversation!');
+            setSuccessBannerFade(true);
+        }
+        function onFailure() {
+            setErrorBannerMessage(
+                'Failed to create a conversation! Please try again.'
+            );
+            setErrorBannerFade(true);
+        }
+        post(setPost, endpointPOST, onFailure, onSuccess, data);
     };
 
+    // eslint-disable-next-line
+    const [deleteValue, setDelete] = useState({
+        data: null,
+        loading: true,
+        error: null,
+    });
     const removeQuestion = (questionID) => {
         if (!checkTime(setCurrentTime, currentTime)) {
             return;
         }
-        setLoading(true);
-
-        const leftQuestions = QRs.filter((q) => q.CONVERSATION !== questionID);
-        setQRs(leftQuestions);
-
-        var data = JSON.stringify({});
-
-        var config = {
-            method: 'delete',
-            url: baseURL + '/api/conversations/' + questionID + '/',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data,
-        };
-
-        axios(config)
-            .then(function (response) {
-                setSuccessBannerMessage(
-                    'Successfully deleted the conversation!'
-                );
-                setSuccessBannerFade(true);
-            })
-            .catch(function (error) {
-                setErrorBannerMessage(
-                    'Failed to delete the conversation! Please try again.'
-                );
-                setErrorBannerFade(true);
-            });
-
-        setLoading(false);
+        const endpointDELETE = '/api/conversations/' + questionID + '/';
+        function onSuccess() {
+            const leftQuestions = QRs.filter(
+                (q) => q.CONVERSATION !== questionID
+            );
+            setQRs(leftQuestions);
+            setSuccessBannerMessage('Successfully deleted the conversation!');
+            setSuccessBannerFade(true);
+        }
+        function onFailure() {
+            setErrorBannerMessage(
+                'Failed to delete the conversation! Please try again.'
+            );
+            setErrorBannerFade(true);
+        }
+        deleteReq(setDelete, endpointDELETE, onFailure, onSuccess);
     };
 
     /*
@@ -171,32 +146,52 @@ export default function QuestionFields({ qrs, stakeholder_id }) {
         return ret;
     }
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
-        <div className="questions">
+        <div>
             <Button
                 id="button"
                 onClick={addQuestion}
                 variant="contained"
                 color="primary"
+                style={{ textTransform: 'unset' }}
             >
-                Add Question
+                Add Questions
             </Button>
             <Button
                 id="button"
                 variant="contained"
                 color="primary"
                 onClick={handleSave}
+                style={{ textTransform: 'unset', marginLeft: '5px' }}
             >
                 Save Changes
             </Button>
+            {unsaved ? (
+                <Typography
+                    style={{ marginLeft: '30px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
+                    Unsaved
+                </Typography>
+            ) : null}
+            {error ? (
+                <Typography
+                    style={{ marginLeft: '5px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
+                    One or more text fields are empty!
+                </Typography>
+            ) : null}
             <form id="form">
                 {QRs.map((data) => (
                     <QuestionField
-                        key={data.STAKEHOLDER}
+                        setUnsaved={setUnsaved}
+                        setError={setError}
+                        key={data.CONVERSATION}
                         id={data.CONVERSATION}
                         removeQuestion={removeQuestion}
                         question={data.QUESTION}
@@ -206,14 +201,6 @@ export default function QuestionFields({ qrs, stakeholder_id }) {
                     />
                 ))}
             </form>
-            <SuccessBanner
-                successMessage={successBannerMessage}
-                fade={successBannerFade}
-            />
-            <ErrorBanner
-                errorMessage={errorBannerMessage}
-                fade={errorBannerFade}
-            />
         </div>
     );
 }

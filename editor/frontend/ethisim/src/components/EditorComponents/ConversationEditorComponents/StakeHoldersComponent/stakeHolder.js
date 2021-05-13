@@ -4,8 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import { Avatar, Button, Box, DialogTitle } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import BasicTable from './table';
@@ -20,7 +18,7 @@ import ErrorBanner from './../../../Banners/ErrorBanner';
 //import LoadingSpinner from './../../../LoadingSpinner';
 import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
 import GenericUnsavedWarning from '../../../WarningDialogs/GenericUnsavedWarning';
-import { baseURL } from './../../../../Constants/Config';
+import get from './../../../../universalHTTPRequests/get';
 import put from './../../../../universalHTTPRequests/put';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
         textTransform: 'unset',
+        height: '32px',
     },
     dialog: {
         overflowX: 'hidden',
@@ -65,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         marginLeft: 'auto',
         float: 'right',
+        height: '32px',
     },
     input: {
         display: 'none',
@@ -74,19 +74,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 15,
     },
 }));
-
-const styles = (theme) => ({
-    root: {
-        margin: 1,
-        padding: theme.spacing(2),
-    },
-    closeButton: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500],
-    },
-});
 
 const DialogContent = withStyles((theme) => ({
     root: {
@@ -136,9 +123,7 @@ export default function StakeHolder({
         mainConvo
     );
     const [displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
-    const [issues, setIssues] = useState([]);
-    const [qRData, setQRData] = useState([]);
-    const [isLoading, setLoading] = useState(false);
+
     const [errorBody, setErrorBody] = useState(false);
     const [stakeHolderPUT, setStakeHolderPUT] = useState({
         data: null,
@@ -157,9 +142,9 @@ export default function StakeHolder({
     });
     const [unsavedMainConvo, setUnsavedMainConvo] = useState(false);
     const [unsavedBio, setUnsavedBio] = useState(false);
+    const [unsavedQuestions, setUnsavedQuestions] = useState(false);
+    const [unsavedPointSelection, setUnsavedPointSelection] = useState(false);
     const [generalUnsaved, setGeneralUnsaved] = useState(false);
-
-    var axios = require('axios');
 
     //Warning for Deleteing a Conversation
     const [openDeleteWarningDialog, setOpenDeleteWarningDialog] = useState(
@@ -181,7 +166,6 @@ export default function StakeHolder({
     // eslint-disable-next-line
     const [successBannerMessage, setSuccessBannerMessage] = useState('');
     const [successBannerFade, setSuccessBannerFade] = useState(false);
-
     useEffect(() => {
         const timeout = setTimeout(() => {
             setSuccessBannerFade(false);
@@ -192,7 +176,6 @@ export default function StakeHolder({
 
     const [errorBannerMessage, setErrorBannerMessage] = useState('');
     const [errorBannerFade, setErrorBannerFade] = useState(false);
-
     useEffect(() => {
         const timeout = setTimeout(() => {
             setErrorBannerFade(false);
@@ -203,26 +186,41 @@ export default function StakeHolder({
 
     //TABLE
     const handleClickOpenBio = () => {
+        setUnsavedBio(true);
         setOpenBio(true);
     };
     const handleCloseBio = () => {
         setUnsavedBio(false);
         setOpenUnsavedWarningDialog(false);
         setOpenBio(false);
+        updateStakeholderInfo(
+            stakeHolderName,
+            stakeHolderJob,
+            stakeHolderBiography,
+            stakeHolderConversation
+        );
     };
     const handleClickOpenMainConvo = () => {
+        setUnsavedMainConvo(true);
         setOpenMainConvo(true);
     };
     const handleCloseMainConvo = () => {
         setUnsavedMainConvo(false);
         setOpenUnsavedWarningDialog(false);
         setOpenMainConvo(false);
+        updateStakeholderInfo(
+            stakeHolderName,
+            stakeHolderJob,
+            stakeHolderBiography,
+            stakeHolderConversation
+        );
     };
 
     const handleClickOpenPointSelection = () => {
         getIssues();
     };
     const handleClosePointSelection = () => {
+        setUnsavedPointSelection(false);
         setOpenUnsavedWarningDialog(false);
         setOpenPointSelection(false);
     };
@@ -231,13 +229,13 @@ export default function StakeHolder({
         getQRs();
     };
     const handleCloseQuestions = () => {
+        setUnsavedQuestions(false);
         setOpenUnsavedWarningDialog(false);
         setOpenQuestions(false);
     };
 
     let handleChangeBiography = (content, editor) => {
         setUnsavedBio(true);
-        setStakeHolderBiography(content);
         updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
@@ -248,7 +246,6 @@ export default function StakeHolder({
 
     let handleChangeConversation = (content, editor) => {
         setUnsavedMainConvo(true);
-        setStakeHolderConversation(content);
         updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
@@ -321,63 +318,53 @@ export default function StakeHolder({
         });
     }
 
+    const [getQRsObj, setGetQRsObj] = useState({
+        data: null,
+        loading: false,
+        error: null,
+    });
     function getQRs() {
-        var data = {};
-        var config = {
-            method: 'get',
-            url: baseURL + '/api/conversations/?STAKEHOLDER=' + id,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data,
-        };
-
-        axios(config)
-            .then(function (response) {
-                setQRData(response.data);
-                setOpenQuestions(true);
-            })
-            .catch(function (error) {
-                setErrorBannerMessage(
-                    'Failed to get the conversation(s) for this stakeholder! Please try again.'
-                );
-                setErrorBannerFade(true);
-            });
+        const getEndpointQRs = '/api/conversations/?STAKEHOLDER=' + id;
+        function onSuccess() {
+            setOpenQuestions(true);
+        }
+        function onError(resp) {
+            setErrorBannerMessage(
+                'Failed to get stakeholder questions and answers! Please try again.'
+            );
+            setErrorBannerFade(true);
+        }
+        get(setGetQRsObj, getEndpointQRs, onError, onSuccess);
     }
 
+    const [getIssuesObj, setGetIssuesObj] = useState({
+        data: null,
+        loading: false,
+        error: null,
+    });
     function getIssues() {
-        setLoading(true);
-        var data = JSON.stringify({});
-
-        var config = {
-            method: 'get',
-            url: baseURL + '/coverages?stakeholder_id=' + id,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: data,
-        };
-
-        axios(config)
-            .then(function (response) {
-                setIssues(response.data.ISSUES);
-                setLoading(false);
-                setOpenPointSelection(true);
-            })
-            .catch(function (error) {
-                setErrorBannerMessage(
-                    'Failed to get the issue(s) for this stakeholder! Please try again.'
-                );
-                setErrorBannerFade(true);
-            });
+        const getEndpointIssues = '/coverages?stakeholder_id=';
+        function onSuccess() {
+            setOpenPointSelection(true);
+        }
+        function onError(resp) {
+            setErrorBannerMessage(
+                'Failed to get the issue(s) for this stakeholder! Please try again.'
+            );
+            setErrorBannerFade(true);
+        }
+        get(setGetIssuesObj, getEndpointIssues + id, onError, onSuccess);
     }
 
+    const [error, setError] = useState(false);
     const saveStakeHolders = (e) => {
         function onSuccess(resp) {
             setGeneralUnsaved(false);
             setUnsavedBio(false);
             setUnsavedMainConvo(false);
-            setSuccessBannerMessage('Successfully saved the stakeholders!');
+            setStakeHolderBiography(resp.data.DESCRIPTION);
+            setStakeHolderConversation(resp.data.INTRODUCTION);
+            setSuccessBannerMessage('Successfully saved the stakeholder!');
             setSuccessBannerFade(true);
         }
         function onError(resp) {
@@ -386,12 +373,40 @@ export default function StakeHolder({
             );
             setErrorBannerFade(true);
         }
-        put(
-            setStakeHolderPUT,
-            endpointPUT + id + '/',
-            onError,
-            onSuccess,
-            stakeHolderObj
+
+        if (
+            !stakeHolderObj.DESCRIPTION ||
+            !stakeHolderObj.DESCRIPTION.trim() ||
+            !stakeHolderObj.INTRODUCTION ||
+            !stakeHolderObj.INTRODUCTION.trim()
+        ) {
+            setErrorBody(true);
+            return;
+        }
+        setErrorBody(false);
+
+        if (
+            !stakeHolderObj.JOB ||
+            !stakeHolderObj.JOB.trim() ||
+            !stakeHolderObj.NAME ||
+            !stakeHolderObj.NAME.trim()
+        ) {
+            setError(true);
+            return;
+        }
+        setError(false);
+
+        //1 second of timeout needed for text editor to save data
+        setTimeout(
+            () =>
+                put(
+                    setStakeHolderPUT,
+                    endpointPUT + id + '/',
+                    onError,
+                    onSuccess,
+                    stakeHolderObj
+                ),
+            1000
         );
     };
 
@@ -403,6 +418,34 @@ export default function StakeHolder({
 
     return (
         <div id="parent">
+            <SuccessBanner
+                successMessage={successBannerMessage}
+                fade={successBannerFade}
+            />
+            <ErrorBanner
+                errorMessage={errorBannerMessage}
+                fade={errorBannerFade}
+            />
+            {generalUnsaved ? (
+                <Typography
+                    style={{ marginLeft: '30px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
+                    Unsaved
+                </Typography>
+            ) : null}
+            {error ? (
+                <Typography
+                    style={{ marginLeft: '5px' }}
+                    variant="h6"
+                    align="center"
+                    color="error"
+                >
+                    Fields cannot be empty.
+                </Typography>
+            ) : null}
             <div className={classes.containerRow}>
                 <div id="SHname" className={classes.spacing}>
                     <TextField
@@ -561,6 +604,8 @@ export default function StakeHolder({
                 maxWidth="lg"
                 fullWidth={true}
                 className={classes.dialog}
+                disableBackdropClick={true}
+                disableEscapeKeyDown={true}
             >
                 <GenericUnsavedWarning
                     func={handleCloseBio}
@@ -595,6 +640,7 @@ export default function StakeHolder({
                             className={classes.exitOutButton}
                             variant="contained"
                             color="primary"
+                            disabled={stakeHolderPUT.loading}
                             onClick={
                                 unsavedBio
                                     ? handleOpenUnsavedWarningDialog
@@ -605,7 +651,7 @@ export default function StakeHolder({
                         </Button>
                     </DialogTitle>
                     <DialogContent className={classes.dialog}>
-                        {unsavedBio ? (
+                        {/*unsavedBio ? (
                             <Typography
                                 style={{ marginLeft: '30px' }}
                                 variant="h6"
@@ -614,7 +660,7 @@ export default function StakeHolder({
                             >
                                 Unsaved
                             </Typography>
-                        ) : null}
+                        ) : null*/}
                         <Body
                             body={bio}
                             setBody={handleChangeBiography}
@@ -634,6 +680,8 @@ export default function StakeHolder({
                 fullWidth={true}
                 open={openMainConvo}
                 className={classes.dialog}
+                disableBackdropClick={true}
+                disableEscapeKeyDown={true}
             >
                 <GenericUnsavedWarning
                     func={handleCloseMainConvo}
@@ -668,6 +716,7 @@ export default function StakeHolder({
                             className={classes.exitOutButton}
                             variant="contained"
                             color="primary"
+                            disabled={stakeHolderPUT.loading}
                             onClick={
                                 unsavedMainConvo
                                     ? handleOpenUnsavedWarningDialog
@@ -678,7 +727,7 @@ export default function StakeHolder({
                         </Button>
                     </DialogTitle>
                     <DialogContent className={classes.dialog}>
-                        {unsavedMainConvo ? (
+                        {/*unsavedMainConvo ? (
                             <Typography
                                 style={{ marginLeft: '30px' }}
                                 variant="h6"
@@ -687,7 +736,7 @@ export default function StakeHolder({
                             >
                                 Unsaved
                             </Typography>
-                        ) : null}
+                        ) : null*/}
                         <Body
                             body={mainConvo}
                             setBody={handleChangeConversation}
@@ -703,52 +752,114 @@ export default function StakeHolder({
             <Dialog
                 onClose={handleCloseQuestions}
                 aria-labelledby="customized-dialog-title"
-                maxWidth={false}
                 open={openQuestions}
+                maxWidth="md"
+                fullWidth={true}
+                className={classes.dialog}
+                disableBackdropClick={true}
+                disableEscapeKeyDown={true}
             >
-                <div style={{ width: 900 }}>
-                    <DialogTitle
-                        id="customized-dialog-title"
-                        onClose={handleCloseQuestions}
+                <GenericUnsavedWarning
+                    func={handleCloseQuestions}
+                    setOpen={setOpenUnsavedWarningDialog}
+                    open={openUnsavedWarningDialog}
+                />
+                <DialogTitle
+                    disableTypography={true}
+                    style={{ display: 'flex' }}
+                >
+                    <Typography
+                        variant="h5"
+                        align="center"
+                        component="div"
+                        style={{ display: 'flex' }}
                     >
-                        <h2 className="questions-header">Questions</h2>
-                    </DialogTitle>
-                    <DialogContent>
-                        <QuestionFields qrs={qRData} stakeholder_id={id} />
-                    </DialogContent>
-                </div>
+                        Stakeholder Questions and Answers
+                    </Typography>
+                    <Button
+                        className={classes.exitOutButton}
+                        variant="contained"
+                        color="primary"
+                        disabled={stakeHolderPUT.loading}
+                        onClick={
+                            unsavedQuestions
+                                ? handleOpenUnsavedWarningDialog
+                                : handleCloseQuestions
+                        }
+                    >
+                        <HighlightOffIcon />
+                    </Button>
+                </DialogTitle>
+                <DialogContent>
+                    <QuestionFields
+                        setErrorBannerFade={setErrorBannerFade}
+                        setErrorBannerMessage={setErrorBannerMessage}
+                        setSuccessBannerMessage={setSuccessBannerMessage}
+                        setSuccessBannerFade={setSuccessBannerFade}
+                        setUnsaved={setUnsavedQuestions}
+                        unsaved={unsavedQuestions}
+                        qrs={getQRsObj.data ? getQRsObj.data : []}
+                        stakeholder_id={id}
+                    />
+                </DialogContent>
             </Dialog>
 
             <Dialog
                 onClose={handleClosePointSelection}
                 aria-labelledby="customized-dialog-title"
                 open={openPointSelection}
+                maxWidth="lg"
+                fullWidth={true}
+                className={classes.dialog}
+                disableBackdropClick={true}
+                disableEscapeKeyDown={true}
             >
-                <div className="point-selection-body" style={{ width: 500 }}>
-                    <DialogTitle
-                        id="customized-dialog-title"
-                        onClose={handleClosePointSelection}
+                <GenericUnsavedWarning
+                    func={handleClosePointSelection}
+                    setOpen={setOpenUnsavedWarningDialog}
+                    open={openUnsavedWarningDialog}
+                />
+                <DialogTitle
+                    disableTypography={true}
+                    style={{ display: 'flex' }}
+                >
+                    <Typography
+                        variant="h5"
+                        align="center"
+                        component="div"
+                        style={{ display: 'flex' }}
                     >
-                        <div className="point-selection-header">
-                            Point Selection
-                        </div>
-                    </DialogTitle>
-                    <DialogContent>
-                        <BasicTable
-                            stakeholder_id={id}
-                            passed_issues={issues}
-                        />
-                    </DialogContent>
-                </div>
+                        Stakeholder Questions and Answers
+                    </Typography>
+                    <Button
+                        className={classes.exitOutButton}
+                        variant="contained"
+                        color="primary"
+                        disabled={stakeHolderPUT.loading}
+                        onClick={
+                            unsavedPointSelection
+                                ? handleOpenUnsavedWarningDialog
+                                : handleClosePointSelection
+                        }
+                    >
+                        <HighlightOffIcon />
+                    </Button>
+                </DialogTitle>
+                <DialogContent>
+                    <BasicTable
+                        setErrorBannerFade={setErrorBannerFade}
+                        setErrorBannerMessage={setErrorBannerMessage}
+                        setSuccessBannerMessage={setSuccessBannerMessage}
+                        setSuccessBannerFade={setSuccessBannerFade}
+                        setUnsaved={setUnsavedPointSelection}
+                        unsaved={unsavedPointSelection}
+                        stakeholder_id={id}
+                        passed_issues={
+                            getIssuesObj.data ? getIssuesObj.data.ISSUES : []
+                        }
+                    />
+                </DialogContent>
             </Dialog>
-            <SuccessBanner
-                successMessage={successBannerMessage}
-                fade={successBannerFade}
-            />
-            <ErrorBanner
-                errorMessage={errorBannerMessage}
-                fade={errorBannerFade}
-            />
         </div>
     );
 }

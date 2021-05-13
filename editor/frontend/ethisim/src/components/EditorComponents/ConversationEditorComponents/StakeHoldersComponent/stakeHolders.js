@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import SuccessBanner from './../../../Banners/SuccessBanner';
 import ErrorBanner from './../../../Banners/ErrorBanner';
 import LoadingSpinner from './../../../LoadingSpinner';
-import { baseURL } from './../../../../Constants/Config';
 import { makeStyles } from '@material-ui/core/styles';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import get from './../../../../universalHTTPRequests/get';
@@ -46,11 +45,6 @@ export default function StakeHolderFields({ scenario, version }) {
     const classes = useStyles();
     //TODO when/if versions get implemented
     version = version ? version : 1;
-    /*
-     * This section is code that is essentially the middleware between the frontend and backend
-     * Handles API calls between frontend and backend
-     */
-    var axios = require('axios');
     //tracks current state of stakeholders to be represented on the frontend
     const [fetchedStakeholders, setFetchedStakeholders] = useState({
         data: null,
@@ -67,8 +61,8 @@ export default function StakeHolderFields({ scenario, version }) {
         loading: false,
         error: null,
     });
-    const [stakeHolders, setStakeHolders] = useState([]);
-    const setStakeHolder = (arr) => {
+    // eslint-disable-next-line
+    const setStakeHolders = (arr) => {
         setFetchedStakeholders({
             ...fetchedStakeholders,
             data: arr,
@@ -246,6 +240,14 @@ export default function StakeHolderFields({ scenario, version }) {
 
     return (
         <div className={classes.container}>
+            <SuccessBanner
+                successMessage={successBannerMessage}
+                fade={successBannerFade}
+            />
+            <ErrorBanner
+                errorMessage={errorBannerMessage}
+                fade={errorBannerFade}
+            />
             <div>
                 <Button
                     variant="contained"
@@ -295,14 +297,6 @@ export default function StakeHolderFields({ scenario, version }) {
                       ))
                     : null}
             </form>
-            <SuccessBanner
-                successMessage={successBannerMessage}
-                fade={successBannerFade}
-            />
-            <ErrorBanner
-                errorMessage={errorBannerMessage}
-                fade={errorBannerFade}
-            />
         </div>
     );
 }
