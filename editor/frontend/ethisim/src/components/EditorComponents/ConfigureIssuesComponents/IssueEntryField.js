@@ -80,6 +80,7 @@ export default function IssueEntryField({
     const [issueName, setIssueName] = useState(issue ? issue : '');
     const [newIssue, setNewIssue] = useState(isNewIssue);
     const [unsaved, setUnsaved] = useState(isNewIssue);
+    // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
     const handleChangeScore = (content) => {
         let arr = [...issueEntryFieldList.data];

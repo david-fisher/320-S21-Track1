@@ -14,6 +14,7 @@ Body.propTypes = {
 
 export default function Body(props) {
     const { body, setBody, error, errorMessage } = props;
+    // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
     var firstTime = true;
     //Executes handleChange when you first click on the text editor

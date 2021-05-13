@@ -23,6 +23,7 @@ export default function Title(props) {
     const error = props.error;
     const errorMessage = props.errorMessage;
     const disabled = props.disabled;
+    // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     let handleChange = (content) => {

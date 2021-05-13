@@ -32,6 +32,7 @@ export default function IssueEntryFieldList({
     scenarioID,
 }) {
     const classes = useStyles();
+    // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     //When we select new issue button, we add new issue object into array.

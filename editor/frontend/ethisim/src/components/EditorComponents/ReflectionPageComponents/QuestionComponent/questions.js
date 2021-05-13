@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import QuestionField from './question';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import './questions.css';
 import PropTypes from 'prop-types';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
@@ -17,6 +16,7 @@ export default function QuestionFields({
     setQuestions,
     setReqBodyNew,
 }) {
+    // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
     //When we select new issue button, we add new issue object into array.
     //We set a temporary unique ID.

@@ -146,6 +146,7 @@ export default function StakeHolder({
     const [unsavedQuestions, setUnsavedQuestions] = useState(false);
     const [unsavedPointSelection, setUnsavedPointSelection] = useState(false);
     const [generalUnsaved, setGeneralUnsaved] = useState(false);
+    // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     //used for delete warning dialog
