@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import EntryField from './IssueEntryField';
 import { Container, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -31,6 +32,7 @@ export default function IssueEntryFieldList({
     scenarioID,
 }) {
     const classes = useStyles();
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     //When we select new issue button, we add new issue object into array.
     //We set a temporary unique ID.
@@ -53,6 +55,7 @@ export default function IssueEntryFieldList({
     const [entryCur, setEntryCur] = useState({
         ISSUE: setNewIssueID(),
         isNewIssue: true,
+        unsaved: true,
     });
 
     const addIssue = (e) => {
@@ -60,9 +63,11 @@ export default function IssueEntryFieldList({
         const newEntry = entryCur;
         issueEntryFieldList.data = issueEntryFieldList.data.concat(newEntry);
         setIssueEntryFieldList(issueEntryFieldList);
+        setGlobalUnsaved(true);
         setEntryCur({
             ISSUE: setNewIssueID(),
             isNewIssue: true,
+            unsaved: true,
         });
     };
 

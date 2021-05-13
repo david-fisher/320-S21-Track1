@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Button, Box, Typography } from '@material-ui/core';
@@ -7,6 +7,8 @@ import GenericDeleteWarning from '../../WarningDialogs/GenericDeleteWarning';
 import deleteReq from '../../../universalHTTPRequests/delete';
 import post from '../../../universalHTTPRequests/post';
 import put from '../../../universalHTTPRequests/put';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+
 const endpointPOST = '/api/issues/';
 //Need issueID
 const endpointPUT = '/api/issues/';
@@ -78,13 +80,47 @@ export default function IssueEntryField({
     const [issueName, setIssueName] = useState(issue ? issue : '');
     const [newIssue, setNewIssue] = useState(isNewIssue);
     const [unsaved, setUnsaved] = useState(isNewIssue);
-
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
     const handleChangeScore = (content) => {
+        let arr = [...issueEntryFieldList.data];
+        arr = arr.map((x) => {
+            //Compare with original id rather than issueID to avoid issues with changing issueIDs
+            //for newly created issues that are saved into the database and get a new ID
+            if (x.ISSUE === id) {
+                return {
+                    ...x,
+                    unsaved: true,
+                };
+            }
+            return x;
+        });
+        setIssueEntryFieldList({
+            ...issueEntryFieldList,
+            data: arr,
+        });
+        setGlobalUnsaved(true);
         setUnsaved(true);
         setIssueScore(content.target.value);
     };
 
     const handleChangeName = (content) => {
+        let arr = [...issueEntryFieldList.data];
+        arr = arr.map((x) => {
+            //Compare with original id rather than issueID to avoid issues with changing issueIDs
+            //for newly created issues that are saved into the database and get a new ID
+            if (x.ISSUE === id) {
+                return {
+                    ...x,
+                    unsaved: true,
+                };
+            }
+            return x;
+        });
+        setIssueEntryFieldList({
+            ...issueEntryFieldList,
+            data: arr,
+        });
+        setGlobalUnsaved(true);
         setUnsaved(true);
         setIssueName(content.target.value);
     };
@@ -134,6 +170,20 @@ export default function IssueEntryField({
                 function onSuccess(resp) {
                     //if newly created issue, replace fake ID with new ID
                     if (resp.data) {
+                        let arr = [...issueEntryFieldList.data];
+                        arr = arr.map((x) => {
+                            if (x.ISSUE === id) {
+                                delete x.unsaved;
+                            }
+                            return x;
+                        });
+                        setIssueEntryFieldList({
+                            ...issueEntryFieldList,
+                            data: arr,
+                        });
+                        if (!arr.some((x) => x.unsaved)) {
+                            setGlobalUnsaved(false);
+                        }
                         setUnsaved(false);
                         setIssueID(resp.data.ISSUE);
                         setSuccessBannerFade(true);
@@ -153,6 +203,23 @@ export default function IssueEntryField({
                 });
             } else {
                 function onSuccess() {
+                    let arr = [...issueEntryFieldList.data];
+                    arr = arr.map((x) => {
+                        if (x.ISSUE === id) {
+                            return {
+                                ...x,
+                                unsaved: false,
+                            };
+                        }
+                        return x;
+                    });
+                    setIssueEntryFieldList({
+                        ...issueEntryFieldList,
+                        data: arr,
+                    });
+                    if (!arr.some((x) => x.unsaved)) {
+                        setGlobalUnsaved(false);
+                    }
                     setUnsaved(false);
                     setSuccessBannerFade(true);
                     setSuccessBannerMessage('Successfully updated issue!');

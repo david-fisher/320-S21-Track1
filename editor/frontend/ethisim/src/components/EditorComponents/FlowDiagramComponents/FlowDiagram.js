@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Typography,
@@ -33,6 +33,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import PropTypes from 'prop-types';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     errorContainer: {
@@ -101,8 +102,8 @@ export default function FlowDiagram({ scenario_ID }) {
     });
 
     const [elements, setElements] = useState([]);
-    const [unsaved, setUnsaved] = useState(false);
     const [errorText, setErrorText] = useState('');
+    const [unsaved, setUnsaved] = useContext(GlobalUnsavedContext);
 
     function positionElements(elements) {
         let introductionElement = elements.filter((componentData) => {
@@ -366,7 +367,6 @@ export default function FlowDiagram({ scenario_ID }) {
             }
             return array;
         }, []);
-        console.log(updatedElements);
         put(
             setElementsPUT,
             endpointPUT + scenarioID,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, TextField, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Body from '../GeneralPageComponents/Body';
@@ -9,6 +9,7 @@ import universalDelete from '../../../universalHTTPRequests/delete.js';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import LoadingSpinner from '../../LoadingSpinner';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 Action.propTypes = {
     scenarioComponents: PropTypes.any,
@@ -103,6 +104,7 @@ export default function Action(props) {
     const [errorOption1Text, setErrorOption1Text] = useState(false);
     const [errorOption2, setErrorOption2] = useState(false);
     const [errorOption2Text, setErrorOption2Text] = useState(false);
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     var postReqBody = {
         PAGE: pageID,
@@ -133,6 +135,7 @@ export default function Action(props) {
             setScenarioComponents(newScenarioComponents);
             setSuccessBannerFade(true);
             setSuccessBannerMessage('Successfully saved page!');
+            setGlobalUnsaved(false);
             universalDelete(setDeleteValues, deleteEndPoint, null, null, {
                 PAGE: pageID,
             });
@@ -213,10 +216,12 @@ export default function Action(props) {
     }
 
     const onChangeOption1 = (event) => {
+        setGlobalUnsaved(true);
         setOption1(event.target.value);
     };
 
     const onChangeOption2 = (event) => {
+        setGlobalUnsaved(true);
         setOption2(event.target.value);
     };
 
@@ -265,6 +270,11 @@ export default function Action(props) {
             <Typography align="center" variant="h2">
                 Action Page
             </Typography>
+            {globalUnsaved ? (
+                <Typography variant="h6" align="center" color="error">
+                    Unsaved
+                </Typography>
+            ) : null}
             <Title
                 title={title}
                 setTitle={setTitle}

@@ -215,6 +215,25 @@ export default function Logistics({ scenario_ID }) {
         setEdit(NewScenario);
     };
 
+    const handleOnChange = (event) => {
+        NewScenario.NAME = event.target.value;
+        setGlobalUnsaved(true);
+        setScenarioName(event.target.value);
+        setEdit(NewScenario);
+    };
+
+    const updateSelectedClasses = (selectedClasses) => {
+        //set new scenario courses to selected classes
+        let sel = [];
+        selectedClasses.map((element) =>
+            sel.push({ COURSE: element.COURSE, NAME: element.NAME })
+        );
+        NewScenario.COURSES = sel;
+        setGlobalUnsaved(true);
+        setCurrentCourses(sel);
+        setEdit(NewScenario);
+    };
+
     const makeNewCourses = (response) => {
         let sel = [];
 
@@ -389,25 +408,6 @@ export default function Logistics({ scenario_ID }) {
                 'There are currently errors within your page. Please fix all errors in order to save.'
             );
         }
-    };
-
-    const handleOnChange = (event) => {
-        NewScenario.NAME = event.target.value;
-        setGlobalUnsaved(true);
-        setScenarioName(event.target.value);
-        setEdit(NewScenario);
-    };
-
-    const updateSelectedClasses = (selectedClasses) => {
-        //set new scenario courses to selected classes
-        let sel = [];
-        selectedClasses.map((element) =>
-            sel.push({ COURSE: element.COURSE, NAME: element.NAME })
-        );
-        NewScenario.COURSES = sel;
-        setGlobalUnsaved(true);
-        setCurrentCourses(sel);
-        setEdit(NewScenario);
     };
 
     if (fetchLogisticsResponse.error) {

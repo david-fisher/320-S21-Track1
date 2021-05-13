@@ -152,6 +152,7 @@ export default function NavSideBarNode(props) {
 
     function handleDisplayComponent() {
         if (!curPage) {
+            //Reset global unsaved to false when going to new component
             setGlobalUnsaved(false);
             onClick(id, title, scenarioPages);
         }

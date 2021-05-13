@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import PropTypes from 'prop-types';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 Body.propTypes = {
     body: PropTypes.string.isRequired,
@@ -13,9 +14,18 @@ Body.propTypes = {
 
 export default function Body(props) {
     const { body, setBody, error, errorMessage } = props;
-
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+    var firstTime = true;
+    //Executes handleChange when you first click on the text editor
+    //There are no unsaved changes until a person types something in
     let handleChange = (content) => {
-        setBody(content);
+        if (firstTime) {
+            setBody(content);
+            firstTime = false;
+        } else {
+            setBody(content);
+            setGlobalUnsaved(true);
+        }
     };
 
     return (

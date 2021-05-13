@@ -318,6 +318,14 @@ export default function Editor(props) {
     function handlePageGet(setGetValues, g_id, scenarioComponentsArray) {
         const endpoint = '/page?page_id=' + g_id;
 
+        let newScenarioComponents = [...scenarioComponentsArray];
+        newScenarioComponents = newScenarioComponents.map((x) => {
+            return { ...x, curPage: false };
+        });
+        newScenarioComponents = newScenarioComponents.map((x) =>
+            x.id === g_id ? { ...x, curPage: true } : x
+        );
+
         function onSuccess(resp) {
             let p = null;
             let c = null;
@@ -325,7 +333,7 @@ export default function Editor(props) {
             let currPageInfo = resp.data;
             if (currPageInfo.PAGE_TYPE === 'I') {
                 p = {
-                    scenarioComponents: scenarioComponentsArray,
+                    scenarioComponents: newScenarioComponents,
                     setScenarioComponents: setScenarioComponents,
                     setCurrentPageID: setCurrentPageID,
                     page_id: currPageInfo.PAGE,
@@ -343,7 +351,7 @@ export default function Editor(props) {
                 c = <Introduction {...p}></Introduction>;
             } else if (currPageInfo.PAGE_TYPE === 'G') {
                 p = {
-                    scenarioComponents: scenarioComponentsArray,
+                    scenarioComponents: newScenarioComponents,
                     setScenarioComponents: setScenarioComponents,
                     setCurrentPageID: setCurrentPageID,
                     page_id: currPageInfo.PAGE,
@@ -361,7 +369,7 @@ export default function Editor(props) {
                 c = <Generic {...p}></Generic>;
             } else if (currPageInfo.PAGE_TYPE === 'A') {
                 p = {
-                    scenarioComponents: scenarioComponentsArray,
+                    scenarioComponents: newScenarioComponents,
                     setScenarioComponents: setScenarioComponents,
                     setCurrentPageID: setCurrentPageID,
                     page_id: currPageInfo.PAGE,
@@ -390,7 +398,7 @@ export default function Editor(props) {
                 c = <Action {...p}></Action>;
             } else if (currPageInfo.PAGE_TYPE === 'R') {
                 p = {
-                    scenarioComponents: scenarioComponentsArray,
+                    scenarioComponents: newScenarioComponents,
                     setScenarioComponents: setScenarioComponents,
                     setCurrentPageID: setCurrentPageID,
                     page_id: currPageInfo.PAGE,
@@ -408,14 +416,8 @@ export default function Editor(props) {
                 c = <Reflection {...p}></Reflection>;
             }
 
-            let newScenarioComponents = [...scenarioComponentsArray];
-            newScenarioComponents = newScenarioComponents.map((x) => {
-                return { ...x, curPage: false };
-            });
             newScenarioComponents = newScenarioComponents.map((x) =>
-                x.id === resp.data.PAGE
-                    ? { ...x, component: c, curPage: true }
-                    : x
+                x.id === resp.data.PAGE ? { ...x, component: c } : x
             );
             setCurrentPageID(currPageInfo.PAGE);
             setScenarioComponents(newScenarioComponents);
@@ -427,13 +429,6 @@ export default function Editor(props) {
             //console.log('Get failed');
         }
 
-        let newScenarioComponents = [...scenarioComponentsArray];
-        newScenarioComponents = newScenarioComponents.map((x) => {
-            return { ...x, curPage: false };
-        });
-        newScenarioComponents = newScenarioComponents.map((x) =>
-            x.id === g_id ? { ...x, curPage: true } : x
-        );
         setScenarioComponents(newScenarioComponents);
         universalFetch(setGetValues, endpoint, onFailure, onSuccess, {
             PAGE: g_id,

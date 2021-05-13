@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Avatar, Button, Box, DialogTitle } from '@material-ui/core';
@@ -20,6 +20,7 @@ import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
 import GenericUnsavedWarning from '../../../WarningDialogs/GenericUnsavedWarning';
 import get from './../../../../universalHTTPRequests/get';
 import put from './../../../../universalHTTPRequests/put';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -145,6 +146,7 @@ export default function StakeHolder({
     const [unsavedQuestions, setUnsavedQuestions] = useState(false);
     const [unsavedPointSelection, setUnsavedPointSelection] = useState(false);
     const [generalUnsaved, setGeneralUnsaved] = useState(false);
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     //used for delete warning dialog
     const [openDeleteWarningDialog, setOpenDeleteWarningDialog] = useState(
@@ -262,6 +264,7 @@ export default function StakeHolder({
 
     const onChangeName = (e) => {
         setGeneralUnsaved(true);
+        setGlobalUnsaved(true);
         setStakeHolderName(e.target.value);
         updateStakeholderInfo(
             e.target.value,
@@ -274,6 +277,7 @@ export default function StakeHolder({
 
     const onChangeJob = (e) => {
         setGeneralUnsaved(true);
+        setGlobalUnsaved(true);
         setStakeHolderJob(e.target.value);
         updateStakeholderInfo(
             stakeHolderName,
@@ -287,6 +291,7 @@ export default function StakeHolder({
     const onUploadPhoto = (e) => {
         // Uses PUT request to upload photo to database
         setGeneralUnsaved(true);
+        setGlobalUnsaved(true);
         var image = e.target.files[0];
         var url = URL.createObjectURL(image);
         setdisplayedPhoto(url);
@@ -300,7 +305,10 @@ export default function StakeHolder({
         );
     };
 
-    function updateStakeholderInfo(shname, shjob, shbio, shconvo, shphoto) {
+    //Deals with bug of updateStakeholderInfo being called on initial load (because of SunEditor)
+    //Don't want to set unsaved to false
+    const [firstLoad, setFirstLoad] = useState(true);
+    const updateStakeholderInfo = (shname, shjob, shbio, shconvo, shphoto) => {
         const updatedStakeHolders = [...stakeHolders];
         setStakeHolders(
             updatedStakeHolders.map((sh) => {
@@ -310,6 +318,11 @@ export default function StakeHolder({
                     sh.DESCRIPTION = shbio;
                     sh.INTRODUCTION = shconvo;
                     sh.PHOTO = shphoto;
+                    if (!firstLoad) {
+                        sh.unsaved = true;
+                    } else {
+                        setFirstLoad(false);
+                    }
                 }
                 return sh;
             })
@@ -322,7 +335,7 @@ export default function StakeHolder({
             INTRODUCTION: shconvo,
             PHOTO: shphoto,
         });
-    }
+    };
 
     const [getQRsObj, setGetQRsObj] = useState({
         data: null,
@@ -365,6 +378,17 @@ export default function StakeHolder({
     const [error, setError] = useState(false);
     const saveStakeHolders = (e) => {
         function onSuccess(resp) {
+            let arr = [...stakeHolders];
+            arr = arr.map((obj) => {
+                if (obj.STAKEHOLDER === resp.data.STAKEHOLDER) {
+                    delete obj.unsaved;
+                }
+                return obj;
+            });
+            if (!arr.some((obj) => obj.unsaved)) {
+                setGlobalUnsaved(false);
+            }
+            setStakeHolders(arr);
             setGeneralUnsaved(false);
             setUnsavedBio(false);
             setUnsavedMainConvo(false);

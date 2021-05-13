@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import QuestionField from './question';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import './questions.css';
 import PropTypes from 'prop-types';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 QuestionFields.propTypes = {
     questions: PropTypes.any,
@@ -15,6 +17,7 @@ export default function QuestionFields({
     setQuestions,
     setReqBodyNew,
 }) {
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
     //When we select new issue button, we add new issue object into array.
     //We set a temporary unique ID.
     function setNewIssueID() {
@@ -32,6 +35,7 @@ export default function QuestionFields({
     }
 
     const removeQuestion = (questionID) => {
+        setGlobalUnsaved(true);
         const leftQuestions = questions.filter((q) => q.id !== questionID);
         setQuestions(leftQuestions);
         let reqBody = leftQuestions.map((obj) => obj.REFLECTION_QUESTION);
@@ -39,6 +43,7 @@ export default function QuestionFields({
     };
 
     const addQuestion = (e) => {
+        setGlobalUnsaved(true);
         e.preventDefault();
         let newQuestions = questions.map((data) => data.REFLECTION_QUESTION);
         newQuestions = [...newQuestions, ''];

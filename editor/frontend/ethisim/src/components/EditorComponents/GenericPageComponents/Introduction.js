@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Body from '../GeneralPageComponents/Body';
 import Title from '../GeneralPageComponents/Title';
 import { Typography, Container, Button } from '@material-ui/core';
@@ -9,6 +9,7 @@ import universalDelete from '../../../universalHTTPRequests/delete.js';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import LoadingSpinner from '../../LoadingSpinner';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     saveButton: {
@@ -68,6 +69,7 @@ export default function Introduction(props) {
         loading: false,
         error: null,
     });
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     const classes = useStyles();
     const [pageID, setPageID] = useState(page_id);
@@ -104,6 +106,7 @@ export default function Introduction(props) {
             setScenarioComponents(newScenarioComponents);
             setSuccessBannerFade(true);
             setSuccessBannerMessage('Successfully saved page!');
+            setGlobalUnsaved(false);
             universalDelete(setDeleteValues, deleteEndPoint, null, null, {
                 PAGE: pageID,
             });
@@ -197,6 +200,11 @@ export default function Introduction(props) {
             <Typography align="center" variant="h2">
                 Introduction Page
             </Typography>
+            {globalUnsaved ? (
+                <Typography variant="h6" align="center" color="error">
+                    Unsaved
+                </Typography>
+            ) : null}
             <Title
                 title={title}
                 setTitle={setTitle}

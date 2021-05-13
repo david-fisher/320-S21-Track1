@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Body from '../GeneralPageComponents/Body';
 import Title from '../GeneralPageComponents/Title';
 import { Typography, Container, Button } from '@material-ui/core';
@@ -10,6 +10,7 @@ import universalDelete from '../../../universalHTTPRequests/delete.js';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import LoadingSpinner from '../../LoadingSpinner';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 Reflection.propTypes = {
     scenarioComponents: PropTypes.any,
@@ -87,6 +88,7 @@ export default function Reflection(props) {
     const [errorBody, setErrorBody] = useState(false);
     const [errorQuestions, setErrorQuestions] = useState(false);
     const [errorQuestionsMessage, setErrorQuestionsMessage] = useState('');
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     let postReqBody = {
         PAGE: pageID,
@@ -111,12 +113,12 @@ export default function Reflection(props) {
             let component = newScenarioComponents.find((x) => x.id === pageID);
             component.id = resp.data.PAGE;
             component.title = title;
-
             setPageID(resp.data.PAGE);
             setCurrentPageID(resp.data.PAGE);
             setScenarioComponents(newScenarioComponents);
             setSuccessBannerFade(true);
             setSuccessBannerMessage('Successfully saved page!');
+            setGlobalUnsaved(false);
             universalDelete(setDeleteValues, deleteEndPoint, null, null, {
                 PAGE: pageID,
             });
@@ -250,6 +252,11 @@ export default function Reflection(props) {
             <Typography align="center" variant="h2">
                 Reflection Page
             </Typography>
+            {globalUnsaved ? (
+                <Typography variant="h6" align="center" color="error">
+                    Unsaved
+                </Typography>
+            ) : null}
             <Title
                 title={title}
                 setTitle={setTitle}

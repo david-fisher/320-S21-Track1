@@ -215,7 +215,7 @@ export default function ScenarioCard({
     );
 
     return (
-        <Grid className={classes.scenarioContainer} key={scenarioID} xs>
+        <Grid className={classes.scenarioContainer} key={scenarioID} item xs>
             <Card className={classes.topHalfContainer}>
                 <CardContent>
                     <Typography variant="h6" display="block" noWrap>

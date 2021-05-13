@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 QuestionField.propTypes = {
     removeQuestion: PropTypes.any,
@@ -23,8 +24,10 @@ export default function QuestionField({
     setReqBodyNew,
 }) {
     const [questionValue, setQuestionValue] = useState(question);
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     const onChangeQuestion = (event) => {
+        setGlobalUnsaved(true);
         setQuestionValue(event.target.value);
         let listOfQuestions2 = [...listOfQuestions];
         for (let i = 0; i < listOfQuestions2.length; i++) {

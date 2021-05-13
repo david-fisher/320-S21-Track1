@@ -4,14 +4,14 @@ import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import PropTypes from 'prop-types';
 
-Body.propTypes = {
+SunEditorForConversationEditor.propTypes = {
     body: PropTypes.string.isRequired,
     setBody: PropTypes.any.isRequired,
     error: PropTypes.bool,
     errorMessage: PropTypes.string,
 };
 
-export default function Body(props) {
+export default function SunEditorForConversationEditor(props) {
     const { body, setBody, error, errorMessage } = props;
     var firstTime = true;
     //Executes handleChange when you first click on the text editor

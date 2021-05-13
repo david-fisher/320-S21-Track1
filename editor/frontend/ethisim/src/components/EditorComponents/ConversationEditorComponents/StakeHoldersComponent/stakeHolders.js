@@ -61,6 +61,7 @@ export default function StakeHolderFields({ scenario, version }) {
         loading: false,
         error: null,
     });
+
     // eslint-disable-next-line
     const setStakeHolders = (arr) => {
         setFetchedStakeholders({

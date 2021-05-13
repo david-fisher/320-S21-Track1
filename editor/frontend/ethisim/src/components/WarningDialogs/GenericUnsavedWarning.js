@@ -26,7 +26,6 @@ export default function GenericUnsavedWarning(props) {
 
     //Func that closes the popup window
     const handleClose = () => {
-        console.log('hi');
         setOpen(false);
     };
 

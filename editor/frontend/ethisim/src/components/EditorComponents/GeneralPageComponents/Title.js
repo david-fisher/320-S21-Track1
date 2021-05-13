@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,9 +23,11 @@ export default function Title(props) {
     const error = props.error;
     const errorMessage = props.errorMessage;
     const disabled = props.disabled;
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
     let handleChange = (content) => {
         setTitle(content.target.value);
+        setGlobalUnsaved(true);
     };
 
     return (
