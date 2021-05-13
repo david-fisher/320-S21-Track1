@@ -6,7 +6,10 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
     addNewScenarioContainer: {
+        marginTop: '10px',
+        marginRight: '10px',
         minHeight: '100%',
+        minWidth: '100%',
         borderStyle: 'dashed',
         borderColor: theme.palette.primary.main,
         border: 3,
@@ -16,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     addNewScenarioButton: {
         width: '100%',
         height: '100%',
+        minHeight: '200px',
         textTransform: 'unset',
     },
     addIcon: {
@@ -38,7 +42,6 @@ export default function AddNewScenarioCard({ onClick }) {
         <Grid
             className={classes.addNewScenarioContainer}
             key="createNewScenarioButton"
-            xs
         >
             <Button className={classes.addNewScenarioButton} onClick={onClick}>
                 <Grid

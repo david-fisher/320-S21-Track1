@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
@@ -13,9 +13,16 @@ Body.propTypes = {
 
 export default function Body(props) {
     const { body, setBody, error, errorMessage } = props;
-
+    var firstTime = true;
+    //Executes handleChange when you first click on the text editor
+    //There are no unsaved changes until a person types something in
     let handleChange = (content) => {
-        setBody(content);
+        if (firstTime) {
+            setBody(content, true);
+            firstTime = false;
+        } else {
+            setBody(content, false);
+        }
     };
 
     return (

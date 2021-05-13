@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
-
+import GlobalUnsavedContext from '../components/Context/GlobalUnsavedContext';
 import universalPost from '../universalHTTPRequests/post.js';
 import universalFetch from '../universalHTTPRequests/get.js';
 import universalDelete from '../universalHTTPRequests/delete.js';
@@ -196,6 +196,7 @@ export default function Editor(props) {
     const [showEditor, setShowEditor] = useState(false);
     const [addNewPageId, setAddNewPageId] = useState(null);
     const [currentPageID, setCurrentPageID] = useState(-1);
+    const unsaved = useState(false);
 
     let handleLogisticsGet = function handleLogisticsGet() {
         let initialComponents = [
@@ -203,18 +204,26 @@ export default function Editor(props) {
                 id: -1,
                 title: 'Logistics',
                 component: <Logistics />,
+                curPage: true,
             },
             {
                 id: -2,
                 title: 'Configure Issues',
                 component: <ConfigureIssues />,
+                curPage: false,
             },
             {
                 id: -3,
                 title: 'Conversation Editor',
                 component: <ConversationEditor />,
+                curPage: false,
             },
-            { id: -4, title: 'Flow Diagram', component: <FlowDiagram /> },
+            {
+                id: -4,
+                title: 'Flow Diagram',
+                component: <FlowDiagram />,
+                curPage: false,
+            },
         ];
 
         const endpoint = '/logistics?scenario_id=' + scenario_ID;
@@ -400,8 +409,13 @@ export default function Editor(props) {
             }
 
             let newScenarioComponents = [...scenarioComponentsArray];
+            newScenarioComponents = newScenarioComponents.map((x) => {
+                return { ...x, curPage: false };
+            });
             newScenarioComponents = newScenarioComponents.map((x) =>
-                x.id === resp.data.PAGE ? { ...x, component: c } : x
+                x.id === resp.data.PAGE
+                    ? { ...x, component: c, curPage: true }
+                    : x
             );
             setCurrentPageID(currPageInfo.PAGE);
             setScenarioComponents(newScenarioComponents);
@@ -413,6 +427,14 @@ export default function Editor(props) {
             //console.log('Get failed');
         }
 
+        let newScenarioComponents = [...scenarioComponentsArray];
+        newScenarioComponents = newScenarioComponents.map((x) => {
+            return { ...x, curPage: false };
+        });
+        newScenarioComponents = newScenarioComponents.map((x) =>
+            x.id === g_id ? { ...x, curPage: true } : x
+        );
+        setScenarioComponents(newScenarioComponents);
         universalFetch(setGetValues, endpoint, onFailure, onSuccess, {
             PAGE: g_id,
         });
@@ -447,6 +469,13 @@ export default function Editor(props) {
         setCurrentPageID(id);
         if (id !== -1 && id !== -2 && id !== -3 && id !== -4) {
             handlePageGet(setGetValues, id, scenarioPages);
+        } else {
+            let arr = [...scenarioPages];
+            arr = arr.map((x) => {
+                return { ...x, curPage: false };
+            });
+            arr[Math.abs(id) - 1].curPage = true;
+            setScenarioComponents(arr);
         }
         setScenarioComponent(
             scenarioComponents.find((x) => x.id === id).component
@@ -734,34 +763,36 @@ export default function Editor(props) {
     }
 
     return (
-        <div className={classes.container}>
-            {NavBar}
-            <Sidebar />
-            <main
-                className={clsx(classes.content1, {
-                    [classes.contentShift]: open,
-                })}
-            >
-                <div className={classes.drawerHeader} />
-                <div className={classes.bannerContainer}>
-                    <SuccessBanner
-                        successMessage={successBannerMessage}
-                        fade={successBannerFade}
-                    />
-                    <ErrorBanner
-                        errorMessage={errorBannerMessage}
-                        fade={errorBannerFade}
-                    />
-                </div>
-                {!getValues.data ||
-                scenarioComponent === null ||
-                getValues.loading ||
-                !showComponent ? (
-                    <LoadingSpinner />
-                ) : (
-                    <div>{scenarioComponent}</div>
-                )}
-            </main>
-        </div>
+        <GlobalUnsavedContext.Provider value={unsaved}>
+            <div className={classes.container}>
+                {NavBar}
+                <Sidebar />
+                <main
+                    className={clsx(classes.content1, {
+                        [classes.contentShift]: open,
+                    })}
+                >
+                    <div className={classes.drawerHeader} />
+                    <div className={classes.bannerContainer}>
+                        <SuccessBanner
+                            successMessage={successBannerMessage}
+                            fade={successBannerFade}
+                        />
+                        <ErrorBanner
+                            errorMessage={errorBannerMessage}
+                            fade={errorBannerFade}
+                        />
+                    </div>
+                    {!getValues.data ||
+                    scenarioComponent === null ||
+                    getValues.loading ||
+                    !showComponent ? (
+                        <LoadingSpinner />
+                    ) : (
+                        <div>{scenarioComponent}</div>
+                    )}
+                </main>
+            </div>
+        </GlobalUnsavedContext.Provider>
     );
 }

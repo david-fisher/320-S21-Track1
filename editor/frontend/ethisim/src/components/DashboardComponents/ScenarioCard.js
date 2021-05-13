@@ -23,6 +23,7 @@ import ShareButton from './ShareButton';
 const useStyles = makeStyles((theme) => ({
     scenarioContainer: {
         marginRight: '10px',
+        marginTop: '10px',
         backgroundColor: theme.palette.primary.light,
         borderStyle: 'solid',
         borderColor: theme.palette.primary.light,

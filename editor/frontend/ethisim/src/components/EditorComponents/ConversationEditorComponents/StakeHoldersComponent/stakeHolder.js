@@ -146,11 +146,8 @@ export default function StakeHolder({
     const [unsavedPointSelection, setUnsavedPointSelection] = useState(false);
     const [generalUnsaved, setGeneralUnsaved] = useState(false);
 
-    //Warning for Deleteing a Conversation
+    //used for delete warning dialog
     const [openDeleteWarningDialog, setOpenDeleteWarningDialog] = useState(
-        false
-    );
-    const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(
         false
     );
 
@@ -158,10 +155,13 @@ export default function StakeHolder({
         setOpenDeleteWarningDialog(true);
     };
 
+    //used for unsaved warning dialog
+    const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(
+        false
+    );
     const handleOpenUnsavedWarningDialog = () => {
         setOpenUnsavedWarningDialog(true);
     };
-
     //for success and error banners
     // eslint-disable-next-line
     const [successBannerMessage, setSuccessBannerMessage] = useState('');
@@ -186,7 +186,6 @@ export default function StakeHolder({
 
     //TABLE
     const handleClickOpenBio = () => {
-        setUnsavedBio(true);
         setOpenBio(true);
     };
     const handleCloseBio = () => {
@@ -201,7 +200,6 @@ export default function StakeHolder({
         );
     };
     const handleClickOpenMainConvo = () => {
-        setUnsavedMainConvo(true);
         setOpenMainConvo(true);
     };
     const handleCloseMainConvo = () => {
@@ -234,8 +232,12 @@ export default function StakeHolder({
         setOpenQuestions(false);
     };
 
-    let handleChangeBiography = (content, editor) => {
-        setUnsavedBio(true);
+    let handleChangeBiography = (content, firstTime) => {
+        if (!firstTime) {
+            setUnsavedBio(true);
+        } else {
+            setUnsavedBio(false);
+        }
         updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
@@ -244,8 +246,12 @@ export default function StakeHolder({
         );
     };
 
-    let handleChangeConversation = (content, editor) => {
-        setUnsavedMainConvo(true);
+    let handleChangeConversation = (content, firstTime) => {
+        if (!firstTime) {
+            setUnsavedMainConvo(true);
+        } else {
+            setUnsavedMainConvo(false);
+        }
         updateStakeholderInfo(
             stakeHolderName,
             stakeHolderJob,
@@ -651,16 +657,16 @@ export default function StakeHolder({
                         </Button>
                     </DialogTitle>
                     <DialogContent className={classes.dialog}>
-                        {/*unsavedBio ? (
+                        {unsavedBio ? (
                             <Typography
-                                style={{ marginLeft: '30px' }}
+                                style={{ marginLeft: '3%', marginTop: '-20px' }}
                                 variant="h6"
                                 align="center"
                                 color="error"
                             >
                                 Unsaved
                             </Typography>
-                        ) : null*/}
+                        ) : null}
                         <Body
                             body={bio}
                             setBody={handleChangeBiography}
@@ -727,16 +733,16 @@ export default function StakeHolder({
                         </Button>
                     </DialogTitle>
                     <DialogContent className={classes.dialog}>
-                        {/*unsavedMainConvo ? (
+                        {unsavedMainConvo ? (
                             <Typography
-                                style={{ marginLeft: '30px' }}
+                                style={{ marginLeft: '5%', marginTop: '-20px' }}
                                 variant="h6"
                                 align="center"
                                 color="error"
                             >
                                 Unsaved
                             </Typography>
-                        ) : null*/}
+                        ) : null}
                         <Body
                             body={mainConvo}
                             setBody={handleChangeConversation}

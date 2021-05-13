@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 //import Author from './Author';
 import {
@@ -19,6 +19,7 @@ import Tags from './DropDown';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import PropTypes from 'prop-types';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     textfields: {
@@ -95,8 +96,8 @@ export default function Logistics({ scenario_ID }) {
         loading: false,
         error: null,
     });
+    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
-    //TODO temporary ID
     // eslint-disable-next-line
     const [id, setId] = useState(scenario_ID);
 
@@ -196,16 +197,19 @@ export default function Logistics({ scenario_ID }) {
     }, [errorBannerFade]);
 
     const handleOnChangePublic = (event) => {
+        setGlobalUnsaved(true);
         setIsPublic(event.target.checked);
         setEdit({ ...NewScenario, PUBLIC: event.target.checked });
     };
 
     const handleOnChangeFinish = (event) => {
+        setGlobalUnsaved(true);
         setIsFinished(event.target.checked);
         setEdit({ ...NewScenario, IS_FINISHED: event.target.checked });
     };
 
     const handleOnChangeNumConvo = (event) => {
+        setGlobalUnsaved(true);
         NewScenario.NUM_CONVERSATION = event.target.value;
         setNumConvos(event.target.value);
         setEdit(NewScenario);
@@ -325,6 +329,7 @@ export default function Logistics({ scenario_ID }) {
 
     const handleSave = () => {
         function onSuccessLogistic(response) {
+            setGlobalUnsaved(false);
             setSuccessBannerMessage('Successfully Saved!');
             setSuccessBannerFade(true);
         }
@@ -388,6 +393,7 @@ export default function Logistics({ scenario_ID }) {
 
     const handleOnChange = (event) => {
         NewScenario.NAME = event.target.value;
+        setGlobalUnsaved(true);
         setScenarioName(event.target.value);
         setEdit(NewScenario);
     };
@@ -399,6 +405,7 @@ export default function Logistics({ scenario_ID }) {
             sel.push({ COURSE: element.COURSE, NAME: element.NAME })
         );
         NewScenario.COURSES = sel;
+        setGlobalUnsaved(true);
         setCurrentCourses(sel);
         setEdit(NewScenario);
     };
@@ -476,6 +483,11 @@ export default function Logistics({ scenario_ID }) {
                 <Typography align="center" variant="h2">
                     Logistics
                 </Typography>
+                {globalUnsaved ? (
+                    <Typography variant="h6" align="center" color="error">
+                        Unsaved
+                    </Typography>
+                ) : null}
                 <form
                     className={classes.textfields}
                     noValidate
