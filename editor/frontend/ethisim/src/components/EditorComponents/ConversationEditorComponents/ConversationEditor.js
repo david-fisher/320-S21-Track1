@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StakeHolderFields from './StakeHoldersComponent/stakeHolders';
+import StakeholderFields from './StakeholdersComponent/stakeholders';
 import PropTypes from 'prop-types';
 
 ConversationEditor.propTypes = {
@@ -7,13 +7,13 @@ ConversationEditor.propTypes = {
 };
 
 export default function ConversationEditor({ scenario_ID }) {
-    const [stakeHolders, setStakeHolders] = useState([]);
+    const [stakeholders, setStakeholders] = useState([]);
 
     return (
         <div>
-            <StakeHolderFields
-                stakeHolders={stakeHolders}
-                setStakeHolders={setStakeHolders}
+            <StakeholderFields
+                stakeholders={stakeholders}
+                setStakeholders={setStakeholders}
                 scenario={scenario_ID}
             />
         </div>

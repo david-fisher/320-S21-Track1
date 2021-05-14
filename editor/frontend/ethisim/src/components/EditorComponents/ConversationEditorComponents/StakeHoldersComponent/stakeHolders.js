@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import StakeHolder from './stakeHolder';
+import Stakeholder from './stakeholder';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import SuccessBanner from './../../../Banners/SuccessBanner';
@@ -10,12 +10,20 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import get from './../../../../universalHTTPRequests/get';
 import deleteReq from './../../../../universalHTTPRequests/delete';
 import post from './../../../../universalHTTPRequests/post';
+import { ConversationEditorHelpInfo } from '../ConversationEditorHelpInfo';
+import GenericHelpButton from '../../../HelpButton/GenericHelpButton';
 
 const useStyles = makeStyles((theme) => ({
     container: {
         marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
+    },
+    headerContainer: {
+        marginTop: theme.spacing(1),
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
     },
     spacing: {
@@ -30,9 +38,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-StakeHolderFields.propTypes = {
-    stakeHolders: PropTypes.any,
-    setStakeHolders: PropTypes.any,
+StakeholderFields.propTypes = {
+    stakeholders: PropTypes.any,
+    setStakeholders: PropTypes.any,
     scenario: PropTypes.number,
     version: PropTypes.number,
 };
@@ -41,7 +49,7 @@ const endpointGET = '/api/stakeholders/?SCENARIO=';
 const endpointPOST = '/stakeholder';
 const endpointDELETE = '/api/stakeholders/';
 
-export default function StakeHolderFields({ scenario, version }) {
+export default function StakeholderFields({ scenario, version }) {
     const classes = useStyles();
     //TODO when/if versions get implemented
     version = version ? version : 1;
@@ -63,7 +71,7 @@ export default function StakeHolderFields({ scenario, version }) {
     });
 
     // eslint-disable-next-line
-    const setStakeHolders = (arr) => {
+    const setStakeholders = (arr) => {
         setFetchedStakeholders({
             ...fetchedStakeholders,
             data: arr,
@@ -75,7 +83,7 @@ export default function StakeHolderFields({ scenario, version }) {
     //handles GETting existing stakeholders from the backend and representing that information in the frontend
     // will eventually know which scenario to get stakeholders from once scenario_id is passed
     // from baseURL + 'stakeholder?scenario_id=' + scenario_id
-    function getExistingStakeHolders() {
+    function getExistingStakeholders() {
         function onError(resp) {
             setErrorBannerMessage(
                 'Failed to get Stakeholders! Please try again.'
@@ -85,16 +93,16 @@ export default function StakeHolderFields({ scenario, version }) {
         get(setFetchedStakeholders, endpointGET + scenario, onError);
     }
 
-    useEffect(getExistingStakeHolders, []);
+    useEffect(getExistingStakeholders, []);
 
     //handles DELETEing a stakeholder from the backend and removing the corresponding stakeholder from the frontend
-    const removeStakeHolder = (stakeHolderID) => {
+    const removeStakeholder = (stakeholderID) => {
         if (!checkTime(setCurrentTime, currentTime)) {
             return;
         }
         //calling the DELETE request on the backend
         function onSuccess(resp) {
-            getExistingStakeHolders();
+            getExistingStakeholders();
             setSuccessBannerMessage('Successfully deleted the stakeholder!');
             setSuccessBannerFade(true);
         }
@@ -107,20 +115,20 @@ export default function StakeHolderFields({ scenario, version }) {
 
         deleteReq(
             setDeleteReq,
-            endpointDELETE + stakeHolderID + '/',
+            endpointDELETE + stakeholderID + '/',
             onError,
             onSuccess
         );
     };
 
     //handles POSTing a new stakeholder to the backend and adding that stakeholder to the frontend
-    const addStakeHolder = (e) => {
+    const addStakeholder = (e) => {
         if (!checkTime(setCurrentTime, currentTime)) {
             return;
         }
 
         function onSuccess(resp) {
-            getExistingStakeHolders();
+            getExistingStakeholders();
             setSuccessBannerMessage('Successfully created a new stakeholder!');
             setSuccessBannerFade(true);
         }
@@ -140,8 +148,8 @@ export default function StakeHolderFields({ scenario, version }) {
 
     //TODO function that saves all stakeholders at once
     /* 
-    const saveStakeHolders = (e) => {
-        var data = [...stakeHolders];
+    const saveStakeholders = (e) => {
+        var data = [...stakeholders];
         for (var i = 0; i < data.length; i++) {
             var form = new FormData();
             var id;
@@ -249,19 +257,23 @@ export default function StakeHolderFields({ scenario, version }) {
                 errorMessage={errorBannerMessage}
                 fade={errorBannerFade}
             />
-            <div>
+            <div className={classes.headerContainer}>
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={getExistingStakeHolders}
+                    onClick={getExistingStakeholders}
                 >
                     <RefreshIcon className={classes.iconRefreshSmall} />
                 </Button>
+                <GenericHelpButton
+                    description={ConversationEditorHelpInfo}
+                    title="Conversation Editor Help"
+                />
             </div>
             <Button
                 id="button"
                 className={classes.button}
-                onClick={addStakeHolder}
+                onClick={addStakeholder}
                 variant="contained"
                 color="primary"
             >
@@ -272,7 +284,7 @@ export default function StakeHolderFields({ scenario, version }) {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={saveStakeHolders}
+                    onClick={saveStakeholders}
                 >
                     Save Stakeholder Changes
                 </Button>
@@ -280,19 +292,19 @@ export default function StakeHolderFields({ scenario, version }) {
             */}
             <form id="form">
                 {fetchedStakeholders.data
-                    ? fetchedStakeholders.data.map((stakeHolder) => (
-                          <StakeHolder
-                              key={stakeHolder.STAKEHOLDER}
-                              removeStakeHolder={removeStakeHolder}
-                              id={stakeHolder.STAKEHOLDER}
-                              name={stakeHolder.NAME}
-                              job={stakeHolder.JOB}
-                              bio={stakeHolder.DESCRIPTION}
-                              photo={stakeHolder.PHOTO}
-                              mainConvo={stakeHolder.INTRODUCTION}
-                              version={stakeHolder.VERSION}
-                              stakeHolders={fetchedStakeholders.data}
-                              setStakeHolders={setStakeHolders}
+                    ? fetchedStakeholders.data.map((stakeholder) => (
+                          <Stakeholder
+                              key={stakeholder.STAKEHOLDER}
+                              removeStakeholder={removeStakeholder}
+                              id={stakeholder.STAKEHOLDER}
+                              name={stakeholder.NAME}
+                              job={stakeholder.JOB}
+                              bio={stakeholder.DESCRIPTION}
+                              photo={stakeholder.PHOTO}
+                              mainConvo={stakeholder.INTRODUCTION}
+                              version={stakeholder.VERSION}
+                              stakeholders={fetchedStakeholders.data}
+                              setStakeholders={setStakeholders}
                               scenario={scenario}
                           />
                       ))

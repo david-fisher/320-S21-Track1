@@ -7,7 +7,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import BasicTable from './table';
-import QuestionFields from './StakeHolderQuestions/questions';
+import QuestionFields from './StakeholderQuestions/questions';
 import SunEditor from 'suneditor-react';
 import Body from './SunEditor';
 import 'suneditor/dist/css/suneditor.min.css';
@@ -82,31 +82,31 @@ const DialogContent = withStyles((theme) => ({
     },
 }))(MuiDialogContent);
 
-StakeHolder.propTypes = {
+Stakeholder.propTypes = {
     name: PropTypes.string,
     bio: PropTypes.string,
     mainConvo: PropTypes.string,
     id: PropTypes.number,
-    removeStakeHolder: PropTypes.any,
+    removeStakeholder: PropTypes.any,
     job: PropTypes.string,
     photo: PropTypes.any,
-    stakeHolders: PropTypes.any,
-    setStakeHolders: PropTypes.func,
+    stakeholders: PropTypes.any,
+    setStakeholders: PropTypes.func,
     scenario: PropTypes.number,
     version: PropTypes.number,
 };
 
 const endpointPUT = '/api/stakeholders/';
-export default function StakeHolder({
+export default function Stakeholder({
     name,
     bio,
     mainConvo,
     id,
-    removeStakeHolder,
+    removeStakeholder,
     job,
     photo,
-    stakeHolders,
-    setStakeHolders,
+    stakeholders,
+    setStakeholders,
     scenario,
     version,
 }) {
@@ -116,22 +116,22 @@ export default function StakeHolder({
     const [openMainConvo, setOpenMainConvo] = useState(false);
     const [openPointSelection, setOpenPointSelection] = useState(false);
     const [openQuestions, setOpenQuestions] = useState(false);
-    const [stakeHolderName, setStakeHolderName] = useState(name);
-    const [stakeHolderJob, setStakeHolderJob] = useState(job);
-    const [stakeHolderBiography, setStakeHolderBiography] = useState(bio);
-    const [stakeHolderPhoto, setStakeHolderPhoto] = useState(photo); // Image object to be uploaded on save
-    const [stakeHolderConversation, setStakeHolderConversation] = useState(
+    const [stakeholderName, setStakeholderName] = useState(name);
+    const [stakeholderJob, setStakeholderJob] = useState(job);
+    const [stakeholderBiography, setStakeholderBiography] = useState(bio);
+    const [stakeholderPhoto, setStakeholderPhoto] = useState(photo); // Image object to be uploaded on save
+    const [stakeholderConversation, setStakeholderConversation] = useState(
         mainConvo
     );
     const [displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
 
     const [errorBody, setErrorBody] = useState(false);
-    const [stakeHolderPUT, setStakeHolderPUT] = useState({
+    const [stakeholderPUT, setStakeholderPUT] = useState({
         data: null,
         loading: false,
         error: null,
     });
-    const [stakeHolderObj, setStakeHolderObj] = useState({
+    const [stakeholderObj, setStakeholderObj] = useState({
         DESCRIPTION: bio,
         INTRODUCTION: mainConvo,
         JOB: job,
@@ -196,10 +196,10 @@ export default function StakeHolder({
         setOpenUnsavedWarningDialog(false);
         setOpenBio(false);
         updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
-            stakeHolderBiography,
-            stakeHolderConversation
+            stakeholderName,
+            stakeholderJob,
+            stakeholderBiography,
+            stakeholderConversation
         );
     };
     const handleClickOpenMainConvo = () => {
@@ -210,10 +210,10 @@ export default function StakeHolder({
         setOpenUnsavedWarningDialog(false);
         setOpenMainConvo(false);
         updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
-            stakeHolderBiography,
-            stakeHolderConversation
+            stakeholderName,
+            stakeholderJob,
+            stakeholderBiography,
+            stakeholderConversation
         );
     };
 
@@ -242,10 +242,10 @@ export default function StakeHolder({
             setUnsavedBio(false);
         }
         updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
+            stakeholderName,
+            stakeholderJob,
             content,
-            stakeHolderConversation
+            stakeholderConversation
         );
     };
 
@@ -256,9 +256,9 @@ export default function StakeHolder({
             setUnsavedMainConvo(false);
         }
         updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
-            stakeHolderBiography,
+            stakeholderName,
+            stakeholderJob,
+            stakeholderBiography,
             content
         );
     };
@@ -266,26 +266,26 @@ export default function StakeHolder({
     const onChangeName = (e) => {
         setGeneralUnsaved(true);
         setGlobalUnsaved(true);
-        setStakeHolderName(e.target.value);
+        setStakeholderName(e.target.value);
         updateStakeholderInfo(
             e.target.value,
-            stakeHolderJob,
-            stakeHolderBiography,
-            stakeHolderConversation,
-            stakeHolderPhoto
+            stakeholderJob,
+            stakeholderBiography,
+            stakeholderConversation,
+            stakeholderPhoto
         );
     };
 
     const onChangeJob = (e) => {
         setGeneralUnsaved(true);
         setGlobalUnsaved(true);
-        setStakeHolderJob(e.target.value);
+        setStakeholderJob(e.target.value);
         updateStakeholderInfo(
-            stakeHolderName,
+            stakeholderName,
             e.target.value,
-            stakeHolderBiography,
-            stakeHolderConversation,
-            stakeHolderPhoto
+            stakeholderBiography,
+            stakeholderConversation,
+            stakeholderPhoto
         );
     };
 
@@ -296,12 +296,12 @@ export default function StakeHolder({
         var image = e.target.files[0];
         var url = URL.createObjectURL(image);
         setdisplayedPhoto(url);
-        setStakeHolderPhoto(image);
+        setStakeholderPhoto(image);
         updateStakeholderInfo(
-            stakeHolderName,
-            stakeHolderJob,
-            stakeHolderBiography,
-            stakeHolderConversation,
+            stakeholderName,
+            stakeholderJob,
+            stakeholderBiography,
+            stakeholderConversation,
             image
         );
     };
@@ -310,9 +310,9 @@ export default function StakeHolder({
     //Don't want to set unsaved to false
     const [firstLoad, setFirstLoad] = useState(true);
     const updateStakeholderInfo = (shname, shjob, shbio, shconvo, shphoto) => {
-        const updatedStakeHolders = [...stakeHolders];
-        setStakeHolders(
-            updatedStakeHolders.map((sh) => {
+        const updatedStakeholders = [...stakeholders];
+        setStakeholders(
+            updatedStakeholders.map((sh) => {
                 if (sh.STAKEHOLDER === id) {
                     sh.NAME = shname;
                     sh.JOB = shjob;
@@ -328,8 +328,8 @@ export default function StakeHolder({
                 return sh;
             })
         );
-        setStakeHolderObj({
-            ...stakeHolderObj,
+        setStakeholderObj({
+            ...stakeholderObj,
             NAME: shname,
             JOB: shjob,
             DESCRIPTION: shbio,
@@ -377,9 +377,9 @@ export default function StakeHolder({
     }
 
     const [error, setError] = useState(false);
-    const saveStakeHolders = (e) => {
+    const saveStakeholders = (e) => {
         function onSuccess(resp) {
-            let arr = [...stakeHolders];
+            let arr = [...stakeholders];
             arr = arr.map((obj) => {
                 if (obj.STAKEHOLDER === resp.data.STAKEHOLDER) {
                     delete obj.unsaved;
@@ -389,12 +389,12 @@ export default function StakeHolder({
             if (!arr.some((obj) => obj.unsaved)) {
                 setGlobalUnsaved(false);
             }
-            setStakeHolders(arr);
+            setStakeholders(arr);
             setGeneralUnsaved(false);
             setUnsavedBio(false);
             setUnsavedMainConvo(false);
-            setStakeHolderBiography(resp.data.DESCRIPTION);
-            setStakeHolderConversation(resp.data.INTRODUCTION);
+            setStakeholderBiography(resp.data.DESCRIPTION);
+            setStakeholderConversation(resp.data.INTRODUCTION);
             setSuccessBannerMessage('Successfully saved the stakeholder!');
             setSuccessBannerFade(true);
         }
@@ -406,10 +406,10 @@ export default function StakeHolder({
         }
 
         if (
-            !stakeHolderObj.DESCRIPTION ||
-            !stakeHolderObj.DESCRIPTION.trim() ||
-            !stakeHolderObj.INTRODUCTION ||
-            !stakeHolderObj.INTRODUCTION.trim()
+            !stakeholderObj.DESCRIPTION ||
+            !stakeholderObj.DESCRIPTION.trim() ||
+            !stakeholderObj.INTRODUCTION ||
+            !stakeholderObj.INTRODUCTION.trim()
         ) {
             setErrorBody(true);
             return;
@@ -417,10 +417,10 @@ export default function StakeHolder({
         setErrorBody(false);
 
         if (
-            !stakeHolderObj.JOB ||
-            !stakeHolderObj.JOB.trim() ||
-            !stakeHolderObj.NAME ||
-            !stakeHolderObj.NAME.trim()
+            !stakeholderObj.JOB ||
+            !stakeholderObj.JOB.trim() ||
+            !stakeholderObj.NAME ||
+            !stakeholderObj.NAME.trim()
         ) {
             setError(true);
             return;
@@ -431,18 +431,18 @@ export default function StakeHolder({
         setTimeout(
             () =>
                 put(
-                    setStakeHolderPUT,
+                    setStakeholderPUT,
                     endpointPUT + id + '/',
                     onError,
                     onSuccess,
-                    stakeHolderObj
+                    stakeholderObj
                 ),
             1000
         );
     };
 
     /*
-        if (stakeHolderPUT.loading || isLoading) {
+        if (stakeholderPUT.loading || isLoading) {
             return <LoadingSpinner />;
         }
     */
@@ -480,15 +480,15 @@ export default function StakeHolder({
             <div className={classes.containerRow}>
                 <div id="SHname" className={classes.spacing}>
                     <TextField
-                        label="StakeHolder Name"
-                        value={stakeHolderName}
+                        label="Stakeholder Name"
+                        value={stakeholderName}
                         onChange={onChangeName}
                     />
                 </div>
                 <div id="SHjob" className={classes.spacing}>
                     <TextField
-                        label="StakeHolder Job"
-                        value={stakeHolderJob}
+                        label="Stakeholder Job"
+                        value={stakeholderJob}
                         onChange={onChangeJob}
                     />
                 </div>
@@ -581,7 +581,7 @@ export default function StakeHolder({
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={saveStakeHolders}
+                        onClick={saveStakeholders}
                         className={classes.button}
                     >
                         Save
@@ -599,7 +599,7 @@ export default function StakeHolder({
                     </Button>
 
                     <GenericDeleteWarning
-                        remove={() => removeStakeHolder(id)}
+                        remove={() => removeStakeholder(id)}
                         setOpen={setOpenDeleteWarningDialog}
                         open={openDeleteWarningDialog}
                     />
@@ -660,7 +660,7 @@ export default function StakeHolder({
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={saveStakeHolders}
+                                onClick={saveStakeholders}
                                 className={classes.button}
                                 style={{ marginRight: '10px' }}
                             >
@@ -671,7 +671,7 @@ export default function StakeHolder({
                             className={classes.exitOutButton}
                             variant="contained"
                             color="primary"
-                            disabled={stakeHolderPUT.loading}
+                            disabled={stakeholderPUT.loading}
                             onClick={
                                 unsavedBio
                                     ? handleOpenUnsavedWarningDialog
@@ -736,7 +736,7 @@ export default function StakeHolder({
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={saveStakeHolders}
+                                onClick={saveStakeholders}
                                 className={classes.button}
                                 style={{ marginRight: '30px' }}
                             >
@@ -747,7 +747,7 @@ export default function StakeHolder({
                             className={classes.exitOutButton}
                             variant="contained"
                             color="primary"
-                            disabled={stakeHolderPUT.loading}
+                            disabled={stakeholderPUT.loading}
                             onClick={
                                 unsavedMainConvo
                                     ? handleOpenUnsavedWarningDialog
@@ -811,7 +811,7 @@ export default function StakeHolder({
                         className={classes.exitOutButton}
                         variant="contained"
                         color="primary"
-                        disabled={stakeHolderPUT.loading}
+                        disabled={stakeholderPUT.loading}
                         onClick={
                             unsavedQuestions
                                 ? handleOpenUnsavedWarningDialog
@@ -866,7 +866,7 @@ export default function StakeHolder({
                         className={classes.exitOutButton}
                         variant="contained"
                         color="primary"
-                        disabled={stakeHolderPUT.loading}
+                        disabled={stakeholderPUT.loading}
                         onClick={
                             unsavedPointSelection
                                 ? handleOpenUnsavedWarningDialog

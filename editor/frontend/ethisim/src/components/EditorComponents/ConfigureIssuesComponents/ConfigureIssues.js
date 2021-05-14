@@ -7,6 +7,8 @@ import LoadingSpinner from '../../LoadingSpinner';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
 import PropTypes from 'prop-types';
+import { ConfigureIssuesHelpInfo } from './ConfigureIssuesHelpInfo';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 
 //Need scenarioID
 const endpointGET = '/api/issues/?SCENARIO=';
@@ -17,9 +19,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-    },
-    spacing: {
-        padding: theme.spacing(1),
     },
     saveButton: {
         margin: theme.spacing(2),
@@ -87,10 +86,14 @@ export default function ConfigureIssues({ scenario_ID }) {
             <Typography align="center" variant="h2">
                 Configure Ethical Issues
             </Typography>
-            <div className={classes.spacing}>
+            <div className={classes.container}>
                 <Button variant="contained" color="primary" onClick={getData}>
                     <RefreshIcon className={classes.iconRefreshSmall} />
                 </Button>
+                <GenericHelpButton
+                    description={ConfigureIssuesHelpInfo}
+                    title="Configure Issues Help"
+                />
             </div>
             <EntryFields
                 issueEntryFieldList={

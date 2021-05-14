@@ -280,16 +280,16 @@ const mockConversationEditorHistory = {
                             response: "Yes, I love stealing everyone's data",
                         },
                     ],
-                    stakeHolderIssues: [
+                    stakeholderIssues: [
                         {
                             id: 1,
                             issue: 'Personal Wealth',
-                            stakeHolderScore: 3,
+                            stakeholderScore: 3,
                         },
                         {
                             id: 2,
                             issue: 'Privacy',
-                            stakeHolderScore: 4,
+                            stakeholderScore: 4,
                         },
                     ],
                 },

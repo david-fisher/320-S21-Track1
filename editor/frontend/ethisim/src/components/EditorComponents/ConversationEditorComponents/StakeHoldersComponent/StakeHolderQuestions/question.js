@@ -96,7 +96,7 @@ export default function QuestionField({
                     <TextField
                         style={{ width: 700, marginTop: 20 }}
                         id="outlined-multiline-static"
-                        label="StakeHolder Response"
+                        label="Stakeholder Response"
                         multiline
                         rows={2}
                         variant="outlined"

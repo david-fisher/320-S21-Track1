@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import { DOMAIN } from '../../Constants/Config';
-import shemptylogo from '../EditorComponents/ConversationEditorComponents/StakeHoldersComponent/shemptylogo.png';
+import shemptylogo from '../EditorComponents/ConversationEditorComponents/StakeholdersComponent/shemptylogo.png';
 
 export default function SimpleMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -35,7 +35,11 @@ export default function SimpleMenu() {
             >
                 <MenuItem
                     onClick={() =>
-                        (window.location.href = DOMAIN + (process.env.NODE_ENV === 'production' ? '/Shibboleth.sso/Logout?return=/' : ':3006'))
+                        (window.location.href =
+                            DOMAIN +
+                            (process.env.NODE_ENV === 'production'
+                                ? '/Shibboleth.sso/Logout?return=/'
+                                : ':3006'))
                     }
                     component={Link}
                     to={{

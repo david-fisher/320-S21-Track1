@@ -20,6 +20,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import PropTypes from 'prop-types';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
+import { LogisticsHelpInfo } from './LogistcsHelpInfo';
 
 const useStyles = makeStyles((theme) => ({
     textfields: {
@@ -480,9 +482,20 @@ export default function Logistics({ scenario_ID }) {
                 />
             </div>
             <Container component="main">
-                <Typography align="center" variant="h2">
-                    Logistics
-                </Typography>
+                <div className={classes.container}>
+                    {/*MarginLeft to account for generic help button icon, centers the title */}
+                    <Typography
+                        align="center"
+                        variant="h2"
+                        style={{ marginLeft: '100px', width: '100%' }}
+                    >
+                        Logistics
+                    </Typography>
+                    <GenericHelpButton
+                        description={LogisticsHelpInfo}
+                        title="Logistics Help"
+                    />
+                </div>
                 {globalUnsaved ? (
                     <Typography variant="h6" align="center" color="error">
                         Unsaved
