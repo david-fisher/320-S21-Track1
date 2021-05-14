@@ -15,6 +15,7 @@
     "material-table": "^1.69.3",
     "node": "^15.14.0",
     "react": "^16.13.1",
+    "react-beforeunload": "^2.5.1",
     "react-device-detect": "^1.14.0",
     "react-dom": "^16.13.1",
     "react-flow-renderer": "^6.1.3",

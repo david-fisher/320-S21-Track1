@@ -20,7 +20,7 @@ import FlowDiagram from '../components/EditorComponents/FlowDiagramComponents/Fl
 import AddNewSimulationScenarioPageDialog from '../components//EditorComponents/AddNewPageComponents/AddNewSimulationScenarioPageDialog';
 import NavSideBarList from '../components/ConfigurationSideBarComponents/NavSideBarList';
 import AddIcon from '@material-ui/icons/Add';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import ErrorBanner from '../components/Banners/ErrorBanner';
@@ -33,6 +33,7 @@ import universalPost from '../universalHTTPRequests/post.js';
 import universalFetch from '../universalHTTPRequests/get.js';
 import universalDelete from '../universalHTTPRequests/delete.js';
 import GenericUnsavedWarning from '../components/WarningDialogs/GenericUnsavedWarning';
+import { useBeforeunload } from 'react-beforeunload';
 //  setResponse, endpoint, onError, onSuccess, requestBody
 
 const drawerWidth = 250;
@@ -197,7 +198,7 @@ export default function Editor(props) {
     const [addNewPageId, setAddNewPageId] = useState(null);
     const [currentPageID, setCurrentPageID] = useState(-1);
     const unsaved = useState(false);
-
+    const [globalUnsaved, setGlobalUnsaved] = unsaved;
     //used for unsaved warning dialog
     const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(
         false
@@ -691,20 +692,15 @@ export default function Editor(props) {
         );
     }
 
-    //warn user of unsaved changes if user tries to close or refresh browser
-    window.addEventListener('beforeunload', function (e) {
-        if (unsaved[0]) {
-            // Cancel the event
-            e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-            // Chrome requires returnValue to be set
-            e.returnValue = '';
-        } else {
-            delete e['returnValue'];
+    useBeforeunload((event) => {
+        if (globalUnsaved) {
+            event.preventDefault();
         }
     });
 
     const history = useHistory();
     function returnToDashboard() {
+        setGlobalUnsaved(false);
         history.push('/dashboard');
     }
 
@@ -746,7 +742,7 @@ export default function Editor(props) {
                         color="primary"
                         className={classes.exitButton}
                         onClick={
-                            unsaved[0]
+                            globalUnsaved
                                 ? handleOpenUnsavedWarningDialog
                                 : returnToDashboard
                         }
