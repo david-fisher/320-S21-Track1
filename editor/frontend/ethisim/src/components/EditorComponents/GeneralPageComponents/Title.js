@@ -6,7 +6,6 @@ import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
     },
 }));

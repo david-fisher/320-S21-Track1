@@ -581,7 +581,7 @@ export default function Dashboard() {
                             onClick={handleCloseSave}
                             color="primary"
                         >
-                            Save changes
+                            Create New Scenario
                         </Button>
                     </DialogActions>
                 </div>

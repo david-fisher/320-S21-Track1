@@ -9,26 +9,26 @@ export const LogisticsHelpInfo = [
     },
     {
         title: 'Courses',
-        description: `The is where you decide the courses associated with this scenario. 
-  Once published, students from these classes will be able to play through these scenarios.`,
+        description: `This is where you decide the courses associated with this scenario. 
+        Once published, students from these classes will be able to play through these scenarios.`,
     },
     {
         title: 'Max Number of Selected Conversations',
         description: `The is where you decide the max number of selected conversations
-                 you would like to permit students to speak with. 
-                By default, the max number of selected conversations is zero. `,
+        you would like to permit students to speak with. 
+        By default, the max number of selected conversations is zero. `,
     },
     {
-        title: 'Public',
-        description: `Selecting the “Public” box allows your scenario to be viewed publicly by others.`,
+        title: 'Make Public',
+        description: `Selecting the “Make Public” box allows your scenario to be viewed publicly by others.`,
     },
     {
         title: 'Published',
-        description: `Selecting the “Published” box puts your scenario in the Finished section of the Dashboard, 
-                ready for student distribution.`,
+        description: `Selecting the “Published” box puts your scenario in the "Published Scenarios" section of the editor dashboard, 
+        ready for student distribution.`,
     },
     {
-        title: 'Save',
-        description: `Selecting "Save" will save your changes.`,
+        title: 'Save Scenario Info',
+        description: `Selecting "Save Scenario Info" will save your changes.`,
     },
 ];

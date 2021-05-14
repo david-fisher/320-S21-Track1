@@ -15,7 +15,7 @@ const endpointGET = '/api/issues/?SCENARIO=';
 
 const useStyles = makeStyles((theme) => ({
     issue: {
-        marginTop: theme.spacing(2),
+        marginTop: '-15px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

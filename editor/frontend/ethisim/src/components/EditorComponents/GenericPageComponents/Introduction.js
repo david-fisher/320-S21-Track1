@@ -10,6 +10,8 @@ import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import LoadingSpinner from '../../LoadingSpinner';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import { IntroductionPageHelpInfo } from './IntroductionPageHelpInfo';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 
 const useStyles = makeStyles((theme) => ({
     saveButton: {
@@ -18,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
         textTransform: 'unset',
     },
     bannerContainer: {
-        marginTop: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -184,9 +185,8 @@ export default function Introduction(props) {
         return <LoadingSpinner />;
     }
 
-    //TODO information list
     return (
-        <Container component="main">
+        <Container component="main" style={{ marginTop: '-15px' }}>
             <div className={classes.bannerContainer}>
                 <SuccessBanner
                     successMessage={successBannerMessage}
@@ -200,6 +200,10 @@ export default function Introduction(props) {
             <Typography align="center" variant="h2">
                 Introduction Page
             </Typography>
+            <GenericHelpButton
+                description={IntroductionPageHelpInfo}
+                title="Introduction Page Help"
+            />
             {globalUnsaved ? (
                 <Typography variant="h6" align="center" color="error">
                     Unsaved

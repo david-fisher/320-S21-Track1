@@ -12,6 +12,8 @@ import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import IssueRow from './IssueRow';
 import put from '../../../../universalHTTPRequests/put';
+import { PointSelectionHelpInfo } from './PointSelectionHelpInfo';
+import GenericHelpButton from '../../../HelpButton/GenericHelpButton';
 
 const useStyles = makeStyles({
     table: {
@@ -126,6 +128,10 @@ export default function BasicTable({
 
     return (
         <div>
+            <GenericHelpButton
+                description={PointSelectionHelpInfo}
+                title="Point Selection Help"
+            />
             <Button
                 id="button-save"
                 variant="contained"

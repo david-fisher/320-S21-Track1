@@ -17,7 +17,7 @@ import Reflection from '../components/EditorComponents/ReflectionPageComponents/
 import Action from '../components/EditorComponents/ActionPageComponents/Action';
 import Introduction from '../components/EditorComponents/GenericPageComponents/Introduction';
 import FlowDiagram from '../components/EditorComponents/FlowDiagramComponents/FlowDiagram';
-import AddNewSimulationScenarioPageDialog from '../components//EditorComponents/AddNewSimulationScenarioPageDialog';
+import AddNewSimulationScenarioPageDialog from '../components//EditorComponents/AddNewPageComponents/AddNewSimulationScenarioPageDialog';
 import NavSideBarList from '../components/ConfigurationSideBarComponents/NavSideBarList';
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     bannerContainer: {
-        marginTop: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

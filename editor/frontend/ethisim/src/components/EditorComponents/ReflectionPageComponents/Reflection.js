@@ -11,6 +11,8 @@ import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import LoadingSpinner from '../../LoadingSpinner';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import { ReflectionPageHelpInfo } from './ReflectionPageHelpInfo';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 
 Reflection.propTypes = {
     scenarioComponents: PropTypes.any,
@@ -36,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
         textTransform: 'unset',
     },
     bannerContainer: {
-        marginTop: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -238,7 +239,7 @@ export default function Reflection(props) {
     }
 
     return (
-        <Container component="main">
+        <Container component="main" style={{ marginTop: '-15px' }}>
             <div className={classes.bannerContainer}>
                 <SuccessBanner
                     successMessage={successBannerMessage}
@@ -252,6 +253,10 @@ export default function Reflection(props) {
             <Typography align="center" variant="h2">
                 Reflection Page
             </Typography>
+            <GenericHelpButton
+                description={ReflectionPageHelpInfo}
+                title="Reflection Page Help"
+            />
             {globalUnsaved ? (
                 <Typography variant="h6" align="center" color="error">
                     Unsaved

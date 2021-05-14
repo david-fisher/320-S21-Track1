@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
         height: '75px',
     },
 }));
+
 DialogTitle.propTypes = {
     onClose: PropTypes.any,
     title: PropTypes.string,
@@ -60,6 +61,7 @@ HelpButtonSinglePlayer.propTypes = {
     description: PropTypes.any,
     title: PropTypes.string,
 };
+
 export default function HelpButtonSinglePlayer({ description, title }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -96,7 +98,12 @@ export default function HelpButtonSinglePlayer({ description, title }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <IconButton size="medium" color="primary" onClick={handleOpen}>
+            <IconButton
+                size="medium"
+                color="primary"
+                onClick={handleOpen}
+                className={classes.icon}
+            >
                 <HelpIcon className={classes.icon} />
             </IconButton>
         </div>

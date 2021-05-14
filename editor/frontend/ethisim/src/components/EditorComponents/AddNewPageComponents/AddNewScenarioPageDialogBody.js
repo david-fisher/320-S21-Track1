@@ -7,7 +7,7 @@ import {
     Typography,
     makeStyles,
 } from '@material-ui/core';
-import AddNewPageSunEditor from '../../components/AddNewPageSunEditor';
+import AddNewPageSunEditor from './AddNewPageSunEditor';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 
@@ -133,8 +133,8 @@ export default function AddNewScenarioPageDialogBody(props) {
                     margin="normal"
                     required
                     fullWidth
-                    name="New Page Name"
-                    label="Page Name"
+                    name="New Page Title"
+                    label="Page Title"
                     id="scenariopageAdder"
                     onChange={(e) => setPageName(e.target.value)}
                 ></TextField>
@@ -144,8 +144,8 @@ export default function AddNewScenarioPageDialogBody(props) {
                     margin="normal"
                     required
                     fullWidth
-                    name="New Page Name"
-                    label="Page Name"
+                    name="New Page Title"
+                    label="Page Title"
                     id="scenariopageAdder"
                     onChange={(e) => setPageName(e.target.value)}
                 ></TextField>

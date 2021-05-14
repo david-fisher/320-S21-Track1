@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import deleteReq from '../../../../../universalHTTPRequests/delete';
 import put from '../../../../../universalHTTPRequests/put';
 import post from '../../../../../universalHTTPRequests/post';
+import { ViewQuestionsHelpInfo } from './ViewQuestionsHelpInfo';
+import GenericHelpButton from '../../../../HelpButton/GenericHelpButton';
 
 QuestionFields.propTypes = {
     qrs: PropTypes.any,
@@ -147,6 +149,10 @@ export default function QuestionFields({
 
     return (
         <div>
+            <GenericHelpButton
+                description={ViewQuestionsHelpInfo}
+                title="StakeHolder Questions Help"
+            />
             <Button
                 id="button"
                 onClick={addQuestion}

@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     bannerContainer: {
-        marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     container: {
-        padding: theme.spacing(1),
+        marginTop: '-15px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -568,7 +567,7 @@ export default function Logistics({ scenario_ID }) {
                                 color="primary"
                             />
                         }
-                        label="Public"
+                        label="Make Public"
                         labelPlacement="start"
                     />
 
@@ -580,7 +579,7 @@ export default function Logistics({ scenario_ID }) {
                                 color="primary"
                             />
                         }
-                        label="Is Finished"
+                        label="Published"
                         labelPlacement="start"
                     />
                 </form>

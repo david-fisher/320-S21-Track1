@@ -34,6 +34,8 @@ import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import PropTypes from 'prop-types';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import { FlowDiagramHelpInfo } from './FlowDiagramHelpInfo';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 
 const useStyles = makeStyles((theme) => ({
     errorContainer: {
@@ -43,13 +45,16 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     container: {
+        marginTop: '-15px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         height: '90vh',
     },
-    margin: {
-        marginBottom: '15px',
+    headerContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
         textAlign: 'center',
@@ -503,14 +508,15 @@ export default function FlowDiagram({ scenario_ID }) {
     return (
         <div className={classes.container}>
             <Typography variant="h3">Order Scenario Pages</Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={refresh}
-                className={classes.margin}
-            >
-                <RefreshIcon className={classes.iconRefreshSmall} />
-            </Button>
+            <div className={classes.headerContainer}>
+                <Button variant="contained" color="primary" onClick={refresh}>
+                    <RefreshIcon className={classes.iconRefreshSmall} />
+                </Button>
+                <GenericHelpButton
+                    description={FlowDiagramHelpInfo}
+                    title="Flow Diagram Help"
+                />
+            </div>
             {unsaved ? (
                 <Typography variant="h6" align="center" color="error">
                     Unsaved

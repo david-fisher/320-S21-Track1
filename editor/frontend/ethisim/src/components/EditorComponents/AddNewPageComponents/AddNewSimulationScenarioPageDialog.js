@@ -10,6 +10,8 @@ import {
 import AddNewScenarioPageDialogBody from './AddNewScenarioPageDialogBody';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PropTypes from 'prop-types';
+import { AddNewPageHelpInfo } from './AddNewPageHelpInfo';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 
 const useStyles = makeStyles((theme) => ({
     dialogWrapper: {
@@ -65,6 +67,10 @@ export default function AddNewSimulationScenarioPageDialog(props) {
             </DialogTitle>
 
             <DialogContent dividers>
+                <GenericHelpButton
+                    description={AddNewPageHelpInfo}
+                    title="Add New Page Help"
+                />
                 <AddNewScenarioPageDialogBody
                     addPage={addPage}
                     setOpenPopup={setOpenPopup}
