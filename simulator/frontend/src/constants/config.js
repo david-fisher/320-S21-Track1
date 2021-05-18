@@ -2,4 +2,4 @@ export const DOMAIN = (process.env.NODE_ENV === 'production') ? process.env.REAC
 export const BACK_URL = DOMAIN + ':7000/backend'
 export const SCENARIO_ID = 1;
 export const STUDENT_ID = 1;
-export const DEV_MODE = true;
+export const DEV_MODE = false;

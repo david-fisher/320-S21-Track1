@@ -75,7 +75,6 @@ export default function VerticalLinearStepper(props) {
   // eslint-disable-next-line
   const [activeStep, setActiveStep] = React.useState(props.pages[props.activePage].pageNumber);
   
-
   function navigatePage(pageID){
     //if(props.pages[pageID].completed){
       if (!props.pages[pageID].visited) {

@@ -14,6 +14,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import CodeButton from './components/classCodeDialog';
 import ProgressBar from './components/progressBar';
 import { STUDENT_ID,changeID } from './../constants/config';
+import ErrorBanner from './components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -125,11 +126,9 @@ export default function Home() {
   const classes = useStyles();
 
 
-  // post on success, concatenating a scenario card to array
+  //post on success, concatenating a scenario card to array
   //delete on success, concatenating a scenario card to array
-
   //when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
-
   //post returns new id of scenario, when you concatenating to array set the id to that
   const [menuCourseItems, setMenuCourseItems] = useState([]);
   const [open, setOpen] = useState(false);
@@ -165,21 +164,12 @@ export default function Home() {
     error: false,
   });
 
-
-  
-  // // eslint-disable-next-line
-  // const [fetchCourseResponse, setFetchCourseResponse] = useState({
-  //     data: null,
-  //     loading: false,
-  //     error: null,
-  // });
-  // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
-  // eslint-disable-next-line
 
   //Get Scenario
   let getData = () => {
     function onSuccess(response) {
+      console.log(response.data.result);
       let incomplete = response.data.result.filter(
         (data) => !data.is_finished
       );
@@ -213,41 +203,33 @@ export default function Home() {
         completeScenarios: complete
       };
       setScenarioList(scen);
-      debugger;
     }
 
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      setErrorBannerFade(true);
     }
     get(setFetchScenariosResponse, (endpointGet + STUDENT_ID), onFailure, onSuccess);
   };
 
-  // //Get Courses
-  // let getCourses = () => {
-  //     function onSuccessCourse(response) {
-  //         setMenuCourseItems(response.data);
-  //     }
+    const [errorBannerMessage, setErrorBannerMessage] = useState('');
+    const [errorBannerFade, setErrorBannerFade] = useState(false);
 
-  //     function onFailureCourse() {
-  //         setErrorBannerMessage('Failed to get courses! Please try again.');
-  //         setErrorBannerFade(true);
-  //     }
-  //     get(
-  //         setFetchCourseResponse,
-  //         endpointGetCourses,
-  //         onFailureCourse,
-  //         onSuccessCourse
-  //     );
-  // };
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setErrorBannerFade(false);
+        }, 1000);
 
-
+        return () => clearTimeout(timeout);
+    }, [errorBannerFade]);
+  // //Get Cours
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
+  
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -317,7 +299,9 @@ export default function Home() {
                     className={classes.button}
                     variant="contained"
                     color="primary"
-                >Select Scenario</Button>
+                >
+                  Select Scenario
+                </Button>
                 {/* <Button onClick={() => {
                   changeID(scenario.version_id)
                   //TEMPORARY SOLUTION
@@ -364,9 +348,6 @@ export default function Home() {
           ))}
         </Grid>
       </TabPanel>
-
-
-
     </div>
   );
 }

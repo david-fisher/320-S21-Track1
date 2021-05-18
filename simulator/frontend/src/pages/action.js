@@ -6,8 +6,7 @@ import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import axios from 'axios';
 import { ScenariosContext } from "../Nav";
 import HTMLRenderer from "./components/htmlRenderer";
-import Introduction from "./introduction.js";
-import ProjectAssignment from "./projectAssignment.js";
+import GenericPage from "./genericPage.js";
 import Reflection from "./reflection.js";
 import Conclusion from "./conclusion.js";
 import Feedback from "./feedback.js";
@@ -37,75 +36,22 @@ const TextTypography = withStyles({
 })(Typography);
 
 function Action({ pages, sessionId, setPages, activePage, conversations, setActivePage, content_url, nextPageID, prevPageID, title }) {
-
+  let choices = "choices": [
+    {"choices_id": 1000, "choice_text": "Approve project assignment and work on it immediately to save time."}, 
+    {"choices_id": 2000, "choice_text": "Postpone and ask questions from stakeholders."}
+  ]
   const location = useLocation();
-
 
   let pathArray = location.pathname.split( '/' );
   const scenario_id = pathArray[pathArray.length - 2];
   const first_page = pathArray[pathArray.length - 1];
   const version_id = scenario_id;
 
-  function goToPage(pageID) {
-    if (!pages[pageID].visited) {
-      setPages((prevPages) => {
-        let copy = { ...prevPages };
-        copy[pageID].visited = true;
-        return copy;
-      });
-    }
-    setActivePage((prevPage) => pageID);
-  }
-
-
-  const [actionQuestion, setActionQuestion, setActionChoices] = React.useState('');
   const [questionID, setQuestionID] = React.useState('');
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [nextPage, setNextPage] = React.useState(-1);
   const [chosenAction, setChosenAction] = React.useState(-1);
 
-  // useEffect(() => {
-  //   // backend call
-  //   (async () => {
-  //     axios({
-  //       method: 'get',
-  //       url: BACK_URL + content_url,
-  //       headers: {
-  //         scenarioID: scenarios.currentScenarioID,
-  //         studentID: STUDENT_ID,
-  //       }
-  //     }).then(response => {
-  //       console.log(response);
-  //       if (scenarios.currentScenarioID == 1)
-  //       {
-  //         setActionQuestion(text => response.data[0].question);
-  //         setQuestionID(id => response.data[0].option_id);
-  //       }
-  //       if (scenarios.currentScenarioID == 2){
-  //         setActionQuestion(text => response.data[1].question);
-  //         setQuestionID(id => response.data[1].option_id);
-  //       }
-  //     }).catch((err)=>{
-  //       console.log("err",err);
-  //       //alert(err);
-  //     });
-  //   })();
-  // }, [scenarios]);
-
-  // async function handleResponse(data) {
-  //   const request_data = {}
-  //   console.log("Question ID's " + questionID);
-  //   request_data[questionID[0].toString()] = data;
-  //   await axios({
-  //     url: BACK_URL + content_url,
-  //     method: 'put',
-  //     data: {
-  //       scenarioID: scenarios.currentScenarioID,
-  //       studentID: STUDENT_ID,
-  //       data: request_data
-  //     }
-  //   });
-  // }
    // MAKE API CALL
    let pageId = activePage
    const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
@@ -151,9 +97,9 @@ function Action({ pages, sessionId, setPages, activePage, conversations, setActi
           id: data.page_id,
         }
       ));
-      let next_html = (<Introduction activePage={npage[0].id}/>);
+      let next_html;
       if(npage[0].type === "PLAIN"){
-        next_html = (<ProjectAssignment version_id={scenario_id} lastPage={activePage}/>);
+        next_html = (<GenericPage version_id={scenario_id} lastPage={activePage}/>);
       } else if (npage[0].type === "REFLECTION"){
         next_html = (<Reflection version_id={scenario_id} content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
       } else if (npage[0].type === "STAKEHOLDERPAGE"){
