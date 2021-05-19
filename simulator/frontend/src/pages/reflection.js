@@ -24,6 +24,15 @@ const TextTypography = withStyles({
     color: "#373a3c",
     whiteSpace: "pre-wrap",
   },
+  backButton: {
+    marginLeft: "0rem",
+    marginRight: "0rem",
+    marginTop: "1rem",
+  },
+  nextButton: {
+    marginRight: "0rem",
+    marginTop: "1rem"
+  }
 })(Typography);
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Reflection({ pageTitle, body, questions, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
   const window = (new JSDOM('')).window;
   const DOMPurify = createDOMPurify(window);
+  body = body.replace(/\\"/g, '"');
   let [contextObj, setContextObj] = useContext(GlobalContext);
 
   questions = [
@@ -118,9 +128,10 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
     }
 
     //TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
+    console.log('hi');
     setSavedAnswers(true);
   }
-
+  console.log(savedAnswers);
   console.log(reflection);
 
   let updateResponse = (e,id) => {  
@@ -142,6 +153,7 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           variant="contained"
           color="primary"
           disableElevation
+          className={classes.backButton}
           onClick={() => getPrevPage(prevPageEndpoint, contextObj.activeIndex, contextObj.pages)}
         >
           Back
@@ -152,6 +164,7 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           variant="contained"
           disabled={!savedAnswers}
           disableElevation
+          className={classes.nextButton}
           color="primary"
           onClick={() => getNextPage(nextPageEndpoint, contextObj.activeIndex, contextObj.pages)}
         >
@@ -170,17 +183,17 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           </TextTypography>
         </Box>
       </Grid>
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item lg={12}>
           { <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }} /> }
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item lg={12}>         
           {questions.map(prompt => (
             <Box m="2rem" p={1} className={classes.textBox}>
-              <p>{prompt.prompt}</p>
+              <p>{prompt.reflection_question}</p>
               <TextField
                 style={{ width: 565 }}
                 id="outlined-multiline-static"
@@ -197,9 +210,10 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
               variant="contained"
               color='primary'
               justify='right'
+              disabled={savedAnswers}
               onClick={postData} 
             >
-              Save answers
+              Submit Answers
             </Button> 
           </Grid>  
         </Grid>

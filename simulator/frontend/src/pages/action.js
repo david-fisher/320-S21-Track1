@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React, { useEffect,useState, useContext} from "react";
 import { useLocation } from 'react-router-dom';
 import { makeStyles, withStyles, Typography, Box, Button, Grid } from "@material-ui/core";
 import Checkbox from "./components/checkbox";
@@ -15,6 +15,7 @@ import Stakeholders from "./stakeholders.js";
 import RefreshIcon from '@material-ui/icons/Refresh';
 import get from '../universalHTTPRequests/get';
 import post from '../universalHTTPRequests/post';
+import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,19 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  backButton: {
+    marginLeft: "0rem",
+    marginRight: "0rem",
+    marginTop: "1rem",
+  },
+  nextButton: {
+    marginRight: "0rem",
+    marginTop: "1rem",
+  },
+  button: {
+    width: '100%',
+    textTransform: 'unset',
   }
 }));
 
@@ -35,10 +49,20 @@ const TextTypography = withStyles({
   }
 })(Typography);
 
-function Action({ pages, sessionId, setPages, activePage, conversations, setActivePage, content_url, nextPageID, prevPageID, title }) {
-  let choices = "choices": [
-    {"choices_id": 1000, "choice_text": "Approve project assignment and work on it immediately to save time."}, 
-    {"choices_id": 2000, "choice_text": "Postpone and ask questions from stakeholders."}
+export default function Action({ versionID, pageID, pageTitle, body, choices, choiceChosen, getNextPage, getPrevPage, prevPageEndpoint }) {
+  let [contextObj, setContextObj] = useContext(GlobalContext);
+  body = body.replace(/\\"/g, '"');
+  choices = [
+    {
+     "choices_id": 1000, 
+     "choice_text": "Approve project assignment and work on it immediately to save time.",
+     "next_page": 7000
+    }, 
+    {
+      "choices_id": 2000, 
+      "choice_text": "Postpone and ask questions from stakeholders.",
+      "next_page": 6000
+    },
   ]
   const location = useLocation();
 
@@ -51,26 +75,7 @@ function Action({ pages, sessionId, setPages, activePage, conversations, setActi
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [nextPage, setNextPage] = React.useState(-1);
   const [chosenAction, setChosenAction] = React.useState(-1);
-
-   // MAKE API CALL
-   let pageId = activePage
-   const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
-   const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
-   const endpointPost = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)
-   const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+version_id
- 
-   const [action, setAction] = useState({     //temporary array of reflection
-    
-    page_id: 0,
-    page_type: "",
-    page_title: "",
-    version_id: 5,
-    body: "",
-    choices: []
-    
-   });
-   
-   const [fetchActionResponse, setFetchActionResponse] = useState({
+  const [fetchActionResponse, setFetchActionResponse] = useState({
      data: null,
      loading: false,
      error: false,
@@ -80,94 +85,24 @@ function Action({ pages, sessionId, setPages, activePage, conversations, setActi
     loading: false,
     error: false,
   });
-   const [shouldFetch, setShouldFetch] = useState(0);
-
-   function onFailure() {
-    //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-    //setErrorBannerFade(true);
-  }
-
-   function onSuccess2(response) {
-      console.log(response.data)
-      let npage = response.data.result.map((data) => (
-        {
-          next: data.next_page,
-          type: data.page_type,
-          title: data.page_title,
-          id: data.page_id,
-        }
-      ));
-      let next_html;
-      if(npage[0].type === "PLAIN"){
-        next_html = (<GenericPage version_id={scenario_id} lastPage={activePage}/>);
-      } else if (npage[0].type === "REFLECTION"){
-        next_html = (<Reflection version_id={scenario_id} content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
-      } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders session_id={sessionId} version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next} numConversations={conversations}/>);
-      } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action sessionId={sessionId} version_id={scenario_id} conversations={conversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
-      } else if (npage[0].type === "CONCLUSION"){
-        next_html = (<Conclusion version_id={scenario_id} prevPageID={activePage}/>);
-      } else if (npage[0].type === "FEEDBACK"){
-        next_html = (<Feedback version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next}/>);
-      } else {
-        next_html = (<Reflection version_id={scenario_id} activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
-      }
-      let len = Object.keys(pages).length
-      let next_page = {
-        visited: false,
-        completed: false,
-        title: npage[0].title,
-        pageNumber: len+1,
-        html: next_html
-      }
-      setPages((prevPages) => {
-        let copy = { ...prevPages };
-        copy[npage[0].id] = next_page;
-        return copy;
-      });
-      if(npage[0].next !== undefined){
-        let next = npage[0].next;
-        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
-        get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2);
-      }
-    }
+   // MAKE API CALL
+   //let pageId = activePage
+   //const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
+   //const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
+   const endpointPost = '/scenarios/action?versionId='+versionID+'&pageId='+(pageID)
+   const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+versionID
  
-   //Get Action Page
-   let getData = () => {
-     function onSuccess(response) {
-       // Right now hardcoded for middle reflection
-       //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-       let ppage = ({
-          page_id: response.data.result.page_id,
-          page_type: response.data.result.page_type,
-          page_title: response.data.result.page_title,
-          version_id: response.data.result.version_id,
-          body: response.data.result.body,
-          choices: response.data.result.choices
-       })
-       let pp = {
-        data: ppage
-       }
-       setAction(ppage);
-       //check if we've already submitted an action for this scen
-       get(setFetchScenariosResponse, (endpointGet2), onFailure, onSuccess1);
-       debugger;
-     }
-     function onSuccess1(response) {
-      // Right now hardcoded for middle reflection
-      //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-      if(response.data.status == 200){
-        setNextPage((cur) => response.data.result.next_page);
-        setChosenAction((cur) => response.data.result.choice);
-      }
-      let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + response.data.result.next_page;
-      get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2)
-    }
-     get(setFetchActionResponse, (endpointGet), onFailure, onSuccess);
-   };
+   const [action, setAction] = useState({     //temporary array of reflection
+    page_id: 0,
+    page_type: "",
+    page_title: "",
+    version_id: 5,
+    body: "",
+    choices: []
+   });
 
-   let getAction = (selectedAction) => {
+   let getAction = (selectedAction, nextPageID) => {
+     console.log(pageID);
     function startSess(response) {
       //do nothing
     }
@@ -180,93 +115,90 @@ function Action({ pages, sessionId, setPages, activePage, conversations, setActi
          choice_text: response.data.result.choice_text,
          next: response.data.result.next_page,
       })
-      console.log(body.next);
-      setNextPage((cur) => body.next);
+      console.log(response);
       setChosenAction((cur) => selectedAction);
-      let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + body.next;
-      get(setFetchActionResponse, endpoint, onFailure, onSuccess2);
+      //getNextPage("/scenarios/task?versionId="+versionID+"&pageId="+nextPageID, contextObj.activeIndex, contextObj.pages);
     }
     function onFailure() {
       //setErrorBannerMessage('Failed to get scenarios! Please try again.');
       //setErrorBannerFade(true);
     }
-    post(setFetchActionResponse, (endpointSess), onFailure, startSess)
-    let body = {"choice_id" : selectedAction, "user_id" : STUDENT_ID};
-    post(setFetchActionResponse, (endpointPost), onFailure, onSuccess, JSON.stringify(body));
+    if(!choiceChosen) {
+      post(setFetchActionResponse, endpointSess, onFailure, startSess)
+      //TODO Remove once post request finishes
+      getNextPage("/scenarios/task?versionId="+versionID+"&pageId="+nextPageID, contextObj.activeIndex, contextObj.pages);
+      let body = {"choice_id" : selectedAction, "user_id" : STUDENT_ID};
+      //TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
+    }
    }
  
-
   const classes = useStyles();
- 
-  useEffect(getData, [shouldFetch]);
 
-  if (fetchActionResponse.error) {
-    return (
-      <div className={classes.errorContainer}>
-        <Box mt={5}>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <TextTypography variant="h4" align="center" gutterBottom>
-              Error fetching scenario data.
-            </TextTypography>
-          </Grid>
-        </Box>
+  const Buttons = (
+    <Grid container direction="row" justify="space-between">
+      <Grid
+        item
+        className={classes.backButton}
+      >
         <Button
           variant="contained"
+          disableElevation
           color="primary"
-          onClick={getData}
+          onClick={() => getPrevPage(prevPageEndpoint, contextObj.activeIndex, contextObj.pages)}
         >
-          <RefreshIcon className={classes.iconRefreshLarge} />
+          Back
         </Button>
-      </div>)
-  }
+      </Grid>
+      <Grid 
+        item 
+        className={classes.nextButton}
+      >
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          disabled={!choiceChosen}
+          onClick={() => getNextPage("/scenarios/task?versionId="+versionID+"&pageId="+choiceChosen, contextObj.activeIndex, contextObj.pages)}
+        >
+          Next
+        </Button>
+      </Grid>
+    </Grid>
+  );
 
   return (
     <div>
+      {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
           <TextTypography variant="h4" align="center" gutterBottom>
-            {action.page_title}
+            {pageTitle}
           </TextTypography>
         </Box>
       </Grid>
-      <Grid container direction="row" justify="space-between">
-        <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation onClick={() => goToPage(activePage-1)}>Back</Button>
-        </Grid>
-        <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation disabled={nextPage === -1} color="primary" onClick={() => goToPage(nextPage)} >Next</Button>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          {/* {action.data.map(d =>( */}
-            <TextTypography variant="h6" align="center" gutterBottom>
-                {action.body}
-              </TextTypography>
+          <Grid item lg={12}>
+            { <div dangerouslySetInnerHTML={{ __html: body }} /> }
+          </Grid>
             <Box mx="auto">
-            {action.choices.map((choice) => (
+            {choices.map((choice) => (
               <Box p={3}>
                 <Button
-                  variant={(choice.choices_id === chosenAction) ? "contained" : "outlined"}
-                  color={(choice.choices_id === chosenAction) ? "secondary" : "primary"}
-                  disabled={nextPage !== -1}
+                  variant="outlined"
+                  color="primary"
+                  disabled={choice.choices_id === choiceChosen}
+                  className={classes.button}
                   size="large"
-                  onClick={() => getAction(choice.choices_id)} // save choice and do something According to this choice
+                  onClick={() => getAction(choice.choices_id, choice.next_page)} // save choice and do something According to this choice
                 >
                   {choice.choice_text}
                 </Button> 
               </Box>
             ))}
-
             </Box>
-          {/* ))} */}
-        </Grid>
-        <Grid item lg={12}>
-          {/* <Checkbox content_url = {content_url} nextPage={() => goToPage(nextPageID)} handleResponse={handleResponse} pages={pages} nextPageName={nextPageID} />  */}
         </Grid>
       </Grid>
     </div>
   );
 }
-
-export default Action;

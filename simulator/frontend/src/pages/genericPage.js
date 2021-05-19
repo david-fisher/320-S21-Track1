@@ -72,8 +72,8 @@ export default function GenericPage({ isIntro, pageTitle, body, getNextPage, get
 
   return (
     <div>
+      {Buttons}
       <Box mt={5}>
-        {Buttons}
         <Grid container direction="row" justify="center" alignItems="center">
           <TextTypography variant="h4" align="center" gutterBottom>
             {pageTitle}

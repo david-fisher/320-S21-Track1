@@ -1,6 +1,7 @@
 import React, { useState, createContext, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import {Grid, Typography, Box, Button} from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 import Stepper from "./components/stepper.js";
 import InfoGatheredList from "./components/gatheredList.js";
 import Summary from "./summary.js";
@@ -22,9 +23,18 @@ import post from '../universalHTTPRequests/post';
 import ErrorBanner from './components/Banners/ErrorBanner';
 import GlobalContext from '../Context/GlobalContext';
 
+const useStyles = makeStyles((theme) => ({
+    bannerContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+}));
+
 export const GatheredInfoContext = createContext();
 
-function SimulationWindow(props) {
+export default function SimulationWindow(props) {
+  const classes = useStyles();
   const location = useLocation();
 
   let pathArray = location.pathname.split( '/' );
@@ -139,6 +149,7 @@ function SimulationWindow(props) {
   console.log(playerContext.pages);
 
   let getNextPage = (nextPageEndpoint, index, pages) => {
+    console.log(index);
     function onSuccess(response) {
       let data = response.data.result[0];
       let next = response.data.result[0].next_page;
@@ -178,6 +189,7 @@ function SimulationWindow(props) {
   }
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
+    console.log(data);
     switch(type) {
       case "G":
         return <GenericPage 
@@ -192,7 +204,7 @@ function SimulationWindow(props) {
       case "R":
         return <Reflection 
                   versionID={versionID} 
-                  pageID={data.pageID} 
+                  pageID={data.page_id} 
                   pageTitle={data.page_title} 
                   body={data.body} 
                   questions={data.questions} 
@@ -204,7 +216,7 @@ function SimulationWindow(props) {
       case "S": 
         return <Stakeholders
                   versionID={versionID} 
-                  pageID={data.pageID} 
+                  pageID={data.page_id} 
                   pageTitle={data.page_title} 
                   body={data.body} 
                   questions={data.questions} 
@@ -216,14 +228,13 @@ function SimulationWindow(props) {
       case "A":
         return <Action 
                   versionID={versionID} 
-                  pageID={data.pageID} 
+                  pageID={data.page_id} 
                   pageTitle={data.page_title} 
                   body={data.body} 
                   choices={data.choices} 
                   choiceChosen={data.choiceChosen}
                   getNextPage={getNextPage} 
                   getPrevPage={getPrevPage} 
-                  nextPageEndpoint={nextPageEndpoint}
                   prevPageEndpoint={prevPageEndpoint}
                 />;
       default: 
@@ -256,10 +267,12 @@ function SimulationWindow(props) {
 
   return (
     <GlobalContext.Provider value={scenarioPlayerContext}>
-      <ErrorBanner
-        errorMessage={errorBannerMessage}
-        fade={errorBannerFade}
-      />
+      <div className={classes.bannerContainer}>
+          <ErrorBanner
+              errorMessage={errorBannerMessage}
+              fade={errorBannerFade}
+          />
+      </div>
       <Grid container spacing={2}>
         {/*<GatheredInfoContext.Provider value={infoIdsState}>*/}
           <Grid item lg={3} md={2} sm={2}>
@@ -285,5 +298,3 @@ function SimulationWindow(props) {
     </GlobalContext.Provider>
   );
 }
-
-export default SimulationWindow;
