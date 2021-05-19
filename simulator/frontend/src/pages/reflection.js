@@ -24,15 +24,6 @@ const TextTypography = withStyles({
     color: "#373a3c",
     whiteSpace: "pre-wrap",
   },
-  backButton: {
-    marginLeft: "0rem",
-    marginRight: "0rem",
-    marginTop: "1rem",
-  },
-  nextButton: {
-    marginRight: "0rem",
-    marginTop: "1rem"
-  }
 })(Typography);
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +39,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  backButton: {
+    marginLeft: "0rem",
+    marginRight: "0rem",
+    marginTop: "1rem",
+  },
+  nextButton: {
+    marginRight: "0rem",
+    marginTop: "1rem",
   }
 }));
 
@@ -148,23 +148,21 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
 
   const Buttons = (
     <Grid container direction="row" justify="space-between">
-      <Grid item style={{ marginRight: "0rem", marginTop: "1rem" }}>
+      <Grid item className={classes.backButton}>
         <Button
           variant="contained"
           color="primary"
           disableElevation
-          className={classes.backButton}
           onClick={() => getPrevPage(prevPageEndpoint, contextObj.activeIndex, contextObj.pages)}
         >
           Back
         </Button>
       </Grid>
-      <Grid item style={{ marginRight: "0rem", marginTop: "1rem" }}>
+      <Grid item className={classes.nextButton}>
         <Button
           variant="contained"
           disabled={!savedAnswers}
           disableElevation
-          className={classes.nextButton}
           color="primary"
           onClick={() => getNextPage(nextPageEndpoint, contextObj.activeIndex, contextObj.pages)}
         >
@@ -183,19 +181,19 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           </TextTypography>
         </Box>
       </Grid>
-      <Grid container>
-        <Grid item lg={12}>
+      <Grid containerstyle={{width:'100%'}}>
+        <Grid item style={{width:'100%'}}>
           { <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }} /> }
         </Grid>
       </Grid>
 
-      <Grid container>
-        <Grid item lg={12}>         
+      <Grid container style={{width:'100%'}}>
+        <Grid item style={{width:'100%'}}>         
           {questions.map(prompt => (
             <Box m="2rem" p={1} className={classes.textBox}>
               <p>{prompt.reflection_question}</p>
               <TextField
-                style={{ width: 565 }}
+                style={{ width: '100%' }}
                 id="outlined-multiline-static"
                 label="Answer"
                 multiline

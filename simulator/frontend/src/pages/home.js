@@ -37,11 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
     }
   },
-
-  button: {
-    variant: 'contained',
-    color: 'primary',
-  },
   grid: {
     justifyContent: "center",
     textAlign: "center",
@@ -53,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     background: 'black',
   },
-
 }));
 
 const endpointGet = '/scenarios?userId=';
@@ -279,10 +273,10 @@ export default function Home() {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
           <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
-            <h1>To-Do</h1>
+            <Typography variant="h2">To-Do</Typography>
           </Grid>
           {scenarioList.incompleteScenarios.map(scenario => (
-            <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished={false}
@@ -321,10 +315,10 @@ export default function Home() {
       <TabPanel value={value} index={1}>
         <Grid container spacing={2} className={classes.grid}>     {/*completed scenarioList section*/}
           <Grid item xs={12}>
-            <h1>Completed</h1>
+            <Typography variant="h2">Completed</Typography>
           </Grid>
           {scenarioList.completeScenarios.map(scenario => (
-            <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished={true}

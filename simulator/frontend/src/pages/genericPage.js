@@ -26,11 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
   nextButton: {
     marginRight: "0rem",
-    marginTop: "1rem"
+    marginTop: "1rem",
   }
 }));
 
-export default function GenericPage({ isIntro, pageTitle, body, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint }) {  
+export default function GenericPage({ isIntro, pageTitle, body, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint }) {
   const window = (new JSDOM('')).window;
   const DOMPurify = createDOMPurify(window);
   const classes = useStyles();
@@ -80,8 +80,8 @@ export default function GenericPage({ isIntro, pageTitle, body, getNextPage, get
           </TextTypography>
         </Grid>
       </Box>
-      <Grid container spacing={2}>
-        <Grid item lg={12}>
+      <Grid container spacing={2} style={{width:'100%'}}>
+        <Grid item style={{width:'100%'}}>
           { <div dangerouslySetInnerHTML={{ __html: body }} /> }
         </Grid>
       </Grid>

@@ -177,8 +177,8 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
         </Box>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item lg={12}>
-          <Grid item lg={12}>
+        <Grid item style={{width:'100%'}}>
+          <Grid item style={{width:'100%'}}>
             { <div dangerouslySetInnerHTML={{ __html: body }} /> }
           </Grid>
             <Box mx="auto">

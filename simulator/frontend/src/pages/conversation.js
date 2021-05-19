@@ -21,6 +21,9 @@ import HTMLRenderer from "./components/htmlRenderer";
 import { ScenariosContext } from "../Nav";
 import get from '../universalHTTPRequests/get';
 import post from '../universalHTTPRequests/post';
+import createDOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
+
 const TextTypography = withStyles({
   root: {
     color: "#373a3c",
@@ -38,7 +41,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Conversation({ session, showStakeholders, setShowStakeholders, stakeholder, version_id}) {
+export default function Conversation({ sessionID, showStakeholders, setShowStakeholders, stakeholder, versionID}) {
+    const classes = useStyles();
+    const window = (new JSDOM('')).window;
+    const DOMPurify = createDOMPurify(window);
+    const body = stakeholder.introduction.replace(/\\"/g, '"');
+    console.log(stakeholder);
+
     function goToStakeholders() {
         setShowStakeholders(true);
     }
@@ -49,7 +58,7 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
     const [selectedConversation, setSelectedConversation] = React.useState(-1);
     const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
-    const endpointGet = "/scenarios/conversation/page?versionId=" + version_id + "&scenarioId="  + version_id + "&stakeholderId=" + stakeholder.id;
+    const endpointGet = "/scenarios/conversation/page?versionId=" + versionID + "&scenarioId="  + versionID + "&stakeholderId=" + stakeholder.id;
 
     const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
@@ -59,9 +68,6 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
     const [shouldFetch, setShouldFetch] = useState(0);
 
     let getData = () => {
-
-     
-
       function onSuccess(response){
         setConversations(response.data.result[1])
       };
@@ -69,11 +75,11 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
       function onFailure(err){
         console.log('Error');
       };
-      get(setFetchConversationResponse, (endpointGet), onFailure, onSuccess);
+      get(setFetchConversationResponse, endpointGet, onFailure, onSuccess);
     };
 
     let checkQuestionAnswered = () => {
-      let endpoint = "/scenarios/conversation/had?versionId=" + version_id + "&stakeholderId=" + stakeholder.id + "&userId=" + STUDENT_ID;
+      let endpoint = "/scenarios/conversation/had?versionId=" + versionID + "&stakeholderId=" + stakeholder.id + "&userId=" + STUDENT_ID;
       
       function onSuccess(response){
         if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
@@ -84,32 +90,31 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
       }
 
       function onFailure(err){
-        console.log('Error')
+        console.log('Error');
       }
 
-      get(setFetchConversationResponse, (endpoint), onFailure, onSuccess);
+      get(setFetchConversationResponse, endpoint, onFailure, onSuccess);
     } 
+
     useEffect(getData, [shouldFetch]);
     useEffect(checkQuestionAnswered, [shouldFetch]);
 
     let postData = () => {
+
       function onSuccess(response){
         setAnswer(response.data.result.conversation_response)
-
       };
   
       function onFailure(err){
         console.log('Error');
       };
 
-      let endpointPost = "/scenarios/conversation?versionId=" + version_id + "&scenarioId=" + version_id + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=" + session;
+      let endpointPost = "/scenarios/conversation?versionId=" + versionID + "&scenarioId=" + versionID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=" + sessionID;
 
-
-      
       post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, {
         already_exist: true
       })
-      setSelectedConversation(-1)
+      setSelectedConversation(-1);
     }
     
     const handleToggle = (value) => () => {
@@ -125,7 +130,7 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
       console.log(e)
       setAnswer(e.target.value);
     }
-    const classes = useStyles();
+
     return (
       <div>
         <Box mt={5}>
@@ -134,25 +139,15 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
               Conversation
             </TextTypography>
             <Avatar style={{height:"100px", width:"100px"}} alt="Stakeholder Photo" size src={stakeholder.photo}/>
-
             <TextTypography variant="h5" align="center" gutterBottom>
               {stakeholder.name}
             </TextTypography>
             <TextTypography variant="h6" align="center" gutterBottom>
               {stakeholder.job}
             </TextTypography>
+            { <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }} /> }
           </Grid>
         </Box>
-        <Grid item style={{ marginLeft: "0rem", marginTop: "-3rem" }}>
-            <Button
-              variant="contained"
-              disableElevation
-              color="primary"
-              onClick={goToStakeholders}
-            >
-              Return
-            </Button>
-          </Grid>
         <Grid container direction="row" justify="space-between">
           <Grid
             item
@@ -168,7 +163,7 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
           <Grid item lg={12}>
             <Divider style={{ marginTop: '10px', marginBottom: '30px', height:'2px', backgroundColor:'black'}}/>
             <Box align="left">
-              Select a Question to Ask:
+              Select one Question to Ask:
               <List>
                 {conversations.map((value) => {
                   const labelId = `question-${value.conversation_id}$`;
@@ -179,7 +174,6 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
                         <Checkbox
                           color='primary'
                           checked={selectedConversation === value.conversation_id}
-                          
                         />
                       </ListItemIcon>
                       <ListItemText id={labelId} primary={value.question} />
@@ -188,26 +182,40 @@ function Conversation({ session, showStakeholders, setShowStakeholders, stakehol
                 })}
               </List>
               <Button 
-              align="left"
-              style={{marginTop: '15px', marginBottom:'25px'}} 
-              disabled={selectedConversation === -1 || questionAnswered}
-              variant='outlined' 
-              size='medium' 
-              color='primary'
-              onClick={handleSubmit}>
-              Select
-            </Button>
+                align="left"
+                style={{marginTop: '15px', marginBottom:'25px'}} 
+                disabled={selectedConversation === -1 || questionAnswered}
+                variant='outlined' 
+                size='medium' 
+                color='primary'
+                onClick={handleSubmit}>
+                Select
+              </Button>
             </Box>
             
           <Box fontWeight={500}>Response</Box>
           <Box p={2} className={classes.textBox}>
             {answer}
           </Box>
-            
+    
           </Grid>
+        </Grid>
+        <Grid item style={{ marginLeft: "0rem", marginTop: "1rem" }}>
+            {!questionAnswered ? (
+            <Typography display="block" variant="subtitle" color="error">
+                You must select one question to ask the stakeholder before you can return.
+            </Typography>
+          ) : null}
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!questionAnswered}
+            onClick={goToStakeholders}
+          >
+            Return
+          </Button>
         </Grid>
       </div>
     );
   }
   
-export default Conversation;
