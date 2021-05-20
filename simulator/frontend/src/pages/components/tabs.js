@@ -4,8 +4,6 @@ import {
     withStyles,
     Typography,
     Box,
-    Grid,
-    Button,
     makeStyles,
   } from "@material-ui/core";
 import AppBar from '@material-ui/core/AppBar';

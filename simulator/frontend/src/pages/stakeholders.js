@@ -3,15 +3,10 @@ import {
   makeStyles, withStyles, Typography, Box, Grid, Button,
   Dialog, DialogContent, Paper, Avatar, Tab, Tabs
 } from "@material-ui/core";
-import { createMuiTheme, useTheme } from "@material-ui/core/styles";
-import { GatheredInfoContext } from './simulationWindow';
-import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
-import axios from 'axios';
+import { STUDENT_ID } from "../constants/config";
 import Conversation from './conversation';
-import { ScenariosContext } from "../Nav";
 import get from '../universalHTTPRequests/get';
 import PropTypes from 'prop-types';
-import { BorderStyle } from "@material-ui/icons";
 import './stakeholders.css';
 import GlobalContext from '../Context/GlobalContext';
 import GenericWarning from './components/GenericWarning';
@@ -147,12 +142,12 @@ const StyledTabs = withStyles({
     },
   });
 
-function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
+export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
   const [stakeholders, setStakeholders] = React.useState([]);
+  //eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  const numConversations = contextObj.numConversations;
   const sessionID = contextObj.sessionID;
-  const [scenarios, setScenarios] = React.useContext(ScenariosContext);
+  //eslint-disable-next-line
   const [conversationLimit, setConversationLimit] = React.useState(contextObj.numConversations);
   const [stakeholdersDisabled, setStakeholdersDisabled] = React.useState({});
   const [stakeholdersSelected, setStakeholdersSelected] = React.useState([]);
@@ -165,16 +160,17 @@ function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpo
   const [currentStakeholder, setCurrentStakeholder] = React.useState({});
   const [numStakeholderTalkedTo, setNumStakeholderTalkedTo] = React.useState(0);
   const createdCardStyles = cardStyles();
-  const stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
+  let stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
   const stakeholdersSelectedGrid = getStakeholdersGrid(stakeholdersSelected, true)
 
   const endpointGet = '/scenarios/stakeholder/page?versionId=' + versionID + "&scenarioId=" + versionID;
-
+  //eslint-disable-next-line
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
     loading: false,
     error: null,
   });
+  //eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
   let getData = () => {
     function onSuccess(response) {
@@ -290,7 +286,7 @@ function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpo
 
         setStakeholdersDisabled(prev => {
           let newStakeholdersDisabled = { ...prev };
-          selectedIds.map(val => {
+          selectedIds.forEach(val => {
             newStakeholdersDisabled[val] = false;
           })
           return newStakeholdersDisabled
@@ -406,7 +402,7 @@ function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpo
         <div>
           <Grid container spacing={3} justify={'center'}>
             {items.map(item => ((
-              <Grid item>
+              <Grid item key={item.stakeholder_id}>
                 {item}
               </Grid>
             )))}
@@ -452,7 +448,7 @@ function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpo
           disableElevation
           disabled={!showStakeholders}
           className={classes.backButton}
-          onClick={() => getPrevPage(prevPageEndpoint, contextObj.activeIndex, contextObj.pages)}
+          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
         >
           Back
         </Button>
@@ -538,6 +534,3 @@ function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpo
     </>
   );
 }
-
-export default Stakeholders;
-

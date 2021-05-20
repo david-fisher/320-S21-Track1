@@ -4,8 +4,6 @@ import {
     withStyles,
     Typography,
     Box,
-    Grid,
-    Button,
     makeStyles,
   } from "@material-ui/core";
 import AppBar from '@material-ui/core/AppBar';
@@ -112,7 +110,7 @@ export default function ScrollableTabsButtonAuto() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Box p={2} className={classes.textBox}>
-            <TextTypography variant="body1">{issuesText[1]} <a href='https://en.wikipedia.org/wiki/Ethics_of_artificial_intelligence#:~:text=Machine%20ethics%20(or%20machine%20morality,morally%20or%20as%20though%20moral.&text=More%20recently%2C%20academics%20and%20many,can%20itself%20be%20held%20accountable.' target="_blank">Click here for more information.</a></TextTypography>
+            <TextTypography variant="body1">{issuesText[1]}</TextTypography>
         </Box>
       </TabPanel>
       <TabPanel value={value} index={2}>

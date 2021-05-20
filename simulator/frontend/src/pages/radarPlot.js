@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef, Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js';
-import { Button, Grid, Tab, Tabs, Box, Typography, Table, TableCell, TableRow, TableHead, TableContainer, TableBody, Paper } from '@material-ui/core';
+import { Grid, Tab, Tabs, Box, Typography, Table, TableCell, TableRow, TableHead, TableContainer, TableBody, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
+import { STUDENT_ID } from "../constants/config";
 import PropTypes from 'prop-types';
 import get from '../universalHTTPRequests/get';
 
+//eslint-disable-next-line
 const TextTypography = withStyles({
     root: {
         color: "#373a3c"
@@ -75,20 +76,22 @@ const StyledTabs = withStyles({
     },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
-function Radar({version_id}) {
+function Radar({versionID}) {
     const chartContainer = useRef(null);
+    //eslint-disable-next-line
     const [chartInstance, setChartInstance] = useState(null);
     const [coverage, setCoverage] = useState([]);
     const [value, setValue] = React.useState(0); 
    
 
-    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + version_id;
-
+    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + versionID;
+    //eslint-disable-next-line
     const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
         data: null,
         loading: false,
         error: null,
     });
+    //eslint-disable-next-line
     const [shouldFetch, setShouldFetch] = useState(0);
 
 
@@ -117,9 +120,9 @@ function Radar({version_id}) {
             return "rgba(255, 0, 0, 0.2)"   // Red if average percentage below 30%
         }
     }
-    useEffect(() => {
-        createChart(coverage);
-    }, [value]);
+    
+    //eslint-disable-next-line
+    useEffect(() => {createChart(coverage)}, []);
 
     function createChart(cov) {
         if(cov.length > 0){

@@ -13,16 +13,10 @@ import {
   ListItemIcon,
   ListItemText,
   Checkbox,
-  TextField
 } from "@material-ui/core";
-import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
-import axios from 'axios';
-import HTMLRenderer from "./components/htmlRenderer";
-import { ScenariosContext } from "../Nav";
+import { STUDENT_ID } from "../constants/config";
 import get from '../universalHTTPRequests/get';
 import post from '../universalHTTPRequests/post';
-import createDOMPurify from 'dompurify';
-import { JSDOM } from 'jsdom';
 
 const TextTypography = withStyles({
   root: {
@@ -42,9 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Conversation({ sessionID, showStakeholders, setShowStakeholders, stakeholder, versionID}) {
-    const classes = useStyles();
-    const window = (new JSDOM('')).window;
-    const DOMPurify = createDOMPurify(window);
+    const classes = useStyles();;
     const body = stakeholder.introduction.replace(/\\"/g, '"');
     console.log(stakeholder);
 
@@ -56,15 +48,15 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
     const [questionAnswered, setQuestionAnswered] = React.useState(false);
     const [conversations, setConversations] = React.useState([]);
     const [selectedConversation, setSelectedConversation] = React.useState(-1);
-    const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
     const endpointGet = "/scenarios/conversation/page?versionId=" + versionID + "&scenarioId="  + versionID + "&stakeholderId=" + stakeholder.id;
-
+    //eslint-disable-next-line
     const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
       loading: false,
       error: null,
     });
+    //eslint-disable-next-line
     const [shouldFetch, setShouldFetch] = useState(0);
 
     let getData = () => {
@@ -126,11 +118,6 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
       setQuestionAnswered(true);
     };
 
-    const handleChange = (e) => {
-      console.log(e)
-      setAnswer(e.target.value);
-    }
-
     return (
       <div>
         <Box mt={5}>
@@ -145,7 +132,7 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
             <TextTypography variant="h6" align="center" gutterBottom>
               {stakeholder.job}
             </TextTypography>
-            { <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }} /> }
+            { <div dangerouslySetInnerHTML={{ __html: body }} /> }
           </Grid>
         </Box>
         <Grid container direction="row" justify="space-between">

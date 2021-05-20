@@ -1,9 +1,7 @@
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import '../App.css';
-import deleteReq from '../universalHTTPRequests/delete';
-import post from '../universalHTTPRequests/post';
 import get from '../universalHTTPRequests/get';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Button, Tabs, Tab, Box, Typography } from '@material-ui/core';
@@ -11,9 +9,11 @@ import ScenarioCard from './components/scenarioCard';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
+//eslint-disable-next-line
 import CodeButton from './components/classCodeDialog';
+//eslint-disable-next-line
 import ProgressBar from './components/progressBar';
-import { STUDENT_ID,changeID } from './../constants/config';
+import { STUDENT_ID } from './../constants/config';
 import ErrorBanner from './components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const endpointGet = '/scenarios?userId=';
+//eslint-disable-next-line
 const endpointPost = '/dashboard';
 
 function TabPanel(props) {
@@ -118,14 +119,10 @@ const StyledTabs = withStyles({
 
 export default function Home() {
   const classes = useStyles();
-
-
   //post on success, concatenating a scenario card to array
   //delete on success, concatenating a scenario card to array
   //when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
   //post returns new id of scenario, when you concatenating to array set the id to that
-  const [menuCourseItems, setMenuCourseItems] = useState([]);
-  const [open, setOpen] = useState(false);
   const [scenarioList, setScenarioList] = useState({     //temporary array of scenarios
       incompleteScenarios: [
         {
@@ -157,7 +154,7 @@ export default function Home() {
     loading: false,
     error: false,
   });
-
+  //eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
 
   //Get Scenario
@@ -266,6 +263,12 @@ export default function Home() {
 
   return (
     <div className={classes.root}>
+        <div className={classes.bannerContainer}>
+          <ErrorBanner
+              errorMessage={errorBannerMessage}
+              fade={errorBannerFade}
+          />
+      </div>
       <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
         <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
         <StyledTab label="Completed Scenarios" {...a11yProps(1)} />

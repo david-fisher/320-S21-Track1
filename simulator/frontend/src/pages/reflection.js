@@ -1,5 +1,4 @@
-import React,{useEffect,useState, useContext} from "react";
-import QA from "./components/q&a";
+import React,{ useState, useContext } from "react";
 import {
   withStyles,
   Typography,
@@ -8,15 +7,8 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import { BACK_URL, STUDENT_ID, SCENARIO_ID }from "../constants/config";
-import axios from 'axios';
-import { ScenariosContext } from "../Nav";
-import get from '../universalHTTPRequests/get';
-import post from '../universalHTTPRequests/post';
+import { STUDENT_ID }from "../constants/config";
 import TextField from '@material-ui/core/TextField';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import createDOMPurify from 'dompurify';
-import { JSDOM } from 'jsdom';
 import GlobalContext from '../Context/GlobalContext';
 
 const TextTypography = withStyles({
@@ -52,9 +44,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Reflection({ pageTitle, body, questions, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
-  const window = (new JSDOM('')).window;
-  const DOMPurify = createDOMPurify(window);
   body = body.replace(/\\"/g, '"');
+  //eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
 
   questions = [
@@ -74,63 +65,31 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
   const classes = useStyles();
 
   const [savedAnswers, setSavedAnswers] = React.useState(false);
-  const [bodyText, setBodyText] = React.useState('');
-  const [prompts, setPrompts] = React.useState([]);
-  const [promptResponses, setPromptResponses] = React.useState({});
-  const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
   // MAKE API CALL
-  let pageId = pageID;
-  const endpointGet = '/scenarios/reflection/response?versionId='+versionID+'&pageId='+(pageID)+'&userId=' + STUDENT_ID;
-
   const [reflection, setReflection] = useState(questions);
   
-  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
-    data: null,
-    loading: false,
-    error: false,
-  });
-  const [shouldFetch, setShouldFetch] = useState(0);
 
-  //Get Reflection Page
-  let getData = () => {
-    function onSuccess(response) {
-      let ppage = response.data.body.map((data) => (data));
-      let pp = {
-        prompts: ppage,
-        message: response.data.message
-      }
-      if(pp.prompts[0].response.length > 1){
-        setSavedAnswers(true);
-      }
-      setReflection(pp);
-      debugger;
-    }
-
-    function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
-    }
-    //get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess);
-  };
-
+  //eslint-disable-next-line
   const endpointPost = '/scenarios/reflection?versionId=' + versionID + '&pageId=' + pageID + '&userId=' + STUDENT_ID;
   let postData = () => {
+    //eslint-disable-next-line
     function onSuccess(response) {
       console.log(response);
     }
-
+    //eslint-disable-next-line
     function onFailure() {
       console.log('Error')
     }
+    //eslint-disable-next-line
     let data = {
       body: reflection.prompts
     }
 
     //TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
-    console.log('hi');
     setSavedAnswers(true);
   }
+
   console.log(savedAnswers);
   console.log(reflection);
 
@@ -153,7 +112,7 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           variant="contained"
           color="primary"
           disableElevation
-          onClick={() => getPrevPage(prevPageEndpoint, contextObj.activeIndex, contextObj.pages)}
+          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
         >
           Back
         </Button>
@@ -183,14 +142,14 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
       </Grid>
       <Grid containerstyle={{width:'100%'}}>
         <Grid item style={{width:'100%'}}>
-          { <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }} /> }
+          { <div dangerouslySetInnerHTML={{ __html: body }} /> }
         </Grid>
       </Grid>
 
       <Grid container style={{width:'100%'}}>
         <Grid item style={{width:'100%'}}>         
           {questions.map(prompt => (
-            <Box m="2rem" p={1} className={classes.textBox}>
+            <Box m="2rem" p={1} className={classes.textBox} key={prompt.id}>
               <p>{prompt.reflection_question}</p>
               <TextField
                 style={{ width: '100%' }}

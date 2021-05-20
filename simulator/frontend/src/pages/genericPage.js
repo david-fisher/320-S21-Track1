@@ -7,8 +7,6 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import createDOMPurify from 'dompurify';
-import { JSDOM } from 'jsdom';
 import GlobalContext from '../Context/GlobalContext';
 
 const TextTypography = withStyles({
@@ -31,9 +29,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function GenericPage({ isIntro, pageTitle, body, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint }) {
-  const window = (new JSDOM('')).window;
-  const DOMPurify = createDOMPurify(window);
   const classes = useStyles();
+  // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   body = body.replace(/\\"/g, '"');
 
@@ -48,7 +45,7 @@ export default function GenericPage({ isIntro, pageTitle, body, getNextPage, get
             variant="contained"
             disableElevation
             color="primary"
-            onClick={() => getPrevPage(prevPageEndpoint, contextObj.activeIndex, contextObj.pages)}
+            onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
           >
             Back
           </Button>

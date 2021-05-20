@@ -16,7 +16,7 @@ const TextTypography = withStyles({
 
 const questions = [{text: "We would appreciate receiving any comments that you have on this online ethics simulation: ", id: 1}];
 
-function Conclusion({pages, setPages, prevPageID, version_id, activePage, setActivePage}) {
+export default function Conclusion({pages, setPages, prevPageID, version_id, activePage, setActivePage}) {
   const [body,setBody] = useState('');
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
@@ -25,24 +25,6 @@ function Conclusion({pages, setPages, prevPageID, version_id, activePage, setAct
     error: false,
   });
   const [shouldFetch, setShouldFetch] = useState(0);
-
-  // useEffect(() => {
-  //   // backend call
-  //   axios({
-  //     method: 'get',
-  //     url: BACK_URL + '/scenarios/conclusion',
-  //     headers: {
-  //       scenarioID: scenarios.currentScenarioID,
-  //       studentID: STUDENT_ID,
-  //     }
-  //   }).then(response => {
-  //     setBody(text => response.data[0].body_text);
-  //   }).catch((err)=>{
-  //     console.log("err",err);
-  //     //alert(err);
-  //   });
-  // }, [scenarios])
-
   const endpointSess = '/scenarios/session/end?userId='+STUDENT_ID+'&versionId='+version_id
 
   let closeSession = () => {
@@ -80,7 +62,7 @@ function Conclusion({pages, setPages, prevPageID, version_id, activePage, setAct
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt = {5}>
           <TextTypography variant="h4" align="center" gutterBottom>
-            Conclusion
+            Student Feedback
           </TextTypography>
         </Box>
       </Grid>
@@ -105,5 +87,3 @@ function Conclusion({pages, setPages, prevPageID, version_id, activePage, setAct
     </div>
   );
 }
-
-export default Conclusion;

@@ -1,7 +1,16 @@
-import React from "react";
-import { withStyles,Typography, Box, Grid, Button} from "@material-ui/core";
+import React, { useState, useEffect, useContext } from "react";
+import { 
+  withStyles,
+  Typography, 
+  Box, 
+  Grid, 
+  Button,
+  makeStyles 
+} from "@material-ui/core";
 import RadarPlot from "./radarPlot.js";
-import ScrollableTabsButtonAuto from "./components/feedback_tabs";
+import GlobalContext from '../Context/GlobalContext';
+import {STUDENT_ID} from "../constants/config";
+import post from '../universalHTTPRequests/post';
 
 const TextTypography = withStyles({
   root: {
@@ -9,66 +18,77 @@ const TextTypography = withStyles({
   }
 })(Typography);
 
-function Feedback({pages, setPages, prevPageID, nextPageID, activePage, version_id, setActivePage}) {
-  
-  function goToPrevPage(){
-    if (!pages[prevPageID].visited) {
-      setPages(prevPages => {
-        let copy = {...prevPages};
-        copy[prevPageID].visited = true;
-        return copy;
-      });
-    }
-    setActivePage(prevPage => prevPageID)
-  }
+const useStyles = makeStyles((theme) => ({
+  backButton: {
+    marginLeft: "0rem",
+    marginRight: "0rem",
+    marginTop: "1rem",
+  },
+}));
 
-  function goToNextPage(){
-    if (!pages[nextPageID].visited) {
-      setPages(prevPages => {
-        let copy = {...prevPages};
-        copy[nextPageID].visited = true;
-        return copy;
-      });
+export default function Feedback({versionID, getPrevPage, prevPageEndpoint}) {
+  const classes = useStyles();
+  //eslint-disable-next-line
+  let [contextObj, setContextObj] = useContext(GlobalContext);
+  const endpointSess = '/scenarios/session/end?userId='+STUDENT_ID+'&versionId='+versionID;
+  //eslint-disable-next-line
+  const [endSessionObj, setEndSessionObj] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  let closeSession = () => {
+    function onSuccess(response) {      
+      //do nothing
     }
-    setActivePage(prevPage => nextPageID)
-  }
 
-  let Summary_Value = 2.03;
-  let Coverage = { Safety: 0.5, Salary: 0.667, Reputation: 1.0, Privacy: 0.8 };
+    function onFailure() {
+      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      //setErrorBannerFade(true);
+    }
+    post(setEndSessionObj, endpointSess, onFailure, onSuccess);
+  };
+
+  useEffect(closeSession, []);
+
+  const Buttons = (
+    <Grid container direction="row" justify="space-between">
+      <Grid
+        item
+        className={classes.backButton}
+      >
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+        >
+          Back
+        </Button>
+      </Grid>
+    </Grid>
+  );
 
   return (
     <div>
+      {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
           <TextTypography variant="h4" align="center" gutterBottom>
             Coverage of Issues
           </TextTypography>
+          <TextTypography variant="h6" align="center" gutterBottom>
+            Thank you for playing through the simulation! Here is how well you covered the ethical issuse pertaining to this simulation.
+          </TextTypography>
         </Box>
-      </Grid>
-      <Grid container direction="row" justify="space-between">
-        <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation onClick={goToPrevPage}>Back</Button>
-        </Grid>
-        <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation color="primary" onClick={goToNextPage}>Next</Button>
-        </Grid>
       </Grid>
       <Grid container spacing={2}>
         <Grid lg={12}>
           <Box m="2rem">
-            <RadarPlot version_id={version_id} />
+            <RadarPlot versionID={versionID} />
           </Box>
-          {/* <TextTypography variant="body1">
-          </TextTypography> */}
         </Grid>
       </Grid>
-      {/* <Grid container spacing={2}>
-        <Grid lg={12}>
-          <ScrollableTabsButtonAuto/>
-        </Grid>
-      </Grid> */}
     </div>
   );
 }
-
-export default Feedback;
