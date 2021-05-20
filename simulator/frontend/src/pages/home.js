@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import '../App.css';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Button, Tabs, Tab, Box, Typography } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  Button,
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+} from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from './components/scenarioCard';
 import LoadingSpinner from './components/LoadingSpinner';
 import get from '../universalHTTPRequests/get';
 // eslint-disable-next-line
-import CodeButton from './components/classCodeDialog';
+import CodeButton from "./components/classCodeDialog";
 // eslint-disable-next-line
-import ProgressBar from './components/progressBar';
-import { STUDENT_ID } from "../constants/config";
+import ProgressBar from "./components/progressBar";
+import { STUDENT_ID } from '../constants/config';
 import ErrorBanner from './components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,14 +40,13 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     background: theme.palette.primary,
     '&:hover': {
-      transform: "scale3d(1.05, 1.05, 1)",
-      backgroundColor: '#f3e4e3'
-
-    }
+      transform: 'scale3d(1.05, 1.05, 1)',
+      backgroundColor: '#f3e4e3',
+    },
   },
   grid: {
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: 'center',
+    textAlign: 'center',
     width: '100%',
     margin: '0px',
   },
@@ -52,10 +59,12 @@ const useStyles = makeStyles((theme) => ({
 
 const endpointGet = '/scenarios?userId=';
 // eslint-disable-next-line
-const endpointPost = '/dashboard';
+const endpointPost = "/dashboard";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {
+    children, value, index, ...other
+  } = props;
 
   return (
     <div
@@ -93,17 +102,14 @@ const StyledTab = withStyles((theme) => ({
       color: 'white',
       opacity: 1,
       selected: {
-        backgroundColor: '#8c8c8c'
-      }
-
+        backgroundColor: '#8c8c8c',
+      },
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
 
 const StyledTabs = withStyles({
-  root: {
-
-  },
+  root: {},
 
   indicator: {
     display: 'flex',
@@ -123,32 +129,33 @@ export default function Home() {
   // delete on success, concatenating a scenario card to array
   // when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
   // post returns new id of scenario, when you concatenating to array set the id to that
-  const [scenarioList, setScenarioList] = useState({     // temporary array of scenarios
-      incompleteScenarios: [
-        {
-          title: " ",
-          course: " ",
-          num_conversations: 0,
-          is_finished: false,
-          first_page: 0,
-          date: " ",
-          completed: 10,
-          max: 10,
-        }
-      ],
-      completeScenarios: [
-        {
-          title: " ",
-          num_conversations: 0,
-          is_finished: true,
-          first_page: 0,
-          course: " ",
-          date: " ",
-          completed: 10,
-          max: 10,
-        }
-      ]
-    });
+  const [scenarioList, setScenarioList] = useState({
+    // temporary array of scenarios
+    incompleteScenarios: [
+      {
+        title: ' ',
+        course: ' ',
+        num_conversations: 0,
+        is_finished: false,
+        first_page: 0,
+        date: ' ',
+        completed: 10,
+        max: 10,
+      },
+    ],
+    completeScenarios: [
+      {
+        title: ' ',
+        num_conversations: 0,
+        is_finished: true,
+        first_page: 0,
+        course: ' ',
+        date: ' ',
+        completed: 10,
+        max: 10,
+      },
+    ],
+  });
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
     loading: false,
@@ -161,37 +168,29 @@ export default function Home() {
   const getData = () => {
     function onSuccess(response) {
       console.log(response.data.result);
-      let incomplete = response.data.result.filter(
-        (data) => !data.is_finished
-      );
-      let complete = response.data.result.filter(
-          (data) => data.is_finished
-      );
-      incomplete = incomplete.map((data) => (
-        {
-          title: data.name,
-          num_conversations: data.num_conversation,
-          is_finished: data.is_finished,
-          date: data.date_created,
-          version_id: data.version_id,
-          first_page: data.first_page, 
-          course: data.course_name
-        }
-      ));
-      complete = complete.map((data) => (
-        {
-          title: data.name,
-          num_conversations: data.num_conversation,
-          is_finished: data.is_finished,
-          date: data.last_date_modified,
-          version_id: data.version_id,
-          first_page: data.first_page,
-          course: data.course_name
-        }
-      ));
+      let incomplete = response.data.result.filter((data) => !data.is_finished);
+      let complete = response.data.result.filter((data) => data.is_finished);
+      incomplete = incomplete.map((data) => ({
+        title: data.name,
+        num_conversations: data.num_conversation,
+        is_finished: data.is_finished,
+        date: data.date_created,
+        version_id: data.version_id,
+        first_page: data.first_page,
+        course: data.course_name,
+      }));
+      complete = complete.map((data) => ({
+        title: data.name,
+        num_conversations: data.num_conversation,
+        is_finished: data.is_finished,
+        date: data.last_date_modified,
+        version_id: data.version_id,
+        first_page: data.first_page,
+        course: data.course_name,
+      }));
       const scen = {
         incompleteScenarios: incomplete,
-        completeScenarios: complete
+        completeScenarios: complete,
       };
       setScenarioList(scen);
     }
@@ -200,19 +199,24 @@ export default function Home() {
       setErrorBannerMessage('Failed to get scenarios! Please try again.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, (endpointGet + STUDENT_ID), onFailure, onSuccess);
+    get(
+      setFetchScenariosResponse,
+      endpointGet + STUDENT_ID,
+      onFailure,
+      onSuccess,
+    );
   };
 
-    const [errorBannerMessage, setErrorBannerMessage] = useState('');
-    const [errorBannerFade, setErrorBannerFade] = useState(false);
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setErrorBannerFade(false);
-        }, 1000);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
 
-        return () => clearTimeout(timeout);
-    }, [errorBannerFade]);
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
   // //Get Cours
   function a11yProps(index) {
     return {
@@ -220,7 +224,7 @@ export default function Home() {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
-  
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -248,11 +252,7 @@ export default function Home() {
             <Typography align="center" variant="h3">
               Error in fetching Scenarios.
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getData}
-            >
+            <Button variant="contained" color="primary" onClick={getData}>
               <RefreshIcon className={classes.iconRefreshLarge} />
             </Button>
           </div>
@@ -263,39 +263,51 @@ export default function Home() {
 
   return (
     <div className={classes.root}>
-        <div className={classes.bannerContainer}>
-          <ErrorBanner
-              errorMessage={errorBannerMessage}
-              fade={errorBannerFade}
-          />
+      <div className={classes.bannerContainer}>
+        <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
       </div>
-      <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
+      <StyledTabs
+        value={value}
+        variant="fullWidth"
+        centered
+        onChange={handleChange}
+        aria-label="simple tabs example"
+      >
         <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
         <StyledTab label="Completed Scenarios" {...a11yProps(1)} />
       </StyledTabs>
       <TabPanel value={value} index={0}>
-        <Grid container spacing={2} className={classes.grid}>   {/* incomplete scenarios section */}
-          <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
+        <Grid container spacing={2} className={classes.grid}>
+          {' '}
+          {/* incomplete scenarios section */}
+          <Grid
+            container
+            direction="row"
+            item
+            xs={12}
+            justify="space-evenly"
+            alignItems="baseline"
+          >
             <Typography variant="h2">To-Do</Typography>
           </Grid>
-          {scenarioList.incompleteScenarios.map(scenario => (
+          {scenarioList.incompleteScenarios.map((scenario) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished={false}
                   title={scenario.title}
-                  course = {scenario.course}
+                  course={scenario.course}
                   date={scenario.date}
                 />
                 <Button
-                    component={Link}
-                    to={{
-                        pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
-                        data: scenario,
-                    }}
-                    className={classes.button}
-                    variant="contained"
-                    color="primary"
+                  component={Link}
+                  to={{
+                    pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
+                    data: scenario,
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
                 >
                   Select Scenario
                 </Button>
@@ -316,11 +328,13 @@ export default function Home() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid container spacing={2} className={classes.grid}>     {/* completed scenarioList section */}
+        <Grid container spacing={2} className={classes.grid}>
+          {' '}
+          {/* completed scenarioList section */}
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>
-          {scenarioList.completeScenarios.map(scenario => (
+          {scenarioList.completeScenarios.map((scenario) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
@@ -330,15 +344,17 @@ export default function Home() {
                   date={scenario.date}
                 />
                 <Button
-                    component={Link}
-                    to={{
-                        pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
-                        data: scenario,
-                    }}
-                    className={classes.button}
-                    variant="contained"
-                    color="primary"
-                >Review Scenario</Button>
+                  component={Link}
+                  to={{
+                    pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
+                    data: scenario,
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                >
+                  Review Scenario
+                </Button>
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>

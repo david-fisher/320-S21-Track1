@@ -1,13 +1,21 @@
-import React, { useState, useContext } from "react";
-import { makeStyles, withStyles, Typography, Box, Button, Grid } from "@material-ui/core";
-import { STUDENT_ID} from "../constants/config";
+import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
+import {
+  makeStyles,
+  withStyles,
+  Typography,
+  Box,
+  Button,
+  Grid,
+} from '@material-ui/core';
+import { STUDENT_ID } from '../constants/config';
 import post from '../universalHTTPRequests/post';
 import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    color: "#5b7f95"
+    color: '#5b7f95',
   },
   errorContainer: {
     marginTop: theme.spacing(2),
@@ -16,60 +24,83 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   backButton: {
-    marginLeft: "0rem",
-    marginRight: "0rem",
-    marginTop: "1rem",
+    marginLeft: '0rem',
+    marginRight: '0rem',
+    marginTop: '1rem',
   },
   nextButton: {
-    marginRight: "0rem",
-    marginTop: "1rem",
+    marginRight: '0rem',
+    marginTop: '1rem',
   },
   button: {
     width: '100%',
     textTransform: 'unset',
-  }
+  },
 }));
 
 const TextTypography = withStyles({
   root: {
-    color: "#373a3c"
-  }
+    color: '#373a3c',
+  },
 })(Typography);
 
-export default function Action({ versionID, pageID, pageTitle, body, choices, choiceChosen, getNextPage, getPrevPage, prevPageEndpoint }) {
+Action.propTypes = {
+  pageTitle: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  getNextPage: PropTypes.func.isRequired,
+  getPrevPage: PropTypes.func.isRequired,
+  prevPageEndpoint: PropTypes.string,
+  versionID: PropTypes.number.isRequired,
+  pageID: PropTypes.number.isRequired,
+  choices: PropTypes.any,
+  choiceChosen: PropTypes.any,
+};
+export default function Action({
+  versionID,
+  pageID,
+  pageTitle,
+  body,
+  choices,
+  choiceChosen,
+  getNextPage,
+  getPrevPage,
+  prevPageEndpoint,
+}) {
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   body = body.replace(/\\"/g, '"');
   choices = [
     {
-     "choices_id": 1000, 
-     "choice_text": "Approve project assignment and work on it immediately to save time.",
-     "next_page": 9000
-    }, 
-    {
-      "choices_id": 2000, 
-      "choice_text": "Postpone and ask questions from stakeholders.",
-      "next_page": 6000
+      choices_id: 1000,
+      choice_text:
+        'Approve project assignment and work on it immediately to save time.',
+      next_page: 9000,
     },
-  ]
+    {
+      choices_id: 2000,
+      choice_text: 'Postpone and ask questions from stakeholders.',
+      next_page: 6000,
+    },
+  ];
   // eslint-disable-next-line
   const [chosenAction, setChosenAction] = React.useState(-1);
   // eslint-disable-next-line
   const [fetchActionResponse, setFetchActionResponse] = useState({
-     data: null,
-     loading: false,
-     error: false,
-   });
-   // MAKE API CALL
-   // let pageId = activePage
-   // const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
-   // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
+    data: null,
+    loading: false,
+    error: false,
+  });
+  // MAKE API CALL
+  // let pageId = activePage
+  // const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
+  // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
   // eslint-disable-next-line
-   const endpointPost = '/scenarios/action?versionId='+versionID+'&pageId='+(pageID)
-   const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`
- 
-   const getAction = (selectedAction, nextPageID) => {
-     console.log(pageID);
+  const endpointPost =
+    `/scenarios/action?versionId=${versionID}&pageId=${pageID}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`;
+
+  const getAction = (selectedAction, nextPageID) => {
+    console.log(pageID);
     function startSess(response) {
       // do nothing
     }
@@ -78,12 +109,12 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
       // Right now hardcoded for middle reflection
       // pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
       // eslint-disable-next-line
-      let body = ({
-         response_id: response.data.result.response_id,
-         choice: response.data.result.choice,
-         choice_text: response.data.result.choice_text,
-         next: response.data.result.next_page,
-      })
+      let body = {
+        response_id: response.data.result.response_id,
+        choice: response.data.result.choice,
+        choice_text: response.data.result.choice_text,
+        next: response.data.result.next_page,
+      };
       console.log(response);
       setChosenAction((cur) => selectedAction);
     }
@@ -91,24 +122,25 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
       // setErrorBannerMessage('Failed to get scenarios! Please try again.');
       // setErrorBannerFade(true);
     }
-    if(!choiceChosen) {
-      post(setFetchActionResponse, endpointSess, onFailure, startSess)
+    if (!choiceChosen) {
+      post(setFetchActionResponse, endpointSess, onFailure, startSess);
       // TODO Remove once post request finishes
-      getNextPage(`/scenarios/task?versionId=${versionID}&pageId=${nextPageID}`, contextObj.activeIndex, contextObj.pages);
+      getNextPage(
+        `/scenarios/task?versionId=${versionID}&pageId=${nextPageID}`,
+        contextObj.activeIndex,
+        contextObj.pages,
+      );
       // eslint-disable-next-line
-      let body = {"choice_id" : selectedAction, "user_id" : STUDENT_ID};
+      let body = { choice_id: selectedAction, user_id: STUDENT_ID };
       // TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
     }
-   }
- 
+  };
+
   const classes = useStyles();
 
   const Buttons = (
     <Grid container direction="row" justify="space-between">
-      <Grid
-        item
-        className={classes.backButton}
-      >
+      <Grid item className={classes.backButton}>
         <Button
           variant="contained"
           disableElevation
@@ -118,16 +150,17 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
           Back
         </Button>
       </Grid>
-      <Grid 
-        item 
-        className={classes.nextButton}
-      >
+      <Grid item className={classes.nextButton}>
         <Button
           variant="contained"
           disableElevation
           color="primary"
           disabled={!choiceChosen}
-          onClick={() => getNextPage(`/scenarios/task?versionId=${versionID}&pageId=${choiceChosen}`, contextObj.activeIndex, contextObj.pages)}
+          onClick={() => getNextPage(
+            `/scenarios/task?versionId=${versionID}&pageId=${choiceChosen}`,
+            contextObj.activeIndex,
+            contextObj.pages,
+          )}
         >
           Next
         </Button>
@@ -146,11 +179,11 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
         </Box>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item style={{width:'100%'}}>
-          <Grid item style={{width:'100%'}}>
+        <Grid item style={{ width: '100%' }}>
+          <Grid item style={{ width: '100%' }}>
             <div dangerouslySetInnerHTML={{ __html: body }} />
           </Grid>
-            <Box mx="auto">
+          <Box mx="auto">
             {choices.map((choice) => (
               <Box p={3} key={choice.choices_id}>
                 <Button
@@ -159,13 +192,13 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
                   disabled={choice.choices_id === choiceChosen}
                   className={classes.button}
                   size="large"
-                  onClick={() => getAction(choice.choices_id, choice.next_page)} // save choice and do something According to this choice
+                  onClick={() => getAction(choice.choices_id, choice.next_page)}
                 >
                   {choice.choice_text}
-                </Button> 
+                </Button>
               </Box>
             ))}
-            </Box>
+          </Box>
         </Grid>
       </Grid>
     </div>

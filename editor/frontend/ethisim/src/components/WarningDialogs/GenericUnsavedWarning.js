@@ -8,53 +8,53 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
 
 GenericUnsavedWarning.propTypes = {
-    func: PropTypes.func.isRequired,
-    open: PropTypes.any.isRequired,
-    setOpen: PropTypes.any.isRequired,
+  func: PropTypes.func.isRequired,
+  open: PropTypes.any.isRequired,
+  setOpen: PropTypes.any.isRequired,
 };
 
 export default function GenericUnsavedWarning(props) {
-    GenericUnsavedWarning.propTypes = props.data;
-    const data = props;
-    //func is the function that occurs when user wants to leave without saving changes
-    const { func, open, setOpen } = data;
+  GenericUnsavedWarning.propTypes = props.data;
+  const data = props;
+  // func is the function that occurs when user wants to leave without saving changes
+  const { func, open, setOpen } = data;
 
-    //Func that closes the popup window
-    const handleClose = () => {
-        setOpen(false);
-    };
+  // Func that closes the popup window
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    return (
-        <Dialog
-            open={open}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-slide-title"
-            aria-describedby="alert-dialog-slide-description"
-        >
-            <DialogTitle id="alert-dialog-slide-title">
-                {'Unsaved Changes'}
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                    You have currently unsaved changes on this page. Are you
-                    sure you want to exit without saving?
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={func} color="primary">
-                    Yes
-                </Button>
-                <Button onClick={handleClose} color="primary">
-                    No
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
+  return (
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-slide-title"
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle id="alert-dialog-slide-title">
+        Unsaved Changes
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          You have currently unsaved changes on this page. Are you
+          sure you want to exit without saving?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={func} color="primary">
+          Yes
+        </Button>
+        <Button onClick={handleClose} color="primary">
+          No
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }

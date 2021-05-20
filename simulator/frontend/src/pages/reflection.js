@@ -1,4 +1,5 @@
-import React,{ useState, useContext } from "react";
+import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import {
   withStyles,
   Typography,
@@ -6,25 +7,25 @@ import {
   Grid,
   Button,
   makeStyles,
-} from "@material-ui/core";
+} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import { STUDENT_ID }from "../constants/config";
+import { STUDENT_ID } from '../constants/config';
 import GlobalContext from '../Context/GlobalContext';
 
 const TextTypography = withStyles({
   root: {
-    color: "#373a3c",
-    whiteSpace: "pre-wrap",
+    color: '#373a3c',
+    whiteSpace: 'pre-wrap',
   },
 })(Typography);
 
 const useStyles = makeStyles((theme) => ({
   textBox: {
-    overflowY: "auto",
+    overflowY: 'auto',
     maxHeight: window.innerHeight * 0.6,
     marginTop: theme.spacing(4),
-    borderRadius: "5px",
-    boxShadow: "0px 0px 2px",
+    borderRadius: '5px',
+    boxShadow: '0px 0px 2px',
   },
   errorContainer: {
     marginTop: theme.spacing(2),
@@ -33,17 +34,38 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   backButton: {
-    marginLeft: "0rem",
-    marginRight: "0rem",
-    marginTop: "1rem",
+    marginLeft: '0rem',
+    marginRight: '0rem',
+    marginTop: '1rem',
   },
   nextButton: {
-    marginRight: "0rem",
-    marginTop: "1rem",
-  }
+    marginRight: '0rem',
+    marginTop: '1rem',
+  },
 }));
 
-export default function Reflection({ pageTitle, body, questions, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
+Reflection.propTypes = {
+  pageTitle: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  questions: PropTypes.array,
+  getNextPage: PropTypes.func.isRequired,
+  getPrevPage: PropTypes.func.isRequired,
+  nextPageEndpoint: PropTypes.string.isRequired,
+  prevPageEndpoint: PropTypes.string.isRequired,
+  versionID: PropTypes.number.isRequired,
+  pageID: PropTypes.number.isRequired,
+};
+export default function Reflection({
+  pageTitle,
+  body,
+  questions,
+  getNextPage,
+  getPrevPage,
+  nextPageEndpoint,
+  prevPageEndpoint,
+  versionID,
+  pageID,
+}) {
   body = body.replace(/\\"/g, '"');
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
@@ -52,26 +74,32 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
     {
       id: 1,
       page: 1,
-      reflection_question: "What are your initial thoughts on autonomous cars?",
-      response: "",
+      reflection_question: 'What are your initial thoughts on autonomous cars?',
+      response: '',
     },
     {
       id: 2,
       page: 1,
-      reflection_question: "What are the ethical conundrums that comes to mind right away for you when you hear about autonomous cars?",
-      response: "",
-    }
-  ]
+      reflection_question:
+        'What are the ethical conundrums that comes to mind right away for you when you hear about autonomous cars?',
+      response: '',
+    },
+  ];
   const classes = useStyles();
 
   const [savedAnswers, setSavedAnswers] = React.useState(false);
 
   // MAKE API CALL
   const [reflection, setReflection] = useState(questions);
-  
 
   // eslint-disable-next-line
-  const endpointPost = '/scenarios/reflection?versionId=' + versionID + '&pageId=' + pageID + '&userId=' + STUDENT_ID;
+  const endpointPost =
+    `/scenarios/reflection?versionId=${
+      versionID
+    }&pageId=${
+      pageID
+    }&userId=${
+      STUDENT_ID}`;
   const postData = () => {
     // eslint-disable-next-line
     function onSuccess(response) {
@@ -79,31 +107,31 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
     }
     // eslint-disable-next-line
     function onFailure() {
-      console.log('Error')
+      console.log('Error');
     }
     // eslint-disable-next-line
     let data = {
-      body: reflection.prompts
-    }
+      body: reflection.prompts,
+    };
 
     // TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
     setSavedAnswers(true);
-  }
+  };
 
   console.log(savedAnswers);
   console.log(reflection);
 
-  const updateResponse = (e,id) => {  
-    setReflection(prev => {
-    for(let i = 0; i < questions.length; ++i){ 
-      if(questions[i].id === id){
-        questions[i].response = e.target.value;
-        break;
+  const updateResponse = (e, id) => {
+    setReflection((prev) => {
+      for (let i = 0; i < questions.length; ++i) {
+        if (questions[i].id === id) {
+          questions[i].response = e.target.value;
+          break;
+        }
       }
-    }
-    return prev;
-    })
-  }
+      return prev;
+    });
+  };
 
   const Buttons = (
     <Grid container direction="row" justify="space-between">
@@ -123,7 +151,11 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           disabled={!savedAnswers}
           disableElevation
           color="primary"
-          onClick={() => getNextPage(nextPageEndpoint, contextObj.activeIndex, contextObj.pages)}
+          onClick={() => getNextPage(
+            nextPageEndpoint,
+            contextObj.activeIndex,
+            contextObj.pages,
+          )}
         >
           Next
         </Button>
@@ -140,15 +172,15 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
           </TextTypography>
         </Box>
       </Grid>
-      <Grid containerstyle={{width:'100%'}}>
-        <Grid item style={{width:'100%'}}>
+      <Grid containerstyle={{ width: '100%' }}>
+        <Grid item style={{ width: '100%' }}>
           <div dangerouslySetInnerHTML={{ __html: body }} />
         </Grid>
       </Grid>
 
-      <Grid container style={{width:'100%'}}>
-        <Grid item style={{width:'100%'}}>         
-          {questions.map(prompt => (
+      <Grid container style={{ width: '100%' }}>
+        <Grid item style={{ width: '100%' }}>
+          {questions.map((prompt) => (
             <Box m="2rem" p={1} className={classes.textBox} key={prompt.id}>
               <p>{prompt.reflection_question}</p>
               <TextField
@@ -158,21 +190,23 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
                 multiline
                 defaultValue={prompt.response}
                 variant="outlined"
-                onChange={(e) => {updateResponse(e, prompt.id)}}
+                onChange={(e) => {
+                  updateResponse(e, prompt.id);
+                }}
               />
             </Box>
           ))}
-          <Grid container justify="center" alignItems="center" >
+          <Grid container justify="center" alignItems="center">
             <Button
               variant="contained"
-              color='primary'
-              justify='right'
+              color="primary"
+              justify="right"
               disabled={savedAnswers}
-              onClick={postData} 
+              onClick={postData}
             >
               Submit Answers
-            </Button> 
-          </Grid>  
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </div>

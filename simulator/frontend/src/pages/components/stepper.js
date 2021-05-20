@@ -1,4 +1,5 @@
-import React, {useContext} from "react";
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import {
   makeStyles,
   Typography,
@@ -9,12 +10,12 @@ import {
   StepContent,
   Button,
   Box,
-} from "@material-ui/core";
+} from '@material-ui/core';
 import GlobalContext from '../../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   button: {
     marginTop: theme.spacing(1),
@@ -27,14 +28,14 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   step: {
-    "&$completed": {
-      color: "#881C1C",
+    '&$completed': {
+      color: '#881C1C',
     },
-    "&$active": {
-      color: "#881C1C",
+    '&$active': {
+      color: '#881C1C',
     },
-    "&$disabled": {
-      color: "#444e58",
+    '&$disabled': {
+      color: '#444e58',
     },
   },
 }));
@@ -44,7 +45,14 @@ function getSteps(pages, navigatePageFunc) {
   console.log(pages);
   for (let i = 0; i < pages.length; i++) {
     const buttonName = pages[i].title;
-    stepArr.push(<Button style={{ color: "#881c1c" }} onClick={() => navigatePageFunc(pages[i].pageEndpoint)} >{buttonName}</Button>);
+    stepArr.push(
+      <Button
+        style={{ color: '#881c1c' }}
+        onClick={() => navigatePageFunc(pages[i].pageEndpoint)}
+      >
+        {buttonName}
+      </Button>,
+    );
   }
   return stepArr;
 }
@@ -52,24 +60,27 @@ function getSteps(pages, navigatePageFunc) {
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return ``;
+      return '';
     case 1:
-      return "";
+      return '';
     case 2:
-      return ``;
+      return '';
     default:
-      return "";
+      return '';
   }
 }
 
+VerticalLinearStepper.propTypes = {
+  setActivePage: PropTypes.func.isRequired,
+};
 export default function VerticalLinearStepper({ setActivePage }) {
   // <Stepper activePage={activePage} pages={pages} />
   const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  const  {pages, activeIndex } = contextObj;
-  function navigatePage(pageID){
-      setActivePage(pageID, pages)
+  const { pages, activeIndex } = contextObj;
+  function navigatePage(pageID) {
+    setActivePage(pageID, pages);
     // }
   }
 
@@ -79,7 +90,8 @@ export default function VerticalLinearStepper({ setActivePage }) {
       <Box mt={3} ml={1}>
         <Stepper activeStep={activeIndex} orientation="vertical">
           {steps.map((label, index) => (
-            <Step key={index}
+            <Step
+              key={index}
               classes={{
                 root: classes.step,
                 completed: classes.completed,

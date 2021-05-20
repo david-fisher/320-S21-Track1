@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/david-fisher/320-S21-Track1#readme",
   "devDependencies": {
-    "eslint": "^7.26.0",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.2",
@@ -30,11 +30,15 @@
     "lint-staged": "^11.0.0",
     "prettier": "2.3.0"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "**/*.js": [
       "eslint --fix",
       "git add"
-    ],
-    "*.js": "eslint --cache --fix"
+    ]
   }
 }

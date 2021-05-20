@@ -1,32 +1,38 @@
-import React, { useState, useEffect, useContext } from "react";
-import { 
+import React, { useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
+import {
   withStyles,
-  Typography, 
-  Box, 
-  Grid, 
+  Typography,
+  Box,
+  Grid,
   Button,
-  makeStyles 
-} from "@material-ui/core";
-import RadarPlot from "./radarPlot.js";
+  makeStyles,
+} from '@material-ui/core';
+import RadarPlot from './radarPlot';
 import GlobalContext from '../Context/GlobalContext';
-import {STUDENT_ID} from "../constants/config";
+import { STUDENT_ID } from '../constants/config';
 import post from '../universalHTTPRequests/post';
 
 const TextTypography = withStyles({
   root: {
-    color: "#373a3c"
-  }
+    color: '#373a3c',
+  },
 })(Typography);
 
 const useStyles = makeStyles((theme) => ({
   backButton: {
-    marginLeft: "0rem",
-    marginRight: "0rem",
-    marginTop: "1rem",
+    marginLeft: '0rem',
+    marginRight: '0rem',
+    marginTop: '1rem',
   },
 }));
 
-export default function Feedback({versionID, getPrevPage, prevPageEndpoint}) {
+Feedback.propTypes = {
+  versionID: PropTypes.number.isRequired,
+  getPrevPage: PropTypes.func.isRequired,
+  prevPageEndpoint: PropTypes.string.isRequired,
+};
+export default function Feedback({ versionID, getPrevPage, prevPageEndpoint }) {
   const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
@@ -38,7 +44,7 @@ export default function Feedback({versionID, getPrevPage, prevPageEndpoint}) {
     error: false,
   });
   const closeSession = () => {
-    function onSuccess(response) {      
+    function onSuccess(response) {
       // do nothing
     }
 
@@ -53,10 +59,7 @@ export default function Feedback({versionID, getPrevPage, prevPageEndpoint}) {
 
   const Buttons = (
     <Grid container direction="row" justify="space-between">
-      <Grid
-        item
-        className={classes.backButton}
-      >
+      <Grid item className={classes.backButton}>
         <Button
           variant="contained"
           disableElevation
@@ -78,7 +81,8 @@ export default function Feedback({versionID, getPrevPage, prevPageEndpoint}) {
             Coverage of Issues
           </TextTypography>
           <TextTypography variant="h6" align="center" gutterBottom>
-            Thank you for playing through the simulation! Here is how well you covered the ethical issuse pertaining to this simulation.
+            Thank you for playing through the simulation! Here is how well you
+            covered the ethical issuse pertaining to this simulation.
           </TextTypography>
         </Box>
       </Grid>
