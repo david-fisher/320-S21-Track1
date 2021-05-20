@@ -264,10 +264,10 @@ export default function SimulationWindow(props) {
       <Grid container spacing={2}>
         {/* <GatheredInfoContext.Provider value={infoIdsState}> */}
           <Grid item lg={3} md={2} sm={2}>
-          <Stepper setActivePage={getPrevPage} />
+            <Stepper setActivePage={getPrevPage} />
           </Grid>
-          <Grid item lg={6} md={8} sm={8}>
-            <Box mb={6}>
+          <Grid item lg={8} md={8} sm={8}>
+            <Box>
               {playerContext.pages[playerContext.activeIndex] && playerContext.pages[playerContext.activeIndex].component}
             </Box>
           </Grid>

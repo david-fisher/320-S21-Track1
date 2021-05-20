@@ -17,6 +17,8 @@ import SimulationWindow from "./pages/simulationWindow";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    overflowX: 'hidden',
+    overflowY: 'hidden'
   },
   menuButton: {
     marginRight: theme.spacing(2),
