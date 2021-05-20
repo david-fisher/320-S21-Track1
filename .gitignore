@@ -34,3 +34,4 @@ apache_server/localhost-shibboleth/
 *.pyc
 
 node_modules/**
+.eslintcache
