@@ -189,7 +189,7 @@ export default function Data({ open, selectedResponseData, handleClose }) {
   function Sidebar() {
     const classes = useStyles();
 
-    const onClick = function (component) {
+    const onClick = (component) => {
       setStudentResponsePage(component);
     };
 
