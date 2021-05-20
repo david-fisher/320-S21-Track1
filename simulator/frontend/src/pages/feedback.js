@@ -28,23 +28,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Feedback({versionID, getPrevPage, prevPageEndpoint}) {
   const classes = useStyles();
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  const endpointSess = '/scenarios/session/end?userId='+STUDENT_ID+'&versionId='+versionID;
-  //eslint-disable-next-line
+  const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&versionId=${versionID}`;
+  // eslint-disable-next-line
   const [endSessionObj, setEndSessionObj] = useState({
     data: null,
     loading: false,
     error: false,
   });
-  let closeSession = () => {
+  const closeSession = () => {
     function onSuccess(response) {      
-      //do nothing
+      // do nothing
     }
 
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      // setErrorBannerFade(true);
     }
     post(setEndSessionObj, endpointSess, onFailure, onSuccess);
   };

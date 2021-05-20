@@ -79,7 +79,7 @@ export default function GenericPage({ isIntro, pageTitle, body, getNextPage, get
       </Box>
       <Grid container spacing={2} style={{width:'100%'}}>
         <Grid item style={{width:'100%'}}>
-          { <div dangerouslySetInnerHTML={{ __html: body }} /> }
+          <div dangerouslySetInnerHTML={{ __html: body }} />
         </Grid>
       </Grid>
     </div>

@@ -3,10 +3,10 @@ import {
   makeStyles, withStyles, Typography, Box, Grid, Button,
   Dialog, DialogContent, Paper, Avatar, Tab, Tabs
 } from "@material-ui/core";
+import PropTypes from 'prop-types';
 import { STUDENT_ID } from "../constants/config";
 import Conversation from './conversation';
 import get from '../universalHTTPRequests/get';
-import PropTypes from 'prop-types';
 import './stakeholders.css';
 import GlobalContext from '../Context/GlobalContext';
 import GenericWarning from './components/GenericWarning';
@@ -22,10 +22,10 @@ const introText = "Please select the Stakeholder you would like to interact with
 function ellipses(str, cutoff) {
   let newStr = str;
   if (str.length >= cutoff) {
-    newStr = str.substring(0, cutoff - 1) + '…';
-    let lastSpace = newStr.lastIndexOf(' ');
+    newStr = `${str.substring(0, cutoff - 1)  }…`;
+    const lastSpace = newStr.lastIndexOf(' ');
     if (lastSpace !== -1) {
-      newStr = newStr.substring(0, lastSpace) + '…';
+      newStr = `${newStr.substring(0, lastSpace)  }…`;
     }
   }
   return newStr;
@@ -64,7 +64,7 @@ const StyledTab = withStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(18),
     backgroundColor: 'white',
-    //backgroundColor: '#d9d9d9',
+    // backgroundColor: '#d9d9d9',
     '&:hover': {
       backgroundColor: '#8c8c8c',
       color: 'white',
@@ -101,7 +101,7 @@ const StyledTabs = withStyles({
     card: {
       width: 600,
       height: 125,
-      //wordBreak: 'break-word',
+      // wordBreak: 'break-word',
       display: 'flex',
       borderRadius: '35px',
       '&:hover': {
@@ -144,10 +144,10 @@ const StyledTabs = withStyles({
 
 export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
   const [stakeholders, setStakeholders] = React.useState([]);
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  const sessionID = contextObj.sessionID;
-  //eslint-disable-next-line
+  const {sessionID} = contextObj;
+  // eslint-disable-next-line
   const [conversationLimit, setConversationLimit] = React.useState(contextObj.numConversations);
   const [stakeholdersDisabled, setStakeholdersDisabled] = React.useState({});
   const [stakeholdersSelected, setStakeholdersSelected] = React.useState([]);
@@ -155,7 +155,7 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
 
   const classes = cardStyles();
   const [modalOpenToggles, setModalOpenToggles] = React.useState({});
-  //const [gatheredInfo, setGatheredInfo] = useContext(GatheredInfoContext);
+  // const [gatheredInfo, setGatheredInfo] = useContext(GatheredInfoContext);
   const [showStakeholders, setShowStakeholders] = React.useState(true);
   const [currentStakeholder, setCurrentStakeholder] = React.useState({});
   const [numStakeholderTalkedTo, setNumStakeholderTalkedTo] = React.useState(0);
@@ -163,26 +163,24 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
   let stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
   const stakeholdersSelectedGrid = getStakeholdersGrid(stakeholdersSelected, true)
 
-  const endpointGet = '/scenarios/stakeholder/page?versionId=' + versionID + "&scenarioId=" + versionID;
-  //eslint-disable-next-line
+  const endpointGet = `/scenarios/stakeholder/page?versionId=${  versionID  }&scenarioId=${  versionID}`;
+  // eslint-disable-next-line
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
     loading: false,
     error: null,
   });
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
-  let getData = () => {
+  const getData = () => {
     function onSuccess(response) {
       // setConversationLimit(...)
-      let holders = response.data.result;
+      const holders = response.data.result;
       setStakeholders(holders);
-      setStakeholdersDisabled(prev => {
-        return holders.reduce((obj, stakeholder) => {
+      setStakeholdersDisabled(prev => holders.reduce((obj, stakeholder) => {
           obj[stakeholder.stakeholder_id] = false;
           return obj;
-        }, {});
-      });
+        }, {}));
       // need isVisited for stakeholder in endpoint
     } 
     function onFailure(err) {
@@ -192,24 +190,22 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
   }
   useEffect(getData, [shouldFetch]);
 
-  let checkStakeholderVisited = () => {
-    let endpoint = "/scenarios/stakeholder/had?userId=" + STUDENT_ID + "&versionId=" + versionID;
+  const checkStakeholderVisited = () => {
+    const endpoint = `/scenarios/stakeholder/had?userId=${  STUDENT_ID  }&versionId=${  versionID}`;
 
     function onSuccess(response) {
       console.log(response.data.result);
-      let holders = response.data.result;
+      const holders = response.data.result;
       setStakeholdersSelected(holders)
-      let ids = []
+      const ids = []
       for (let i = 0; i < holders.length; ++i) {
-        setNumStakeholderTalkedTo(prev => {
-          return (prev + 1);
-        })
+        setNumStakeholderTalkedTo(prev => (prev + 1))
         ids.push(holders[i].stakeholder_id);
       }
       setSelectedIds(ids)
       if(holders.length === conversationLimit){
         setStakeholdersDisabled(prev => {
-          for(var key of Object.keys(prev)){
+          for(const key of Object.keys(prev)){
             if(!ids.includes(parseInt(key))){
               prev[key] = true
             }
@@ -234,20 +230,20 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
 
     function onClickStakeholder() {
       setCurrentStakeholder(prev => ({
-        name: name,
-        id: id,
-        job: job,
-        description: description,
-        introduction: introduction,
-        photo: photo
+        name,
+        id,
+        job,
+        description,
+        introduction,
+        photo
       }));
 
       if (!selectedIds.includes(id)) {
         setStakeholders(prev => {
-          let holders = prev;
+          const holders = prev;
           for (let i = 0; i < holders.length; ++i) {
             if (holders[i].stakeholder_id === id) {
-              let selectedHolder = holders[i];
+              const selectedHolder = holders[i];
               holders.splice(i, 1);
 
               setSelectedIds(prev => {
@@ -257,7 +253,7 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
               });
 
               setStakeholdersSelected(prev => {
-                let h = prev
+                const h = prev
                 if (!h.some(item => (item.stakeholder_id === id)))
                   h.push(selectedHolder)
                 return h;
@@ -269,7 +265,7 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
         });
 
         setStakeholdersDisabled(prev => {
-          let newStakeholdersDisabled = { ...prev };
+          const newStakeholdersDisabled = { ...prev };
           if (numStakeholderTalkedTo + 1 >= conversationLimit) {
             for (const sID in newStakeholdersDisabled) {
               if (!selectedIds.includes(sID)) {
@@ -280,12 +276,10 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
           return newStakeholdersDisabled;
         });
 
-        setNumStakeholderTalkedTo(prev => {
-          return (prev + 1)
-        });
+        setNumStakeholderTalkedTo(prev => (prev + 1));
 
         setStakeholdersDisabled(prev => {
-          let newStakeholdersDisabled = { ...prev };
+          const newStakeholdersDisabled = { ...prev };
           selectedIds.forEach(val => {
             newStakeholdersDisabled[val] = false;
           })
@@ -307,13 +301,13 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
 
     function toggleModal(id, toggle) {
       setModalOpenToggles(prev => {
-        let newToggles = { ...prev };
+        const newToggles = { ...prev };
         newToggles[id] = toggle;
         return newToggles;
       });
     }
 
-    let cardClass, nameClass, jobClass, descriptionClass;
+    let cardClass; let nameClass; let jobClass; let descriptionClass;
 
     if (stakeholdersDisabled[id]) {
       cardClass = `${styles.card} ${styles.disabled}`;
@@ -355,7 +349,7 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
           }}
           open={modalOpenToggles[id]}
           onClose={() => toggleModal(id, false)}
-          maxWidth={'sm'}
+          maxWidth="sm"
           fullWidth={false}
         >
           <DialogContent>
@@ -390,17 +384,17 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
 
   function getStakeholdersGrid(stakeholders, selected) {
     if (!selected) {
-      let stakeholdersNotSelected = stakeholders
+      const stakeholdersNotSelected = stakeholders
       for (let i = 0; i < stakeholdersNotSelected.length; ++i) {
         if (selectedIds.includes(stakeholdersNotSelected[i].stakeholder_id)) {
           stakeholdersNotSelected.splice(i, 1);
         }
       }
-      let items = stakeholdersNotSelected.map(stakeholder => getStakeholderCards(
+      const items = stakeholdersNotSelected.map(stakeholder => getStakeholderCards(
         stakeholder.stakeholder_id, stakeholder.name, stakeholder.job, stakeholder.description, stakeholder.introduction, stakeholder.photo, createdCardStyles));
       return (
         <div>
-          <Grid container spacing={3} justify={'center'}>
+          <Grid container spacing={3} justify="center">
             {items.map(item => ((
               <Grid item key={item.stakeholder_id}>
                 {item}
@@ -410,12 +404,12 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
         </div>
       )
     }
-    else {
-      let items = stakeholdersSelected.map(stakeholder => getStakeholderCards(
+    
+      const items = stakeholdersSelected.map(stakeholder => getStakeholderCards(
         stakeholder.stakeholder_id, stakeholder.name, stakeholder.job, stakeholder.description, stakeholder.introduction, stakeholder.photo, createdCardStyles));
       return (
         <div>
-          <Grid container spacing={3} justify={'center'}>
+          <Grid container spacing={3} justify="center">
             {items.map(item => ((
               <Grid item>
                 {item}
@@ -424,7 +418,7 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
           </Grid>
         </div>
       )
-    }
+    
   }
 
   const [ openWarning, setOpenWarning ] = useState(false);
@@ -497,7 +491,7 @@ export default function Stakeholders({ pageTitle, body, getNextPage, getPrevPage
           </Grid>
           <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
-              <Box m="1rem" align={'center'}>
+              <Box m="1rem" align="center">
                 <TextTypography>
                   You've spoken to <b>{numStakeholderTalkedTo} out of {conversationLimit}</b> stakeholders</TextTypography>
               </Box>

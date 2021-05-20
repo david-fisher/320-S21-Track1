@@ -21,21 +21,21 @@ const TextTypography = withStyles({
 //   setTestInput3(event.target.value);
 
 function getQuestions(questionArr, responses, setResponses, previouslyResponded) {
-  let arr = [];
+  const arr = [];
   for (let i = 0; i < questionArr.length; i++) {
     const question = questionArr[i];
     arr.push(
       <div>
         <p><b>{question.text}</b></p>
         <textarea disabled={previouslyResponded} id={question.id} value={responses[question.id]} onChange={event => {
-          const target = event.target
+          const {target} = event
           setResponses((reses) => {
-            let newObj = {...reses};
+            const newObj = {...reses};
             newObj[target.id] = target.value;
             return newObj;
           });
         }}
-          rows="4" cols="90" style={{ resize: "none" }}></textarea>
+          rows="4" cols="90" style={{ resize: "none" }} />
       </div>
     )
   }
@@ -48,7 +48,7 @@ export default function StateTextFields(props) {
 
   const [responses, setResponses] = React.useState({});
   const [error, setError] = React.useState(false);
-  let header = props.header;
+  const {header} = props;
   const [helperText, setHelperText] = React.useState('');
 
   React.useEffect(() => {
@@ -59,7 +59,7 @@ export default function StateTextFields(props) {
     }, {}));
   }, [props.prevResponses])
 
-  let qAndA = getQuestions(props.questions, responses, setResponses, previouslyResponded);
+  const qAndA = getQuestions(props.questions, responses, setResponses, previouslyResponded);
 
   const handleSubmit = (event) => {
     event.preventDefault();

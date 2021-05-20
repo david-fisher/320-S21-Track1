@@ -1,7 +1,7 @@
 import React from 'react';
  
-export default function ScenarioCard({finished, title, course, date}) {       //scenario card for the simulator homepage
-   let word = finished ? "Completed on: " : "Assigned: "
+export default function ScenarioCard({finished, title, course, date}) {       // scenario card for the simulator homepage
+   const word = finished ? "Completed on: " : "Assigned: "
     return(
        <div>
            <h2>{title}</h2>

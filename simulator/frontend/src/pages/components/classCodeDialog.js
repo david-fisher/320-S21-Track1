@@ -123,13 +123,13 @@ export default function CodeDialog(props) {
                 <Typography variant="subtitle1">Add Scenario using Course Code</Typography>
             </Button>
             <Dialog
-                fullWidth={true}
+                fullWidth
                 maxWidth="sm"
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
-                <DialogTitle onClose={handleClose}></DialogTitle>
+                <DialogTitle onClose={handleClose} />
                 <DialogContent dividers>
                     <form
                         className={classes.textField}
@@ -140,7 +140,7 @@ export default function CodeDialog(props) {
                             label="Enter Course Code"
                             id="Enter Course Code"
                             variant="outlined"
-                            onInput={(e) => e.target.value = ("" + e.target.value).toUpperCase()}
+                            onInput={(e) => e.target.value = (`${  e.target.value}`).toUpperCase()}
                         />
                     </form>
                 </DialogContent>

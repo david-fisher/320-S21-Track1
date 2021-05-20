@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BACK_URL } from './../constants/config';
+import { BACK_URL } from "../constants/config";
 
 // Universal fetch request using axios
 export default function universalPost(

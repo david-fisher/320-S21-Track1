@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACK_URL } from './../constants/config';
+import { BACK_URL } from "../constants/config";
 // Universal put request using axios
 export default function universalPut(
     setResponse,

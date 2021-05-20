@@ -49,17 +49,17 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
     const [conversations, setConversations] = React.useState([]);
     const [selectedConversation, setSelectedConversation] = React.useState(-1);
 
-    const endpointGet = "/scenarios/conversation/page?versionId=" + versionID + "&scenarioId="  + versionID + "&stakeholderId=" + stakeholder.id;
-    //eslint-disable-next-line
+    const endpointGet = `/scenarios/conversation/page?versionId=${  versionID  }&scenarioId=${   versionID  }&stakeholderId=${  stakeholder.id}`;
+    // eslint-disable-next-line
     const [fetchConversationResponse, setFetchConversationResponse] = useState({
       data: null,
       loading: false,
       error: null,
     });
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     const [shouldFetch, setShouldFetch] = useState(0);
 
-    let getData = () => {
+    const getData = () => {
       function onSuccess(response){
         setConversations(response.data.result[1])
       };
@@ -70,8 +70,8 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
       get(setFetchConversationResponse, endpointGet, onFailure, onSuccess);
     };
 
-    let checkQuestionAnswered = () => {
-      let endpoint = "/scenarios/conversation/had?versionId=" + versionID + "&stakeholderId=" + stakeholder.id + "&userId=" + STUDENT_ID;
+    const checkQuestionAnswered = () => {
+      const endpoint = `/scenarios/conversation/had?versionId=${  versionID  }&stakeholderId=${  stakeholder.id  }&userId=${  STUDENT_ID}`;
       
       function onSuccess(response){
         if(response.data.message === "succes"){ // Yes, there is a typo in the endpoint.
@@ -91,7 +91,7 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
     useEffect(getData, [shouldFetch]);
     useEffect(checkQuestionAnswered, [shouldFetch]);
 
-    let postData = () => {
+    const postData = () => {
 
       function onSuccess(response){
         setAnswer(response.data.result.conversation_response)
@@ -101,7 +101,7 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
         console.log('Error');
       };
 
-      let endpointPost = "/scenarios/conversation?versionId=" + versionID + "&scenarioId=" + versionID + "&stakeholderId=" + stakeholder.id + "&conversationId=" + selectedConversation + "&sessionId=" + sessionID;
+      const endpointPost = `/scenarios/conversation?versionId=${  versionID  }&scenarioId=${  versionID  }&stakeholderId=${  stakeholder.id  }&conversationId=${  selectedConversation  }&sessionId=${  sessionID}`;
 
       post(setFetchConversationResponse,(endpointPost), onFailure, onSuccess, {
         already_exist: true
@@ -132,7 +132,7 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
             <TextTypography variant="h6" align="center" gutterBottom>
               {stakeholder.job}
             </TextTypography>
-            { <div dangerouslySetInnerHTML={{ __html: body }} /> }
+            <div dangerouslySetInnerHTML={{ __html: body }} />
           </Grid>
         </Box>
         <Grid container direction="row" justify="space-between">
@@ -143,8 +143,7 @@ export default function Conversation({ sessionID, showStakeholders, setShowStake
               marginRight: "0rem",
               marginTop: "-3rem",
             }}
-          >
-          </Grid>
+           />
         </Grid>
         <Grid container spacing={2}>
           <Grid item lg={12}>

@@ -8,9 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 GenericUnsavedWarning.propTypes = {
     func: PropTypes.func.isRequired,
@@ -21,10 +19,10 @@ GenericUnsavedWarning.propTypes = {
 export default function GenericUnsavedWarning(props) {
     GenericUnsavedWarning.propTypes = props.data;
     const data = props;
-    //func is the function that occurs when user wants to leave without saving changes
+    // func is the function that occurs when user wants to leave without saving changes
     const { func, open, setOpen, description, title } = data;
 
-    //Func that closes the popup window
+    // Func that closes the popup window
     const handleClose = () => {
         setOpen(false);
     };

@@ -49,9 +49,7 @@ export default function CustomizedMenus() {
 
   const gatheredInformation = ["Assignment", "Stakeholder 1", "Stakeholder 2"]
 
-  const menuItems = gatheredInformation.map(information => { 
-    return (<StyledMenuItem> <ListItemText primary={information}/> </StyledMenuItem>);
-})
+  const menuItems = gatheredInformation.map(information => (<StyledMenuItem> <ListItemText primary={information}/> </StyledMenuItem>))
 
   return (
     <div>

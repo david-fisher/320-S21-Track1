@@ -7,8 +7,8 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
-import { STUDENT_ID }from "../constants/config";
 import TextField from '@material-ui/core/TextField';
+import { STUDENT_ID }from "../constants/config";
 import GlobalContext from '../Context/GlobalContext';
 
 const TextTypography = withStyles({
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Reflection({ pageTitle, body, questions, getNextPage, getPrevPage, nextPageEndpoint, prevPageEndpoint, versionID, pageID }) {
   body = body.replace(/\\"/g, '"');
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
 
   questions = [
@@ -70,30 +70,30 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
   const [reflection, setReflection] = useState(questions);
   
 
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   const endpointPost = '/scenarios/reflection?versionId=' + versionID + '&pageId=' + pageID + '&userId=' + STUDENT_ID;
-  let postData = () => {
-    //eslint-disable-next-line
+  const postData = () => {
+    // eslint-disable-next-line
     function onSuccess(response) {
       console.log(response);
     }
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     function onFailure() {
       console.log('Error')
     }
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     let data = {
       body: reflection.prompts
     }
 
-    //TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
+    // TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
     setSavedAnswers(true);
   }
 
   console.log(savedAnswers);
   console.log(reflection);
 
-  let updateResponse = (e,id) => {  
+  const updateResponse = (e,id) => {  
     setReflection(prev => {
     for(let i = 0; i < questions.length; ++i){ 
       if(questions[i].id === id){
@@ -142,7 +142,7 @@ export default function Reflection({ pageTitle, body, questions, getNextPage, ge
       </Grid>
       <Grid containerstyle={{width:'100%'}}>
         <Grid item style={{width:'100%'}}>
-          { <div dangerouslySetInnerHTML={{ __html: body }} /> }
+          <div dangerouslySetInnerHTML={{ __html: body }} />
         </Grid>
       </Grid>
 

@@ -1,5 +1,4 @@
 import React from "react";
-import Home from "./pages/home";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -12,6 +11,7 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Home from "./pages/home";
 import SimulationWindow from "./pages/simulationWindow";
 
 const useStyles = makeStyles((theme) => ({

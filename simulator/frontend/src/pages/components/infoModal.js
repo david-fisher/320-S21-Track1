@@ -4,8 +4,8 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import CloseIcon from '@material-ui/icons/Close';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme , ThemeProvider } from '@material-ui/core/styles';
+
 
 const styles = (theme) => ({
     root: {
@@ -82,7 +82,7 @@ export default function InfoModal({getContent, info}) {
                         {modalTitle}
                 </Button>
             </ThemeProvider>
-            <Dialog fullWidth = {true} onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <Dialog fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {modalTitle}
                 </DialogTitle>

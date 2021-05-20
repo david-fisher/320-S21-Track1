@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, List, ListItem, ListItemText, Button, Box, Typography} from '@material-ui/core';
-import { GatheredInfoContext } from '../simulationWindow';
 import PersonIcon from '@material-ui/icons/Person';
-import InfoModal from './infoModal';
 import axios from 'axios';
+import { GatheredInfoContext } from '../simulationWindow';
+import InfoModal from './infoModal';
 import { ScenariosContext } from '../../Nav';
 import {BACK_URL, STUDENT_ID} from "../../constants/config";
 
@@ -30,7 +30,7 @@ export default function InfoGatheredList({pages}) {
   // const modalTitle = "Introduction";
   // const inputText = "Some Text 123";
 
-  let listContentById = {};
+  const listContentById = {};
   const [infos, setInfos] = useContext(GatheredInfoContext);
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
 
@@ -46,14 +46,12 @@ export default function InfoGatheredList({pages}) {
           case 'page':
             return axios({
               method: 'get',
-              url: BACK_URL + '/scenarios/task',
+              url: `${BACK_URL  }/scenarios/task`,
               headers: {
                 studentID: STUDENT_ID,
                 scenarioID: scenarios.currentScenarioID
               }
-            }).then(response => {
-              return response.data[0].body_text;
-            });
+            }).then(response => response.data[0].body_text);
           default:
             if (info.id.startsWith('stakeholder:')) {
               return (
@@ -74,21 +72,21 @@ export default function InfoGatheredList({pages}) {
           listContentById[info.id] = res;
           return res;
         }).catch(err => console.error(err));
-    } else {
+    } 
       return listContentById[info.id];
-    }
+    
   }
 
-  //changing variables as per screensize
+  // changing variables as per screensize
   const [height, width] = useWindowSize();
   const isSmall = width < 640;
-  const isMedium = width < 1024; //could also be 1007 instead of 1024 depending on standard used
+  const isMedium = width < 1024; // could also be 1007 instead of 1024 depending on standard used
   const margin_left = isSmall? 1 : (isMedium ? 2 : 8);
-  const title_fontSize = isSmall? '8px' : (isMedium ? '12px' : '16px'); //use it later when making it suitable for medium and small sizes
+  const title_fontSize = isSmall? '8px' : (isMedium ? '12px' : '16px'); // use it later when making it suitable for medium and small sizes
 
   return (
     <div className={classes.root}>
-      <Box mt = {6} ml = {'20%'}>
+      <Box mt = {6} ml = "20%">
         <Button onClick={toggleShow} 
          color = "primary"
          style = {{ fontSize: '16px'}}
@@ -112,13 +110,11 @@ export default function InfoGatheredList({pages}) {
                 </ListItem>
               );
             })} */}
-            {infos.filter(info => pages[info.pageId].visited).map(info => {
-              return (
+            {infos.filter(info => pages[info.pageId].visited).map(info => (
                 <ListItem key={info.id}>
                   <InfoModal getContent={getListContent} info={info}/>
                 </ListItem>
-              );
-            })}
+              ))}
           {/* <ListItem>
             <InfoModal inputText={inputText} modalTitle={modalTitle}/>
           </ListItem> */}

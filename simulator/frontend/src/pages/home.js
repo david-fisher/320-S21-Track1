@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import '../App.css';
-import get from '../universalHTTPRequests/get';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Button, Tabs, Tab, Box, Typography } from '@material-ui/core';
-import ScenarioCard from './components/scenarioCard';
-import LoadingSpinner from './components/LoadingSpinner';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
-//eslint-disable-next-line
+import ScenarioCard from './components/scenarioCard';
+import LoadingSpinner from './components/LoadingSpinner';
+import get from '../universalHTTPRequests/get';
+// eslint-disable-next-line
 import CodeButton from './components/classCodeDialog';
-//eslint-disable-next-line
+// eslint-disable-next-line
 import ProgressBar from './components/progressBar';
-import { STUDENT_ID } from './../constants/config';
+import { STUDENT_ID } from "../constants/config";
 import ErrorBanner from './components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const endpointGet = '/scenarios?userId=';
-//eslint-disable-next-line
+// eslint-disable-next-line
 const endpointPost = '/dashboard';
 
 function TabPanel(props) {
@@ -87,7 +87,7 @@ const StyledTab = withStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(18),
     backgroundColor: 'white',
-    //backgroundColor: '#d9d9d9',
+    // backgroundColor: '#d9d9d9',
     '&:hover': {
       backgroundColor: '#8c8c8c',
       color: 'white',
@@ -119,11 +119,11 @@ const StyledTabs = withStyles({
 
 export default function Home() {
   const classes = useStyles();
-  //post on success, concatenating a scenario card to array
-  //delete on success, concatenating a scenario card to array
-  //when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
-  //post returns new id of scenario, when you concatenating to array set the id to that
-  const [scenarioList, setScenarioList] = useState({     //temporary array of scenarios
+  // post on success, concatenating a scenario card to array
+  // delete on success, concatenating a scenario card to array
+  // when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
+  // post returns new id of scenario, when you concatenating to array set the id to that
+  const [scenarioList, setScenarioList] = useState({     // temporary array of scenarios
       incompleteScenarios: [
         {
           title: " ",
@@ -154,11 +154,11 @@ export default function Home() {
     loading: false,
     error: false,
   });
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
 
-  //Get Scenario
-  let getData = () => {
+  // Get Scenario
+  const getData = () => {
     function onSuccess(response) {
       console.log(response.data.result);
       let incomplete = response.data.result.filter(
@@ -189,7 +189,7 @@ export default function Home() {
           course: data.course_name
         }
       ));
-      let scen = {
+      const scen = {
         incompleteScenarios: incomplete,
         completeScenarios: complete
       };
@@ -274,7 +274,7 @@ export default function Home() {
         <StyledTab label="Completed Scenarios" {...a11yProps(1)} />
       </StyledTabs>
       <TabPanel value={value} index={0}>
-        <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
+        <Grid container spacing={2} className={classes.grid}>   {/* incomplete scenarios section */}
           <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
             <Typography variant="h2">To-Do</Typography>
           </Grid>
@@ -290,7 +290,7 @@ export default function Home() {
                 <Button
                     component={Link}
                     to={{
-                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
+                        pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
                         data: scenario,
                     }}
                     className={classes.button}
@@ -316,7 +316,7 @@ export default function Home() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid container spacing={2} className={classes.grid}>     {/*completed scenarioList section*/}
+        <Grid container spacing={2} className={classes.grid}>     {/* completed scenarioList section */}
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>
@@ -324,7 +324,7 @@ export default function Home() {
             <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
-                  finished={true}
+                  finished
                   title={scenario.title}
                   course={scenario.course}
                   date={scenario.date}
@@ -332,7 +332,7 @@ export default function Home() {
                 <Button
                     component={Link}
                     to={{
-                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
+                        pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
                         data: scenario,
                     }}
                     className={classes.button}

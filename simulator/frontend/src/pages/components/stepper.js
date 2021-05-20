@@ -40,15 +40,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps(pages, navigatePageFunc) {
-  let stepArr = [];
+  const stepArr = [];
   console.log(pages);
   for (let i = 0; i < pages.length; i++) {
-    let buttonName = pages[i].title;
+    const buttonName = pages[i].title;
     stepArr.push(<Button style={{ color: "#881c1c" }} onClick={() => navigatePageFunc(pages[i].pageEndpoint)} >{buttonName}</Button>);
   }
   return stepArr;
 }
-//eslint-disable-next-line
+// eslint-disable-next-line
 function getStepContent(step) {
   switch (step) {
     case 0:
@@ -70,7 +70,7 @@ export default function VerticalLinearStepper({ setActivePage }) {
   const  {pages, activeIndex } = contextObj;
   function navigatePage(pageID){
       setActivePage(pageID, pages)
-    //}
+    // }
   }
 
   const steps = getSteps(pages, navigatePage);
@@ -100,7 +100,7 @@ export default function VerticalLinearStepper({ setActivePage }) {
               <StepContent>
                 <Typography>{}</Typography>
                 <div className={classes.actionsContainer}>
-                  <div></div>
+                  <div />
                 </div>
               </StepContent>
             </Step>

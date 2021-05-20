@@ -1,8 +1,8 @@
 import React from 'react';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Home from "./pages/home";
 import SimulationWindow from "./pages/simulationWindow";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import './App.css';
 
 export default function App() {

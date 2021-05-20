@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import { withStyles, Typography, Box, Grid, Button } from "@material-ui/core";
-import QA from "./components/q&a";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import QA from "./components/q&a";
 import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
 import { ScenariosContext } from "../Nav";
 import post from '../universalHTTPRequests/post';
@@ -25,16 +25,16 @@ export default function Conclusion({pages, setPages, prevPageID, version_id, act
     error: false,
   });
   const [shouldFetch, setShouldFetch] = useState(0);
-  const endpointSess = '/scenarios/session/end?userId='+STUDENT_ID+'&versionId='+version_id
+  const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&versionId=${version_id}`
 
-  let closeSession = () => {
+  const closeSession = () => {
     function onSuccess(response) {      
-      //do nothing
+      // do nothing
     }
 
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      // setErrorBannerFade(true);
     }
     post(setFetchScenariosResponse, (endpointSess), onFailure, onSuccess);
   };
@@ -43,7 +43,7 @@ export default function Conclusion({pages, setPages, prevPageID, version_id, act
   function goToPrevPage(){
     if (!pages[prevPageID].visited) {
       setPages(prevPages => {
-        let copy = {...prevPages};
+        const copy = {...prevPages};
         copy[prevPageID].visited = true;
         return copy;
       });
@@ -51,7 +51,7 @@ export default function Conclusion({pages, setPages, prevPageID, version_id, act
     setActivePage(prevPage => prevPageID)
   }
 
-  let history = useHistory();
+  const history = useHistory();
   const goToHome = () => {
     closeSession();
     history.push('/');
@@ -71,16 +71,15 @@ export default function Conclusion({pages, setPages, prevPageID, version_id, act
           <Button variant="contained" disableElevation onClick={goToPrevPage}>Back</Button>
         </Grid>
         <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          {/*<Button variant="outlined">Next</Button>*/}
+          {/* <Button variant="outlined">Next</Button> */}
         </Grid>
       </Grid>
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          <Box m="2rem">
-          </Box>
+          <Box m="2rem" />
           <QA header={body} questions={questions}
             handleResponse={async (data) => console.log(data)}
-            nextPage={goToHome} pages={pages} nextPageName={"home"}
+            nextPage={goToHome} pages={pages} nextPageName="home"
             prevResponses={{}}/>
         </Grid>
       </Grid>

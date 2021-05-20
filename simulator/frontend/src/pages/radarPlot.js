@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js';
 import { Grid, Tab, Tabs, Box, Typography, Table, TableCell, TableRow, TableHead, TableContainer, TableBody, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { STUDENT_ID } from "../constants/config";
 import PropTypes from 'prop-types';
+import { STUDENT_ID } from "../constants/config";
 import get from '../universalHTTPRequests/get';
 
-//eslint-disable-next-line
+// eslint-disable-next-line
 const TextTypography = withStyles({
     root: {
         color: "#373a3c"
@@ -46,7 +46,7 @@ const StyledTab = withStyles((theme) => ({
         fontWeight: theme.typography.fontWeightRegular,
         fontSize: theme.typography.pxToRem(18),
         backgroundColor: 'white',
-        //backgroundColor: '#d9d9d9',
+        // backgroundColor: '#d9d9d9',
         '&:hover': {
             backgroundColor: '#8c8c8c',
             color: 'white',
@@ -78,24 +78,24 @@ const StyledTabs = withStyles({
 
 function Radar({versionID}) {
     const chartContainer = useRef(null);
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     const [chartInstance, setChartInstance] = useState(null);
     const [coverage, setCoverage] = useState([]);
     const [value, setValue] = React.useState(0); 
    
 
-    const endpointGet = '/scenarios/radar?userId=' + STUDENT_ID + "&versionId=" + versionID;
-    //eslint-disable-next-line
+    const endpointGet = `/scenarios/radar?userId=${  STUDENT_ID  }&versionId=${  versionID}`;
+    // eslint-disable-next-line
     const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
         data: null,
         loading: false,
         error: null,
     });
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     const [shouldFetch, setShouldFetch] = useState(0);
 
 
-    let getData = () => {
+    const getData = () => {
         function onSuccess(response) {
             setCoverage(response.data.result);
             createChart(response.data.result);
@@ -113,24 +113,24 @@ function Radar({versionID}) {
         if (average >= 60) {
             return "rgba(0, 128, 0, 0.2)"  // Green if average percentage above 60%
         }
-        else if (average >= 30) {
+        if (average >= 30) {
             return "rgba(255, 255, 0, 0.2)" // Yellow if average percentage above 30%
         }
-        else {
+        
             return "rgba(255, 0, 0, 0.2)"   // Red if average percentage below 30%
-        }
+        
     }
     
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     useEffect(() => {createChart(coverage)}, []);
 
     function createChart(cov) {
         if(cov.length > 0){
-            let lbls = cov.map(x => x.name);
-            let vals = cov.map(x => x.percentage);
-            let average = vals.reduce((a, b) => a + b) / vals.length;
+            const lbls = cov.map(x => x.name);
+            const vals = cov.map(x => x.percentage);
+            const average = vals.reduce((a, b) => a + b) / vals.length;
             console.log(average)
-            let config = {
+            const config = {
                 type: 'radar',
                 data: {
                     labels: lbls,
@@ -155,8 +155,8 @@ function Radar({versionID}) {
                             max: 100,
                             min: 0,
                             stepSize: 20,
-                            callback: function (value, index, values) {
-                                return value + '%';
+                            callback (value, index, values) {
+                                return `${value  }%`;
                             },
 
                         }

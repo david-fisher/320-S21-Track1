@@ -11,11 +11,11 @@ const introText = "You've chosen to delay starting the project in order to get m
 
 
 export default function GatheredInformation({pages, setPages, activePage, setActivePage}) {
-  let goToInitialAction = ()=>{
+  const goToInitialAction = ()=>{
     if(pages.initialAction.completed){
       if(!pages.initialAction.visited) {
           setPages(prevPages => {
-            let copy = {...prevPages};
+            const copy = {...prevPages};
             copy.initialAction.visited = true;
             return copy;
           });
@@ -26,7 +26,7 @@ export default function GatheredInformation({pages, setPages, activePage, setAct
   function goToStakeholders(){
     if (!pages.stakeholders.visited) {
       setPages(prevPages => {
-        let copy = {...prevPages};
+        const copy = {...prevPages};
         copy.stakeholders.visited = true;
         return copy;
       });

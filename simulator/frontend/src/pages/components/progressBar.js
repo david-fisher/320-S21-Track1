@@ -38,7 +38,7 @@ export default function CardProgressBar({completed, max, size}) {
    return (
    <div className={classes.container} style={{height : size}}>
        <div style={fillStyle}>
-         <span className={classes.label}></span>
+         <span className={classes.label} />
        </div>
      </div>
    );

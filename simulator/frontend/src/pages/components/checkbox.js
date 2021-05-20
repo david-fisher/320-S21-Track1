@@ -7,10 +7,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import {Box, Button} from "@material-ui/core";
 
-import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../../constants/config";
 import axios from 'axios';
-import { ScenariosContext } from "../../Nav";
 import { TrainOutlined, TrainRounded } from "@material-ui/icons";
+import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../../constants/config";
+import { ScenariosContext } from "../../Nav";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ErrorRadios(props) 
 {
-  let   content_url = props.content_url;
+  const   {content_url} = props;
   const classes = useStyles();
   const [value, setValue] = React.useState('');
   const [error, setError] = React.useState(false);
@@ -60,7 +60,7 @@ export default function ErrorRadios(props)
 
   useEffect(() => {
     // backend call
-    console.log("base: " + BACK_URL + " scenario: " + SCENARIO_ID + " student: " + STUDENT_ID);
+    console.log(`base: ${  BACK_URL  } scenario: ${  SCENARIO_ID  } student: ${  STUDENT_ID}`);
     axios({
       method: 'get',
       url: BACK_URL + content_url,
@@ -88,7 +88,7 @@ export default function ErrorRadios(props)
       }
     }).catch((err)=>{
       console.log("err",err);
-      //alert(err);
+      // alert(err);
     });
   }, [scenarios])
 

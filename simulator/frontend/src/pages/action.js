@@ -37,7 +37,7 @@ const TextTypography = withStyles({
 })(Typography);
 
 export default function Action({ versionID, pageID, pageTitle, body, choices, choiceChosen, getNextPage, getPrevPage, prevPageEndpoint }) {
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   body = body.replace(/\\"/g, '"');
   choices = [
@@ -52,32 +52,32 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
       "next_page": 6000
     },
   ]
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   const [chosenAction, setChosenAction] = React.useState(-1);
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   const [fetchActionResponse, setFetchActionResponse] = useState({
      data: null,
      loading: false,
      error: false,
    });
    // MAKE API CALL
-   //let pageId = activePage
-   //const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
-   //const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
-  //eslint-disable-next-line
+   // let pageId = activePage
+   // const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
+   // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
+  // eslint-disable-next-line
    const endpointPost = '/scenarios/action?versionId='+versionID+'&pageId='+(pageID)
-   const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+versionID
+   const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`
  
-   let getAction = (selectedAction, nextPageID) => {
+   const getAction = (selectedAction, nextPageID) => {
      console.log(pageID);
     function startSess(response) {
-      //do nothing
+      // do nothing
     }
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     function onSuccess(response) {
       // Right now hardcoded for middle reflection
-      //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-      //eslint-disable-next-line
+      // pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
+      // eslint-disable-next-line
       let body = ({
          response_id: response.data.result.response_id,
          choice: response.data.result.choice,
@@ -88,16 +88,16 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
       setChosenAction((cur) => selectedAction);
     }
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      // setErrorBannerFade(true);
     }
     if(!choiceChosen) {
       post(setFetchActionResponse, endpointSess, onFailure, startSess)
-      //TODO Remove once post request finishes
-      getNextPage("/scenarios/task?versionId="+versionID+"&pageId="+nextPageID, contextObj.activeIndex, contextObj.pages);
-      //eslint-disable-next-line
+      // TODO Remove once post request finishes
+      getNextPage(`/scenarios/task?versionId=${versionID}&pageId=${nextPageID}`, contextObj.activeIndex, contextObj.pages);
+      // eslint-disable-next-line
       let body = {"choice_id" : selectedAction, "user_id" : STUDENT_ID};
-      //TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
+      // TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
     }
    }
  
@@ -127,7 +127,7 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
           disableElevation
           color="primary"
           disabled={!choiceChosen}
-          onClick={() => getNextPage("/scenarios/task?versionId="+versionID+"&pageId="+choiceChosen, contextObj.activeIndex, contextObj.pages)}
+          onClick={() => getNextPage(`/scenarios/task?versionId=${versionID}&pageId=${choiceChosen}`, contextObj.activeIndex, contextObj.pages)}
         >
           Next
         </Button>
@@ -148,7 +148,7 @@ export default function Action({ versionID, pageID, pageTitle, body, choices, ch
       <Grid container spacing={2}>
         <Grid item style={{width:'100%'}}>
           <Grid item style={{width:'100%'}}>
-            { <div dangerouslySetInnerHTML={{ __html: body }} /> }
+            <div dangerouslySetInnerHTML={{ __html: body }} />
           </Grid>
             <Box mx="auto">
             {choices.map((choice) => (

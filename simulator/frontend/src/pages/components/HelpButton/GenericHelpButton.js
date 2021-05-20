@@ -45,7 +45,7 @@ function DialogTitle(props) {
     const { onClose, title } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root}>
-            <Typography variant="h5">{title ? title : 'Help'}</Typography>
+            <Typography variant="h5">{title || 'Help'}</Typography>
             <Button
                 className={classes.closeButton}
                 variant="contained"
@@ -79,8 +79,8 @@ export default function HelpButtonSinglePlayer({ description, title }) {
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={open}
-                fullWidth={true}
-                maxWidth={'sm'}
+                fullWidth
+                maxWidth="sm"
                 scroll="body"
             >
                 <DialogTitle onClose={handleClose} title={title} />
