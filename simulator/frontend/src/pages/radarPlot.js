@@ -133,9 +133,9 @@ function Radar({ versionID }) {
     return 'rgba(255, 0, 0, 0.2)'; // Red if average percentage below 30%
   }
 
-  // eslint-disable-next-line
   useEffect(() => {
     createChart(coverage);
+    // eslint-disable-next-line
   }, []);
 
   function createChart(cov) {

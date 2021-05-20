@@ -181,7 +181,7 @@ export default function Stakeholders({
   const [currentStakeholder, setCurrentStakeholder] = React.useState({});
   const [numStakeholderTalkedTo, setNumStakeholderTalkedTo] = React.useState(0);
   const createdCardStyles = cardStyles();
-  let stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
+  const stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
   const stakeholdersSelectedGrid = getStakeholdersGrid(
     stakeholdersSelected,
     true,
@@ -234,9 +234,11 @@ export default function Stakeholders({
               prev[key] = true;
             }
           }
+          console.log(prev);
           return prev;
         });
       }
+      // eslint-disable-next-line
       stakeholdersGrid = getStakeholdersGrid(stakeholders, false);
     }
 
@@ -352,7 +354,6 @@ export default function Stakeholders({
       jobClass = styles.job;
       descriptionClass = styles.background;
     }
-
     return (
       <>
         <Button
@@ -601,6 +602,7 @@ export default function Stakeholders({
                     {numStakeholderTalkedTo}
                     {' '}
                     out of
+                    {' '}
                     {conversationLimit}
                   </b>
                   {' '}
