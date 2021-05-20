@@ -4,7 +4,8 @@
   "description": "ethisim repo",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -29,15 +30,11 @@
     "lint-staged": "^11.0.0",
     "prettier": "2.3.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "**/*.js": [
       "eslint --fix",
       "git add"
-    ]
+    ],
+    "*.js": "eslint --cache --fix"
   }
 }
