@@ -69,6 +69,7 @@ export default function Action({
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   body = body.replace(/\\"/g, '"');
+
   choices = [
     {
       choices_id: 1000,
@@ -82,6 +83,35 @@ export default function Action({
       next_page: 6000,
     },
   ];
+  if (pageTitle === 'Choose Initial Action') {
+    choices = [
+      {
+        choices_id: 1000,
+        choice_text:
+          'delay getting started and try to get answers for any lingering questions that you might have about the project?',
+        next_page: 11006,
+      },
+      {
+        choices_id: 2000,
+        choice_text: "get to work so that you don't feel stressed about completing your task assignment before the project deadline?",
+        next_page: 11010,
+      },
+    ];
+  } else if (pageTitle === 'Choose Final Action') {
+    choices = [
+      {
+        choices_id: 1000,
+        choice_text:
+          'move forward with your task as assigned in order to not further exceed the project deadline, confident that you can deal with any considerations later?',
+        next_page: 11010,
+      },
+      {
+        choices_id: 2000,
+        choice_text: "delay completing your task assignment and the entire project to invite your teammates to a meeting to discuss gathering more information and possible changes to the project based on what you've learned?",
+        next_page: 11010,
+      },
+    ];
+  }
   // eslint-disable-next-line
   const [chosenAction, setChosenAction] = React.useState(-1);
   // eslint-disable-next-line

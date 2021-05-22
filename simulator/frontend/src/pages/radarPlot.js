@@ -75,7 +75,6 @@ const StyledTab = withStyles((theme) => ({
 
 const StyledTabs = withStyles({
   root: {},
-
   indicator: {
     display: 'flex',
     justifyContent: 'center',
@@ -110,6 +109,7 @@ function Radar({ versionID }) {
 
   const getData = () => {
     function onSuccess(response) {
+      console.log(response);
       setCoverage(response.data.result);
       createChart(response.data.result);
     }
@@ -136,7 +136,7 @@ function Radar({ versionID }) {
   useEffect(() => {
     createChart(coverage);
     // eslint-disable-next-line
-  }, []);
+  }, [value]);
 
   function createChart(cov) {
     if (cov.length > 0) {
@@ -186,6 +186,7 @@ function Radar({ versionID }) {
 
       if (chartContainer && chartContainer.current) {
         const newChartInstance = new Chart(chartContainer.current, config);
+        console.log(newChartInstance);
         setChartInstance(newChartInstance);
       }
     }

@@ -117,7 +117,6 @@ const cardStyles = makeStyles({
   name: {
     color: '#000000',
     fontWeight: 'fontWeightBold',
-    marginBottom: '-10px',
   },
   selected: {
     borderRight: '6px solid lime',
@@ -379,37 +378,32 @@ export default function Stakeholders({
                 className={nameClass}
                 align="left"
               >
-                {name}
+                <Typography variant="h5">
+                  {name}
+                </Typography>
               </Box>
               <Box
                 fontWeight="fontWeightBold"
                 className={jobClass}
                 align="left"
               >
-                {job}
+                <Typography variant="h5">
+                  {job}
+                </Typography>
               </Box>
-              <Typography
-                variant="body2"
-                component="p"
-                align="left"
-                className={descriptionClass}
-              >
-                {ellipses(description, 130)}
-              </Typography>
             </div>
           </Paper>
         </Button>
         <Dialog
           PaperProps={{
             style: {
-              width: '350px',
               borderRadius: '30px',
             },
           }}
           open={modalOpenToggles[id]}
           onClose={() => toggleModal(id, false)}
           maxWidth="sm"
-          fullWidth={false}
+          fullWidth
         >
           <DialogContent>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -436,16 +430,7 @@ export default function Stakeholders({
             >
               {job}
             </Box>
-            <Typography
-              variant="body2"
-              component="p"
-              align="center"
-              className={descriptionClass}
-            >
-              {description}
-            </Typography>
-            <br />
-            <br />
+            <div dangerouslySetInnerHTML={{ __html: description }} />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 disabled={stakeholdersDisabled[id]}
@@ -529,9 +514,15 @@ export default function Stakeholders({
         setOpen={setOpenWarning}
         open={openWarning}
         title="Warning"
-        description={`You can talk to ${
-          conversationLimit - numStakeholderTalkedTo
-        } more stakeholders. Are you sure you want to move on?`}
+        description={
+          conversationLimit - numStakeholderTalkedTo > 1
+            ? `You can talk to ${
+              conversationLimit - numStakeholderTalkedTo
+            } more stakeholders. Are you sure you want to move on?`
+            : `You can talk to ${
+              conversationLimit - numStakeholderTalkedTo
+            } more stakeholder. Are you sure you want to move on?`
+        }
       />
       <Grid item style={{ marginRight: '0rem', marginTop: '1rem' }}>
         <Button
@@ -553,7 +544,7 @@ export default function Stakeholders({
           className={classes.nextButton}
           color="primary"
           onClick={
-            numStakeholderTalkedTo + 1 >= conversationLimit
+            numStakeholderTalkedTo >= conversationLimit
               ? () => getNextPage(
                 nextPageEndpoint,
                 contextObj.activeIndex,

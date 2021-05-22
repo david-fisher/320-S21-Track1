@@ -61,11 +61,11 @@ export default function BasicTable({
     }
     let data = [...issues];
     const checkInvalidScore = (obj) => {
-      const issueScore = obj.COVERAGE_SCORE
+      const issueScore = obj.COVERAGE_SCORE.toString()
         ? Number(obj.COVERAGE_SCORE)
         : null;
       return (
-        !obj.COVERAGE_SCORE
+        !obj.COVERAGE_SCORE.toString()
                 || isNaN(issueScore)
                 || issueScore.toString().indexOf('.') !== -1
                 || issueScore > 5

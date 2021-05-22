@@ -70,6 +70,7 @@ export default function Reflection({
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
 
+  // For the sake of the demo
   questions = [
     {
       id: 1,
@@ -85,6 +86,65 @@ export default function Reflection({
       response: '',
     },
   ];
+  if (pageTitle === 'Reflect on Initial Information') {
+    questions = [
+      {
+        id: 1,
+        page: 1,
+        reflection_question: 'What new responsibilities do you have after being assigned to this project?',
+        response: '',
+      },
+      {
+        id: 2,
+        page: 1,
+        reflection_question:
+          "What aren't you sure about, or what questions are raised for you about those responsibilities?",
+        response: '',
+      },
+    ];
+  } else if (pageTitle === 'Reflect on Additional Information') {
+    questions = [
+      {
+        id: 1,
+        page: 1,
+        reflection_question: 'Why did you select your chosen source(s) of information?',
+        response: '',
+      },
+      {
+        id: 2,
+        page: 1,
+        reflection_question:
+          'What did you learn that most affects the action that you will take next?',
+        response: '',
+      },
+    ];
+  } else if (pageTitle === 'Reflect on Consequences') {
+    questions = [
+      {
+        id: 1,
+        page: 1,
+        reflection_question: 'Do the consequences presented match your expectations for what you thought would happen? Explain your answer.',
+        response: '',
+      },
+      {
+        id: 2,
+        page: 1,
+        reflection_question:
+          'Considering these consequences, how satisfied are you with your choices? In other words, how would you approach a similar situation in the future? Be sure to explain what you might keep the same and what you would change.',
+        response: '',
+      },
+    ];
+  } else if (pageTitle === 'Conclusion') {
+    questions = [
+      {
+        id: 1,
+        page: 1,
+        reflection_question: 'We would appreciate receiving any comments that you have on this online ethics simulation:',
+        response: '',
+      },
+    ];
+  }
+
   const classes = useStyles();
 
   const [savedAnswers, setSavedAnswers] = React.useState(false);
@@ -196,7 +256,7 @@ export default function Reflection({
               />
             </Box>
           ))}
-          <Grid container justify="center" alignItems="center">
+          <Grid container justify="center" alignItems="center" style={{ marginBottom: '1rem' }}>
             <Button
               variant="contained"
               color="primary"

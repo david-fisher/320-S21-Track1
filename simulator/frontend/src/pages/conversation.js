@@ -52,17 +52,16 @@ export default function Conversation({
 }) {
   const classes = useStyles();
   const body = stakeholder.introduction.replace(/\\"/g, '"');
-  console.log(stakeholder);
 
   function goToStakeholders() {
     setShowStakeholders(true);
   }
 
-  const [answer, setAnswer] = React.useState('');
-  const [questionAnswered, setQuestionAnswered] = React.useState(false);
-  const [conversations, setConversations] = React.useState([]);
-  const [selectedConversation, setSelectedConversation] = React.useState(-1);
-
+  const [answer, setAnswer] = useState('');
+  const [questionAnswered, setQuestionAnswered] = useState(false);
+  const [conversations, setConversations] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(-1);
+  const [hasQuestions, setHasQuestions] = useState(false);
   const endpointGet = `/scenarios/conversation/page?versionId=${versionID}&scenarioId=${versionID}&stakeholderId=${stakeholder.id}`;
   // eslint-disable-next-line
   const [fetchConversationResponse, setFetchConversationResponse] = useState({
@@ -75,11 +74,15 @@ export default function Conversation({
 
   const getData = () => {
     function onSuccess(response) {
+      console.log(response);
       setConversations(response.data.result[1]);
+      setHasQuestions(true);
     }
 
     function onFailure(err) {
-      console.log('Error');
+      // TODO stakeholder does not have questions
+      setQuestionAnswered(true);
+      setHasQuestions(false);
     }
     get(setFetchConversationResponse, endpointGet, onFailure, onSuccess);
   };
@@ -108,6 +111,7 @@ export default function Conversation({
 
   const postData = () => {
     function onSuccess(response) {
+      console.log(response);
       setAnswer(response.data.result.conversation_response);
     }
 
@@ -145,10 +149,10 @@ export default function Conversation({
             size
             src={stakeholder.photo}
           />
-          <TextTypography variant="h5" align="center" gutterBottom>
+          <TextTypography variant="h4" align="center" gutterBottom>
             {stakeholder.name}
           </TextTypography>
-          <TextTypography variant="h6" align="center" gutterBottom>
+          <TextTypography variant="h5" align="center" gutterBottom>
             {stakeholder.job}
           </TextTypography>
           <div dangerouslySetInnerHTML={{ __html: body }} />
@@ -164,63 +168,66 @@ export default function Conversation({
           }}
         />
       </Grid>
-      <Grid container spacing={2}>
-        <Grid item lg={12}>
-          <Divider
-            style={{
-              marginTop: '10px',
-              marginBottom: '30px',
-              height: '2px',
-              backgroundColor: 'black',
-            }}
-          />
-          <Box align="left">
-            Select one Question to Ask:
-            <List>
-              {conversations.map((value) => {
-                const labelId = `question-${value.conversation_id}$`;
+      {hasQuestions
+        ? (
+          <Grid container spacing={2}>
+            <Grid item lg={12}>
+              <Divider
+                style={{
+                  marginTop: '10px',
+                  marginBottom: '30px',
+                  height: '2px',
+                  backgroundColor: 'black',
+                }}
+              />
+              <Box align="left">
+                Select one Question to Ask:
+                <List>
+                  {conversations.map((value) => {
+                    const labelId = `question-${value.conversation_id}$`;
 
-                return (
-                  <ListItem
-                    alignItems="center"
-                    key={value.conversation_id}
-                    role="listitem"
-                    disabled={questionAnswered}
-                    button
-                    onClick={handleToggle(value.conversation_id)}
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        color="primary"
-                        checked={selectedConversation === value.conversation_id}
-                      />
-                    </ListItemIcon>
-                    <ListItemText id={labelId} primary={value.question} />
-                  </ListItem>
-                );
-              })}
-            </List>
-            <Button
-              align="left"
-              style={{ marginTop: '15px', marginBottom: '25px' }}
-              disabled={selectedConversation === -1 || questionAnswered}
-              variant="outlined"
-              size="medium"
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Select
-            </Button>
-          </Box>
-
-          <Box fontWeight={500}>Response</Box>
-          <Box p={2} className={classes.textBox}>
-            {answer}
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid item style={{ marginLeft: '0rem', marginTop: '1rem' }}>
-        {!questionAnswered ? (
+                    return (
+                      <ListItem
+                        alignItems="center"
+                        key={value.conversation_id}
+                        role="listitem"
+                        disabled={questionAnswered}
+                        button
+                        onClick={handleToggle(value.conversation_id)}
+                      >
+                        <ListItemIcon>
+                          <Checkbox
+                            color="primary"
+                            checked={selectedConversation === value.conversation_id}
+                          />
+                        </ListItemIcon>
+                        <ListItemText id={labelId} primary={value.question} />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+                <Button
+                  align="left"
+                  style={{ marginTop: '15px', marginBottom: '25px' }}
+                  disabled={selectedConversation === -1 || questionAnswered}
+                  variant="outlined"
+                  size="medium"
+                  color="primary"
+                  onClick={handleSubmit}
+                >
+                  Select
+                </Button>
+              </Box>
+              <Box fontWeight={500}>Response</Box>
+              <Box p={2} className={classes.textBox}>
+                {answer}
+              </Box>
+            </Grid>
+          </Grid>
+        )
+        : null }
+      <Grid item style={{ marginLeft: '0rem', marginTop: '1rem', marginBottom: '1rem' }}>
+        {!questionAnswered && hasQuestions ? (
           <Typography display="block" variant="subtitle" color="error">
             You must select one question to ask the stakeholder before you can
             return.
@@ -229,7 +236,7 @@ export default function Conversation({
         <Button
           variant="contained"
           color="primary"
-          disabled={!questionAnswered}
+          disabled={!questionAnswered && hasQuestions}
           onClick={goToStakeholders}
         >
           Return
