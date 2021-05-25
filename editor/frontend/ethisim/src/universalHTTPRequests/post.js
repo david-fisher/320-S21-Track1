@@ -16,7 +16,7 @@ export default function universalPost(
     error: null,
   });
   axios
-    .post(baseURL + endpoint, requestBody)
+    .post(baseURL + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

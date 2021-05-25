@@ -15,7 +15,7 @@ export default function universalFetch(
     error: null,
   });
   axios
-    .get(baseURL + endpoint)
+    .get(baseURL + endpoint, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

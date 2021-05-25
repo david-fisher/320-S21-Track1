@@ -14,7 +14,7 @@ export default function universalPut(
     error: null,
   });
   axios
-    .put(baseURL + endpoint, requestBody)
+    .put(baseURL + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

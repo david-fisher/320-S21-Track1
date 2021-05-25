@@ -14,7 +14,7 @@ export default function universalDelete(
     error: null,
   });
   axios
-    .delete(BACK_URL + endpoint, requestBody)
+    .delete(BACK_URL + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,
