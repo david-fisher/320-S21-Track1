@@ -32,3 +32,6 @@ hs_err_pid*
 apache_server/localhost-shibboleth/
 
 *.pyc
+
+node_modules/**
+.eslintcache

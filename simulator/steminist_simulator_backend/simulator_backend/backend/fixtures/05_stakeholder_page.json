@@ -1,382 +1,382 @@
 [
-    {
-        "model": "backend.Page",
-        "pk": 6000,
-        "fields": {
-            "page_type": "STAKEHOLDERPAGE",
-            "page_title": "Stakeholder Page",
-            "version_id": 1000,
-            "body": "",
-            "next_page": 7000,
-            "x_coordinate": 0,
-            "y_coordinate": 0
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 1000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Justin",
-            "description": "Your supervisor assigns you to the project and convinces you to work on it by telling you that the project will benefit your career, you will receive a bonus, and you will be working on a revolutionary project.",
-            "job": "Your supervisor",
-            "introduction": "Justin is your manager and the person that put you on this project. He trusts you and puts you in charge of this revolutionary project which will benefit your career. You don’t want to let him down.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 4000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Jay",
-            "description": "Your parent shows you both aspects of working on this project ie. if it goes well, it’ll benefit your career and if it goes badly it’ll impact your career.",
-            "job": "your Parent",
-            "introduction": "Jay is a loving parent with whom you have a very strong bond. Jordan was a strong supporter as you went through college, and is now very proud of how hard you work, and how well you have succeeded.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 2000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Nora",
-            "description": "Marketing team for the company writes several articles about how the new product will lead to increase in public safety, decrease in traffic and accidents, increase in accessibility to those who cannot drive.",
-            "job": "Head of Marketing at you company",
-            "introduction": "Nora, the head of marketing at you company, is planning on having a press release to unveil to the world the new product your team is working on. She will highlight all the safety, and convenience benefits of an autonomous car.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 3000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Maria Rachel",
-            "description": "Draft up documents freeing company and employee from responsibility if a death occurs either because of a flaw in the algorithm or if the car has to make a split-second decision between saving passenger or pedestrian (in fine print of terms and conditions when buying the car)",
-            "job": "Corporate Lawyer",
-            "introduction": "Rachel is one of the Company’s lawyers, and her job is to save the company from any legal troubles. If any employee or product might be a part of a lawsuit, it is Rachel’s responsibility. Maria is known for being honest and professional and has a good grasp of public perception of the company.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 5000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Allie",
-            "description": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
-            "job": "Pessimistic ML specialist",
-            "introduction": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
-            "photopath": ""
-        }
-    },
-    {
-        "model": "backend.Stakeholder",
-        "pk": 6000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Daphne",
-            "description": "This optimistic ML specialist tells you how revolutionary this level 4 autonomous car technology will be and the immense benefit to the public.",
-            "job": "Optimistic ML specialist",
-            "introduction": "Daphne has had long experience in applying ML to practical problems. She is a consultant to your project, and is very enthusiastic about it. She is very eager to help and has a great knowledge of the products currently being sold.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 7000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Eilat",
-            "description": "This gung-ho employee is all for the project and praises the fact that it’ll lead to public safety and convenience. He tells you that you are working on a revolutionary project that will lead to benefits to not only you but also the company",
-            "job": "Pro Project Co-worker",
-            "introduction": "This gung-ho employee is all for the project and is full of praises for the benefits this project will have to the public. They are extremely excited to work on this revolutionary project that will propel their career forward.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 8000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Chris",
-            "description": "This maverick employee talks about how the failure in this project would ruin your career and the company’s image. Small flaws could have terrible consequences, even killing either the pedestrian or passenger in the car.",
-            "job": "Against Project Co-worker",
-            "introduction": "Chris has worked for the company for several years and has built a reputation for having strong opinions. Chris is respected for being very smart and very productive, but Chris does not hesitate to be critical of other employees and of the company, even if that can be disruptive. He talks about a few of the reasons he decided not to work on this particular project.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 9000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Jane",
-            "description": "This consumer is very excited about this fascinating project and its contributions to public safety and convenience and the cool technology that it comes with.",
-            "job": "Excited consumer",
-            "introduction": "Jane is a tech savvy lady in her middle 30s, always on the lookout for new products being launched in tech industry. Jane also got into a car accident a few years ago and it seems like Jane would be someone interested in exploring the different features of the autonomous car.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 10000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "Anjana",
-            "description": "This sceptical consumer mentions how even a small flaw could lead to catastrophic flaws and maybe even death. They’ve heard the product is being created in 3 years and don’t know if that time frame is good enough for a project that has this much advanced technology.",
-            "job": "Sceptical consumer",
-            "introduction": "Anjana is a consumer who has used a semi-autonomous car in the past. Her negative experience with that product has caused her to have a sceptical view towards self-driving technology.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Stakeholder",
-        "pk": 11000,
-        "fields": {
-            "version_id": 1000,
-            "scenario_id": 1000,
-            "name": "James",
-            "description": "This “paranoid” consumer is afraid to have a vehicle like this out in the public. The car has to make split second decisions to save either the passenger or the pedestrian crossing the street illegally. And if someone is killed, nobody will be held accountable. This consumer will not only never sit in a car like this, they hope that cars like this are never created.",
-            "job": " Paranoid consumer",
-            "introduction": "James is one of the consumers in a product use testing experiment. In the experiment he makes it clear that he will never use a self-driving car and hopes it is never created.",
-            "photopath": ""
-        }
-    },
-	{
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 8000,
-            "stakeholder_id": 11000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 9000,
-            "stakeholder_id": 11000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 4000,
-            "stakeholder_id": 9000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 5000,
-            "stakeholder_id": 9000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 10000,
-            "stakeholder_id": 8000,
-            "coverage_score": 0.4
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 11000,
-            "stakeholder_id": 8000,
-            "coverage_score": 0.4
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 6000,
-            "stakeholder_id": 8000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 7000,
-            "stakeholder_id": 8000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 8000,
-            "stakeholder_id": 8000,
-            "coverage_score": 0.3
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 1000,
-            "stakeholder_id": 7000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 2000,
-            "stakeholder_id": 7000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 3000,
-            "stakeholder_id": 7000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 4000,
-            "stakeholder_id": 7000,
-            "coverage_score": 0.3
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 5000,
-            "stakeholder_id": 7000,
-            "coverage_score": 0.3
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 2000,
-            "stakeholder_id": 6000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 4000,
-            "stakeholder_id": 6000,
-            "coverage_score": 0.3
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 5000,
-            "stakeholder_id": 6000,
-            "coverage_score": 0.3
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 6000,
-            "stakeholder_id": 5000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 7000,
-            "stakeholder_id": 5000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 1000,
-            "stakeholder_id": 4000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 10000,
-            "stakeholder_id": 4000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 8000,
-            "stakeholder_id": 3000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 9000,
-            "stakeholder_id": 3000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 4000,
-            "stakeholder_id": 2000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 5000,
-            "stakeholder_id": 2000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 1000,
-            "stakeholder_id": 1000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 2000,
-            "stakeholder_id": 1000,
-            "coverage_score": 0.5
-        }
-    },
-    {
-        "model": "backend.Coverage",
-        "fields": {
-            "issue_id": 3000,
-            "stakeholder_id": 1000,
-            "coverage_score": 0.3
-        }
+  {
+    "model": "backend.Page",
+    "pk": 6000,
+    "fields": {
+      "page_type": "STAKEHOLDERPAGE",
+      "page_title": "Stakeholder Page",
+      "version_id": 1000,
+      "body": "",
+      "next_page": 7000,
+      "x_coordinate": 0,
+      "y_coordinate": 0
     }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 1000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Justin",
+      "description": "Your supervisor assigns you to the project and convinces you to work on it by telling you that the project will benefit your career, you will receive a bonus, and you will be working on a revolutionary project.",
+      "job": "Your supervisor",
+      "introduction": "Justin is your manager and the person that put you on this project. He trusts you and puts you in charge of this revolutionary project which will benefit your career. You don’t want to let him down.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 4000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Jay",
+      "description": "Your parent shows you both aspects of working on this project ie. if it goes well, it’ll benefit your career and if it goes badly it’ll impact your career.",
+      "job": "your Parent",
+      "introduction": "Jay is a loving parent with whom you have a very strong bond. Jordan was a strong supporter as you went through college, and is now very proud of how hard you work, and how well you have succeeded.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 2000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Nora",
+      "description": "Marketing team for the company writes several articles about how the new product will lead to increase in public safety, decrease in traffic and accidents, increase in accessibility to those who cannot drive.",
+      "job": "Head of Marketing at you company",
+      "introduction": "Nora, the head of marketing at you company, is planning on having a press release to unveil to the world the new product your team is working on. She will highlight all the safety, and convenience benefits of an autonomous car.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 3000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Maria Rachel",
+      "description": "Draft up documents freeing company and employee from responsibility if a death occurs either because of a flaw in the algorithm or if the car has to make a split-second decision between saving passenger or pedestrian (in fine print of terms and conditions when buying the car)",
+      "job": "Corporate Lawyer",
+      "introduction": "Rachel is one of the Company’s lawyers, and her job is to save the company from any legal troubles. If any employee or product might be a part of a lawsuit, it is Rachel’s responsibility. Maria is known for being honest and professional and has a good grasp of public perception of the company.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 5000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Allie",
+      "description": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
+      "job": "Pessimistic ML specialist",
+      "introduction": "Allie is a machine learning specialist who helps developers make ethical decisions related to software design. In her publications, she focuses on the dangers of machine learning algorithms and how harmful poorly implemented solutions can be.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 6000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Daphne",
+      "description": "This optimistic ML specialist tells you how revolutionary this level 4 autonomous car technology will be and the immense benefit to the public.",
+      "job": "Optimistic ML specialist",
+      "introduction": "Daphne has had long experience in applying ML to practical problems. She is a consultant to your project, and is very enthusiastic about it. She is very eager to help and has a great knowledge of the products currently being sold.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 7000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Eilat",
+      "description": "This gung-ho employee is all for the project and praises the fact that it’ll lead to public safety and convenience. He tells you that you are working on a revolutionary project that will lead to benefits to not only you but also the company",
+      "job": "Pro Project Co-worker",
+      "introduction": "This gung-ho employee is all for the project and is full of praises for the benefits this project will have to the public. They are extremely excited to work on this revolutionary project that will propel their career forward.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 8000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Chris",
+      "description": "This maverick employee talks about how the failure in this project would ruin your career and the company’s image. Small flaws could have terrible consequences, even killing either the pedestrian or passenger in the car.",
+      "job": "Against Project Co-worker",
+      "introduction": "Chris has worked for the company for several years and has built a reputation for having strong opinions. Chris is respected for being very smart and very productive, but Chris does not hesitate to be critical of other employees and of the company, even if that can be disruptive. He talks about a few of the reasons he decided not to work on this particular project.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 9000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Jane",
+      "description": "This consumer is very excited about this fascinating project and its contributions to public safety and convenience and the cool technology that it comes with.",
+      "job": "Excited consumer",
+      "introduction": "Jane is a tech savvy lady in her middle 30s, always on the lookout for new products being launched in tech industry. Jane also got into a car accident a few years ago and it seems like Jane would be someone interested in exploring the different features of the autonomous car.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 10000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "Anjana",
+      "description": "This sceptical consumer mentions how even a small flaw could lead to catastrophic flaws and maybe even death. They’ve heard the product is being created in 3 years and don’t know if that time frame is good enough for a project that has this much advanced technology.",
+      "job": "Sceptical consumer",
+      "introduction": "Anjana is a consumer who has used a semi-autonomous car in the past. Her negative experience with that product has caused her to have a sceptical view towards self-driving technology.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Stakeholder",
+    "pk": 11000,
+    "fields": {
+      "version_id": 1000,
+      "scenario_id": 1000,
+      "name": "James",
+      "description": "This “paranoid” consumer is afraid to have a vehicle like this out in the public. The car has to make split second decisions to save either the passenger or the pedestrian crossing the street illegally. And if someone is killed, nobody will be held accountable. This consumer will not only never sit in a car like this, they hope that cars like this are never created.",
+      "job": " Paranoid consumer",
+      "introduction": "James is one of the consumers in a product use testing experiment. In the experiment he makes it clear that he will never use a self-driving car and hopes it is never created.",
+      "photopath": ""
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 8000,
+      "stakeholder_id": 11000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 9000,
+      "stakeholder_id": 11000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 4000,
+      "stakeholder_id": 9000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 5000,
+      "stakeholder_id": 9000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 10000,
+      "stakeholder_id": 8000,
+      "coverage_score": 0.4
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 11000,
+      "stakeholder_id": 8000,
+      "coverage_score": 0.4
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 6000,
+      "stakeholder_id": 8000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 7000,
+      "stakeholder_id": 8000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 8000,
+      "stakeholder_id": 8000,
+      "coverage_score": 0.3
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 1000,
+      "stakeholder_id": 7000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 2000,
+      "stakeholder_id": 7000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 3000,
+      "stakeholder_id": 7000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 4000,
+      "stakeholder_id": 7000,
+      "coverage_score": 0.3
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 5000,
+      "stakeholder_id": 7000,
+      "coverage_score": 0.3
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 2000,
+      "stakeholder_id": 6000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 4000,
+      "stakeholder_id": 6000,
+      "coverage_score": 0.3
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 5000,
+      "stakeholder_id": 6000,
+      "coverage_score": 0.3
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 6000,
+      "stakeholder_id": 5000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 7000,
+      "stakeholder_id": 5000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 1000,
+      "stakeholder_id": 4000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 10000,
+      "stakeholder_id": 4000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 8000,
+      "stakeholder_id": 3000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 9000,
+      "stakeholder_id": 3000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 4000,
+      "stakeholder_id": 2000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 5000,
+      "stakeholder_id": 2000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 1000,
+      "stakeholder_id": 1000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 2000,
+      "stakeholder_id": 1000,
+      "coverage_score": 0.5
+    }
+  },
+  {
+    "model": "backend.Coverage",
+    "fields": {
+      "issue_id": 3000,
+      "stakeholder_id": 1000,
+      "coverage_score": 0.3
+    }
+  }
 ]

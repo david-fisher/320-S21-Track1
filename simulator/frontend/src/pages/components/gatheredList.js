@@ -1,12 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, List, ListItem, ListItemText, Button, Box, Typography} from '@material-ui/core';
-import { GatheredInfoContext } from '../simulationWindow';
+import {
+  makeStyles,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Box,
+  Typography,
+} from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
-import InfoModal from './infoModal';
 import axios from 'axios';
+import { GatheredInfoContext } from '../simulationWindow';
+import InfoModal from './infoModal';
 import { ScenariosContext } from '../../Nav';
-import {BACK_URL, STUDENT_ID} from "../../constants/config";
+import { BACK_URL, STUDENT_ID } from '../../constants/config';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,89 +22,91 @@ const useStyles = makeStyles((theme) => ({
     height: 400,
     maxWidth: 300,
     backgroundColor: theme.palette.background.paper,
-    color: "#5b7f95"
-  }
+    color: '#5b7f95',
+  },
 }));
 
-
-export default function InfoGatheredList({pages}) {
+InfoGatheredList.propTypes = {
+  pages: PropTypes.array.isRequired,
+};
+export default function InfoGatheredList({ pages }) {
   const classes = useStyles();
 
-  const [showList, setShowContent] = React.useState(true);
+  const [showList, setShowContent] = useState(true);
   const toggleShow = () => {
-    setShowContent(show => !show);
+    setShowContent((show) => !show);
   };
 
   // const modalTitle = "Introduction";
   // const inputText = "Some Text 123";
 
-  let listContentById = {};
+  const listContentById = {};
   const [infos, setInfos] = useContext(GatheredInfoContext);
-  const [scenarios, setScenarios] = React.useContext(ScenariosContext);
+  const [scenarios, setScenarios] = useContext(ScenariosContext);
 
   /*  Retrieve the content to display for a given info button.
       If the info button onClick triggers an alert, this should be a string. If it's a modal popup, it should be html.
   */
   async function getListContent(info) {
     if (listContentById[info.id] === undefined) {
-      const mockHttpRequest = async () => { // Simulating async retrieval of data
+      const mockHttpRequest = async () => {
+        // Simulating async retrieval of data
         switch (info.id) {
           case 'p0':
-            return (<Typography>placeholder</Typography>);
+            return <Typography>placeholder</Typography>;
           case 'page':
             return axios({
               method: 'get',
-              url: BACK_URL + '/scenarios/task',
+              url: `${BACK_URL}/scenarios/task`,
               headers: {
                 studentID: STUDENT_ID,
-                scenarioID: scenarios.currentScenarioID
-              }
-            }).then(response => {
-              return response.data[0].body_text;
-            });
+                scenarioID: scenarios.currentScenarioID,
+              },
+            }).then((response) => response.data[0].body_text);
           default:
             if (info.id.startsWith('stakeholder:')) {
               return (
-              <Box>
-                <b>Occupation</b>
-                <Typography>{info.job}</Typography>
-                <br/>
-                <b>Description</b>
-                <Typography>{info.description}</Typography>
-              </Box>
+                <Box>
+                  <b>Occupation</b>
+                  <Typography>{info.job}</Typography>
+                  <br />
+                  <b>Description</b>
+                  <Typography>{info.description}</Typography>
+                </Box>
               );
             }
-            return (<Typography>default</Typography>);
+            return <Typography>default</Typography>;
         }
-      }
+      };
       return mockHttpRequest()
-        .then(res => {
+        .then((res) => {
           listContentById[info.id] = res;
           return res;
-        }).catch(err => console.error(err));
-    } else {
-      return listContentById[info.id];
+        })
+        .catch((err) => console.error(err));
     }
+    return listContentById[info.id];
   }
 
-  //changing variables as per screensize
+  // changing variables as per screensize
   const [height, width] = useWindowSize();
   const isSmall = width < 640;
-  const isMedium = width < 1024; //could also be 1007 instead of 1024 depending on standard used
-  const margin_left = isSmall? 1 : (isMedium ? 2 : 8);
-  const title_fontSize = isSmall? '8px' : (isMedium ? '12px' : '16px'); //use it later when making it suitable for medium and small sizes
+  const isMedium = width < 1024; // could also be 1007 instead of 1024 depending on standard used
+  const marginLeft = isSmall ? 1 : isMedium ? 2 : 8;
+  const titleFontSize = isSmall ? '8px' : isMedium ? '12px' : '16px'; // use it later when making it suitable for medium and small sizes
 
   return (
     <div className={classes.root}>
-      <Box mt = {6} ml = {'20%'}>
-        <Button onClick={toggleShow} 
-         color = "primary"
-         style = {{ fontSize: '16px'}}
-         disableRipple = "true"
-         >
-         Gathered Information
-         </Button>
-        {showList &&
+      <Box mt={6} ml="20%">
+        <Button
+          onClick={toggleShow}
+          color="primary"
+          style={{ fontSize: '16px' }}
+          disableRipple="true"
+        >
+          Gathered Information
+        </Button>
+        {showList && (
           <List>
             {/* {infos.filter(info => pages[info.pageId].visited).map(info => {
               return (
@@ -112,32 +122,32 @@ export default function InfoGatheredList({pages}) {
                 </ListItem>
               );
             })} */}
-            {infos.filter(info => pages[info.pageId].visited).map(info => {
-              return (
+            {infos
+              .filter((info) => pages[info.pageId].visited)
+              .map((info) => (
                 <ListItem key={info.id}>
-                  <InfoModal getContent={getListContent} info={info}/>
+                  <InfoModal getContent={getListContent} info={info} />
                 </ListItem>
-              );
-            })}
-          {/* <ListItem>
+              ))}
+            {/* <ListItem>
             <InfoModal inputText={inputText} modalTitle={modalTitle}/>
           </ListItem> */}
-          </List> 
-        }
-     </Box> 
+          </List>
+        )}
+      </Box>
     </div>
   );
 }
 
-function useWindowSize(){
+function useWindowSize() {
   const [size, setSize] = useState([window.innerHeight, window.innerWidth]);
-  useEffect(()=> {
-    const handleResize = () =>{
+  useEffect(() => {
+    const handleResize = () => {
       setSize([window.innerHeight, window.innerWidth]);
     };
-    window.addEventListener("resize", handleResize);
-    return ()=>{
-      window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
   return size;

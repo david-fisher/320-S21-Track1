@@ -1,222 +1,321 @@
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, { useState, createContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import {Grid, Typography, Box, Button} from "@material-ui/core";
-import Stepper from "./components/stepper.js";
-import InfoGatheredList from "./components/gatheredList.js";
-import Summary from "./summary.js";
-import Conclusion from "./conclusion.js";
-import Introduction from "./introduction.js";
-import ProjectAssignment from "./projectAssignment.js";
-import Reflection from "./reflection.js";
-import Action from "./action.js";
-import GatheredInformation from "./gatheredInformation.js";
-import Stakeholders from "./stakeholders.js";
-import Feedback from "./feedback.js";
-import Radar from "./radarPlot.js";
-import { ScenariosContext } from "../Nav.js";
-import axios from "axios";
-import {BACK_URL, STUDENT_ID, DEV_MODE, SCENARIO_ID} from "../constants/config";
-import { useParams } from 'react-router-dom';
+import { Grid, Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import Stepper from './components/stepper';
+import GenericPage from './genericPage';
+import Reflection from './reflection';
+import Action from './action';
+import Stakeholders from './stakeholders';
+import Feedback from './feedback';
+import { STUDENT_ID } from '../constants/config';
 import LoadingSpinner from './components/LoadingSpinner';
 import get from '../universalHTTPRequests/get';
 import post from '../universalHTTPRequests/post';
+import ErrorBanner from './components/Banners/ErrorBanner';
+import GlobalContext from '../Context/GlobalContext';
 
+const useStyles = makeStyles((theme) => ({
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+}));
 
 export const GatheredInfoContext = createContext();
 
-function SimulationWindow(props) {
+SimulationWindow.propTypes = {
+  location: PropTypes.any,
+};
+export default function SimulationWindow(props) {
+  const classes = useStyles();
   const location = useLocation();
 
+  const pathArray = location.pathname.split('/');
+  const scenarioID = props.location.data
+    ? props.location.data.version_id
+    : pathArray[pathArray.length - 2];
+  const firstPage = props.location.data
+    ? props.location.data.first_page
+    : pathArray[pathArray.length - 1];
+  const versionID = scenarioID;
 
-  let pathArray = location.pathname.split( '/' );
-  const scenario_id = props.location.data
-      ? props.location.data.version_id
-      : pathArray[pathArray.length - 2];
-  const first_page = props.location.data
-      ? props.location.data.first_page
-      : pathArray[pathArray.length - 1];
-  const version_id = scenario_id;
-
-  
-  const [activePage, setActivePage] = useState(first_page);
-  let numConversations = 0;
-  let sessionID = 1;
-  let initial_pages = {};
-  initial_pages[first_page] = { visited: true, completed: true, title: "Introduction", pageNumber: 1, html: (<Introduction version_id={version_id}/>) }
-  const [pages, setPages] = useState(initial_pages);
-
-  const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+version_id
-  const endpointGet = '/scenarios/task?versionId='+version_id+'&pageId='+activePage
-  const endpointGetMeta = '/scenarios?userId=' + STUDENT_ID
-  const infoIdsState = useState([]);
-  const [scenarios, setScenarios] = useContext(ScenariosContext);
-  const { id } = useParams();
-
-  // // Asynchronously initialize infoIdsState and scenarios
-  // useEffect(() => {
-  //   // placeholder async function until redux is set up
-  //   async function imitateGetCompleteStakeholders() { return [] };// {name: 'Stakeholder 0', id: 's0'}] }
-
-  //   imitateGetCompleteStakeholders().then(stakeholders => {
-  //     infoIdsState[1](ids => {
-  //       return [
-  //         ...stakeholders.map(stakeholder => {
-  //           stakeholder.pageId = 'stakeholders';
-  //           return stakeholder;
-  //         })
-  //       ];
-  //     });
-  //   });
-
-  //     axios({
-  //       method: 'get',
-  //       url: BACK_URL + 'scenarios?userId=' + STUDENT_ID
-  //     }).then(response => {
-  //       setScenarios(prev => {
-  //         return {
-  //           scenarioList: response.data.body,
-  //           currentScenarioID: id
+  const numConversations = props.location.data
+    ? props.location.data.num_conversations
+    : 3;
+  // eslint-disable-next-line
+  const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
+  const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
+  const [playerContext, setPlayerContext] = scenarioPlayerContext;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`;
+  const firstPageEndpoint = `/scenarios/task?versionId=${versionID}&pageId=${firstPage}`;
+  // eslint-disable-next-line
+  const endpointGetMeta = "/scenarios?userId=" + STUDENT_ID;
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
     loading: false,
     error: false,
   });
-  const [shouldFetch, setShouldFetch] = useState(0);
-
-   //Get next page
-   let getData = () => {
+  const getFirstPage = () => {
     function startSess(response) {
-      sessionID = response.data.result.sessionId;
+      setPlayerContext(() => ({
+        numConversations,
+        sessionID: response.data.result.sessionId,
+        activeIndex: 0,
+        pages: [],
+      }));
+      get(setFetchScenariosResponse, firstPageEndpoint, onFailure, onSuccess);
     }
     function onSuccess(response) {
-      let scen = response.data.result.filter(
-        (result) => result.version_id === scenario_id
+      const data = response.data.result[0];
+      const next = response.data.result[0].next_page;
+      const nextEndpoint = `/scenarios/task?versionId=${versionID}&pageId=${next}`;
+      const component = (
+        <GenericPage
+          isIntro
+          sessionID={sessionID}
+          pageTitle={data.page_title}
+          body={data.body}
+          getNextPage={getNextPage}
+          nextPageEndpoint={nextEndpoint}
+        />
       );
-      numConversations = scen[0].num_conversation;
-      console.log(scen[0].first_page);
-    }
-    function onSuccess1(response) {
-        let next = response.data.result[0].next_page;
-        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
-        get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2)
-    }
-    function onSuccess2(response) {
-      console.log(response.data)
-      let npage = response.data.result.map((data) => (
-        {
-          next: data.next_page,
-          type: data.page_type,
-          title: data.page_title,
-          id: data.page_id,
-        }
-      ));
-      let next_html = (<Introduction activePage={npage[0].id}/>);
-      if(npage[0].type === "PLAIN"){
-        next_html = (<ProjectAssignment version_id={scenario_id} prevPageID={activePage}/>);
-      } else if (npage[0].type === "REFLECTION"){
-        next_html = (<Reflection version_id={scenario_id} content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
-      } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders session_id={sessionID} version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next} numConversations={numConversations}/>);
-      } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action sessionId={sessionID} conversations={numConversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
-      } else if (npage[0].type === "CONCLUSION"){
-        next_html = (<Conclusion version_id={scenario_id} prevPageID={activePage}/>);
-      } else if (npage[0].type === "FEEDBACK"){
-        next_html = (<Feedback version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next}/>);
-      } else {
-        next_html = (<Reflection version_id={scenario_id} activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
-      }
-      let len = Object.keys(pages).length
-      let next_page = {
+      const newPage = {
         visited: false,
         completed: false,
-        title: npage[0].title,
-        pageNumber: len+1,
-        html: next_html
-      }
-      setPages((prevPages) => {
-        let copy = { ...prevPages };
-        copy[npage[0].id] = next_page;
-        return copy;
-      });
-      if(npage[0].next !== undefined){
-        let next = npage[0].next;
-        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
-        get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2);
-      }
+        id: data.page_id,
+        title: data.page_title,
+        pageEndpoint: firstPageEndpoint,
+        nextPageEndpoint: nextEndpoint,
+        component,
+      };
+      setPlayerContext((oldObj) => ({
+        ...oldObj,
+        pages: [...oldObj.pages, newPage],
+      }));
     }
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      setErrorBannerFade(true);
     }
-    post(setFetchScenariosResponse, (endpointSess), onFailure, startSess);
-    get(setFetchScenariosResponse, (endpointGetMeta), onFailure, onSuccess);
-    get(setFetchScenariosResponse, (endpointGet), onFailure, onSuccess1);
+    post(setFetchScenariosResponse, endpointSess, onFailure, startSess);
   };
 
-  useEffect(getData, [shouldFetch]);
+  function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
+    switch (type) {
+      case 'G':
+        return (
+          <GenericPage
+            isIntro={false}
+            pageTitle={data.page_title}
+            body={data.body}
+            getNextPage={getNextPage}
+            getPrevPage={getPrevPage}
+            nextPageEndpoint={nextPageEndpoint}
+            prevPageEndpoint={prevPageEndpoint}
+          />
+        );
+      case 'R':
+        return (
+          <Reflection
+            versionID={versionID}
+            pageID={data.page_id}
+            pageTitle={data.page_title}
+            body={data.body}
+            questions={data.questions}
+            getNextPage={getNextPage}
+            getPrevPage={getPrevPage}
+            nextPageEndpoint={nextPageEndpoint}
+            prevPageEndpoint={prevPageEndpoint}
+          />
+        );
+      case 'S':
+        return (
+          <Stakeholders
+            versionID={versionID}
+            pageID={data.page_id}
+            pageTitle={data.page_title}
+            body={data.body}
+            getNextPage={getNextPage}
+            getPrevPage={getPrevPage}
+            nextPageEndpoint={nextPageEndpoint}
+            prevPageEndpoint={prevPageEndpoint}
+          />
+        );
+      case 'A':
+        return (
+          <Action
+            sessionID={sessionID}
+            versionID={versionID}
+            pageID={data.page_id}
+            pageTitle={data.page_title}
+            body={data.body}
+            choices={data.choices}
+            choiceChosen={data.choiceChosen}
+            getNextPage={getNextPage}
+            getPrevPage={getPrevPage}
+            prevPageEndpoint={prevPageEndpoint}
+          />
+        );
+      case 'F':
+        return (
+          <Feedback
+            sessionID={sessionID}
+            versionID={versionID}
+            getPrevPage={getPrevPage}
+            prevPageEndpoint={prevPageEndpoint}
+          />
+        );
+      default:
+    }
+  }
 
-  // if (fetchScenariosResponse.loading || activePage === -1) {
-  //   return (
-  //     <div>
-  //       <div style={{ marginTop: '100px' }}>
-  //         <LoadingSpinner />
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  let getPrevPage = (prevPageEndpoint, pages) => {
+    function onSuccess(response) {
+      const data = response.data.result[0];
+      const indexInPages = pages.findIndex((obj) => obj.id === data.page_id);
+      setPlayerContext((oldObj) => ({
+        ...oldObj,
+        activeIndex: indexInPages,
+      }));
+    }
+
+    function onFailure() {
+      setErrorBannerMessage('Failed to get page! Please try again.');
+      setErrorBannerFade(true);
+    }
+
+    get(setFetchScenariosResponse, prevPageEndpoint, onFailure, onSuccess);
+  };
+
+  let getNextPage = (nextPageEndpoint, index, pages) => {
+    // Last page, show feedback page
+    if (!nextPageEndpoint) {
+      const component = getPageComponent(
+        'F',
+        null,
+        null,
+        pages[index].pageEndpoint,
+      );
+      const newPage = {
+        visited: false,
+        completed: false,
+        title: 'Feedback',
+        id: -1,
+        pageEndpoint: null,
+        nextPageEndpoint: null,
+        component,
+      };
+      const copy = [...pages, newPage];
+      copy[index].completed = true;
+      copy[index].visited = true;
+      setPlayerContext((oldObj) => ({
+        ...oldObj,
+        activeIndex: oldObj.activeIndex + 1,
+        pages: copy,
+      }));
+      return;
+    }
+
+    function onSuccess(response) {
+      const data = response.data.result[0];
+      const indexInPages = pages.findIndex((obj) => obj.id === data.page_id);
+      if (indexInPages === -1) {
+        const next = response.data.result[0].next_page;
+        const nextEndpoint = !next || next <= 0
+          ? null
+          : `/scenarios/task?versionId=${versionID}&pageId=${next}`;
+        const component = getPageComponent(
+          data.page_type,
+          data,
+          nextEndpoint,
+          pages[index].pageEndpoint,
+        );
+        const newPage = {
+          visited: false,
+          completed: false,
+          title: data.page_title,
+          id: data.page_id,
+          pageEndpoint: nextPageEndpoint,
+          nextPageEndpoint: nextEndpoint,
+          component,
+        };
+        const copy = [...pages, newPage];
+        copy[index].completed = true;
+        copy[index].visited = true;
+        setPlayerContext((oldObj) => ({
+          ...oldObj,
+          activeIndex: oldObj.activeIndex + 1,
+          pages: copy,
+        }));
+      } else {
+        setPlayerContext((oldObj) => ({
+          ...oldObj,
+          activeIndex: indexInPages,
+        }));
+      }
+    }
+
+    function onFailure(e) {
+      setErrorBannerMessage('Failed to get page! Please try again.');
+      setErrorBannerFade(true);
+    }
+
+    get(setFetchScenariosResponse, nextPageEndpoint, onFailure, onSuccess);
+  };
+
+  useEffect(getFirstPage, []);
+
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
+
+  if (fetchScenariosResponse.loading) {
+    return (
+      <div>
+        <div style={{ marginTop: '100px' }}>
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <Grid container direction="row" justify="center" alignItems="center">
-      </Grid>
+    <GlobalContext.Provider value={scenarioPlayerContext}>
+      <div className={classes.bannerContainer}>
+        <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
+      </div>
       <Grid container spacing={2}>
-        <GatheredInfoContext.Provider value={infoIdsState}>
-          <Grid item lg={3} md={2} sm={2}>
-            <Stepper activePage={activePage} pages={pages} setPages={setPages} setActivePage={setActivePage} key={activePage} />
-          </Grid>
-          <Grid item lg={6} md={8} sm={8}>
-            <Box mb={6} key={activePage}>
-              {React.cloneElement(pages[activePage].html, {
-                    pages: pages,
-                    setPages: setPages,
-                    activePage: activePage,
-                    setActivePage: setActivePage,
-                    version_id: scenario_id})}
-                    {/* first_page: props.location.data.first_page,
-                    nid: props.location.data.next */}
-            </Box>
-            {DEV_MODE && (
-              <Typography>
-                <br/>
-                {scenarios.scenarioList && scenarios.scenarioList.map(scenario => {
-                  return (<>
-                    {Object.keys(scenario).map(key => ((<>{key}: {scenario[key]}<br/></>)))}
-                    <Button variant="contained" disableElevation
-                    onClick={() => setScenarios(scenarios => {
-                      let newScenarios = {...scenarios};
-                      newScenarios.currentScenarioID = scenario.id;
-                      return newScenarios;
-                    })}>
-                      set as current scenario
-                    </Button>
-                    <br/> <br/>
-                  </>)
-                })}
-              </Typography>)}
-          </Grid>
+        {/* <GatheredInfoContext.Provider value={infoIdsState}> */}
+        <Grid item lg={3} md={2} sm={2}>
+          <Stepper setActivePage={getPrevPage} />
+        </Grid>
+        <Grid item lg={8} md={8} sm={8}>
+          <Box>
+            {playerContext.pages[playerContext.activeIndex]
+              && playerContext.pages[playerContext.activeIndex].component}
+          </Box>
+        </Grid>
+        {/*
           <Grid container item lg={3} md={2} sm={2}>
             <Grid item lg={12}>
-              <InfoGatheredList pages={pages}/>
+             <InfoGatheredList pages={pages}/>
             </Grid>
             <Grid item lg={12}>
-
             </Grid>
           </Grid>
         </GatheredInfoContext.Provider>
+        */}
       </Grid>
-    </div>
+    </GlobalContext.Provider>
   );
 }
-
-export default SimulationWindow;

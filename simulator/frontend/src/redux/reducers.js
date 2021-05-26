@@ -1,19 +1,19 @@
 import { combineReducers } from 'redux';
 
 const initialCompletedStakeholders = {
-    stakeholdersById: {},
-    stakeholderIds: []
-}
+  stakeholdersById: {},
+  stakeholderIds: [],
+};
 
 function completedStakeholders(state = initialCompletedStakeholders, action) {
-    switch (action.type) {
-        default:
-            return state
-    }
+  switch (action.type) {
+    default:
+      return state;
+  }
 }
 
 const playerReducer = combineReducers({
-    completedStakeholders
+  completedStakeholders,
 });
 
 export default playerReducer;

@@ -1,8 +1,4 @@
-import React from "react";
-import { DOMAIN } from './constants/config';
-import Summary from "./pages/summary";
-import Home from "./pages/home";
-
+import React from 'react';
 import {
   ThemeProvider,
   createMuiTheme,
@@ -12,28 +8,32 @@ import {
   Typography,
   Button,
   IconButton,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import SimulationWindow from "./pages/simulationWindow";
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import {
+  BrowserRouter as Router, Switch, Route, Link,
+} from 'react-router-dom';
+import Home from './pages/home';
+import SimulationWindow from './pages/simulationWindow';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    overflowX: 'hidden',
+    overflowY: 'hidden',
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    backgroundColor: "#ced4da",
+    backgroundColor: '#ced4da',
   },
   title: {
     flexGrow: 1,
-    color: "#FFF",
+    color: '#FFF',
   },
   link: {
-    "&:hover": {
-      color: "#000000",
-      textDecoration: "none",
+    '&:hover': {
+      color: '#000000',
+      textDecoration: 'none',
     },
   },
 }));
@@ -41,35 +41,18 @@ const useStyles = makeStyles((theme) => ({
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#881c1c",
+      main: '#881c1c',
     },
   },
   background: {
-    color: '#444e58'
-  }
+    color: '#444e58',
+  },
 });
-
-const menuItems = [
-  {
-    listText: "Home",
-    listPath: "/",
-  },
-  {
-    listText: "Summary",
-    listPath: "/summary",
-  },
-  {
-    listText: "Simulation Window",
-    listPath: "/simulation",
-  },
-];
 
 export const ScenariosContext = React.createContext();
 
-function Nav() {
+export default function Nav() {
   const classes = useStyles();
-  const scenariosState = React.useState({});
-  const landingPage = DOMAIN + ':3006';
 
   return (
     <div className={classes.root}>
@@ -84,7 +67,7 @@ function Nav() {
                   color="inherit"
                   aria-label="menu"
                 >
-                <MenuIcon />
+                  <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
                   <Link className={classes.link} to="/">
@@ -92,48 +75,30 @@ function Nav() {
                       Home
                     </Button>
                   </Link>
-
                 </Typography>
                 <Button
-
-                    onClick={() => window.location.href = '/Shibboleth.sso/Logout?return=/'}
-
-                    color="inherit">LogOut
-
+                  onClick={() => (window.location.href = '/Shibboleth.sso/Logout?return=/')}
+                  color="inherit"
+                >
+                  LogOut
                 </Button>
               </Toolbar>
             </AppBar>
 
-          {/* A <Switch> looks through its children <Route>s and
+            {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path="/" exact>
+            <Switch>
+              <Route path="/" exact>
                 <Home />
-            </Route>
-            <Route path="/summary" exact>
-              <Summary />
-            </Route>
-            {/* <Route path="/simulation/:id" exact>
-              <ScenariosContext.Provider value={scenariosState}>
-                <SimulationWindow />
-              </ScenariosContext.Provider>
-            </Route> */}
-            <Route
+              </Route>
+              <Route
                 path="/simulation/:id"
-                
-                render={(props) => 
-                <ScenariosContext.Provider value={scenariosState}>
-                  <SimulationWindow {...props} />
-                </ScenariosContext.Provider>}
-            />
-            <Route path="/chartTest" exact>
-            </Route>
-          </Switch>
+                render={(props) => <SimulationWindow {...props} />}
+              />
+            </Switch>
           </ThemeProvider>
         </div>
       </Router>
     </div>
   );
 }
-
-export default Nav;

@@ -1,10 +1,10 @@
 {
-  "name": "unethical-corp",
+  "name": "ethisim_simulator",
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
+    "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.9.1",
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -12,15 +12,17 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.0",
     "chart.js": "^2.9.4",
+    "dompurify": "^2.2.8",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
+    "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-redux": "^7.2.2",
+    "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
-    "redux": "^4.0.5",
-    "typescript": "^4.0.5"
+    "redux": "^4.1.0",
+    "typescript": "^4.2.4"
   },
   "proxy": "http://localhost:5000",
   "scripts": {
@@ -28,9 +30,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [

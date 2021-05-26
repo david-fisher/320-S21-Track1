@@ -1,0 +1,9 @@
++ husky@6.0.0
++ lint-staged@11.0.0
+added 68 packages from 39 contributors and audited 1850 packages in 22.909s
+
+110 packages are looking for funding
+  run `npm fund` for details
+
+found 82 vulnerabilities (81 moderate, 1 high)
+  run `npm audit fix` to fix them, or `npm audit` for details
