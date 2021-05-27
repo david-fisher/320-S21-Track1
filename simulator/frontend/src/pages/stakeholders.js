@@ -12,12 +12,13 @@ import {
   Avatar,
   Tab,
   Tabs,
+  DialogTitle,
 } from '@material-ui/core';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PropTypes from 'prop-types';
 import { STUDENT_ID } from '../constants/config';
 import Conversation from './conversation';
 import get from '../universalHTTPRequests/get';
-import './stakeholders.css';
 import GlobalContext from '../Context/GlobalContext';
 import GenericWarning from './components/GenericWarning';
 
@@ -71,17 +72,20 @@ function TabPanel(props) {
 const StyledTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
-    color: '#000',
+    color: 'white',
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(18),
-    backgroundColor: 'white',
+    backgroundColor: '#881c1c',
+    borderColor: 'black',
+    border: 'solid',
+    borderRadius: '2%',
     // backgroundColor: '#d9d9d9',
     '&:hover': {
-      backgroundColor: '#8c8c8c',
-      color: 'white',
+      backgroundColor: '#F7E7E7',
+      color: 'black',
       opacity: 1,
       selected: {
-        backgroundColor: '#8c8c8c',
+        backgroundColor: '#F7E7E7',
       },
     },
   },
@@ -107,7 +111,7 @@ const cardStyles = makeStyles({
   card: {
     width: 600,
     height: 125,
-    // wordBreak: 'break-word',
+    wordBreak: 'break-word',
     display: 'flex',
     borderRadius: '35px',
     '&:hover': {
@@ -140,10 +144,33 @@ const cardStyles = makeStyles({
     color: '#000000',
     marginTop: '10px',
     marginBottom: '2px',
+    wordBreak: 'break-word',
   },
   dialogJob: {
     color: '#881c1c',
     marginBottom: '15px',
+    wordBreak: 'break-word',
+  },
+  exitOutButton: {
+    marginLeft: 'auto',
+    float: 'right',
+  },
+  stakeholderContainer: {
+    width: '125px',
+    marginRight: '20px',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  stakeholderImg: {
+    height: '90px',
+    width: '90px',
+    left: '20px',
+  },
+  infoContainer: {
+    paddingTop: '10px',
+    marginLeft: '10px',
+    maxWidth: '400px',
   },
 });
 
@@ -362,23 +389,25 @@ export default function Stakeholders({
         >
           <Paper elevation={2} className={cardClass}>
             <div
+              className={classes.stakeholderContainer}
               id="stakeholder-container"
               style={{ display: 'flex', justifyContent: 'center' }}
             >
               <Avatar
+                className={classes.stakeholderImg}
                 id="stakeholder-img"
                 alt="Stakeholder Photo"
                 src={photo}
               />
             </div>
-            <div id="info-container" style={{ flex: 1 }}>
+            <div id="info-container" className={classes.infoContainer} style={{ flex: 1 }}>
               <Box
                 fontSize="20px"
                 fontWeight="fontWeightBold"
                 className={nameClass}
                 align="left"
               >
-                <Typography variant="h5">
+                <Typography variant="h5" noWrap>
                   {name}
                 </Typography>
               </Box>
@@ -387,7 +416,7 @@ export default function Stakeholders({
                 className={jobClass}
                 align="left"
               >
-                <Typography variant="h5">
+                <Typography variant="h5" noWrap>
                   {job}
                 </Typography>
               </Box>
@@ -405,6 +434,24 @@ export default function Stakeholders({
           maxWidth="sm"
           fullWidth
         >
+          <DialogTitle disableTypography style={{ display: 'flex' }}>
+            <Typography
+              variant="h5"
+              align="center"
+              component="div"
+              style={{ display: 'flex' }}
+            >
+              {`Biography of ${name}`}
+            </Typography>
+            <Button
+              className={classes.exitOutButton}
+              variant="contained"
+              color="primary"
+              onClick={() => toggleModal(id, false)}
+            >
+              <HighlightOffIcon />
+            </Button>
+          </DialogTitle>
           <DialogContent>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Avatar
@@ -431,11 +478,20 @@ export default function Stakeholders({
               {job}
             </Box>
             <div dangerouslySetInnerHTML={{ __html: description }} />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={
+              {
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '1rem',
+                marginBottom: '1rem',
+              }
+            }
+            >
               <Button
                 disabled={stakeholdersDisabled[id]}
                 variant="contained"
                 onClick={onClickStakeholder}
+                color="primary"
               >
                 Speak to
                 {' '}

@@ -12,6 +12,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { GenericPageHelpInfo } from './GenericPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
+import HTMLPreview from '../HTMLPreview';
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -212,6 +213,7 @@ export default function Generic(props) {
           Unsaved
         </Typography>
       ) : null}
+      <HTMLPreview title={title} body={bodyText} />
       <Title
         title={title}
         setTitle={setTitle}

@@ -14,6 +14,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { ActionPageHelpInfo } from './ActionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
+import HTMLPreview from '../HTMLPreview';
 
 Action.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -31,6 +32,7 @@ Action.propTypes = {
   yCoord: PropTypes.any,
   choice1: PropTypes.any,
   choice2: PropTypes.any,
+  choices: PropTypes.array,
   r1: PropTypes.any,
   r2: PropTypes.any,
 };
@@ -78,6 +80,7 @@ export default function Action(props) {
     body,
     choice1,
     choice2,
+    choices,
     xCoord,
     yCoord,
   } = props;
@@ -99,7 +102,7 @@ export default function Action(props) {
   const [bodyText, setBodyText] = useState(body);
   const [option1, setOption1] = useState(choice1);
   const [option2, setOption2] = useState(choice2);
-
+  const [actions, setActions] = useState(choices);
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState(false);
   const [errorBody, setErrorBody] = useState(false);
@@ -223,11 +226,17 @@ export default function Action(props) {
   const onChangeOption1 = (event) => {
     setGlobalUnsaved(true);
     setOption1(event.target.value);
+    const copy = [...actions];
+    copy[0].CHOICE = event.target.value;
+    setActions(copy);
   };
 
   const onChangeOption2 = (event) => {
     setGlobalUnsaved(true);
     setOption2(event.target.value);
+    const copy = [...actions];
+    copy[1].CHOICE = event.target.value;
+    setActions(copy);
   };
 
   const savePage = () => {
@@ -284,6 +293,7 @@ export default function Action(props) {
           Unsaved
         </Typography>
       ) : null}
+      <HTMLPreview title={title} body={bodyText} choices={actions} />
       <Title
         title={title}
         setTitle={setTitle}

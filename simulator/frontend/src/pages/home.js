@@ -98,18 +98,20 @@ const StyledTab = withStyles((theme) => ({
     backgroundColor: 'white',
     // backgroundColor: '#d9d9d9',
     '&:hover': {
-      backgroundColor: '#8c8c8c',
-      color: 'white',
+      backgroundColor: '#F7E7E7',
+      color: 'black',
       opacity: 1,
       selected: {
-        backgroundColor: '#8c8c8c',
+        backgroundColor: '#F7E7E7',
       },
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
 
 const StyledTabs = withStyles({
-  root: {},
+  root: {
+
+  },
 
   indicator: {
     display: 'flex',
@@ -311,20 +313,9 @@ export default function Home() {
                 >
                   Select Scenario
                 </Button>
-                {/* <Button onClick={() => {
-                  changeID(scenario.version_id)
-                  //TEMPORARY SOLUTION
-                  window.location.href="/simulation";
-                }} className={classes.button}>Select Scenario</Button> */}
-                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
           ))}
-          {/* <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
-            <Box m={2} pt={3}>
-              <CodeButton />
-            </Box>
-          </Grid> */}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>

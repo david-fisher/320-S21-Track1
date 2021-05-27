@@ -32,7 +32,7 @@ export default function QuestionField({
     setQuestionValue(event.target.value);
     const listOfQuestions2 = [...listOfQuestions];
     for (let i = 0; i < listOfQuestions2.length; i++) {
-      if (listOfQuestions2[i].id === id) {
+      if (listOfQuestions2[i].RQ_ID === id) {
         listOfQuestions2[i].REFLECTION_QUESTION = event.target.value;
       }
     }

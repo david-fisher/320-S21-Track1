@@ -23,6 +23,8 @@ import GenericUnsavedWarning from '../../../WarningDialogs/GenericUnsavedWarning
 import get from '../../../../universalHTTPRequests/get';
 import put from '../../../../universalHTTPRequests/put';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import HTMLPreview from '../../HTMLPreview';
+import StakeholderPreview from '../StakeholderPreview';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -621,6 +623,10 @@ export default function Stakeholder({
             View Questions
           </Button>
         </div>
+
+        <div id="stakeholderPreview">
+          <StakeholderPreview id={id} name={name} job={job} bio={bio} mainConvo={mainConvo} photo={photo} />
+        </div>
       </div>
 
       <Dialog
@@ -654,7 +660,7 @@ export default function Stakeholder({
                 color="primary"
                 onClick={saveStakeholders}
                 className={classes.button}
-                style={{ marginRight: '10px' }}
+                style={{ marginRight: '20px' }}
               >
                 Save
               </Button>
@@ -690,6 +696,7 @@ export default function Stakeholder({
               error={errorBody}
               errorMessage="Stakeholder biography cannot be empty"
             />
+            <HTMLPreview dialogTitle="HTML Preview" body={bio} />
           </DialogContent>
         </div>
       </Dialog>
@@ -725,7 +732,7 @@ export default function Stakeholder({
                 color="primary"
                 onClick={saveStakeholders}
                 className={classes.button}
-                style={{ marginRight: '30px' }}
+                style={{ marginRight: '50px' }}
               >
                 Save
               </Button>
@@ -761,6 +768,7 @@ export default function Stakeholder({
               error={errorBody}
               errorMessage="Stakeholder biography cannot be empty"
             />
+            <HTMLPreview dialogTitle="HTML Preview" body={mainConvo} />
           </DialogContent>
         </div>
       </Dialog>
@@ -787,7 +795,7 @@ export default function Stakeholder({
             component="div"
             style={{ display: 'flex' }}
           >
-            Stakeholder Questions and Answers
+            {`${name} Questions and Answers`}
           </Typography>
           <Button
             className={classes.exitOutButton}
@@ -839,7 +847,7 @@ export default function Stakeholder({
             component="div"
             style={{ display: 'flex' }}
           >
-            Stakeholder Questions and Answers
+            {`${name} Issue Coverage`}
           </Typography>
           <Button
             className={classes.exitOutButton}

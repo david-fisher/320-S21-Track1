@@ -148,7 +148,8 @@ export default function Reflection({
   const classes = useStyles();
 
   const [savedAnswers, setSavedAnswers] = React.useState(false);
-
+  // variables to show error if not all reflection questions are answered
+  const [errorName, setErrorName] = useState(false);
   // MAKE API CALL
   const [reflection, setReflection] = useState(questions);
 
@@ -174,6 +175,11 @@ export default function Reflection({
       body: reflection.prompts,
     };
 
+    if (reflection.some(({ response }) => !response || !response.trim())) {
+      setErrorName(true);
+      return;
+    }
+    setErrorName(false);
     // TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
     setSavedAnswers(true);
   };
@@ -183,9 +189,10 @@ export default function Reflection({
 
   const updateResponse = (e, id) => {
     setReflection((prev) => {
-      for (let i = 0; i < questions.length; ++i) {
-        if (questions[i].id === id) {
-          questions[i].response = e.target.value;
+      for (let i = 0; i < prev.length; ++i) {
+        if (prev[i].id === id) {
+          prev[i].response = e.target.value;
+          console.log(prev[i].response);
           break;
         }
       }
@@ -239,6 +246,16 @@ export default function Reflection({
       </Grid>
 
       <Grid container style={{ width: '100%' }}>
+        {errorName ? (
+          <Typography
+            style={{ }}
+            variant="h6"
+            align="center"
+            color="error"
+          >
+            You must answer all questions!
+          </Typography>
+        ) : null}
         <Grid item style={{ width: '100%' }}>
           {questions.map((prompt) => (
             <Box m="2rem" p={1} className={classes.textBox} key={prompt.id}>

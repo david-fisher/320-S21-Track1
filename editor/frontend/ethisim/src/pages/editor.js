@@ -398,6 +398,7 @@ export default function Editor(props) {
           r2: currPageInfo.CHOICES[1]
             ? currPageInfo.CHOICES[1].RESULT_PAGE
             : null,
+          choices: currPageInfo.CHOICES,
           xCoord: currPageInfo.X_COORDINATE,
           yCoord: currPageInfo.Y_COORDINATE,
           created: false,

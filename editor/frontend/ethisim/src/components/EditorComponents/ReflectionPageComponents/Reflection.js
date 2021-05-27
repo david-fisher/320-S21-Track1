@@ -13,6 +13,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { ReflectionPageHelpInfo } from './ReflectionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
+import HTMLPreview from '../HTMLPreview';
 
 Reflection.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -74,12 +75,13 @@ export default function Reflection(props) {
     loading: false,
     error: null,
   });
+
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
   const [bodyText, setBodyText] = useState(body);
   const [questions, setQuestions] = useState(reflection_questions);
   const [questionsForReqBody, setQuestionsForReqBody] = useState(
-    questions.map((a) => ({ REFLECTION_QUESTION: a.REFLECTION_QUESTION })),
+    reflection_questions.map((a) => ({ REFLECTION_QUESTION: a.REFLECTION_QUESTION })),
   );
 
   const [errorTitle, setErrorTitle] = useState(false);
@@ -260,6 +262,7 @@ export default function Reflection(props) {
           Unsaved
         </Typography>
       ) : null}
+      <HTMLPreview title={title} body={bodyText} questions={questions} />
       <Title
         title={title}
         setTitle={setTitle}

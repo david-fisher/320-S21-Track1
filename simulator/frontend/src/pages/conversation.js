@@ -201,7 +201,7 @@ export default function Conversation({
                             checked={selectedConversation === value.conversation_id}
                           />
                         </ListItemIcon>
-                        <ListItemText id={labelId} primary={value.question} />
+                        <ListItemText id={labelId} primary={value.question} style={{ wordBreak: 'break-word' }} />
                       </ListItem>
                     );
                   })}
@@ -218,7 +218,11 @@ export default function Conversation({
                   Select
                 </Button>
               </Box>
-              <Box fontWeight={500}>Response</Box>
+              <Box fontWeight={500}>
+                <Typography variant="h6">
+                  Response
+                </Typography>
+              </Box>
               <Box p={2} className={classes.textBox}>
                 {answer}
               </Box>
