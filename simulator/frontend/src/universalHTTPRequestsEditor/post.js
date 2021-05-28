@@ -1,7 +1,9 @@
 import axios from 'axios';
-import { BACK_URL } from '../constants/config';
-// Universal put request using axios
-export default function universalPut(
+
+import { BACK_URL_EDITOR } from '../constants/config';
+
+// Universal fetch request using axios
+export default function universalPost(
   setResponse,
   endpoint,
   onError,
@@ -14,7 +16,7 @@ export default function universalPut(
     error: null,
   });
   axios
-    .put(BACK_URL + endpoint, requestBody, { withCredentials: true })
+    .post(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

@@ -2,6 +2,7 @@ import React from 'react';
 import { Handle } from 'react-flow-renderer';
 
 export function actionNode({ data }) {
+  const { label, actions } = data;
   return (
     <>
       <Handle
@@ -9,19 +10,16 @@ export function actionNode({ data }) {
         position="top"
         onConnect={(params) => console.log('handle onConnect', params)}
       />
-      {data.label}
-      <Handle
-        type="source"
-        position="bottom"
-        id="a"
-        style={{ left: '20%' }}
-      />
-      <Handle
-        type="source"
-        position="bottom"
-        id="b"
-        style={{ left: '80%' }}
-      />
+      {label}
+      {actions.map((obj, index) => (
+        <Handle
+          key={index + 1}
+          type="source"
+          position="bottom"
+          id={index + 1}
+          style={{ left: `${100 - (100 / (actions.length + 1)) * (index + 1)}%` }}
+        />
+      ))}
     </>
   );
 }

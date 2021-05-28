@@ -16,8 +16,8 @@ import {
   Checkbox,
 } from '@material-ui/core';
 import { STUDENT_ID } from '../constants/config';
-import get from '../universalHTTPRequests/get';
-import post from '../universalHTTPRequests/post';
+import get from '../universalHTTPRequestsEditor/get';
+import post from '../universalHTTPRequestsEditor/post';
 
 const TextTypography = withStyles({
   root: {
@@ -58,11 +58,10 @@ export default function Conversation({
   }
 
   const [answer, setAnswer] = useState('');
-  const [questionAnswered, setQuestionAnswered] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(-1);
   const [hasQuestions, setHasQuestions] = useState(false);
-  const endpointGet = `/scenarios/conversation/page?versionId=${versionID}&scenarioId=${versionID}&stakeholderId=${stakeholder.id}`;
+  const endpointGet = `/api/conversations/?STAKEHOLDER=${stakeholder.id}`;
   // eslint-disable-next-line
   const [fetchConversationResponse, setFetchConversationResponse] = useState({
     data: null,
@@ -75,27 +74,26 @@ export default function Conversation({
   const getData = () => {
     function onSuccess(response) {
       console.log(response);
-      setConversations(response.data.result[1]);
+      setConversations(response.data);
       setHasQuestions(true);
     }
 
     function onFailure(err) {
       // TODO stakeholder does not have questions
-      setQuestionAnswered(true);
       setHasQuestions(false);
     }
     get(setFetchConversationResponse, endpointGet, onFailure, onSuccess);
   };
 
+  // TODO
   const checkQuestionAnswered = () => {
     const endpoint = `/scenarios/conversation/had?versionId=${versionID}&stakeholderId=${stakeholder.id}&userId=${STUDENT_ID}`;
 
     function onSuccess(response) {
       if (response.data.message === 'succes') {
         // Yes, there is a typo in the endpoint.
-        setQuestionAnswered(true);
-        setSelectedConversation(response.data.result[0].conversation_id);
-        setAnswer(response.data.result[0].conversation_response);
+        setSelectedConversation(response.data.result[0].CONVERSATION);
+        setAnswer(response.data.result[0].RESPONSE);
       }
     }
 
@@ -103,16 +101,17 @@ export default function Conversation({
       console.log('Error');
     }
 
-    get(setFetchConversationResponse, endpoint, onFailure, onSuccess);
+    // get(setFetchConversationResponse, endpoint, onFailure, onSuccess);
   };
 
   useEffect(getData, [shouldFetch]);
   useEffect(checkQuestionAnswered, [shouldFetch]);
 
+  // TODO
   const postData = () => {
     function onSuccess(response) {
       console.log(response);
-      setAnswer(response.data.result.conversation_response);
+      setAnswer(response.data.result.RESPONSE);
     }
 
     function onFailure(err) {
@@ -121,9 +120,9 @@ export default function Conversation({
 
     const endpointPost = `/scenarios/conversation?versionId=${versionID}&scenarioId=${versionID}&stakeholderId=${stakeholder.id}&conversationId=${selectedConversation}&sessionId=${sessionID}`;
 
-    post(setFetchConversationResponse, endpointPost, onFailure, onSuccess, {
-      already_exist: true,
-    });
+    // post(setFetchConversationResponse, endpointPost, onFailure, onSuccess, {
+    //  already_exist: true,
+    // });
     setSelectedConversation(-1);
   };
 
@@ -132,8 +131,9 @@ export default function Conversation({
   };
 
   const handleSubmit = () => {
-    postData();
-    setQuestionAnswered(true);
+    setAnswer(conversations.filter((obj) => obj.CONVERSATION === selectedConversation)[0].RESPONSE);
+    // postData();
+    // setQuestionAnswered(true);
   };
 
   return (
@@ -181,27 +181,25 @@ export default function Conversation({
                 }}
               />
               <Box align="left">
-                Select one Question to Ask:
                 <List>
                   {conversations.map((value) => {
-                    const labelId = `question-${value.conversation_id}$`;
+                    const labelId = `question-${value.CONVERSATION}$`;
 
                     return (
                       <ListItem
                         alignItems="center"
-                        key={value.conversation_id}
+                        key={value.CONVERSATION}
                         role="listitem"
-                        disabled={questionAnswered}
                         button
-                        onClick={handleToggle(value.conversation_id)}
+                        onClick={handleToggle(value.CONVERSATION)}
                       >
                         <ListItemIcon>
                           <Checkbox
                             color="primary"
-                            checked={selectedConversation === value.conversation_id}
+                            checked={selectedConversation === value.CONVERSATION}
                           />
                         </ListItemIcon>
-                        <ListItemText id={labelId} primary={value.question} style={{ wordBreak: 'break-word' }} />
+                        <ListItemText id={labelId} primary={value.QUESTION} style={{ wordBreak: 'break-word' }} />
                       </ListItem>
                     );
                   })}
@@ -209,7 +207,7 @@ export default function Conversation({
                 <Button
                   align="left"
                   style={{ marginTop: '15px', marginBottom: '25px' }}
-                  disabled={selectedConversation === -1 || questionAnswered}
+                  disabled={selectedConversation === -1}
                   variant="outlined"
                   size="medium"
                   color="primary"
@@ -231,16 +229,9 @@ export default function Conversation({
         )
         : null }
       <Grid item style={{ marginLeft: '0rem', marginTop: '1rem', marginBottom: '1rem' }}>
-        {!questionAnswered && hasQuestions ? (
-          <Typography display="block" variant="subtitle" color="error">
-            You must select one question to ask the stakeholder before you can
-            return.
-          </Typography>
-        ) : null}
         <Button
           variant="contained"
           color="primary"
-          disabled={!questionAnswered && hasQuestions}
           onClick={goToStakeholders}
         >
           Return

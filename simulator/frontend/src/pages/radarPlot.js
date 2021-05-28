@@ -17,7 +17,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { STUDENT_ID } from '../constants/config';
-import get from '../universalHTTPRequests/get';
+import get from '../universalHTTPRequestsEditor/get';
 
 // eslint-disable-next-line
 const TextTypography = withStyles({

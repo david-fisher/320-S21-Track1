@@ -15,6 +15,7 @@ import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { ActionPageHelpInfo } from './ActionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
+import Choice from './Choice';
 
 Action.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -30,11 +31,7 @@ Action.propTypes = {
   bodies: PropTypes.any,
   xCoord: PropTypes.any,
   yCoord: PropTypes.any,
-  choice1: PropTypes.any,
-  choice2: PropTypes.any,
   choices: PropTypes.array,
-  r1: PropTypes.any,
-  r2: PropTypes.any,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -78,8 +75,6 @@ export default function Action(props) {
     scenario_ID,
     next_page_id,
     body,
-    choice1,
-    choice2,
     choices,
     xCoord,
     yCoord,
@@ -100,16 +95,11 @@ export default function Action(props) {
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
   const [bodyText, setBodyText] = useState(body);
-  const [option1, setOption1] = useState(choice1);
-  const [option2, setOption2] = useState(choice2);
-  const [actions, setActions] = useState(choices);
+  const [choicesArr, setChoicesArr] = useState(choices);
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState(false);
   const [errorBody, setErrorBody] = useState(false);
-  const [errorOption1, setErrorOption1] = useState(false);
-  const [errorOption1Text, setErrorOption1Text] = useState(false);
-  const [errorOption2, setErrorOption2] = useState(false);
-  const [errorOption2Text, setErrorOption2Text] = useState(false);
+  const [errorChoices, setErrorChoices] = useState(false);
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
   const postReqBody = {
@@ -119,10 +109,7 @@ export default function Action(props) {
     PAGE_BODY: bodyText,
     SCENARIO: scenario_ID,
     NEXT_PAGE: next_page_id,
-    CHOICES: [
-      { CHOICE: option1, RESULT_PAGE: null },
-      { CHOICE: option2, RESULT_PAGE: null },
-    ],
+    CHOICES: choicesArr,
     X_COORDINATE: xCoord,
     Y_COORDINATE: yCoord,
   };
@@ -175,39 +162,16 @@ export default function Action(props) {
       setErrorBody(false);
     }
 
-    if (!option1 || !option1.trim()) {
-      setErrorOption1(true);
-      setErrorOption1Text('Option cannot be empty');
-      validInput = false;
-    } else if (option1.length >= 1000) {
-      setErrorOption1(true);
-      setErrorOption1Text('Option must have less than 1000 characters');
+    const arr = choicesArr.map(({ CHOICE }) => CHOICE.trim());
+    if (choicesArr.some(({ CHOICE }) => !CHOICE && !CHOICE.trim()) || (new Set(arr)).size !== arr.length) {
+      setErrorChoices(true);
       validInput = false;
     } else {
-      setErrorOption1(false);
-    }
-
-    if (!option2 || !option2.trim()) {
-      setErrorOption2(true);
-      setErrorOption2Text('Option cannot be empty');
-      validInput = false;
-    } else if (option2.length >= 1000) {
-      setErrorOption2(true);
-      setErrorOption2Text('Option must have less than 1000 characters');
-      validInput = false;
-    } else {
-      setErrorOption2(false);
-    }
-
-    if (option1 && option2 && option1.trim() === option2.trim()) {
-      setErrorOption1(true);
-      setErrorOption1Text('Option1 cannot be the same as Option2');
-      setErrorOption2(true);
-      setErrorOption2Text('Option1 cannot be the same as Option2');
-      validInput = false;
+      setErrorChoices(false);
     }
 
     if (validInput) {
+      postReqBody.CHOICES = choicesArr.map(({ CHOICE, NEXT_PAGE }) => ({ CHOICE, NEXT_PAGE }));
       universalPost(
         setPostValues,
         endpoint,
@@ -222,25 +186,38 @@ export default function Action(props) {
       );
     }
   }
-
-  const onChangeOption1 = (event) => {
-    setGlobalUnsaved(true);
-    setOption1(event.target.value);
-    const copy = [...actions];
-    copy[0].CHOICE = event.target.value;
-    setActions(copy);
-  };
-
-  const onChangeOption2 = (event) => {
-    setGlobalUnsaved(true);
-    setOption2(event.target.value);
-    const copy = [...actions];
-    copy[1].CHOICE = event.target.value;
-    setActions(copy);
-  };
-
   const savePage = () => {
     handlePost(setPostValues, postReqBody, scenario_ID, false);
+  };
+
+  function setNewID() {
+    let newID = Math.floor(Math.random() * 10000000);
+    let collision = choicesArr.filter((data) => data.APC_ID === newID).length !== 0;
+    while (collision) {
+      newID = Math.floor(Math.random() * 10000000);
+      const checkNewID = newID;
+      collision = choicesArr.filter((data) => data.APC_ID === checkNewID)
+        .length !== 0;
+    }
+    return newID;
+  }
+
+  const addChoice = (e) => {
+    setGlobalUnsaved(true);
+    e.preventDefault();
+    const newChoicesArr = choicesArr.concat({
+      APC_ID: setNewID(),
+      CHOICE: '',
+      NEXT_PAGE: null,
+      PAGE_id: page_id,
+    });
+    setChoicesArr(newChoicesArr);
+  };
+
+  const removeChoice = (id) => {
+    setGlobalUnsaved(true);
+    const leftChoices = choicesArr.filter((q) => q.APC_ID !== id);
+    setChoicesArr(leftChoices);
   };
 
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
@@ -293,7 +270,7 @@ export default function Action(props) {
           Unsaved
         </Typography>
       ) : null}
-      <HTMLPreview title={title} body={bodyText} choices={actions} />
+      <HTMLPreview title={title} body={bodyText} choices={choices} />
       <Title
         title={title}
         setTitle={setTitle}
@@ -307,67 +284,30 @@ export default function Action(props) {
         errorMessage="Page body cannot be empty."
       />
       <div className={classes.container}>
+        <Button
+          className={classes.saveButton}
+          variant="contained"
+          color="primary"
+          onClick={addChoice}
+        >
+          Add Choice
+        </Button>
+        {errorChoices ? (
+          <Typography variant="h6" align="center" color="error">
+            All choices must be filled in and there cannot be duplicate choices!
+          </Typography>
+        ) : null}
         <form className={classes.form}>
-          <Typography align="center" variant="h6">
-            Option 1
-          </Typography>
-          {errorOption1 ? (
-            <TextField
-              error
-              helperText={errorOption1Text}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="option 1"
-              label="Input Option 1 Text"
-              name="option 1"
-              value={option1}
-              onChange={onChangeOption1}
+          {choicesArr.map((obj) => (
+            <Choice
+              key={obj.APC_ID}
+              id={obj.APC_ID}
+              choice={obj.CHOICE}
+              choices={choicesArr}
+              setChoices={setChoicesArr}
+              removeChoice={removeChoice}
             />
-          ) : (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="option 1"
-              label="Input Option 1 Text"
-              name="option 1"
-              value={option1}
-              onChange={onChangeOption1}
-            />
-          )}
-          <Typography align="center" variant="h6">
-            Option 2
-          </Typography>
-          {errorOption2 ? (
-            <TextField
-              error
-              helperText={errorOption2Text}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="option 2"
-              label="Input Option 2 Text"
-              name="option 2"
-              value={option2}
-              onChange={onChangeOption2}
-            />
-          ) : (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="option 2"
-              label="Input Option 2 Text"
-              name="option 2"
-              value={option2}
-              onChange={onChangeOption2}
-            />
-          )}
+          ))}
           <Button
             className={classes.saveButton}
             variant="contained"

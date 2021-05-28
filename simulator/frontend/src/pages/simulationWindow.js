@@ -11,8 +11,8 @@ import Stakeholders from './stakeholders';
 import Feedback from './feedback';
 import { STUDENT_ID } from '../constants/config';
 import LoadingSpinner from './components/LoadingSpinner';
-import get from '../universalHTTPRequests/get';
-import post from '../universalHTTPRequests/post';
+import get from '../universalHTTPRequestsEditor/get';
+import post from '../universalHTTPRequestsEditor/post';
 import ErrorBanner from './components/Banners/ErrorBanner';
 import GlobalContext from '../Context/GlobalContext';
 
@@ -35,22 +35,21 @@ export default function SimulationWindow(props) {
 
   const pathArray = location.pathname.split('/');
   const scenarioID = props.location.data
-    ? props.location.data.version_id
+    ? props.location.data.scenarioID
     : pathArray[pathArray.length - 2];
   const firstPage = props.location.data
-    ? props.location.data.first_page
+    ? props.location.data.firstPage
     : pathArray[pathArray.length - 1];
-  const versionID = scenarioID;
 
   const numConversations = props.location.data
-    ? props.location.data.num_conversations
+    ? props.location.data.numConversations
     : 3;
   // eslint-disable-next-line
   const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`;
-  const firstPageEndpoint = `/scenarios/task?versionId=${versionID}&pageId=${firstPage}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
+  const firstPageEndpoint = `/page?page_id=${firstPage}`;
   // eslint-disable-next-line
   const endpointGetMeta = "/scenarios?userId=" + STUDENT_ID;
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
@@ -66,18 +65,18 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [],
       }));
-      get(setFetchScenariosResponse, firstPageEndpoint, onFailure, onSuccess);
     }
     function onSuccess(response) {
-      const data = response.data.result[0];
-      const next = response.data.result[0].next_page;
-      const nextEndpoint = `/scenarios/task?versionId=${versionID}&pageId=${next}`;
+      console.log(response);
+      const { data } = response;
+      const next = data.NEXT_PAGE;
+      const nextEndpoint = `/page?page_id=${next}`;
       const component = (
         <GenericPage
           isIntro
           sessionID={sessionID}
-          pageTitle={data.page_title}
-          body={data.body}
+          pageTitle={data.PAGE_TITLE}
+          body={data.PAGE_BODY}
           getNextPage={getNextPage}
           nextPageEndpoint={nextEndpoint}
         />
@@ -85,22 +84,26 @@ export default function SimulationWindow(props) {
       const newPage = {
         visited: false,
         completed: false,
-        id: data.page_id,
-        title: data.page_title,
+        id: data.PAGE,
+        title: data.PAGE_TITLE,
         pageEndpoint: firstPageEndpoint,
         nextPageEndpoint: nextEndpoint,
         component,
       };
       setPlayerContext((oldObj) => ({
         ...oldObj,
+        numConversations,
+        activeIndex: 0,
         pages: [...oldObj.pages, newPage],
       }));
+      post(setFetchScenariosResponse, endpointSess, onFailure, startSess);
     }
     function onFailure() {
-      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      setErrorBannerMessage('Failed to start session! Please try again.');
       setErrorBannerFade(true);
     }
-    post(setFetchScenariosResponse, endpointSess, onFailure, startSess);
+
+    get(setFetchScenariosResponse, firstPageEndpoint, onFailure, onSuccess);
   };
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
@@ -109,8 +112,9 @@ export default function SimulationWindow(props) {
         return (
           <GenericPage
             isIntro={false}
-            pageTitle={data.page_title}
-            body={data.body}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
             getNextPage={getNextPage}
             getPrevPage={getPrevPage}
             nextPageEndpoint={nextPageEndpoint}
@@ -120,11 +124,11 @@ export default function SimulationWindow(props) {
       case 'R':
         return (
           <Reflection
-            versionID={versionID}
-            pageID={data.page_id}
-            pageTitle={data.page_title}
-            body={data.body}
-            questions={data.questions}
+            scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
+            questions={data.REFLECTION_QUESTIONS}
             getNextPage={getNextPage}
             getPrevPage={getPrevPage}
             nextPageEndpoint={nextPageEndpoint}
@@ -134,10 +138,10 @@ export default function SimulationWindow(props) {
       case 'S':
         return (
           <Stakeholders
-            versionID={versionID}
-            pageID={data.page_id}
-            pageTitle={data.page_title}
-            body={data.body}
+            scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
             getNextPage={getNextPage}
             getPrevPage={getPrevPage}
             nextPageEndpoint={nextPageEndpoint}
@@ -148,11 +152,11 @@ export default function SimulationWindow(props) {
         return (
           <Action
             sessionID={sessionID}
-            versionID={versionID}
-            pageID={data.page_id}
-            pageTitle={data.page_title}
-            body={data.body}
-            choices={data.choices}
+            scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
+            choices={data.CHOICES}
             choiceChosen={data.choiceChosen}
             getNextPage={getNextPage}
             getPrevPage={getPrevPage}
@@ -163,7 +167,7 @@ export default function SimulationWindow(props) {
         return (
           <Feedback
             sessionID={sessionID}
-            versionID={versionID}
+            scenarioID={scenarioID}
             getPrevPage={getPrevPage}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -174,8 +178,8 @@ export default function SimulationWindow(props) {
 
   let getPrevPage = (prevPageEndpoint, pages) => {
     function onSuccess(response) {
-      const data = response.data.result[0];
-      const indexInPages = pages.findIndex((obj) => obj.id === data.page_id);
+      const { data } = response;
+      const indexInPages = pages.findIndex((obj) => obj.id === data.PAGE);
       setPlayerContext((oldObj) => ({
         ...oldObj,
         activeIndex: indexInPages,
@@ -220,15 +224,15 @@ export default function SimulationWindow(props) {
     }
 
     function onSuccess(response) {
-      const data = response.data.result[0];
-      const indexInPages = pages.findIndex((obj) => obj.id === data.page_id);
+      const { data } = response;
+      const indexInPages = pages.findIndex((obj) => obj.id === data.PAGE);
       if (indexInPages === -1) {
-        const next = response.data.result[0].next_page;
+        const next = data.NEXT_PAGE;
         const nextEndpoint = !next || next <= 0
           ? null
-          : `/scenarios/task?versionId=${versionID}&pageId=${next}`;
+          : `/page?page_id=${next}`;
         const component = getPageComponent(
-          data.page_type,
+          data.PAGE_TYPE,
           data,
           nextEndpoint,
           pages[index].pageEndpoint,
@@ -236,8 +240,8 @@ export default function SimulationWindow(props) {
         const newPage = {
           visited: false,
           completed: false,
-          title: data.page_title,
-          id: data.page_id,
+          title: data.PAGE_TITLE,
+          id: data.PAGE,
           pageEndpoint: nextPageEndpoint,
           nextPageEndpoint: nextEndpoint,
           component,
@@ -259,10 +263,10 @@ export default function SimulationWindow(props) {
     }
 
     function onFailure(e) {
+      console.log(e);
       setErrorBannerMessage('Failed to get page! Please try again.');
       setErrorBannerFade(true);
     }
-
     get(setFetchScenariosResponse, nextPageEndpoint, onFailure, onSuccess);
   };
 

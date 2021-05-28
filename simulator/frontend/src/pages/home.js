@@ -16,7 +16,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from './components/scenarioCard';
 import LoadingSpinner from './components/LoadingSpinner';
-import get from '../universalHTTPRequests/get';
+import get from '../universalHTTPRequestsEditor/get';
 // eslint-disable-next-line
 import CodeButton from "./components/classCodeDialog";
 // eslint-disable-next-line
@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const endpointGet = '/scenarios?userId=';
+// TODO change when backend gets implemented
+const endpointGet = '/dashboard?professor_id=';
 // eslint-disable-next-line
 const endpointPost = "/dashboard";
 
@@ -136,10 +137,10 @@ export default function Home() {
     incompleteScenarios: [
       {
         title: ' ',
-        course: ' ',
-        num_conversations: 0,
-        is_finished: false,
-        first_page: 0,
+        courses: [],
+        numConversations: 0,
+        isFinished: false,
+        firstPage: 0,
         date: ' ',
         completed: 10,
         max: 10,
@@ -148,10 +149,10 @@ export default function Home() {
     completeScenarios: [
       {
         title: ' ',
-        num_conversations: 0,
-        is_finished: true,
-        first_page: 0,
-        course: ' ',
+        numConversations: 0,
+        isFinished: true,
+        firstPage: 0,
+        courses: [],
         date: ' ',
         completed: 10,
         max: 10,
@@ -169,31 +170,36 @@ export default function Home() {
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      console.log(response.data.result);
-      let incomplete = response.data.result.filter((data) => !data.is_finished);
-      let complete = response.data.result.filter((data) => data.is_finished);
-      incomplete = incomplete.map((data) => ({
-        title: data.name,
-        num_conversations: data.num_conversation,
-        is_finished: data.is_finished,
-        date: data.date_created,
-        version_id: data.version_id,
-        first_page: data.first_page,
-        course: data.course_name,
+      console.log(response);
+      let incomplete = [];
+      // response.data.result.filter((data) => !data.is_finished);
+      const complete = [];
+      // response.data.result.filter((data) => data.is_finished);
+      incomplete = response.data.map((data) => ({
+        title: data.NAME,
+        numConversations: 6, // TODO
+        isFinished: false, // TODO
+        date: data.DATE_CREATED,
+        scenarioID: data.SCENARIO,
+        firstPage: 618,
+        courses: data.COURSES,
       }));
+      /*
       complete = complete.map((data) => ({
         title: data.name,
         num_conversations: data.num_conversation,
         is_finished: data.is_finished,
         date: data.last_date_modified,
-        version_id: data.version_id,
-        first_page: data.first_page,
+        scenarioID: data.scenarioID,
+        firstPage: data.firstPage,
         course: data.course_name,
       }));
+      */
       const scen = {
         incompleteScenarios: incomplete,
         completeScenarios: complete,
       };
+      console.log(scen);
       setScenarioList(scen);
     }
 
@@ -219,7 +225,7 @@ export default function Home() {
 
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
-  // //Get Cours
+
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -293,18 +299,18 @@ export default function Home() {
             <Typography variant="h2">To-Do</Typography>
           </Grid>
           {scenarioList.incompleteScenarios.map((scenario) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished={false}
                   title={scenario.title}
-                  course={scenario.course}
+                  courses={scenario.courses}
                   date={scenario.date}
                 />
                 <Button
                   component={Link}
                   to={{
-                    pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
+                    pathname: `/simulation/${scenario.scenarioID}/${scenario.firstPage}`,
                     data: scenario,
                   }}
                   className={classes.button}
@@ -326,18 +332,18 @@ export default function Home() {
             <Typography variant="h2">Completed</Typography>
           </Grid>
           {scenarioList.completeScenarios.map((scenario) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished
                   title={scenario.title}
-                  course={scenario.course}
+                  courses={scenario.courses}
                   date={scenario.date}
                 />
                 <Button
                   component={Link}
                   to={{
-                    pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
+                    pathname: `/simulation/${scenario.scenarioID}/${scenario.firstPage}`,
                     data: scenario,
                   }}
                   className={classes.button}
