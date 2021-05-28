@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Box,
@@ -14,6 +14,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
+import get from '../../universalHTTPRequests/get';
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -47,11 +48,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 HTMLPreview.propTypes = {
+  id: PropTypes.number,
   body: PropTypes.string.isRequired,
   title: PropTypes.string,
   questions: PropTypes.array,
   choices: PropTypes.array,
   dialogTitle: PropTypes.string,
+  getQuestions: PropTypes.bool,
 };
 
 export default function HTMLPreview(props) {
@@ -60,10 +63,29 @@ export default function HTMLPreview(props) {
   const data = props;
   // func is the function that occurs when user wants to leave without saving changes
   const {
-    body, title, questions, choices, dialogTitle, isFlowDiagram,
+    id, body, title, questions, choices, dialogTitle, isFlowDiagram, getQuestions,
   } = data;
   const [open, setOpen] = useState(false);
+  const [questionsArr, setQuestionsArr] = useState(questions);
+  const [getQuestionsValues, setGetQuestionsValues] = useState({
+    data: null,
+    loading: false,
+    error: null,
+  });
 
+  // For Flow Diagram Page Preview
+  function getReflectionQuestions() {
+    const endpoint = `/page?page_id=${id}`;
+    function onSuccess(resp) {
+      setQuestionsArr(resp.data.REFLECTION_QUESTIONS);
+    }
+
+    if (!questionsArr && getQuestions) {
+      get(setGetQuestionsValues, endpoint, null, onSuccess);
+    }
+  }
+
+  useEffect(getReflectionQuestions, []);
   // Func that closes the popup window
   const handleClose = () => {
     setOpen(false);
@@ -141,7 +163,7 @@ export default function HTMLPreview(props) {
           </Grid>
         </Grid>
         <Grid item style={{ width: '100%' }}>
-          {questions ? questions.map((q) => (
+          {questionsArr ? questionsArr.map((q) => (
             <Box m="2rem" p={1} className={classes.textBox} key={q.RQ_ID}>
               <p>{q.REFLECTION_QUESTION}</p>
               <TextField

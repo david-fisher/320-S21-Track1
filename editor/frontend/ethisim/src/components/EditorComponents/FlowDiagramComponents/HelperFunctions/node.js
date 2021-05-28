@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle } from 'react-flow-renderer';
 import HTMLPreview from '../../HTMLPreview';
+import get from '../../../../universalHTTPRequests/get';
 
 export function actionNode({ data }) {
   const { label, actions, componentData } = data;
@@ -53,16 +54,18 @@ export function introNode({ data }) {
 }
 
 export function reflectionNode({ data }) {
-  const { label, componentData } = data;
+  const { label, componentData, questionsArr } = data;
   return (
     <>
       <Handle type="target" position="top" />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <HTMLPreview
+          id={componentData.PAGE}
           title={componentData.PAGE_TITLE}
           body={componentData.PAGE_BODY}
-          questions={componentData.REFLECTION_QUESTIONS}
+          questions={questionsArr}
           isFlowDiagram
+          getQuestions
         />
       </div>
       {label}
