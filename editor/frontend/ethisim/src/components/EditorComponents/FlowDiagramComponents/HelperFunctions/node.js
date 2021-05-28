@@ -4,6 +4,8 @@ import HTMLPreview from '../../HTMLPreview';
 
 export function actionNode({ data }) {
   const { label, actions, componentData } = data;
+  actions.sort((a, b) => a.APC_ID - b.APC_ID);
+
   return (
     <>
       <Handle
@@ -15,7 +17,7 @@ export function actionNode({ data }) {
         <HTMLPreview
           title={componentData.PAGE_TITLE}
           body={componentData.PAGE_BODY}
-          choices={componentData.ACTION}
+          choices={actions}
           isFlowDiagram
         />
       </div>

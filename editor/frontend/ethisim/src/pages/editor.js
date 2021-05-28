@@ -263,6 +263,7 @@ export default function Editor(props) {
       );
 
       const pages = logistics_and_pages.PAGES;
+      pages.sort((a, b) => b.PAGE - a.PAGE);
 
       for (let i = 0; i < pages.length; i++) {
         // Already have component in initial components

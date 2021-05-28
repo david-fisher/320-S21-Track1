@@ -140,14 +140,14 @@ export default function FlowDiagram({ scenario_ID }) {
     initialElements = initialElements.map((componentData) => initializeElements(componentData));
 
     // Set position of elements if elements are new ({x: 0,y: 0})
-    // Height of nodes are 51.2 pixels
+    // Height of nodes are 91 pixels
     initialElements.reduce((acc, currentValue) => {
       if (
         currentValue.position.x === 0
                 && currentValue.position.y === 0
       ) {
         currentValue.position.y += acc;
-        return acc + 51.2;
+        return acc + 91;
       }
       return acc;
     }, 0);

@@ -76,6 +76,7 @@ export default function Reflection(props) {
     error: null,
   });
 
+  reflection_questions.sort((a, b) => a.RQ_ID - b.RQ_ID);
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
   const [bodyText, setBodyText] = useState(body);
@@ -116,9 +117,11 @@ export default function Reflection(props) {
       );
       component.id = resp.data.PAGE;
       component.title = title;
+      const firstHalf = newScenarioComponents.splice(0, 5);
+      newScenarioComponents.sort((a, b) => b.id - a.id);
       setPageID(resp.data.PAGE);
       setCurrentPageID(resp.data.PAGE);
-      setScenarioComponents(newScenarioComponents);
+      setScenarioComponents(firstHalf.concat(newScenarioComponents));
       setSuccessBannerFade(true);
       setSuccessBannerMessage('Successfully saved page!');
       setGlobalUnsaved(false);
