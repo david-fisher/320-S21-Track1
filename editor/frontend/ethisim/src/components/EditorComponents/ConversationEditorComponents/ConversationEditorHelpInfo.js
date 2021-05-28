@@ -42,6 +42,11 @@ export const ConversationEditorHelpInfo = [
   Selecting "Point Selection" will allow you to input the appropriate scores for each ethical issue.`,
   },
   {
+    title: 'Stakeholder Preview',
+    description: `Selecting "Stakeholder Preview" will show how 
+  the stakeholder component will exactly look like to the player.`,
+  },
+  {
     title: 'Delete',
     description:
             'Selecting "Delete" will delete the particular stakeholder from the scenario.',

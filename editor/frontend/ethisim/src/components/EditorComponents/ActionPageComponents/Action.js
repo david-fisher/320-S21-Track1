@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Button, TextField, Typography, Container,
+  Button, Typography, Container,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -298,7 +298,7 @@ export default function Action(props) {
           </Typography>
         ) : null}
         <form className={classes.form}>
-          {choicesArr.map((obj) => (
+          {choicesArr.map((obj, index) => (
             <Choice
               key={obj.APC_ID}
               id={obj.APC_ID}
@@ -306,6 +306,7 @@ export default function Action(props) {
               choices={choicesArr}
               setChoices={setChoicesArr}
               removeChoice={removeChoice}
+              index={index + 1}
             />
           ))}
           <Button

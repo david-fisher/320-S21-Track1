@@ -334,7 +334,6 @@ export default function HTMLPreview(props) {
                       <Avatar
                         style={{ height: '150px', width: '150px' }}
                         alt="Stakeholder Photo"
-                        size
                         src={photo}
                       />
                     </div>

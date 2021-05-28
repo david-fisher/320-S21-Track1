@@ -4,7 +4,7 @@ export default function initializeElements(componentData) {
       return {
         id: componentData.PAGE,
         type: 'introNode',
-        data: { label: componentData.PAGE_TITLE },
+        data: { label: componentData.PAGE_TITLE, componentData },
         style: {
           border: '3px solid orange',
           borderRadius: '5%',
@@ -25,7 +25,7 @@ export default function initializeElements(componentData) {
       return {
         id: componentData.PAGE,
         type: 'actionNode',
-        data: { label: componentData.PAGE_TITLE, actions: componentData.ACTION },
+        data: { label: componentData.PAGE_TITLE, actions: componentData.ACTION, componentData },
         style: {
           border: '3px solid green',
           borderRadius: '5%',
@@ -44,7 +44,7 @@ export default function initializeElements(componentData) {
       return {
         id: componentData.PAGE,
         type: 'genericNode',
-        data: { label: componentData.PAGE_TITLE },
+        data: { label: componentData.PAGE_TITLE, componentData },
         style: {
           border: '3px solid red',
           borderRadius: '5%',
@@ -63,7 +63,7 @@ export default function initializeElements(componentData) {
       return {
         id: componentData.PAGE,
         type: 'reflectionNode',
-        data: { label: componentData.PAGE_TITLE },
+        data: { label: componentData.PAGE_TITLE, componentData },
         style: {
           border: '3px solid purple',
           borderRadius: '5%',

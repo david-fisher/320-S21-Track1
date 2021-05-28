@@ -12,6 +12,7 @@ QuestionField.propTypes = {
   id: PropTypes.number,
   choices: PropTypes.any,
   setChoices: PropTypes.any,
+  index: PropTypes.number,
 };
 
 export default function QuestionField({
@@ -20,6 +21,7 @@ export default function QuestionField({
   choices,
   setChoices,
   removeChoice,
+  index,
 }) {
   const [choiceValue, setQuestionValue] = useState(choice);
   // eslint-disable-next-line
@@ -49,7 +51,7 @@ export default function QuestionField({
         <Box p={1} style={{ width: '80%' }}>
           <TextField
             style={{ width: '100%' }}
-            label="Choice"
+            label={`Choice ${index}`}
             multiline
             rows={2}
             variant="outlined"

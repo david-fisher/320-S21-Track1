@@ -386,18 +386,6 @@ export default function Editor(props) {
           next_page_id: currPageInfo.NEXT_PAGE,
           version_ID: tempVersionID,
           body: currPageInfo.PAGE_BODY,
-          choice1: currPageInfo.CHOICES[0]
-            ? currPageInfo.CHOICES[0].CHOICE
-            : '',
-          r1: currPageInfo.CHOICES[0]
-            ? currPageInfo.CHOICES[0].RESULT_PAGE
-            : null,
-          choice2: currPageInfo.CHOICES[1]
-            ? currPageInfo.CHOICES[1].CHOICE
-            : '',
-          r2: currPageInfo.CHOICES[1]
-            ? currPageInfo.CHOICES[1].RESULT_PAGE
-            : null,
           choices: currPageInfo.CHOICES,
           xCoord: currPageInfo.X_COORDINATE,
           yCoord: currPageInfo.Y_COORDINATE,

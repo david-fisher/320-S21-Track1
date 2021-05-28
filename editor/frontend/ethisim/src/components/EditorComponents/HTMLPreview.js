@@ -13,6 +13,7 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
+import OpenWithIcon from '@material-ui/icons/OpenWith';
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -59,7 +60,7 @@ export default function HTMLPreview(props) {
   const data = props;
   // func is the function that occurs when user wants to leave without saving changes
   const {
-    body, title, questions, choices, dialogTitle,
+    body, title, questions, choices, dialogTitle, isFlowDiagram,
   } = data;
   const [open, setOpen] = useState(false);
 
@@ -74,14 +75,27 @@ export default function HTMLPreview(props) {
 
   return (
     <div className={classes.container}>
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="primary"
-        onClick={handleOpen}
-      >
-        {dialogTitle || 'Page Preview'}
-      </Button>
+      { isFlowDiagram ? (
+        <Button
+          id="button"
+          variant="contained"
+          color="primary"
+          onClick={handleOpen}
+          className={classes.button}
+        >
+          <OpenWithIcon />
+        </Button>
+      )
+        : (
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={handleOpen}
+          >
+            {dialogTitle || 'Page Preview'}
+          </Button>
+        )}
       <Dialog
         open={open}
         TransitionComponent={Transition}
