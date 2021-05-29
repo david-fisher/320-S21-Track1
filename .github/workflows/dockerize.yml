@@ -35,8 +35,8 @@ jobs:
           context: ./landing page/welcome-login/
           file: ./landing page/welcome-login/Dockerfile.prod
           push: true
-          tags: dacollins/ethisim:frontend-landing-page
-          cache-from: type=registery, ref=dacollins/ethisim:frontend-landing-page
+          tags: ikhurana/ethisim-prod:frontend-landing-page
+          cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-landing-page
           cache-to: type=inline
   
   editor-frontend:
@@ -60,8 +60,8 @@ jobs:
           context: ./editor/frontend/ethisim/
           file: ./editor/frontend/ethisim/Dockerfile.prod
           push: true
-          tags: dacollins/ethisim:frontend-editor
-          cache-from: type=registery, ref=dacollins/ethisim:frontend-editor
+          tags: ikhurana/ethisim-prod:frontend-editor
+          cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-editor
           cache-to: type=inline
 
   editor-backend:
@@ -84,8 +84,8 @@ jobs:
         with:
           context: ./editor/backend/
           push: true
-          tags: dacollins/ethisim:backend-editor
-          cache-from: type=registery, ref=dacollins/ethisim:backend-editor
+          tags: ikhurana/ethisim-prod:backend-editor
+          cache-from: type=registery, ref=ikhurana/ethisim-prod:backend-editor
           cache-to: type=inline
 
   simulator-frontend:
@@ -109,8 +109,8 @@ jobs:
           context: ./simulator/frontend/
           file: ./simulator/frontend/Dockerfile.prod
           push: true
-          tags: dacollins/ethisim:frontend-simulator
-          cache-from: type=registery, ref=dacollins/ethisim:frontend-simulator
+          tags: ikhurana/ethisim-prod:frontend-simulator
+          cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-simulator
           cache-to: type=inline
 
   simulator-backend:
@@ -133,8 +133,8 @@ jobs:
         with:
           context: ./simulator/steminist_simulator_backend/
           push: true
-          tags: dacollins/ethisim:backend-simulator
-          cache-from: type=registery, ref=dacollins/ethisim:backend-simulator
+          tags: ikhurana/ethisim-prod:backend-simulator
+          cache-from: type=registery, ref=ikhurana/ethisim-prod:backend-simulator
           cache-to: type=inline
 
   deploy:
