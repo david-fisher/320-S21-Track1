@@ -1,11 +1,11 @@
 #!/bin/sh
 cd /shared/docker
 docker-compose down
-docker pull dacollins/ethisim:frontend-landing-page 
-docker pull dacollins/ethisim:frontend-editor
-docker pull dacollins/ethisim:frontend-simulator
-docker pull dacollins/ethisim:backend-editor
-docker pull dacollins/ethisim:backend-simulator
+docker pull ikhurana/ethisim-dev:frontend-landing-page 
+docker pull ikhurana/ethisim-dev:frontend-editor
+docker pull ikhurana/ethisim-dev:frontend-simulator
+docker pull ikhurana/ethisim-dev:backend-editor
+docker pull ikhurana/ethisim-dev:backend-simulator
 docker rmi docker_production:latest
 docker-compose up -d
 yes | docker system prune -a --filter "until=168h"
