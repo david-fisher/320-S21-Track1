@@ -26,7 +26,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ikhurana -p ishaan123
+          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
       
       # Build and push Landing Page Frontend image
       - name: build and push landing page
@@ -51,7 +51,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ikhurana -p ishaan123
+          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
 
       #Build and push Editor Frontend image       
       - name: build and push editor frontend
@@ -76,7 +76,7 @@ jobs:
     
       - name: docker login
         run: |
-          docker login -u ikhurana -p ishaan123
+          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
 
       # Build and push Editor Backend image
       - name: build and push editor backend
@@ -100,7 +100,7 @@ jobs:
     
       - name: docker login
         run: |
-          docker login -u ikhurana -p ishaan123
+          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
 
       # Build and push Simulator Frontend image
       - name: build and push simulator frontend
@@ -125,7 +125,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ikhurana -p ishaan123
+          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
 
         # Build and push Simulator Backend image
       - name: build and push simulator backend
@@ -148,8 +148,8 @@ jobs:
 
       - name: copy files into server
         run: |
-          sshpass -p abcd scp -o StrictHostKeyChecking=no apache_server/ethisim.dev.conf ikhurana@ethisim2.cs.umass.edu:/ethisim/configuration/conf.d/ethisim.conf
-          sshpass -p abcd scp -o StrictHostKeyChecking=no apache_server/httpd.conf ikhurana@ethisim2.cs.umass.edu:/ethisim/configuration/conf/httpd.conf
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} scp -o StrictHostKeyChecking=no apache_server/ethisim.dev.conf ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}}:/ethisim/configuration/conf.d/ethisim.conf
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} scp -o StrictHostKeyChecking=no apache_server/httpd.conf ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}}:/ethisim/configuration/conf/httpd.conf
 
       - name: Prep to deploy
         run: | 
@@ -159,4 +159,4 @@ jobs:
         #login to the server using ssh
       - name: log in to server
         run: |
-          sshpass -p abcd ssh -tt -o StrictHostKeyChecking=no ikhurana@ethisim2.cs.umass.edu 'bash -s' < .github/scripts/server.sh
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} ssh -tt -o StrictHostKeyChecking=no ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}} 'bash -s' < .github/scripts/server.sh
