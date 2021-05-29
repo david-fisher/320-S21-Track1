@@ -26,7 +26,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
       
       # Build and push Landing Page Frontend image
       - name: build and push landing page
@@ -51,7 +51,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
       #Build and push Editor Frontend image       
       - name: build and push editor frontend
@@ -76,7 +76,7 @@ jobs:
     
       - name: docker login
         run: |
-          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
       # Build and push Editor Backend image
       - name: build and push editor backend
@@ -100,7 +100,7 @@ jobs:
     
       - name: docker login
         run: |
-          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
       # Build and push Simulator Frontend image
       - name: build and push simulator frontend
@@ -125,7 +125,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ${{DOCKER_HUB_USER}} -p ${{secrets. DOCKER_HUB_PASS}}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
         # Build and push Simulator Backend image
       - name: build and push simulator backend
