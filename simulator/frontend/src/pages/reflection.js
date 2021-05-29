@@ -180,7 +180,7 @@ export default function Reflection({
           </Typography>
         ) : null}
         <Grid item style={{ width: '100%' }}>
-          {reflection.map((prompt) => (
+          {reflection.sort((a, b) => b.id - a.id).map((prompt) => (
             <Box m="2rem" p={1} className={classes.textBox} key={prompt.RQ_ID}>
               <p>{prompt.REFLECTION_QUESTION}</p>
               <TextField

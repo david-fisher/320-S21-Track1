@@ -15,7 +15,7 @@ import { ActionPageHelpInfo } from './ActionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
 import Choice from './Choice';
-import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
 
 Action.propTypes = {

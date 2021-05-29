@@ -12,7 +12,7 @@ import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { IntroductionPageHelpInfo } from './IntroductionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
-import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
 
 const useStyles = makeStyles((theme) => ({

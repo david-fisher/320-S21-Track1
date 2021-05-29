@@ -13,7 +13,7 @@ import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { ReflectionPageHelpInfo } from './ReflectionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
-import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
 
 Reflection.propTypes = {

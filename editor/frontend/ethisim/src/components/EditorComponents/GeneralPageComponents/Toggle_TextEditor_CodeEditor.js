@@ -22,7 +22,7 @@ Toggle.propTypes = {
   errorMessage: PropTypes.string,
   option: PropTypes.any,
   setOption: PropTypes.func,
-  notSetUnsaved: PropTypes.bool,
+  notSetUnsaved: PropTypes.bool, // notSetUnsaved is for Add New Page component, we don't need to warn user of unsaved changes
 };
 export default function Toggle({
   body, setBody, error, errorMessage, option, setOption, notSetUnsaved,

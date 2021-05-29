@@ -24,7 +24,7 @@ import put from '../../../../universalHTTPRequests/put';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 import HTMLPreview from '../../HTMLPreview';
 import StakeholderPreview from '../StakeholderPreview';
-import Toggle from '../../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import Toggle from '../../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../../GeneralPageComponents/checkEditorType';
 
 const useStyles = makeStyles((theme) => ({

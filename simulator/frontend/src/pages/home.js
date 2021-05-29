@@ -184,6 +184,8 @@ export default function Home() {
         firstPage: 695,
         courses: data.COURSES,
       }));
+      console.log(incomplete.filter(({ scenarioID }) => scenarioID === 86));
+      incomplete.filter(({ scenarioID }) => scenarioID === 86)[0].firstPage = 515;
       /*
       complete = complete.map((data) => ({
         title: data.name,

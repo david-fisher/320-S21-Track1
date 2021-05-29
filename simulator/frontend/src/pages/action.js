@@ -172,7 +172,7 @@ export default function Action({
             <InnerHTML html={body.replace(/\\"/g, '"')} />
           </Grid>
           <Box mx="auto">
-            {choices.map((choice) => (
+            {choices.sort((a, b) => a.APC_ID - b.APC_ID).map((choice) => (
               <Box p={3} key={choice.APC_ID}>
                 <Button
                   variant="outlined"

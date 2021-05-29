@@ -454,7 +454,7 @@ export default function Editor(props) {
 
   const [shouldFetch, setShouldFetch] = useState(0);
   useEffect(handleLogisticsGet, [shouldFetch]);
-
+  console.log(scenarioComponent);
   const onClick = (id, title, scenarioPages) => {
     setCurrentPageID(id);
     if (id !== -1 && id !== -2 && id !== -3 && id !== -4) {
@@ -514,9 +514,9 @@ export default function Editor(props) {
       setShowComponent(false);
       const endpoint = '/api/pages/';
       // eslint-disable-next-line
-            let c = null;
+      let c = null;
       // eslint-disable-next-line
-            let p = null;
+      let p = null;
       let postReqBody;
 
       function onSuccess(resp) {
@@ -677,6 +677,7 @@ export default function Editor(props) {
     );
   }
 
+  // Warn users when leaving editor view if there are unsaved changes
   useBeforeunload((event) => {
     if (globalUnsaved) {
       event.preventDefault();

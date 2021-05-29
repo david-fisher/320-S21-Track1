@@ -9,8 +9,7 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
-import AddNewPageSunEditor from './AddNewPageSunEditor';
-import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 
 const useStyles = makeStyles((theme) => ({
   containerRow: {
