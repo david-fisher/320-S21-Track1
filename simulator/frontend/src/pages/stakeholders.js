@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import InnerHTML from 'dangerously-set-html-content';
 import PropTypes from 'prop-types';
 import { STUDENT_ID } from '../constants/config';
 import Conversation from './conversation';
@@ -471,7 +472,7 @@ export default function Stakeholders({
             >
               {job}
             </Box>
-            <div dangerouslySetInnerHTML={{ __html: description }} />
+            <InnerHTML html={description.replace(/\\"/g, '"')} />
             <div style={
               {
                 display: 'flex',

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -8,6 +8,7 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
 import { STUDENT_ID } from '../constants/config';
 import GlobalContext from '../Context/GlobalContext';
@@ -66,17 +67,16 @@ export default function Reflection({
   scenarioID,
   pageID,
 }) {
-  body = body.replace(/\\"/g, '"');
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  questions = questions.map((obj) => ({ ...obj, response: '' }));
   const classes = useStyles();
 
   const [savedAnswers, setSavedAnswers] = React.useState(false);
   // variables to show error if not all reflection questions are answered
   const [errorName, setErrorName] = useState(false);
   // MAKE API CALL
-  // const [reflection, setReflection] = useState(questions);
+  const [reflection, setReflection] = useState(questions.map((obj) => ({ ...obj, response: '' })));
+  useEffect(() => setReflection(questions.map((obj) => ({ ...obj, response: '' }))), [questions]);
 
   // eslint-disable-next-line
   const endpointPost =
@@ -100,7 +100,7 @@ export default function Reflection({
       body: questions,
     };
 
-    if (questions.some(({ response }) => !response || !response.trim())) {
+    if (reflection.some(({ response }) => !response || !response.trim())) {
       setErrorName(true);
       return;
     }
@@ -109,16 +109,18 @@ export default function Reflection({
     setSavedAnswers(true);
   };
 
-  console.log(savedAnswers);
-  console.log(questions);
+  console.log(reflection);
 
   const updateResponse = (e, id) => {
-    for (let i = 0; i < questions.length; ++i) {
-      if (questions[i].RQ_ID === id) {
-        questions[i].response = e.target.value;
-        break;
+    setReflection((prev) => {
+      for (let i = 0; i < prev.length; ++i) {
+        if (prev[i].RQ_ID === id) {
+          prev[i].response = e.target.value;
+          break;
+        }
       }
-    }
+      return prev;
+    });
   };
 
   const Buttons = (
@@ -162,7 +164,7 @@ export default function Reflection({
       </Grid>
       <Grid containerstyle={{ width: '100%' }}>
         <Grid item style={{ width: '100%' }}>
-          <div dangerouslySetInnerHTML={{ __html: body }} />
+          <InnerHTML html={body.replace(/\\"/g, '"')} />
         </Grid>
       </Grid>
 
@@ -178,7 +180,7 @@ export default function Reflection({
           </Typography>
         ) : null}
         <Grid item style={{ width: '100%' }}>
-          {questions.map((prompt) => (
+          {reflection.map((prompt) => (
             <Box m="2rem" p={1} className={classes.textBox} key={prompt.RQ_ID}>
               <p>{prompt.REFLECTION_QUESTION}</p>
               <TextField

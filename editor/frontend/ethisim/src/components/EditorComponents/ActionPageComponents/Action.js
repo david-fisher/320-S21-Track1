@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Body from '../GeneralPageComponents/Body';
 import Title from '../GeneralPageComponents/Title';
 import universalPost from '../../../universalHTTPRequests/post';
 import universalDelete from '../../../universalHTTPRequests/delete';
@@ -16,6 +15,8 @@ import { ActionPageHelpInfo } from './ActionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
 import Choice from './Choice';
+import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import checkEditorType from '../GeneralPageComponents/checkEditorType';
 
 Action.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -80,6 +81,10 @@ export default function Action(props) {
     yCoord,
   } = props;
 
+  // Used to differentiate between Code Editor and Text Editor format
+  const { initialBody, option } = checkEditorType(body);
+  const [editorOption, setEditorOption] = useState(option);
+
   const [postValues, setPostValues] = useState({
     data: null,
     loading: false,
@@ -95,7 +100,9 @@ export default function Action(props) {
   choices.sort((a, b) => a.APC_ID - b.APC_ID);
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
-  const [bodyText, setBodyText] = useState(body);
+  const [bodyText, setBodyText] = useState(initialBody);
+  // This makes sure that the body will be the most updated version, hot fix
+  useEffect(() => setBodyText(initialBody), [body, initialBody]);
   const [choicesArr, setChoicesArr] = useState(choices);
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState(false);
@@ -175,6 +182,10 @@ export default function Action(props) {
 
     if (validInput) {
       postReqBody.CHOICES = choicesArr.map(({ CHOICE, NEXT_PAGE }) => ({ CHOICE, NEXT_PAGE }));
+      // Used to differentiate between Code Editor and Text Editor format
+      if (editorOption === 'CodeEditor') {
+        postReqBody.PAGE_BODY = `${bodyText}<!--CodeEditor-->`;
+      }
       universalPost(
         setPostValues,
         endpoint,
@@ -273,18 +284,19 @@ export default function Action(props) {
           Unsaved
         </Typography>
       ) : null}
-      <HTMLPreview title={title} body={bodyText} choices={choices} />
+      <HTMLPreview title={title} body={bodyText} choices={choicesArr} />
       <Title
         title={title}
         setTitle={setTitle}
         error={errorTitle}
         errorMessage={errorTitleText}
       />
-      <Body
+      <Toggle
         body={bodyText}
         setBody={setBodyText}
         error={errorBody}
-        errorMessage="Page body cannot be empty."
+        option={editorOption}
+        setOption={setEditorOption}
       />
       <div className={classes.container}>
         <Button

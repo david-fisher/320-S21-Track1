@@ -3,7 +3,6 @@ import { Typography, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Title from '../GeneralPageComponents/Title';
-import Body from '../GeneralPageComponents/Body';
 import universalPost from '../../../universalHTTPRequests/post';
 import universalDelete from '../../../universalHTTPRequests/delete';
 import SuccessBanner from '../../Banners/SuccessBanner';
@@ -13,6 +12,8 @@ import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { GenericPageHelpInfo } from './GenericPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
+import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import checkEditorType from '../GeneralPageComponents/checkEditorType';
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -59,6 +60,10 @@ export default function Generic(props) {
     yCoord,
   } = props;
 
+  // Used to differentiate between Code Editor and Text Editor format
+  const { initialBody, option } = checkEditorType(body);
+  const [editorOption, setEditorOption] = useState(option);
+
   // eslint-disable-next-line
     const [postValues, setPostValues] = useState({
     data: null,
@@ -75,9 +80,11 @@ export default function Generic(props) {
   const classes = useStyles();
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
-  const [bodyText, setBodyText] = useState(body);
+  const [bodyText, setBodyText] = useState(initialBody);
+  // This makes sure that the body will be the most updated version, hot fix
+  useEffect(() => setBodyText(initialBody), [body, initialBody]);
   // eslint-disable-next-line
-    const [bodiesText, setBodiesText] = useState(bodies);
+  const [bodiesText, setBodiesText] = useState(bodies);
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState(false);
   const [errorBody, setErrorBody] = useState(false);
@@ -145,6 +152,10 @@ export default function Generic(props) {
     }
 
     if (validInput) {
+      // Used to differentiate between Code Editor and Text Editor format
+      if (editorOption === 'CodeEditor') {
+        postReqBody.PAGE_BODY = `${bodyText}<!--CodeEditor-->`;
+      }
       universalPost(
         setPostValues,
         endpoint,
@@ -222,11 +233,12 @@ export default function Generic(props) {
         error={errorTitle}
         errorMessage={errorTitleText}
       />
-      <Body
+      <Toggle
         body={bodyText}
         setBody={setBodyText}
         error={errorBody}
-        errorMessage="Page body cannot be empty."
+        option={editorOption}
+        setOption={setEditorOption}
       />
       <Button
         className={classes.saveButton}

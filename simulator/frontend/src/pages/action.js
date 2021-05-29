@@ -8,6 +8,7 @@ import {
   Button,
   Grid,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import { STUDENT_ID } from '../constants/config';
 import post from '../universalHTTPRequestsEditor/post';
 import GlobalContext from '../Context/GlobalContext';
@@ -68,8 +69,7 @@ export default function Action({
 }) {
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  body = body.replace(/\\"/g, '"');
-
+  console.log(choices);
   // eslint-disable-next-line
   const [chosenAction, setChosenAction] = React.useState(-1);
   // eslint-disable-next-line
@@ -169,7 +169,7 @@ export default function Action({
       <Grid container spacing={2}>
         <Grid item style={{ width: '100%' }}>
           <Grid item style={{ width: '100%' }}>
-            <div dangerouslySetInnerHTML={{ __html: body }} />
+            <InnerHTML html={body.replace(/\\"/g, '"')} />
           </Grid>
           <Box mx="auto">
             {choices.map((choice) => (

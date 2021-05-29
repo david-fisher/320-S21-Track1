@@ -299,7 +299,6 @@ export default function FlowDiagram({ scenario_ID }) {
               RESULT_PAGE: null,
             }),
           );
-
           const actions = currentElement.ACTION;
           for (let i = 0; i < actions.length; i++) {
             elements.forEach((currElement) => {
@@ -318,6 +317,7 @@ export default function FlowDiagram({ scenario_ID }) {
               }
             });
           }
+          console.log(nodeElement);
         } else {
           // Set next page ID for all other node types
           elements.some((currElement) => {

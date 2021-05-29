@@ -19,6 +19,7 @@ import {
   ListItemText,
   Checkbox,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
@@ -353,7 +354,7 @@ export default function HTMLPreview(props) {
                     >
                       {job}
                     </Box>
-                    <div dangerouslySetInnerHTML={{ __html: bio }} />
+                    <InnerHTML html={bio.replace(/\\"/g, '"')} />
                     <div style={
               {
                 display: 'flex',
@@ -396,7 +397,7 @@ export default function HTMLPreview(props) {
                     <TextTypography variant="h5" align="center" gutterBottom>
                       {job}
                     </TextTypography>
-                    <div dangerouslySetInnerHTML={{ __html: mainConvo }} />
+                    <InnerHTML html={mainConvo.replace(/\\"/g, '"')} />
                   </Grid>
                 </Box>
                 <Grid container direction="row" justify="space-between">

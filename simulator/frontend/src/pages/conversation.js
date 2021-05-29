@@ -15,9 +15,9 @@ import {
   ListItemText,
   Checkbox,
 } from '@material-ui/core';
-import { STUDENT_ID } from '../constants/config';
+import InnerHTML from 'dangerously-set-html-content';
 import get from '../universalHTTPRequestsEditor/get';
-import post from '../universalHTTPRequestsEditor/post';
+// import post from '../universalHTTPRequestsEditor/post';
 
 const TextTypography = withStyles({
   root: {
@@ -75,7 +75,7 @@ export default function Conversation({
     function onSuccess(response) {
       console.log(response);
       setConversations(response.data);
-      setHasQuestions(true);
+      setHasQuestions(response.data.length > 0);
     }
 
     function onFailure(err) {
@@ -87,8 +87,9 @@ export default function Conversation({
 
   // TODO
   const checkQuestionAnswered = () => {
-    const endpoint = `/scenarios/conversation/had?versionId=${versionID}&stakeholderId=${stakeholder.id}&userId=${STUDENT_ID}`;
+    // const endpoint = `/scenarios/conversation/had?versionId=${versionID}&stakeholderId=${stakeholder.id}&userId=${STUDENT_ID}`;
 
+    // eslint-disable-next-line
     function onSuccess(response) {
       if (response.data.message === 'succes') {
         // Yes, there is a typo in the endpoint.
@@ -97,6 +98,7 @@ export default function Conversation({
       }
     }
 
+    // eslint-disable-next-line
     function onFailure(err) {
       console.log('Error');
     }
@@ -108,17 +110,19 @@ export default function Conversation({
   useEffect(checkQuestionAnswered, [shouldFetch]);
 
   // TODO
+  // eslint-disable-next-line
   const postData = () => {
+    // eslint-disable-next-line
     function onSuccess(response) {
       console.log(response);
       setAnswer(response.data.result.RESPONSE);
     }
-
+    // eslint-disable-next-line
     function onFailure(err) {
       console.log('Error');
     }
 
-    const endpointPost = `/scenarios/conversation?versionId=${versionID}&scenarioId=${versionID}&stakeholderId=${stakeholder.id}&conversationId=${selectedConversation}&sessionId=${sessionID}`;
+    // const endpointPost = `/scenarios/conversation?versionId=${versionID}&scenarioId=${versionID}&stakeholderId=${stakeholder.id}&conversationId=${selectedConversation}&sessionId=${sessionID}`;
 
     // post(setFetchConversationResponse, endpointPost, onFailure, onSuccess, {
     //  already_exist: true,
@@ -155,7 +159,7 @@ export default function Conversation({
           <TextTypography variant="h5" align="center" gutterBottom>
             {stakeholder.job}
           </TextTypography>
-          <div dangerouslySetInnerHTML={{ __html: body }} />
+          <InnerHTML html={body.replace(/\\"/g, '"')} />
         </Grid>
       </Box>
       <Grid container direction="row" justify="space-between">

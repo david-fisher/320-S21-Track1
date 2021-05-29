@@ -33,7 +33,6 @@ export default function Body(props) {
 
   return (
     <div>
-      <Typography variant="h4">Body</Typography>
       <SunEditor
         setContents={body}
         setOptions={{

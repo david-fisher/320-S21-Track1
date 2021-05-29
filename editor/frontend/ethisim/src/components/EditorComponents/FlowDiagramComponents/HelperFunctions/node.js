@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Handle } from 'react-flow-renderer';
 import HTMLPreview from '../../HTMLPreview';
-import get from '../../../../universalHTTPRequests/get';
 
 export function actionNode({ data }) {
   const { label, actions, componentData } = data;
   actions.sort((a, b) => a.APC_ID - b.APC_ID);
-
+  console.log(actions);
   return (
     <>
       <Handle
@@ -29,7 +28,7 @@ export function actionNode({ data }) {
           type="source"
           position="bottom"
           id={index + 1}
-          style={{ left: `${100 - (100 / (actions.length + 1)) * (index + 1)}%` }}
+          style={{ left: `${(100 / (actions.length + 1)) * (index + 1)}%` }}
         />
       ))}
     </>

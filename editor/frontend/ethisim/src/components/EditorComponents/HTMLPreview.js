@@ -14,6 +14,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
+import InnerHTML from 'dangerously-set-html-content';
 import get from '../../universalHTTPRequests/get';
 
 const Transition = React.forwardRef((props, ref) => (
@@ -67,6 +68,7 @@ export default function HTMLPreview(props) {
   } = data;
   const [open, setOpen] = useState(false);
   const [questionsArr, setQuestionsArr] = useState(questions);
+  // eslint-disable-next-line
   const [getQuestionsValues, setGetQuestionsValues] = useState({
     data: null,
     loading: false,
@@ -159,11 +161,23 @@ export default function HTMLPreview(props) {
           : null}
         <Grid container spacing={2} style={{ width: '100%' }}>
           <Grid item style={{ width: '100%', margin: '2%' }}>
-            <div dangerouslySetInnerHTML={{ __html: body.replace(/\\"/g, '"') }} />
+            <InnerHTML html={body.replace(/\\"/g, '"')} />
           </Grid>
         </Grid>
         <Grid item style={{ width: '100%' }}>
-          {questionsArr ? questionsArr.map((q) => (
+          {getQuestions && questionsArr ? questionsArr.map((q) => (
+            <Box m="2rem" p={1} className={classes.textBox} key={q.RQ_ID}>
+              <p>{q.REFLECTION_QUESTION}</p>
+              <TextField
+                style={{ width: '100%' }}
+                id="outlined-multiline-static"
+                label="Answer"
+                multiline
+                variant="outlined"
+              />
+            </Box>
+          )) : null}
+          {questions ? questions.map((q) => (
             <Box m="2rem" p={1} className={classes.textBox} key={q.RQ_ID}>
               <p>{q.REFLECTION_QUESTION}</p>
               <TextField

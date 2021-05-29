@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Typography, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Body from '../GeneralPageComponents/Body';
 import Title from '../GeneralPageComponents/Title';
 import QuestionFields from './QuestionComponent/questions';
 import universalPost from '../../../universalHTTPRequests/post';
@@ -14,6 +13,8 @@ import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 import { ReflectionPageHelpInfo } from './ReflectionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
+import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
+import checkEditorType from '../GeneralPageComponents/checkEditorType';
 
 Reflection.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -64,6 +65,10 @@ export default function Reflection(props) {
 
   const classes = useStyles();
 
+  // Used to differentiate between Code Editor and Text Editor format
+  const { initialBody, option } = checkEditorType(body);
+  const [editorOption, setEditorOption] = useState(option);
+
   const [postValues, setPostValues] = useState({
     data: null,
     loading: false,
@@ -79,12 +84,13 @@ export default function Reflection(props) {
   reflection_questions.sort((a, b) => a.RQ_ID - b.RQ_ID);
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
-  const [bodyText, setBodyText] = useState(body);
+  const [bodyText, setBodyText] = useState(initialBody);
+  // This makes sure that the body will be the most updated version, hot fix
+  useEffect(() => setBodyText(initialBody), [body, initialBody]);
   const [questions, setQuestions] = useState(reflection_questions);
   const [questionsForReqBody, setQuestionsForReqBody] = useState(
     reflection_questions.map((a) => ({ REFLECTION_QUESTION: a.REFLECTION_QUESTION })),
   );
-
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState('');
   const [errorBody, setErrorBody] = useState(false);
@@ -187,6 +193,10 @@ export default function Reflection(props) {
     }
 
     if (validInput) {
+      // Used to differentiate between Code Editor and Text Editor format
+      if (editorOption === 'CodeEditor') {
+        postReqBody.PAGE_BODY = `${bodyText}<!--CodeEditor-->`;
+      }
       universalPost(
         setPostValues,
         endpoint,
@@ -272,11 +282,12 @@ export default function Reflection(props) {
         error={errorTitle}
         errorMessage={errorTitleText}
       />
-      <Body
+      <Toggle
         body={bodyText}
         setBody={setBodyText}
         error={errorBody}
-        errorMessage="Page body cannot be empty"
+        option={editorOption}
+        setOption={setEditorOption}
       />
       <QuestionFields
         questions={questions}

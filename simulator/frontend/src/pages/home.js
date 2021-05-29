@@ -181,7 +181,7 @@ export default function Home() {
         isFinished: false, // TODO
         date: data.DATE_CREATED,
         scenarioID: data.SCENARIO,
-        firstPage: 618,
+        firstPage: 695,
         courses: data.COURSES,
       }));
       /*
