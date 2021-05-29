@@ -82,7 +82,7 @@ export default function Action(props) {
   } = props;
 
   // Used to differentiate between Code Editor and Text Editor format
-  const { initialBody, option } = checkEditorType(body);
+  const { formattedBody, option } = checkEditorType(body);
   const [editorOption, setEditorOption] = useState(option);
 
   const [postValues, setPostValues] = useState({
@@ -100,9 +100,9 @@ export default function Action(props) {
   choices.sort((a, b) => a.APC_ID - b.APC_ID);
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
-  const [bodyText, setBodyText] = useState(initialBody);
+  const [bodyText, setBodyText] = useState(formattedBody);
   // This makes sure that the body will be the most updated version, hot fix
-  useEffect(() => setBodyText(initialBody), [body, initialBody]);
+  useEffect(() => { setBodyText(formattedBody); }, [formattedBody]);
   const [choicesArr, setChoicesArr] = useState(choices);
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState(false);

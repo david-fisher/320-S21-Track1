@@ -10,6 +10,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import AddNewPageSunEditor from './AddNewPageSunEditor';
+import Toggle from '../GeneralPageComponents/Body_TextEditor_CodeEditor';
 
 const useStyles = makeStyles((theme) => ({
   containerRow: {
@@ -60,6 +61,7 @@ export default function AddNewScenarioPageDialogBody(props) {
   const [errorNameText, setErrorNameText] = useState('');
   const [errorBody, setErrorBody] = useState(false);
 
+  const [editorOption, setEditorOption] = useState('TextEditor');
   // eslint-disable-next-line
     const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -98,7 +100,12 @@ export default function AddNewScenarioPageDialogBody(props) {
     }
 
     if (validInput) {
-      addPage(pageType, pageName, pageBody);
+      // Used to differentiate between Code Editor and Text Editor format
+      let formattedPageBody = pageBody;
+      if (editorOption === 'CodeEditor') {
+        formattedPageBody = `${pageBody}<!--CodeEditor-->`;
+      }
+      addPage(pageType, pageName, formattedPageBody);
       setOpenPopup(false);
     }
   };
@@ -151,7 +158,14 @@ export default function AddNewScenarioPageDialogBody(props) {
         />
       )}
 
-      <AddNewPageSunEditor text={pageBody} setText={setPageBody} />
+      <Toggle
+        body={pageBody}
+        setBody={setPageBody}
+        error={errorBody}
+        option={editorOption}
+        setOption={setEditorOption}
+        notSetUnsaved
+      />
       {errorBody ? (
         <Typography
           style={{ marginLeft: 15 }}

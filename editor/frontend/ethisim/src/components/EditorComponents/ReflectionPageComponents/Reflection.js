@@ -66,7 +66,7 @@ export default function Reflection(props) {
   const classes = useStyles();
 
   // Used to differentiate between Code Editor and Text Editor format
-  const { initialBody, option } = checkEditorType(body);
+  const { formattedBody, option } = checkEditorType(body);
   const [editorOption, setEditorOption] = useState(option);
 
   const [postValues, setPostValues] = useState({
@@ -84,9 +84,9 @@ export default function Reflection(props) {
   reflection_questions.sort((a, b) => a.RQ_ID - b.RQ_ID);
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
-  const [bodyText, setBodyText] = useState(initialBody);
+  const [bodyText, setBodyText] = useState(formattedBody);
   // This makes sure that the body will be the most updated version, hot fix
-  useEffect(() => setBodyText(initialBody), [body, initialBody]);
+  useEffect(() => setBodyText(formattedBody), [formattedBody]);
   const [questions, setQuestions] = useState(reflection_questions);
   const [questionsForReqBody, setQuestionsForReqBody] = useState(
     reflection_questions.map((a) => ({ REFLECTION_QUESTION: a.REFLECTION_QUESTION })),

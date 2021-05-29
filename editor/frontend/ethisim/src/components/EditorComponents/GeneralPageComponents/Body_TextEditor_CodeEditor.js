@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Typography,
 }
@@ -12,7 +12,9 @@ import TextFormatIcon from '@material-ui/icons/TextFormat';
 import Body from './Body';
 import CodeEditor from './CodeEditor';
 import ChangeEditorWarning from '../../WarningDialogs/ChangeEditorWarning';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
+// We know if a page is using the CodeEditor if the string has the tag "<!--CodeEditor-->"" at the end"
 Toggle.propTypes = {
   body: PropTypes.string.isRequired,
   setBody: PropTypes.any.isRequired,
@@ -20,15 +22,21 @@ Toggle.propTypes = {
   errorMessage: PropTypes.string,
   option: PropTypes.any,
   setOption: PropTypes.func,
+  notSetUnsaved: PropTypes.bool,
 };
 export default function Toggle({
-  body, setBody, error, errorMessage, option, setOption,
+  body, setBody, error, errorMessage, option, setOption, notSetUnsaved,
 }) {
-  // TODO Dialog warning
+  // eslint-disable-next-line
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
   const handleToggleChange = (e) => {
     setBody('');
     setOption(option === 'TextEditor' ? 'CodeEditor' : 'TextEditor');
     setOpen(false);
+    if (notSetUnsaved) {
+      return;
+    }
+    setGlobalUnsaved(true);
   };
   // warning dialog
   const [open, setOpen] = useState(false);
@@ -56,6 +64,7 @@ export default function Toggle({
           setBody={setBody}
           error={error}
           errorMessage="Page body cannot be empty."
+          notSetUnsaved={notSetUnsaved}
         />
       )
         : null}
@@ -65,6 +74,7 @@ export default function Toggle({
           setBody={setBody}
           error={error}
           errorMessage="Page body cannot be empty."
+          notSetUnsaved={notSetUnsaved}
         />
       ) : null}
     </div>

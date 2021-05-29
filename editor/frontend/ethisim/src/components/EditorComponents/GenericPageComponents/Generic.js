@@ -61,7 +61,7 @@ export default function Generic(props) {
   } = props;
 
   // Used to differentiate between Code Editor and Text Editor format
-  const { initialBody, option } = checkEditorType(body);
+  const { formattedBody, option } = checkEditorType(body);
   const [editorOption, setEditorOption] = useState(option);
 
   // eslint-disable-next-line
@@ -80,9 +80,9 @@ export default function Generic(props) {
   const classes = useStyles();
   const [pageID, setPageID] = useState(page_id);
   const [title, setTitle] = useState(page_title);
-  const [bodyText, setBodyText] = useState(initialBody);
+  const [bodyText, setBodyText] = useState(formattedBody);
   // This makes sure that the body will be the most updated version, hot fix
-  useEffect(() => setBodyText(initialBody), [body, initialBody]);
+  useEffect(() => setBodyText(formattedBody), [formattedBody]);
   // eslint-disable-next-line
   const [bodiesText, setBodiesText] = useState(bodies);
   const [errorTitle, setErrorTitle] = useState(false);

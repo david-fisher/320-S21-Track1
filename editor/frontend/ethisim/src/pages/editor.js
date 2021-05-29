@@ -458,16 +458,17 @@ export default function Editor(props) {
   const onClick = (id, title, scenarioPages) => {
     setCurrentPageID(id);
     if (id !== -1 && id !== -2 && id !== -3 && id !== -4) {
+      setScenarioComponent(null);
       handlePageGet(setGetValues, id, scenarioPages);
     } else {
       let arr = [...scenarioPages];
       arr = arr.map((x) => ({ ...x, curPage: false }));
       arr[Math.abs(id) - 1].curPage = true;
       setScenarioComponents(arr);
+      setScenarioComponent(
+        scenarioComponents.find((x) => x.id === id).component,
+      );
     }
-    setScenarioComponent(
-      scenarioComponents.find((x) => x.id === id).component,
-    );
   };
 
   const deleteByID = (d_id) => {

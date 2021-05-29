@@ -34,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
   iconRefreshSmall: {
     fontSize: '30px',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 StakeholderFields.propTypes = {
@@ -69,7 +74,7 @@ export default function StakeholderFields({ scenario, version }) {
   });
 
   // eslint-disable-next-line
-    const setStakeholders = (arr) => {
+  const setStakeholders = (arr) => {
     setFetchedStakeholders({
       ...fetchedStakeholders,
       data: arr,
@@ -81,14 +86,22 @@ export default function StakeholderFields({ scenario, version }) {
   // handles GETting existing stakeholders from the backend and representing that information in the frontend
   // will eventually know which scenario to get stakeholders from once scenario_id is passed
   // from baseURL + 'stakeholder?scenario_id=' + scenario_id
-  function getExistingStakeholders() {
+
+  // If glitches occur after updating individual stakeholders, force a "refresh" by calling this function to get the stakeholders again from the database
+  function getExistingStakeholders(onSaveStakeholder) {
+    function onSuccess(resp) {
+      if (onSaveStakeholder) {
+        setSuccessBannerMessage('Successfully saved the stakeholder!');
+        setSuccessBannerFade(true);
+      }
+    }
     function onError(resp) {
       setErrorBannerMessage(
         'Failed to get Stakeholders! Please try again.',
       );
       setErrorBannerFade(true);
     }
-    get(setFetchedStakeholders, endpointGET + scenario, onError);
+    get(setFetchedStakeholders, endpointGET + scenario, onError, onSuccess);
   }
 
   useEffect(getExistingStakeholders, []);
@@ -143,52 +156,6 @@ export default function StakeholderFields({ scenario, version }) {
     };
     post(setPostReq, endpointPOST, onError, onSuccess, data);
   };
-
-  // TODO function that saves all stakeholders at once
-  /*
-    const saveStakeholders = (e) => {
-        var data = [...stakeholders];
-        for (var i = 0; i < data.length; i++) {
-            var form = new FormData();
-            var id;
-            var item = data[i];
-            for (var key in item) {
-                if (key === 'STAKEHOLDER') {
-                    id = item[key];
-                    form.append(key, item[key]);
-                } else if (key === 'PHOTO') {
-                    if (item[key] instanceof File) {
-                        form.append(key, item[key]);
-                    }
-                } else {
-                    form.append(key, item[key]);
-                }
-            }
-            var config = {
-                method: 'put',
-                url: baseURL + '/api/stakeholders/' + id + '/',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                data: form,
-            };
-
-            axios(config)
-                .then(function (response) {
-                    setSuccessBannerMessage(
-                        'Successfully saved the stakeholders!'
-                    );
-                    setSuccessBannerFade(true);
-                })
-                .catch(function (error) {
-                    setErrorBannerMessage(
-                        'Failed to save the stakeholders! Please try again.'
-                    );
-                    setErrorBannerFade(true);
-                });
-        }
-    };
-    */
 
   /*
      * This section is about managing time to prevent sending a combination of multiple
@@ -247,14 +214,16 @@ export default function StakeholderFields({ scenario, version }) {
 
   return (
     <div className={classes.container}>
-      <SuccessBanner
-        successMessage={successBannerMessage}
-        fade={successBannerFade}
-      />
-      <ErrorBanner
-        errorMessage={errorBannerMessage}
-        fade={errorBannerFade}
-      />
+      <div className={classes.bannerContainer}>
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       <div className={classes.headerContainer}>
         <Button
           variant="contained"
@@ -290,7 +259,7 @@ export default function StakeholderFields({ scenario, version }) {
             */}
       <form id="form">
         {fetchedStakeholders.data
-          ? fetchedStakeholders.data.map((stakeholder) => (
+          ? fetchedStakeholders.data.sort((a, b) => a.STAKEHOLDER - b.STAKEHOLDER).map((stakeholder) => (
             <Stakeholder
               key={stakeholder.STAKEHOLDER}
               removeStakeholder={removeStakeholder}
@@ -303,6 +272,7 @@ export default function StakeholderFields({ scenario, version }) {
               version={stakeholder.VERSION}
               stakeholders={fetchedStakeholders.data}
               setStakeholders={setStakeholders}
+              getStakeholders={getExistingStakeholders}
               scenario={scenario}
             />
           ))

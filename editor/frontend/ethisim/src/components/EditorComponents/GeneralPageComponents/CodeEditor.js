@@ -11,20 +11,23 @@ CodeEditor.propTypes = {
   setBody: PropTypes.any.isRequired,
   error: PropTypes.bool,
   errorMessage: PropTypes.string,
+  notSetUnsaved: PropTypes.bool,
 };
 export default function CodeEditor({
-  body, setBody, error, errorMessage,
+  body, setBody, error, errorMessage, notSetUnsaved,
 }) {
   // eslint-disable-next-line
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
   const handleChange = (str) => {
     setBody(str);
+    if (notSetUnsaved) {
+      return;
+    }
     setGlobalUnsaved(true);
   };
 
   return (
     <div>
-      <Typography variant="h4">Code Editor</Typography>
       <div style={{ border: '1px solid black' }}>
         <Editor
           className="editor"

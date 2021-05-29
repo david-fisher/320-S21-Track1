@@ -73,7 +73,6 @@ export default function Conversation({
 
   const getData = () => {
     function onSuccess(response) {
-      console.log(response);
       setConversations(response.data);
       setHasQuestions(response.data.length > 0);
     }

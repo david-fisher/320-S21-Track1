@@ -10,11 +10,12 @@ Body.propTypes = {
   setBody: PropTypes.any.isRequired,
   error: PropTypes.bool,
   errorMessage: PropTypes.string,
+  notSetUnsaved: PropTypes.bool,
 };
 
 export default function Body(props) {
   const {
-    body, setBody, error, errorMessage,
+    body, setBody, error, errorMessage, notSetUnsaved,
   } = props;
   // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
@@ -23,10 +24,13 @@ export default function Body(props) {
   // There are no unsaved changes until a person types something in
   const handleChange = (content) => {
     if (firstTime) {
-      setBody(content);
+      setBody(content, firstTime);
       firstTime = false;
     } else {
-      setBody(content);
+      setBody(content, firstTime);
+      if (notSetUnsaved) {
+        return;
+      }
       setGlobalUnsaved(true);
     }
   };

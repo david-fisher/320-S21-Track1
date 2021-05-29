@@ -410,7 +410,7 @@ export default function HTMLPreview(props) {
                     }}
                   />
                 </Grid>
-                {getQRsObj.data
+                {getQRsObj.data && getQRsObj.data.length > 0
                   ? (
                     <Grid container spacing={2} style={{ width: '100%' }}>
                       <Grid item lg={12} style={{ width: '100%' }}>

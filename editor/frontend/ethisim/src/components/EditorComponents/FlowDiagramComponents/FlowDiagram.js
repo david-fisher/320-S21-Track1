@@ -317,7 +317,6 @@ export default function FlowDiagram({ scenario_ID }) {
               }
             });
           }
-          console.log(nodeElement);
         } else {
           // Set next page ID for all other node types
           elements.some((currElement) => {
