@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./landing page/welcome-login/
-          file: ./landing page/welcome-login/Dockerfile.prod
+          file: ./landing page/welcome-login/Dockerfile.dev
           push: true
           tags: ikhurana/ethisim-dev:frontend-landing-page
           cache-from: type=registery, ref=ikhurana/ethisim-dev:frontend-landing-page
@@ -58,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./editor/frontend/ethisim/
-          file: ./editor/frontend/ethisim/Dockerfile.prod
+          file: ./editor/frontend/ethisim/Dockerfile.dev
           push: true
           tags: ikhurana/ethisim-dev:frontend-editor
           cache-from: type=registery, ref=ikhurana/ethisim-dev:frontend-editor
@@ -107,7 +107,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./simulator/frontend/
-          file: ./simulator/frontend/Dockerfile.prod
+          file: ./simulator/frontend/Dockerfile.dev
           push: true
           tags: ikhurana/ethisim-dev:frontend-simulator
           cache-from: type=registery, ref=ikhurana/ethisim-dev:frontend-simulator
