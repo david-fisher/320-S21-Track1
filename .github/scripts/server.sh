@@ -1,5 +1,5 @@
 #!/bin/sh
-cd /shared/docker
+cd /ethisim
 docker-compose down
 docker pull ikhurana/ethisim-dev:frontend-landing-page 
 docker pull ikhurana/ethisim-dev:frontend-editor
