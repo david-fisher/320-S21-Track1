@@ -148,8 +148,8 @@ jobs:
 
       - name: copy files into server
         run: |
-          sshpass -p abcd scp -o StrictHostKeyChecking=no apache_server/ethisim.conf ikhurana@ethisim2.cs.umass.edu/ethisim/configuration/conf.d/ethisim.conf
-          sshpass -p abcd scp -o StrictHostKeyChecking=no apache_server/httpd.conf ikhurana@ethisim2.cs.umass.edu:/shared/docker/configuration/conf/httpd.conf
+          sshpass -p abcd scp -o StrictHostKeyChecking=no apache_server/ethisim.conf ikhurana@ethisim2.cs.umass.edu:/ethisim/configuration/conf.d/ethisim.conf
+          sshpass -p abcd scp -o StrictHostKeyChecking=no apache_server/httpd.conf ikhurana@ethisim2.cs.umass.edu:/ethisim/configuration/conf/httpd.conf
 
       - name: Prep to deploy
         run: | 
