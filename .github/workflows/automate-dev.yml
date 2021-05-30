@@ -154,9 +154,9 @@ jobs:
       - name: Prep to deploy
         run: | 
           sudo apt-get install sshpass
-          chmod +x .github/scripts/server.sh
+          chmod +x .github/scripts/server.dev.sh
           
         #login to the server using ssh
       - name: log in to server
         run: |
-          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} ssh -tt -o StrictHostKeyChecking=no ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}} 'bash -s' < .github/scripts/server.sh
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} ssh -tt -o StrictHostKeyChecking=no ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}} 'bash -s' < .github/scripts/server.dev.sh
