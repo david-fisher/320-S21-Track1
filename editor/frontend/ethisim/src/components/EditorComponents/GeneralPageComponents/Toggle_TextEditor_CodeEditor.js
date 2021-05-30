@@ -62,8 +62,6 @@ export default function Toggle({
         <Body
           body={body}
           setBody={setBody}
-          error={error}
-          errorMessage="Page body cannot be empty."
           notSetUnsaved={notSetUnsaved}
         />
       )
@@ -72,10 +70,18 @@ export default function Toggle({
         <CodeEditor
           body={body}
           setBody={setBody}
-          error={error}
-          errorMessage="Page body cannot be empty."
           notSetUnsaved={notSetUnsaved}
         />
+      ) : null}
+      {error ? (
+        <Typography
+          style={{ marginLeft: 15 }}
+          variant="caption"
+          display="block"
+          color="error"
+        >
+          {errorMessage || 'Page body cannot be empty.'}
+        </Typography>
       ) : null}
     </div>
   );

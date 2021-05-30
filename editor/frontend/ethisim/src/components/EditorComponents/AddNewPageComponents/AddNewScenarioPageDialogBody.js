@@ -54,7 +54,8 @@ export default function AddNewScenarioPageDialogBody(props) {
     const [anchorEl, setAnchorEl] = useState(null);
   const [pageType, setPageType] = useState('Generic');
   const [pageName, setPageName] = useState('');
-  const [pageBody, setPageBody] = useState('');
+  // Text Editor default value
+  const [pageBody, setPageBody] = useState('<p><br></p>');
 
   const [errorName, setErrorName] = useState(false);
   const [errorNameText, setErrorNameText] = useState('');
@@ -165,16 +166,6 @@ export default function AddNewScenarioPageDialogBody(props) {
         setOption={setEditorOption}
         notSetUnsaved
       />
-      {errorBody ? (
-        <Typography
-          style={{ marginLeft: 15 }}
-          variant="caption"
-          display="block"
-          color="error"
-        >
-          Page body cannot be empty.
-        </Typography>
-      ) : null}
       <div className={classes.containerRow}>
         <Button
           className={classes.addButton}
