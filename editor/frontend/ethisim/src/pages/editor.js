@@ -306,10 +306,15 @@ export default function Editor(props) {
     });
   };
 
-  // TODO implement banner
-  function handleDelete(setDeleteValues, d_id) {
+  function handleDelete(setDeleteValues, d_id, samePage) {
     const endpoint = `/page?page_id=${d_id}`;
     function onSuccess(resp) {
+      // we deleted the page that we are currently on,
+      // if there were unsaved changes on that page,
+      // we can set global unsaved context to false, as there are no unsaved changes
+      if (samePage) {
+        setGlobalUnsaved(false);
+      }
       setSuccessBannerFade(true);
       setSuccessBannerMessage('Successfully deleted page!');
       setShowEditor(true);
@@ -472,6 +477,7 @@ export default function Editor(props) {
   };
 
   const deleteByID = (d_id) => {
+    let samePage = false;
     // If on page that is going to be deleted, redirect back to logistics page
     if (
       scenarioComponents.filter((i) => i.id === d_id)[0].id
@@ -479,10 +485,11 @@ export default function Editor(props) {
     ) {
       setCurrentPageID(-1);
       setScenarioComponent(scenarioComponents[0].component);
+      samePage = true;
     }
     setScenarioComponents(scenarioComponents.filter((i) => i.id !== d_id));
     setShowEditor(false);
-    handleDelete(setDeleteValues, d_id);
+    handleDelete(setDeleteValues, d_id, samePage);
   };
 
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
@@ -520,6 +527,7 @@ export default function Editor(props) {
       let postReqBody;
 
       function onSuccess(resp) {
+        setGlobalUnsaved(false);
         setAddNewPageId(resp.data.PAGE);
         setShouldFetch(shouldFetch + 1);
       }

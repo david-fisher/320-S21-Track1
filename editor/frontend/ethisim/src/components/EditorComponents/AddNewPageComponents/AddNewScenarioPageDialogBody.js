@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Select,
   MenuItem,
@@ -10,6 +10,8 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
+import GenericUnsavedWarning from '../../WarningDialogs/GenericUnsavedWarning';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
   containerRow: {
@@ -49,7 +51,7 @@ export default function AddNewScenarioPageDialogBody(props) {
   AddNewScenarioPageDialogBody.propTypes = props.data;
   const data = props;
   const { addPage, setOpenPopup } = data;
-
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
   // eslint-disable-next-line
     const [anchorEl, setAnchorEl] = useState(null);
   const [pageType, setPageType] = useState('Generic');
@@ -73,6 +75,12 @@ export default function AddNewScenarioPageDialogBody(props) {
 
   const handleChange = (event) => {
     setPageType(event.target.value);
+  };
+
+  // used for unsaved warning dialog
+  const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(false);
+  const handleOpenUnsavedWarningDialog = () => {
+    setOpenUnsavedWarningDialog(true);
   };
 
   const createNewPage = () => {
@@ -167,11 +175,19 @@ export default function AddNewScenarioPageDialogBody(props) {
         notSetUnsaved
       />
       <div className={classes.containerRow}>
+        <GenericUnsavedWarning
+          func={createNewPage}
+          setOpen={setOpenUnsavedWarningDialog}
+          open={openUnsavedWarningDialog}
+          description="You have currently unsaved changes. Are you sure you add a new page without saving?"
+        />
         <Button
           className={classes.addButton}
           variant="contained"
           color="primary"
-          onClick={createNewPage}
+          onClick={globalUnsaved
+            ? handleOpenUnsavedWarningDialog
+            : createNewPage}
         >
           <AddIcon />
           Add New Page
