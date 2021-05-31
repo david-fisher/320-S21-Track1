@@ -134,30 +134,8 @@ export default function Home() {
   // post returns new id of scenario, when you concatenating to array set the id to that
   const [scenarioList, setScenarioList] = useState({
     // temporary array of scenarios
-    incompleteScenarios: [
-      {
-        title: ' ',
-        courses: [],
-        numConversations: 0,
-        isFinished: false,
-        firstPage: 0,
-        date: ' ',
-        completed: 10,
-        max: 10,
-      },
-    ],
-    completeScenarios: [
-      {
-        title: ' ',
-        numConversations: 0,
-        isFinished: true,
-        firstPage: 0,
-        courses: [],
-        date: ' ',
-        completed: 10,
-        max: 10,
-      },
-    ],
+    incompleteScenarios: null,
+    completeScenarios: null,
   });
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
@@ -177,15 +155,31 @@ export default function Home() {
       // response.data.result.filter((data) => data.is_finished);
       incomplete = response.data.map((data) => ({
         title: data.NAME,
-        numConversations: 6, // TODO
-        isFinished: false, // TODO
+        numConversations: data.NUM_CONVERSATION,
+        isFinished: false,
         date: data.DATE_CREATED,
         scenarioID: data.SCENARIO,
-        firstPage: 695,
+        firstPage: null,
         courses: data.COURSES,
       }));
-      console.log(incomplete.filter(({ scenarioID }) => scenarioID === 86));
-      incomplete.filter(({ scenarioID }) => scenarioID === 86)[0].firstPage = 515;
+      // TODO temporary requests to get first Page field
+      incomplete.forEach((obj) => {
+        function onSuccess(resp) {
+          obj.firstPage = resp.data.PAGES.filter(({ PAGE_TYPE }) => PAGE_TYPE === 'I')[0].PAGE;
+          const scen = {
+            incompleteScenarios: incomplete,
+            completeScenarios: complete,
+          };
+          setScenarioList(scen);
+        }
+        get(
+          setFetchScenariosResponse,
+          `/logistics?scenario_id=${obj.scenarioID}`,
+          null,
+          onSuccess,
+        );
+      });
+
       /*
       complete = complete.map((data) => ({
         title: data.name,
@@ -197,12 +191,6 @@ export default function Home() {
         course: data.course_name,
       }));
       */
-      const scen = {
-        incompleteScenarios: incomplete,
-        completeScenarios: complete,
-      };
-      console.log(scen);
-      setScenarioList(scen);
     }
 
     function onFailure() {
@@ -300,7 +288,7 @@ export default function Home() {
           >
             <Typography variant="h2">To-Do</Typography>
           </Grid>
-          {scenarioList.incompleteScenarios.map((scenario) => (
+          {scenarioList.incompleteScenarios ? scenarioList.incompleteScenarios.map((scenario) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
@@ -320,10 +308,12 @@ export default function Home() {
                   color="primary"
                 >
                   Select Scenario
+                  {' '}
+                  {scenario.firstPage}
                 </Button>
               </Paper>
             </Grid>
-          ))}
+          )) : null}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -333,7 +323,7 @@ export default function Home() {
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>
-          {scenarioList.completeScenarios.map((scenario) => (
+          {scenarioList.completeScenarios ? scenarioList.completeScenarios.map((scenario) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
@@ -357,7 +347,7 @@ export default function Home() {
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
-          ))}
+          )) : null}
         </Grid>
       </TabPanel>
     </div>

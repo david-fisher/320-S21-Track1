@@ -284,6 +284,7 @@ export default function Stakeholders({
     styles,
   ) {
     function onClickStakeholder() {
+      // POST that we talked to this stakeholder
       setCurrentStakeholder(() => ({
         name,
         id,
@@ -345,14 +346,6 @@ export default function Stakeholders({
 
       setShowStakeholders(false);
       toggleModal(id, false);
-      /* setGatheredInfo(infos => {
-        let ind = infos.findIndex(info => info.pageId === PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS);
-        if (ind < 0) { ind = infos.length; }
-        let newInfos = [...infos];
-        newInfos.splice(ind, 0,
-          { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: 'stakeholders'});
-        return newInfos;
-      }); */
     }
 
     function toggleModal(id, toggle) {

@@ -858,7 +858,7 @@ export default function Stakeholder({
             component="div"
             style={{ display: 'flex' }}
           >
-            {`${name} Questions and Answers`}
+            {`${stakeholderName} Questions and Answers`}
           </Typography>
           <Button
             className={classes.exitOutButton}
@@ -910,7 +910,7 @@ export default function Stakeholder({
             component="div"
             style={{ display: 'flex' }}
           >
-            {`${name} Issue Coverage`}
+            {`${stakeholderName} Issue Coverage`}
           </Typography>
           <Button
             className={classes.exitOutButton}

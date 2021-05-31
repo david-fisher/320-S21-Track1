@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getSteps(pages, navigatePageFunc) {
   const stepArr = [];
-  console.log(pages);
+  // console.log(pages);
   for (let i = 0; i < pages.length; i++) {
     const buttonName = pages[i].title;
     stepArr.push(

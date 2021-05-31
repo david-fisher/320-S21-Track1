@@ -23,6 +23,7 @@ const questions = [
   },
 ];
 
+// TODO Currently not used, could be used as the final page of a scenario
 Conclusion.propTypes = {
   setActivePage: PropTypes.string.isRequired,
   activePage: PropTypes.string.isRequired,

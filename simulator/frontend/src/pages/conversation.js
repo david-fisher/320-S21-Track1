@@ -108,7 +108,8 @@ export default function Conversation({
   useEffect(getData, [shouldFetch]);
   useEffect(checkQuestionAnswered, [shouldFetch]);
 
-  // TODO
+  // TODO, POST that we selected the stakeholder once you click on the stakeholder, not once you return (Look at stakeholder.js function onClickStakeholder)
+  // TODO, if we want to keep track of what questions the player asked the stakeholder, this is where we would POST that data
   // eslint-disable-next-line
   const postData = () => {
     // eslint-disable-next-line

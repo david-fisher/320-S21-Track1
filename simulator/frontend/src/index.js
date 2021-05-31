@@ -1,11 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import playerReducer from './redux/reducers';
 import './index.css';
-import './pages/components/suneditor.min.css';
 import Nav from './Nav';
 import * as serviceWorker from './serviceWorker';
 
@@ -18,19 +14,10 @@ const theme = createMuiTheme({
   },
 });
 
-const store = createStore(
-  playerReducer,
-  undefined,
-  // eslint-disable-next-line no-underscore-dangle
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-);
-
 ReactDOM.render(
   <React.StrictMode>
     <MuiThemeProvider theme={theme}>
-      <Provider store={store}>
-        <Nav />
-      </Provider>
+      <Nav />
     </MuiThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),

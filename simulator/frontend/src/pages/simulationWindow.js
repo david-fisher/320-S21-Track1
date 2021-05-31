@@ -96,7 +96,8 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [...oldObj.pages, newPage],
       }));
-      post(setFetchScenariosResponse, endpointSess, onFailure, startSess);
+      // TODO replace null with onFailure once session endpoint is finished
+      post(setFetchScenariosResponse, endpointSess, null, startSess);
     }
     function onFailure() {
       setErrorBannerMessage('Failed to start session! Please try again.');
@@ -309,16 +310,6 @@ export default function SimulationWindow(props) {
               && playerContext.pages[playerContext.activeIndex].component}
           </Box>
         </Grid>
-        {/*
-          <Grid container item lg={3} md={2} sm={2}>
-            <Grid item lg={12}>
-             <InfoGatheredList pages={pages}/>
-            </Grid>
-            <Grid item lg={12}>
-            </Grid>
-          </Grid>
-        </GatheredInfoContext.Provider>
-        */}
       </Grid>
     </GlobalContext.Provider>
   );
