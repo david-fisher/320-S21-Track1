@@ -51,6 +51,7 @@ export default function AddNewScenarioPageDialogBody(props) {
   AddNewScenarioPageDialogBody.propTypes = props.data;
   const data = props;
   const { addPage, setOpenPopup } = data;
+  // eslint-disable-next-line
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
   // eslint-disable-next-line
     const [anchorEl, setAnchorEl] = useState(null);

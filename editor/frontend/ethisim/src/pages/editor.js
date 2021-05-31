@@ -172,7 +172,7 @@ export default function Editor(props) {
     : scenarioIDFromURL;
 
   // TODO when version control is implemented
-  const tempVersionID = 1;
+  const tempVersionID = null;
 
   const [getValues, setGetValues] = useState({
     data: null,

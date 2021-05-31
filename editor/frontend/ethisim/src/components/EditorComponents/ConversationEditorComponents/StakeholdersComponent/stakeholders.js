@@ -56,7 +56,7 @@ const endpointDELETE = '/api/stakeholders/';
 export default function StakeholderFields({ scenario, version }) {
   const classes = useStyles();
   // TODO when/if versions get implemented
-  version = version || 1;
+  version = version || null;
   // tracks current state of stakeholders to be represented on the frontend
   const [fetchedStakeholders, setFetchedStakeholders] = useState({
     data: null,
