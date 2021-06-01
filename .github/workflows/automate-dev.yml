@@ -4,7 +4,7 @@ concurrency: deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: [ ethisim-dev ]
 
 
   # Allows you to run this workflow manually from the Actions tab
@@ -26,17 +26,17 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
       
       # Build and push Landing Page Frontend image
       - name: build and push landing page
         uses: docker/build-push-action@v2
         with:
           context: ./landing page/welcome-login/
-          file: ./landing page/welcome-login/Dockerfile.prod
+          file: ./landing page/welcome-login/Dockerfile.dev
           push: true
-          tags: ikhurana/ethisim-prod:frontend-landing-page
-          cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-landing-page
+          tags: ikhurana/ethisim-dev:frontend-landing-page
+          cache-from: type=registery, ref=ikhurana/ethisim-dev:frontend-landing-page
           cache-to: type=inline
   
   editor-frontend:
@@ -51,17 +51,17 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
       #Build and push Editor Frontend image       
       - name: build and push editor frontend
         uses: docker/build-push-action@v2
         with:
           context: ./editor/frontend/ethisim/
-          file: ./editor/frontend/ethisim/Dockerfile.prod
+          file: ./editor/frontend/ethisim/Dockerfile.dev
           push: true
-          tags: ikhurana/ethisim-prod:frontend-editor
-          cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-editor
+          tags: ikhurana/ethisim-dev:frontend-editor
+          cache-from: type=registery, ref=ikhurana/ethisim-dev:frontend-editor
           cache-to: type=inline
 
   editor-backend:
@@ -76,7 +76,7 @@ jobs:
     
       - name: docker login
         run: |
-          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
       # Build and push Editor Backend image
       - name: build and push editor backend
@@ -84,8 +84,8 @@ jobs:
         with:
           context: ./editor/backend/
           push: true
-          tags: ikhurana/ethisim-prod:backend-editor
-          cache-from: type=registery, ref=ikhurana/ethisim-prod:backend-editor
+          tags: ikhurana/ethisim-dev:backend-editor
+          cache-from: type=registery, ref=ikhurana/ethisim-dev:backend-editor
           cache-to: type=inline
 
   simulator-frontend:
@@ -100,17 +100,17 @@ jobs:
     
       - name: docker login
         run: |
-          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
       # Build and push Simulator Frontend image
       - name: build and push simulator frontend
         uses: docker/build-push-action@v2
         with:
           context: ./simulator/frontend/
-          file: ./simulator/frontend/Dockerfile.prod
+          file: ./simulator/frontend/Dockerfile.dev
           push: true
-          tags: ikhurana/ethisim-prod:frontend-simulator
-          cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-simulator
+          tags: ikhurana/ethisim-dev:frontend-simulator
+          cache-from: type=registery, ref=ikhurana/ethisim-dev:frontend-simulator
           cache-to: type=inline
 
   simulator-backend:
@@ -125,7 +125,7 @@ jobs:
       
       - name: docker login
         run: |
-          docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASS }}
+          docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASS}}
 
         # Build and push Simulator Backend image
       - name: build and push simulator backend
@@ -133,8 +133,8 @@ jobs:
         with:
           context: ./simulator/steminist_simulator_backend/
           push: true
-          tags: ikhurana/ethisim-prod:backend-simulator
-          cache-from: type=registery, ref=ikhurana/ethisim-prod:backend-simulator
+          tags: ikhurana/ethisim-dev:backend-simulator
+          cache-from: type=registery, ref=ikhurana/ethisim-dev:backend-simulator
           cache-to: type=inline
 
   deploy:
@@ -148,15 +148,15 @@ jobs:
 
       - name: copy files into server
         run: |
-          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/ethisim.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf.d/ethisim.conf
-          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} scp -o StrictHostKeyChecking=no apache_server/httpd.conf ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }}:/shared/docker/configuration/conf/httpd.conf
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} scp -o StrictHostKeyChecking=no apache_server/ethisim.dev.conf ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}}:/ethisim/configuration/conf.d/ethisim.conf
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} scp -o StrictHostKeyChecking=no apache_server/httpd.conf ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}}:/ethisim/configuration/conf/httpd.conf
 
       - name: Prep to deploy
         run: | 
           sudo apt-get install sshpass
-          chmod +x .github/scripts/server.sh
+          chmod +x .github/scripts/server.dev.sh
           
         #login to the server using ssh
-      - name: log in to server
+      - name: log in to server 
         run: |
-          sshpass -p ${{ secrets.CSCF_SERVER_PASS }} ssh -tt -o StrictHostKeyChecking=no ${{ secrets.CSCF_SERVER_USER }}@${{ secrets.CSCF_SERVER_HOST }} 'bash -s' < .github/scripts/server.sh
+          sshpass -p ${{secrets.CSCF_SERVER_PASS_DEV}} ssh -tt -o StrictHostKeyChecking=no ${{secrets.CSCF_SERVER_USER_DEV}}@${{secrets.CSCF_SERVER_HOST_DEV}} 'bash -s' < .github/scripts/server.dev.sh
