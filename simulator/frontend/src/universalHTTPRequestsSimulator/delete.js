@@ -1,9 +1,7 @@
 import axios from 'axios';
-
-import { BACK_URL } from '../constants/config';
-
-// Universal fetch request using axios
-export default function universalPost(
+import { BACK_URL_SIMULATOR } from '../constants/config';
+// Universal delete request using axios
+export default function universalDelete(
   setResponse,
   endpoint,
   onError,
@@ -16,7 +14,7 @@ export default function universalPost(
     error: null,
   });
   axios
-    .post(BACK_URL + endpoint, requestBody, { withCredentials: true })
+    .delete(BACK_URL_SIMULATOR + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

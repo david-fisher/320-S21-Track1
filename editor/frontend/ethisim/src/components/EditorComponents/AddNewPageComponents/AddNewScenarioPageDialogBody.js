@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Select,
   MenuItem,
@@ -9,7 +9,9 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
-import AddNewPageSunEditor from './AddNewPageSunEditor';
+import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
+import GenericUnsavedWarning from '../../WarningDialogs/GenericUnsavedWarning';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
   containerRow: {
@@ -49,17 +51,20 @@ export default function AddNewScenarioPageDialogBody(props) {
   AddNewScenarioPageDialogBody.propTypes = props.data;
   const data = props;
   const { addPage, setOpenPopup } = data;
-
+  // eslint-disable-next-line
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
   // eslint-disable-next-line
     const [anchorEl, setAnchorEl] = useState(null);
   const [pageType, setPageType] = useState('Generic');
   const [pageName, setPageName] = useState('');
-  const [pageBody, setPageBody] = useState('');
+  // Text Editor default value
+  const [pageBody, setPageBody] = useState('<p><br></p>');
 
   const [errorName, setErrorName] = useState(false);
   const [errorNameText, setErrorNameText] = useState('');
   const [errorBody, setErrorBody] = useState(false);
 
+  const [editorOption, setEditorOption] = useState('TextEditor');
   // eslint-disable-next-line
     const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -71,6 +76,12 @@ export default function AddNewScenarioPageDialogBody(props) {
 
   const handleChange = (event) => {
     setPageType(event.target.value);
+  };
+
+  // used for unsaved warning dialog
+  const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(false);
+  const handleOpenUnsavedWarningDialog = () => {
+    setOpenUnsavedWarningDialog(true);
   };
 
   const createNewPage = () => {
@@ -98,7 +109,12 @@ export default function AddNewScenarioPageDialogBody(props) {
     }
 
     if (validInput) {
-      addPage(pageType, pageName, pageBody);
+      // Used to differentiate between Code Editor and Text Editor format
+      let formattedPageBody = pageBody;
+      if (editorOption === 'CodeEditor') {
+        formattedPageBody = `${pageBody}<!--CodeEditor-->`;
+      }
+      addPage(pageType, pageName, formattedPageBody);
       setOpenPopup(false);
     }
   };
@@ -151,23 +167,28 @@ export default function AddNewScenarioPageDialogBody(props) {
         />
       )}
 
-      <AddNewPageSunEditor text={pageBody} setText={setPageBody} />
-      {errorBody ? (
-        <Typography
-          style={{ marginLeft: 15 }}
-          variant="caption"
-          display="block"
-          color="error"
-        >
-          Page body cannot be empty.
-        </Typography>
-      ) : null}
+      <Toggle
+        body={pageBody}
+        setBody={setPageBody}
+        error={errorBody}
+        option={editorOption}
+        setOption={setEditorOption}
+        notSetUnsaved
+      />
       <div className={classes.containerRow}>
+        <GenericUnsavedWarning
+          func={createNewPage}
+          setOpen={setOpenUnsavedWarningDialog}
+          open={openUnsavedWarningDialog}
+          description="You have currently unsaved changes. Are you sure you add a new page without saving?"
+        />
         <Button
           className={classes.addButton}
           variant="contained"
           color="primary"
-          onClick={createNewPage}
+          onClick={globalUnsaved
+            ? handleOpenUnsavedWarningDialog
+            : createNewPage}
         >
           <AddIcon />
           Add New Page

@@ -140,14 +140,14 @@ export default function FlowDiagram({ scenario_ID }) {
     initialElements = initialElements.map((componentData) => initializeElements(componentData));
 
     // Set position of elements if elements are new ({x: 0,y: 0})
-    // Height of nodes are 51.2 pixels
+    // Height of nodes are 91 pixels
     initialElements.reduce((acc, currentValue) => {
       if (
         currentValue.position.x === 0
                 && currentValue.position.y === 0
       ) {
         currentValue.position.y += acc;
-        return acc + 51.2;
+        return acc + 91;
       }
       return acc;
     }, 0);
@@ -160,28 +160,17 @@ export default function FlowDiagram({ scenario_ID }) {
     elements.forEach((currentElement) => {
       // TODO
       if (currentElement.type === 'actionNode') {
-        if (!currentElement.ACTION[0]) {
-          // eslint-disable-next-line
-                    throw 'Action incomplete';
-        }
-        // Only 2 action options
-        if (currentElement.ACTION[0].RESULT_PAGE_id) {
-          elements = addEdge(
-            {
-              source: `${currentElement.id.toString()}__a`,
-              target: currentElement.ACTION[0].RESULT_PAGE_id.toString(),
-            },
-            elements,
-          );
-        }
-        if (currentElement.ACTION[1].RESULT_PAGE_id) {
-          elements = addEdge(
-            {
-              source: `${currentElement.id.toString()}__b`,
-              target: currentElement.ACTION[1].RESULT_PAGE_id.toString(),
-            },
-            elements,
-          );
+        const actions = currentElement.ACTION;
+        for (let i = 0; i < actions.length; i++) {
+          if (currentElement.ACTION[i].RESULT_PAGE_id) {
+            elements = addEdge(
+              {
+                source: `${currentElement.id.toString()}__${i + 1}`,
+                target: currentElement.ACTION[i].RESULT_PAGE_id.toString(),
+              },
+              elements,
+            );
+          }
         }
       } else if (currentElement.NEXT_PAGE_id) {
         elements = addEdge(
@@ -193,7 +182,6 @@ export default function FlowDiagram({ scenario_ID }) {
         );
       }
     });
-
     return elements;
   }
 
@@ -203,13 +191,7 @@ export default function FlowDiagram({ scenario_ID }) {
       setElements(addEdges(positionElements(resp.data)));
     }
     function onError(resp) {
-      if (resp === 'Action incomplete') {
-        setErrorText(
-          'You have at least one Action page that is incomplete (i.e. without options). You must complete all action pages before you can access the Flow Diagram.',
-        );
-      } else {
-        setErrorText('Unable to fetch Flow Diagram! Please try again.');
-      }
+      setErrorText('Unable to fetch Flow Diagram! Please try again.');
     }
     get(setFetchedElements, endpointGET + scenarioID, onError, onSuccess);
   };
@@ -311,38 +293,30 @@ export default function FlowDiagram({ scenario_ID }) {
         if (currentElement.type === 'actionNode') {
           nodeElement.ACTION = currentElement.ACTION.map(
             (actionData) => ({
-              id: actionData.id,
+              APC_ID: actionData.APC_ID,
               PAGE: actionData.PAGE_id,
               CHOICE: actionData.CHOICE,
               RESULT_PAGE: null,
             }),
           );
-
-          elements.forEach((currElement) => {
+          const actions = currentElement.ACTION;
+          for (let i = 0; i < actions.length; i++) {
+            elements.forEach((currElement) => {
             // First option
-            if (
-              isEdge(currElement)
-                            && currElement.source === `${currentElement.id}__a`
-            ) {
-              nodeElement.ACTION[0] = {
-                id: currentElement.ACTION[0].id,
-                CHOICE: currentElement.ACTION[0].CHOICE,
-                PAGE: currentElement.id,
-                RESULT_PAGE: Number(currElement.target),
-              };
-              // Second option
-            } else if (
-              isEdge(currElement)
-                            && currElement.source === `${currentElement.id}__b`
-            ) {
-              nodeElement.ACTION[1] = {
-                id: currentElement.ACTION[1].id,
-                CHOICE: currentElement.ACTION[1].CHOICE,
-                PAGE: currentElement.id,
-                RESULT_PAGE: Number(currElement.target),
-              };
-            }
-          });
+              if (
+                isEdge(currElement)
+                            && currElement.source.substring(0, currElement.source.length - 1) === `${currentElement.id}__`
+              ) {
+                const index = Number(currElement.source[currElement.source.length - 1]) - 1;
+                nodeElement.ACTION[index] = {
+                  APC_ID: currentElement.ACTION[index].APC_ID,
+                  CHOICE: currentElement.ACTION[index].CHOICE,
+                  PAGE: currentElement.id,
+                  RESULT_PAGE: Number(currElement.target),
+                };
+              }
+            });
+          }
         } else {
           // Set next page ID for all other node types
           elements.some((currElement) => {

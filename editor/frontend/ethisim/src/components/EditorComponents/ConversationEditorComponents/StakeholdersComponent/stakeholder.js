@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import BasicTable from './table';
 import QuestionFields from './StakeholderQuestions/questions';
-import Body from './SunEditor';
 import 'suneditor/dist/css/suneditor.min.css';
 import SuccessBanner from '../../../Banners/SuccessBanner';
 import ErrorBanner from '../../../Banners/ErrorBanner';
@@ -23,6 +22,10 @@ import GenericUnsavedWarning from '../../../WarningDialogs/GenericUnsavedWarning
 import get from '../../../../universalHTTPRequests/get';
 import put from '../../../../universalHTTPRequests/put';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import HTMLPreview from '../../HTMLPreview';
+import StakeholderPreview from '../StakeholderPreview';
+import Toggle from '../../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
+import checkEditorType from '../../GeneralPageComponents/checkEditorType';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+  },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   containerColumn: {
     display: 'flex',
@@ -94,6 +102,7 @@ Stakeholder.propTypes = {
   photo: PropTypes.any,
   stakeholders: PropTypes.any,
   setStakeholders: PropTypes.func,
+  getStakeholders: PropTypes.func,
   scenario: PropTypes.number,
   version: PropTypes.number,
 };
@@ -109,10 +118,23 @@ export default function Stakeholder({
   photo,
   stakeholders,
   setStakeholders,
+  getStakeholders,
   scenario,
   version,
 }) {
   const classes = useStyles();
+  // Used to differentiate between Code Editor and Text Editor format
+  const bioObj = checkEditorType(bio);
+  const [editorOptionBio, setEditorOptionBio] = useState(bioObj.option);
+  const [stakeholderBiography, setStakeholderBiography] = useState(bioObj.formattedBody);
+  // This makes sure that the body will be the most updated version, hot fix
+  useEffect(() => setStakeholderBiography(bioObj.formattedBody), [bio, bioObj.formattedBody]);
+
+  const mainConvoObj = checkEditorType(mainConvo);
+  const [editorOptionMainConvo, setEditorOptionMainConvo] = useState(mainConvoObj.option);
+  const [stakeholderConversation, setStakeholderConversation] = useState(mainConvoObj.formattedBody);
+  // This makes sure that the body will be the most updated version, hot fix
+  useEffect(() => setStakeholderConversation(mainConvoObj.formattedBody), [mainConvoObj.formattedBody]);
 
   const [openBio, setOpenBio] = useState(false);
   const [openMainConvo, setOpenMainConvo] = useState(false);
@@ -120,9 +142,7 @@ export default function Stakeholder({
   const [openQuestions, setOpenQuestions] = useState(false);
   const [stakeholderName, setStakeholderName] = useState(name);
   const [stakeholderJob, setStakeholderJob] = useState(job);
-  const [stakeholderBiography, setStakeholderBiography] = useState(bio);
   const [stakeholderPhoto, setStakeholderPhoto] = useState(photo); // Image object to be uploaded on save
-  const [stakeholderConversation, setStakeholderConversation] = useState(mainConvo);
   const [displayedPhoto, setdisplayedPhoto] = useState(photo); // Local image to be displayed
 
   const [errorBody, setErrorBody] = useState(false);
@@ -147,7 +167,7 @@ export default function Stakeholder({
   const [unsavedPointSelection, setUnsavedPointSelection] = useState(false);
   const [generalUnsaved, setGeneralUnsaved] = useState(false);
   // eslint-disable-next-line
-    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
   // used for delete warning dialog
   const [openDeleteWarningDialog, setOpenDeleteWarningDialog] = useState(false);
@@ -191,6 +211,18 @@ export default function Stakeholder({
     setUnsavedBio(false);
     setOpenUnsavedWarningDialog(false);
     setOpenBio(false);
+    if (unsavedBio) {
+      setStakeholderBiography(bioObj.formattedBody);
+      setEditorOptionBio(bioObj.option);
+      setGlobalUnsaved(false);
+      updateStakeholderInfo(
+        stakeholderName,
+        stakeholderJob,
+        bioObj.formattedBody,
+        stakeholderConversation,
+      );
+      return;
+    }
     updateStakeholderInfo(
       stakeholderName,
       stakeholderJob,
@@ -198,13 +230,27 @@ export default function Stakeholder({
       stakeholderConversation,
     );
   };
+
   const handleClickOpenMainConvo = () => {
     setOpenMainConvo(true);
   };
+
   const handleCloseMainConvo = () => {
     setUnsavedMainConvo(false);
     setOpenUnsavedWarningDialog(false);
     setOpenMainConvo(false);
+    if (unsavedMainConvo) {
+      setStakeholderConversation(mainConvoObj.formattedBody);
+      setEditorOptionMainConvo(mainConvoObj.option);
+      setGlobalUnsaved(false);
+      updateStakeholderInfo(
+        stakeholderName,
+        stakeholderJob,
+        mainConvoObj.formattedBody,
+        stakeholderConversation,
+      );
+      return;
+    }
     updateStakeholderInfo(
       stakeholderName,
       stakeholderJob,
@@ -237,6 +283,7 @@ export default function Stakeholder({
     } else {
       setUnsavedBio(false);
     }
+    setStakeholderBiography(content);
     updateStakeholderInfo(
       stakeholderName,
       stakeholderJob,
@@ -251,6 +298,7 @@ export default function Stakeholder({
     } else {
       setUnsavedMainConvo(false);
     }
+    setStakeholderConversation(content);
     updateStakeholderInfo(
       stakeholderName,
       stakeholderJob,
@@ -304,8 +352,9 @@ export default function Stakeholder({
 
   // Deals with bug of updateStakeholderInfo being called on initial load (because of SunEditor)
   // Don't want to set unsaved to false
-  const [firstLoad, setFirstLoad] = useState(true);
+  // const [firstLoad, setFirstLoad] = useState(true);
   const updateStakeholderInfo = (shname, shjob, shbio, shconvo, shphoto) => {
+    /*
     const updatedStakeholders = [...stakeholders];
     setStakeholders(
       updatedStakeholders.map((sh) => {
@@ -324,6 +373,7 @@ export default function Stakeholder({
         return sh;
       }),
     );
+    */
     setStakeholderObj({
       ...stakeholderObj,
       NAME: shname,
@@ -389,10 +439,10 @@ export default function Stakeholder({
       setGeneralUnsaved(false);
       setUnsavedBio(false);
       setUnsavedMainConvo(false);
-      setStakeholderBiography(resp.data.DESCRIPTION);
-      setStakeholderConversation(resp.data.INTRODUCTION);
       setSuccessBannerMessage('Successfully saved the stakeholder!');
       setSuccessBannerFade(true);
+      // If glitches occur in keeping track of stakeholders array information, getting all existing stakeholders after each save will be more robust
+      // getStakeholders(true);
     }
     function onError(resp) {
       setErrorBannerMessage(
@@ -423,6 +473,13 @@ export default function Stakeholder({
     }
     setError(false);
 
+    if (editorOptionBio === 'CodeEditor') {
+      stakeholderObj.DESCRIPTION = `${stakeholderBiography}<!--CodeEditor-->`;
+    }
+    if (editorOptionMainConvo === 'CodeEditor') {
+      stakeholderObj.INTRODUCTION = `${stakeholderConversation}<!--CodeEditor-->`;
+    }
+
     // 1 second of timeout needed for text editor to save data
     setTimeout(
       () => put(
@@ -441,17 +498,20 @@ export default function Stakeholder({
             return <LoadingSpinner />;
         }
     */
+  const codeEditorText = '<p><span style="font-family: Arial; font-size: 14px;">Click to open Code Editor - Page was designed using Code Editor</span></p>';
 
   return (
     <div id="parent">
-      <SuccessBanner
-        successMessage={successBannerMessage}
-        fade={successBannerFade}
-      />
-      <ErrorBanner
-        errorMessage={errorBannerMessage}
-        fade={errorBannerFade}
-      />
+      <div className={classes.bannerContainer}>
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       {generalUnsaved ? (
         <Typography
           style={{ marginLeft: '30px' }}
@@ -528,14 +588,14 @@ export default function Stakeholder({
             </Typography>
             <div onClick={handleClickOpenBio}>
               <SunEditor
-                setContents={bio}
+                setContents={editorOptionBio === 'CodeEditor' ? codeEditorText : stakeholderBiography}
                 disable
                 showToolbar={false}
                 setOptions={{
                   width: 500,
                   height: 1,
                   placeholder:
-                                        'Enter the biography of the stakeholder...',
+                    'Enter the biography of the stakeholder...',
                   resizingBar: false,
                   showPathLabel: false,
                 }}
@@ -553,7 +613,7 @@ export default function Stakeholder({
             </Typography>
             <div onClick={handleClickOpenMainConvo}>
               <SunEditor
-                setContents={mainConvo}
+                setContents={editorOptionMainConvo === 'CodeEditor' ? codeEditorText : stakeholderConversation}
                 disable
                 showToolbar={false}
                 setOptions={{
@@ -564,7 +624,6 @@ export default function Stakeholder({
                   resizingBar: false,
                   showPathLabel: false,
                 }}
-                onChange={handleChangeConversation}
               />
             </div>
           </div>
@@ -621,6 +680,10 @@ export default function Stakeholder({
             View Questions
           </Button>
         </div>
+
+        <div id="stakeholderPreview">
+          <StakeholderPreview id={id} name={stakeholderName} job={stakeholderJob} bio={stakeholderBiography} mainConvo={stakeholderConversation} photo={stakeholderPhoto} />
+        </div>
       </div>
 
       <Dialog
@@ -654,7 +717,7 @@ export default function Stakeholder({
                 color="primary"
                 onClick={saveStakeholders}
                 className={classes.button}
-                style={{ marginRight: '10px' }}
+                style={{ marginRight: '20px' }}
               >
                 Save
               </Button>
@@ -674,9 +737,12 @@ export default function Stakeholder({
             </Button>
           </DialogTitle>
           <DialogContent className={classes.dialog}>
+            <div style={{ marginLeft: '20px', marginTop: '-20px' }}>
+              <HTMLPreview dialogTitle="HTML Preview" body={stakeholderBiography} />
+            </div>
             {unsavedBio ? (
               <Typography
-                style={{ marginLeft: '3%', marginTop: '-20px' }}
+                style={{ marginLeft: '3%', marginTop: '0px' }}
                 variant="h6"
                 align="center"
                 color="error"
@@ -684,11 +750,12 @@ export default function Stakeholder({
                 Unsaved
               </Typography>
             ) : null}
-            <Body
-              body={bio}
+            <Toggle
+              body={stakeholderBiography}
               setBody={handleChangeBiography}
               error={errorBody}
-              errorMessage="Stakeholder biography cannot be empty"
+              option={editorOptionBio}
+              setOption={setEditorOptionBio}
             />
           </DialogContent>
         </div>
@@ -725,7 +792,7 @@ export default function Stakeholder({
                 color="primary"
                 onClick={saveStakeholders}
                 className={classes.button}
-                style={{ marginRight: '30px' }}
+                style={{ marginRight: '50px' }}
               >
                 Save
               </Button>
@@ -745,9 +812,12 @@ export default function Stakeholder({
             </Button>
           </DialogTitle>
           <DialogContent className={classes.dialog}>
+            <div style={{ marginLeft: '35px', marginTop: '-20px' }}>
+              <HTMLPreview dialogTitle="HTML Preview" body={stakeholderConversation} />
+            </div>
             {unsavedMainConvo ? (
               <Typography
-                style={{ marginLeft: '5%', marginTop: '-20px' }}
+                style={{ marginLeft: '40px', marginTop: '0px' }}
                 variant="h6"
                 align="center"
                 color="error"
@@ -755,11 +825,12 @@ export default function Stakeholder({
                 Unsaved
               </Typography>
             ) : null}
-            <Body
-              body={mainConvo}
+            <Toggle
+              body={stakeholderConversation}
               setBody={handleChangeConversation}
               error={errorBody}
-              errorMessage="Stakeholder biography cannot be empty"
+              option={editorOptionMainConvo}
+              setOption={setEditorOptionMainConvo}
             />
           </DialogContent>
         </div>
@@ -787,7 +858,7 @@ export default function Stakeholder({
             component="div"
             style={{ display: 'flex' }}
           >
-            Stakeholder Questions and Answers
+            {`${stakeholderName} Questions and Answers`}
           </Typography>
           <Button
             className={classes.exitOutButton}
@@ -839,7 +910,7 @@ export default function Stakeholder({
             component="div"
             style={{ display: 'flex' }}
           >
-            Stakeholder Questions and Answers
+            {`${stakeholderName} Issue Coverage`}
           </Typography>
           <Button
             className={classes.exitOutButton}

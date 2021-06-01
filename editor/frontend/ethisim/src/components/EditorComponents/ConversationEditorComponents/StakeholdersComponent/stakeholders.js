@@ -12,6 +12,7 @@ import deleteReq from '../../../../universalHTTPRequests/delete';
 import post from '../../../../universalHTTPRequests/post';
 import { ConversationEditorHelpInfo } from '../ConversationEditorHelpInfo';
 import GenericHelpButton from '../../../HelpButton/GenericHelpButton';
+import { getCurrentTimeInt, checkTime } from '../../../CheckTime';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
   iconRefreshSmall: {
     fontSize: '30px',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 StakeholderFields.propTypes = {
@@ -50,7 +56,7 @@ const endpointDELETE = '/api/stakeholders/';
 export default function StakeholderFields({ scenario, version }) {
   const classes = useStyles();
   // TODO when/if versions get implemented
-  version = version || 1;
+  version = version || null;
   // tracks current state of stakeholders to be represented on the frontend
   const [fetchedStakeholders, setFetchedStakeholders] = useState({
     data: null,
@@ -69,7 +75,7 @@ export default function StakeholderFields({ scenario, version }) {
   });
 
   // eslint-disable-next-line
-    const setStakeholders = (arr) => {
+  const setStakeholders = (arr) => {
     setFetchedStakeholders({
       ...fetchedStakeholders,
       data: arr,
@@ -81,21 +87,29 @@ export default function StakeholderFields({ scenario, version }) {
   // handles GETting existing stakeholders from the backend and representing that information in the frontend
   // will eventually know which scenario to get stakeholders from once scenario_id is passed
   // from baseURL + 'stakeholder?scenario_id=' + scenario_id
-  function getExistingStakeholders() {
+
+  // If glitches occur after updating individual stakeholders, force a "refresh" by calling this function to get the stakeholders again from the database
+  function getExistingStakeholders(onSaveStakeholder) {
+    function onSuccess(resp) {
+      if (onSaveStakeholder) {
+        setSuccessBannerMessage('Successfully saved the stakeholder!');
+        setSuccessBannerFade(true);
+      }
+    }
     function onError(resp) {
       setErrorBannerMessage(
         'Failed to get Stakeholders! Please try again.',
       );
       setErrorBannerFade(true);
     }
-    get(setFetchedStakeholders, endpointGET + scenario, onError);
+    get(setFetchedStakeholders, endpointGET + scenario, onError, onSuccess);
   }
 
   useEffect(getExistingStakeholders, []);
 
   // handles DELETEing a stakeholder from the backend and removing the corresponding stakeholder from the frontend
   const removeStakeholder = (stakeholderID) => {
-    if (!checkTime(setCurrentTime, currentTime)) {
+    if (!checkTime(currentTime, setCurrentTime)) {
       return;
     }
     // calling the DELETE request on the backend
@@ -111,6 +125,10 @@ export default function StakeholderFields({ scenario, version }) {
       setErrorBannerFade(true);
     }
 
+    setFetchedStakeholders({
+      ...fetchedStakeholders,
+      loading: true,
+    });
     deleteReq(
       setDeleteReq,
       `${endpointDELETE + stakeholderID}/`,
@@ -121,7 +139,7 @@ export default function StakeholderFields({ scenario, version }) {
 
   // handles POSTing a new stakeholder to the backend and adding that stakeholder to the frontend
   const addStakeholder = (e) => {
-    if (!checkTime(setCurrentTime, currentTime)) {
+    if (!checkTime(currentTime, setCurrentTime)) {
       return;
     }
 
@@ -137,6 +155,10 @@ export default function StakeholderFields({ scenario, version }) {
       setErrorBannerFade(true);
     }
 
+    setFetchedStakeholders({
+      ...fetchedStakeholders,
+      loading: true,
+    });
     const data = {
       SCENARIO: scenario,
       VERSION: version,
@@ -144,79 +166,11 @@ export default function StakeholderFields({ scenario, version }) {
     post(setPostReq, endpointPOST, onError, onSuccess, data);
   };
 
-  // TODO function that saves all stakeholders at once
-  /*
-    const saveStakeholders = (e) => {
-        var data = [...stakeholders];
-        for (var i = 0; i < data.length; i++) {
-            var form = new FormData();
-            var id;
-            var item = data[i];
-            for (var key in item) {
-                if (key === 'STAKEHOLDER') {
-                    id = item[key];
-                    form.append(key, item[key]);
-                } else if (key === 'PHOTO') {
-                    if (item[key] instanceof File) {
-                        form.append(key, item[key]);
-                    }
-                } else {
-                    form.append(key, item[key]);
-                }
-            }
-            var config = {
-                method: 'put',
-                url: baseURL + '/api/stakeholders/' + id + '/',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                data: form,
-            };
-
-            axios(config)
-                .then(function (response) {
-                    setSuccessBannerMessage(
-                        'Successfully saved the stakeholders!'
-                    );
-                    setSuccessBannerFade(true);
-                })
-                .catch(function (error) {
-                    setErrorBannerMessage(
-                        'Failed to save the stakeholders! Please try again.'
-                    );
-                    setErrorBannerFade(true);
-                });
-        }
-    };
-    */
-
   /*
      * This section is about managing time to prevent sending a combination of multiple
      *    HTTP GET/POST/PUT/DELETE calls before a response is returned
      */
   const [currentTime, setCurrentTime] = useState(getCurrentTimeInt());
-  // gets the current time in hms and converts it to an int
-  function getCurrentTimeInt() {
-    const d = Date();
-    const h = d.substring(16, 18);
-    const m = d.substring(19, 21);
-    const s = d.substring(22, 24);
-    return 60 * (60 * h + m) + s;
-  }
-
-  // checks if at least 1 second has elapsed since last action
-  // if someone waits a multiple of exactly 24 hours since their last action they will
-  //    not be able to take an action for an additional second
-  function checkTime(setTime, t) {
-    let ret = false;
-    // current time difference is at least 1 second, but that SHOULD be ample time for
-    // the database to get back to the frontend
-    if (getCurrentTimeInt() - t !== 0) {
-      ret = true;
-    }
-    setTime(getCurrentTimeInt());
-    return ret;
-  }
 
   // for success and error banners
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
@@ -247,14 +201,16 @@ export default function StakeholderFields({ scenario, version }) {
 
   return (
     <div className={classes.container}>
-      <SuccessBanner
-        successMessage={successBannerMessage}
-        fade={successBannerFade}
-      />
-      <ErrorBanner
-        errorMessage={errorBannerMessage}
-        fade={errorBannerFade}
-      />
+      <div className={classes.bannerContainer}>
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       <div className={classes.headerContainer}>
         <Button
           variant="contained"
@@ -290,7 +246,7 @@ export default function StakeholderFields({ scenario, version }) {
             */}
       <form id="form">
         {fetchedStakeholders.data
-          ? fetchedStakeholders.data.map((stakeholder) => (
+          ? fetchedStakeholders.data.sort((a, b) => a.STAKEHOLDER - b.STAKEHOLDER).map((stakeholder) => (
             <Stakeholder
               key={stakeholder.STAKEHOLDER}
               removeStakeholder={removeStakeholder}
@@ -303,6 +259,7 @@ export default function StakeholderFields({ scenario, version }) {
               version={stakeholder.VERSION}
               stakeholders={fetchedStakeholders.data}
               setStakeholders={setStakeholders}
+              getStakeholders={getExistingStakeholders}
               scenario={scenario}
             />
           ))

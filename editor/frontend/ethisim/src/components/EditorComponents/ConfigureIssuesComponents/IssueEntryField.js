@@ -9,7 +9,7 @@ import post from '../../../universalHTTPRequests/post';
 import put from '../../../universalHTTPRequests/put';
 import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
-const endpointPOST = '/api/issues/';
+const endpointPOST = '/issue';
 // Need issueID
 const endpointPUT = '/api/issues/';
 // Need issueID
@@ -54,7 +54,7 @@ export default function IssueEntryField({
   const classes = useStyles();
 
   // TODO replace once versionID is implemented with backend
-  const versionID = 2;
+  const versionID = null;
 
   // eslint-disable-next-line
     const [postValue, setPost] = useState({

@@ -11,7 +11,7 @@ import {
 import RadarPlot from './radarPlot';
 import GlobalContext from '../Context/GlobalContext';
 import { STUDENT_ID } from '../constants/config';
-import post from '../universalHTTPRequests/post';
+import post from '../universalHTTPRequestsEditor/post';
 
 const TextTypography = withStyles({
   root: {

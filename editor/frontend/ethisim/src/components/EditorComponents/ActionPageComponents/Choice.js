@@ -3,45 +3,43 @@ import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
-import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
-import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import GenericDeleteWarning from '../../WarningDialogs/GenericDeleteWarning';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 QuestionField.propTypes = {
-  removeQuestion: PropTypes.any,
-  question: PropTypes.any,
+  removeChoice: PropTypes.any,
+  choice: PropTypes.any,
   id: PropTypes.number,
-  listOfQuestions: PropTypes.any,
-  setListOfQuestions: PropTypes.any,
-  setReqBodyNew: PropTypes.any,
+  choices: PropTypes.any,
+  setChoices: PropTypes.any,
+  index: PropTypes.number,
 };
 
 export default function QuestionField({
-  question,
-  removeQuestion,
   id,
-  listOfQuestions,
-  setListOfQuestions,
-  setReqBodyNew,
+  choice,
+  choices,
+  setChoices,
+  removeChoice,
+  index,
 }) {
-  const [questionValue, setQuestionValue] = useState(question);
+  const [choiceValue, setQuestionValue] = useState(choice);
   // eslint-disable-next-line
     const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
 
-  const onChangeQuestion = (event) => {
+  const onChangeChoice = (event) => {
     setGlobalUnsaved(true);
     setQuestionValue(event.target.value);
-    const listOfQuestions2 = [...listOfQuestions];
-    for (let i = 0; i < listOfQuestions2.length; i++) {
-      if (listOfQuestions2[i].RQ_ID === id) {
-        listOfQuestions2[i].REFLECTION_QUESTION = event.target.value;
+    const choicesArr = [...choices];
+    for (let i = 0; i < choicesArr.length; i++) {
+      if (choicesArr[i].APC_ID === id) {
+        choicesArr[i].CHOICE = event.target.value;
       }
     }
-    setListOfQuestions(listOfQuestions2);
-    const reqBody = listOfQuestions2.map((obj) => obj.REFLECTION_QUESTION);
-    setReqBodyNew(reqBody);
+    setChoices(choicesArr);
   };
 
-  // Warning to Delete a question componet
+  // Warning to Delete a choice component
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,12 +51,12 @@ export default function QuestionField({
         <Box p={1} style={{ width: '80%' }}>
           <TextField
             style={{ width: '100%' }}
-            label="Question"
+            label={`Choice ${index}`}
             multiline
             rows={2}
             variant="outlined"
-            value={questionValue}
-            onChange={onChangeQuestion}
+            value={choiceValue}
+            onChange={onChangeChoice}
           />
         </Box>
         <Box p={1} style={{ width: '20%' }}>
@@ -72,7 +70,7 @@ export default function QuestionField({
               Delete
             </Button>
             <GenericDeleteWarning
-              remove={() => removeQuestion(id)}
+              remove={() => removeChoice(id)}
               setOpen={setOpen}
               open={open}
             />

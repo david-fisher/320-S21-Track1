@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -8,6 +8,7 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
 import { STUDENT_ID } from '../constants/config';
 import GlobalContext from '../Context/GlobalContext';
@@ -52,7 +53,7 @@ Reflection.propTypes = {
   getPrevPage: PropTypes.func.isRequired,
   nextPageEndpoint: PropTypes.string.isRequired,
   prevPageEndpoint: PropTypes.string.isRequired,
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
   pageID: PropTypes.number.isRequired,
 };
 export default function Reflection({
@@ -63,99 +64,24 @@ export default function Reflection({
   getPrevPage,
   nextPageEndpoint,
   prevPageEndpoint,
-  versionID,
+  scenarioID,
   pageID,
 }) {
-  body = body.replace(/\\"/g, '"');
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-
-  // For the sake of the demo
-  questions = [
-    {
-      id: 1,
-      page: 1,
-      reflection_question: 'What are your initial thoughts on autonomous cars?',
-      response: '',
-    },
-    {
-      id: 2,
-      page: 1,
-      reflection_question:
-        'What are the ethical conundrums that comes to mind right away for you when you hear about autonomous cars?',
-      response: '',
-    },
-  ];
-  if (pageTitle === 'Reflect on Initial Information') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'What new responsibilities do you have after being assigned to this project?',
-        response: '',
-      },
-      {
-        id: 2,
-        page: 1,
-        reflection_question:
-          "What aren't you sure about, or what questions are raised for you about those responsibilities?",
-        response: '',
-      },
-    ];
-  } else if (pageTitle === 'Reflect on Additional Information') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'Why did you select your chosen source(s) of information?',
-        response: '',
-      },
-      {
-        id: 2,
-        page: 1,
-        reflection_question:
-          'What did you learn that most affects the action that you will take next?',
-        response: '',
-      },
-    ];
-  } else if (pageTitle === 'Reflect on Consequences') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'Do the consequences presented match your expectations for what you thought would happen? Explain your answer.',
-        response: '',
-      },
-      {
-        id: 2,
-        page: 1,
-        reflection_question:
-          'Considering these consequences, how satisfied are you with your choices? In other words, how would you approach a similar situation in the future? Be sure to explain what you might keep the same and what you would change.',
-        response: '',
-      },
-    ];
-  } else if (pageTitle === 'Conclusion') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'We would appreciate receiving any comments that you have on this online ethics simulation:',
-        response: '',
-      },
-    ];
-  }
-
   const classes = useStyles();
 
   const [savedAnswers, setSavedAnswers] = React.useState(false);
-
+  // variables to show error if not all reflection questions are answered
+  const [errorName, setErrorName] = useState(false);
   // MAKE API CALL
-  const [reflection, setReflection] = useState(questions);
+  const [reflection, setReflection] = useState(questions.map((obj) => ({ ...obj, response: '' })));
+  useEffect(() => setReflection(questions.map((obj) => ({ ...obj, response: '' }))), [questions]);
 
   // eslint-disable-next-line
   const endpointPost =
     `/scenarios/reflection?versionId=${
-      versionID
+      scenarioID
     }&pageId=${
       pageID
     }&userId=${
@@ -171,21 +97,25 @@ export default function Reflection({
     }
     // eslint-disable-next-line
     let data = {
-      body: reflection.prompts,
+      body: questions,
     };
 
+    if (reflection.some(({ response }) => !response || !response.trim())) {
+      setErrorName(true);
+      return;
+    }
+    setErrorName(false);
     // TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
     setSavedAnswers(true);
   };
 
-  console.log(savedAnswers);
   console.log(reflection);
 
   const updateResponse = (e, id) => {
     setReflection((prev) => {
-      for (let i = 0; i < questions.length; ++i) {
-        if (questions[i].id === id) {
-          questions[i].response = e.target.value;
+      for (let i = 0; i < prev.length; ++i) {
+        if (prev[i].RQ_ID === id) {
+          prev[i].response = e.target.value;
           break;
         }
       }
@@ -234,15 +164,25 @@ export default function Reflection({
       </Grid>
       <Grid containerstyle={{ width: '100%' }}>
         <Grid item style={{ width: '100%' }}>
-          <div dangerouslySetInnerHTML={{ __html: body }} />
+          <InnerHTML html={body.replace(/\\"/g, '"')} />
         </Grid>
       </Grid>
 
       <Grid container style={{ width: '100%' }}>
+        {errorName ? (
+          <Typography
+            style={{ }}
+            variant="h6"
+            align="center"
+            color="error"
+          >
+            You must answer all questions!
+          </Typography>
+        ) : null}
         <Grid item style={{ width: '100%' }}>
-          {questions.map((prompt) => (
-            <Box m="2rem" p={1} className={classes.textBox} key={prompt.id}>
-              <p>{prompt.reflection_question}</p>
+          {reflection.sort((a, b) => b.id - a.id).map((prompt) => (
+            <Box m="2rem" p={1} className={classes.textBox} key={prompt.RQ_ID}>
+              <p>{prompt.REFLECTION_QUESTION}</p>
               <TextField
                 style={{ width: '100%' }}
                 id="outlined-multiline-static"
@@ -251,7 +191,7 @@ export default function Reflection({
                 defaultValue={prompt.response}
                 variant="outlined"
                 onChange={(e) => {
-                  updateResponse(e, prompt.id);
+                  updateResponse(e, prompt.RQ_ID);
                 }}
               />
             </Box>

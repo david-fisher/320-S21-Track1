@@ -5,9 +5,10 @@ import {
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { BACK_URL, STUDENT_ID, SCENARIO_ID } from '../constants/config';
+import InnerHTML from 'dangerously-set-html-content';
+import { BACK_URL_EDITOR, STUDENT_ID, SCENARIO_ID } from '../constants/config';
 import { ScenariosContext } from '../Nav';
-import post from '../universalHTTPRequests/post';
+import post from '../universalHTTPRequestsEditor/post';
 
 const TextTypography = withStyles({
   root: {
@@ -22,6 +23,7 @@ const questions = [
   },
 ];
 
+// TODO Currently not used, could be used as the final page of a scenario
 Conclusion.propTypes = {
   setActivePage: PropTypes.string.isRequired,
   activePage: PropTypes.string.isRequired,

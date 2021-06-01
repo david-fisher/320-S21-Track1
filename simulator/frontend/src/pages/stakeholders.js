@@ -12,12 +12,14 @@ import {
   Avatar,
   Tab,
   Tabs,
+  DialogTitle,
 } from '@material-ui/core';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import InnerHTML from 'dangerously-set-html-content';
 import PropTypes from 'prop-types';
 import { STUDENT_ID } from '../constants/config';
 import Conversation from './conversation';
-import get from '../universalHTTPRequests/get';
-import './stakeholders.css';
+import get from '../universalHTTPRequestsEditor/get';
 import GlobalContext from '../Context/GlobalContext';
 import GenericWarning from './components/GenericWarning';
 
@@ -28,18 +30,6 @@ const TextTypography = withStyles({
 })(Typography);
 
 const introText = 'Please select the Stakeholder you would like to interact with...';
-
-function ellipses(str, cutoff) {
-  let newStr = str;
-  if (str.length >= cutoff) {
-    newStr = `${str.substring(0, cutoff - 1)}…`;
-    const lastSpace = newStr.lastIndexOf(' ');
-    if (lastSpace !== -1) {
-      newStr = `${newStr.substring(0, lastSpace)}…`;
-    }
-  }
-  return newStr;
-}
 
 TabPanel.propTypes = {
   children: PropTypes.any,
@@ -71,17 +61,20 @@ function TabPanel(props) {
 const StyledTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
-    color: '#000',
+    color: 'white',
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(18),
-    backgroundColor: 'white',
+    backgroundColor: '#881c1c',
+    borderColor: 'black',
+    border: 'solid',
+    borderRadius: '2%',
     // backgroundColor: '#d9d9d9',
     '&:hover': {
-      backgroundColor: '#8c8c8c',
-      color: 'white',
+      backgroundColor: '#F7E7E7',
+      color: 'black',
       opacity: 1,
       selected: {
-        backgroundColor: '#8c8c8c',
+        backgroundColor: '#F7E7E7',
       },
     },
   },
@@ -107,7 +100,7 @@ const cardStyles = makeStyles({
   card: {
     width: 600,
     height: 125,
-    // wordBreak: 'break-word',
+    wordBreak: 'break-word',
     display: 'flex',
     borderRadius: '35px',
     '&:hover': {
@@ -140,10 +133,33 @@ const cardStyles = makeStyles({
     color: '#000000',
     marginTop: '10px',
     marginBottom: '2px',
+    wordBreak: 'break-word',
   },
   dialogJob: {
     color: '#881c1c',
     marginBottom: '15px',
+    wordBreak: 'break-word',
+  },
+  exitOutButton: {
+    marginLeft: 'auto',
+    float: 'right',
+  },
+  stakeholderContainer: {
+    width: '125px',
+    marginRight: '20px',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  stakeholderImg: {
+    height: '90px',
+    width: '90px',
+    left: '20px',
+  },
+  infoContainer: {
+    paddingTop: '10px',
+    marginLeft: '10px',
+    maxWidth: '400px',
   },
 });
 
@@ -152,14 +168,14 @@ Stakeholders.propTypes = {
   getPrevPage: PropTypes.any.isRequired,
   nextPageEndpoint: PropTypes.any.isRequired,
   prevPageEndpoint: PropTypes.any.isRequired,
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
 };
 export default function Stakeholders({
   getNextPage,
   getPrevPage,
   nextPageEndpoint,
   prevPageEndpoint,
-  versionID,
+  scenarioID,
 }) {
   const [stakeholders, setStakeholders] = React.useState([]);
   // eslint-disable-next-line
@@ -186,7 +202,7 @@ export default function Stakeholders({
     true,
   );
 
-  const endpointGet = `/scenarios/stakeholder/page?versionId=${versionID}&scenarioId=${versionID}`;
+  const endpointGet = `/api/stakeholders/?SCENARIO=${scenarioID}`;
   // eslint-disable-next-line
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
@@ -198,7 +214,15 @@ export default function Stakeholders({
   const getData = () => {
     function onSuccess(response) {
       // setConversationLimit(...)
-      const holders = response.data.result;
+      let holders = response.data;
+      holders = holders.map((obj) => ({
+        stakeholder_id: obj.STAKEHOLDER,
+        name: obj.NAME,
+        description: obj.DESCRIPTION,
+        job: obj.JOB,
+        introduction: obj.INTRODUCTION,
+        photo: obj.PHOTO,
+      }));
       setStakeholders(holders);
       setStakeholdersDisabled(() => holders.reduce((obj, stakeholder) => {
         obj[stakeholder.stakeholder_id] = false;
@@ -214,10 +238,10 @@ export default function Stakeholders({
   useEffect(getData, [shouldFetch]);
 
   const checkStakeholderVisited = () => {
-    const endpoint = `/scenarios/stakeholder/had?userId=${STUDENT_ID}&versionId=${versionID}`;
+    const endpoint = `/scenarios/stakeholder/had?userId=${STUDENT_ID}&versionId=${scenarioID}`;
 
     function onSuccess(response) {
-      console.log(response.data.result);
+      console.log(response.data);
       const holders = response.data.result;
       setStakeholdersSelected(holders);
       const ids = [];
@@ -260,6 +284,7 @@ export default function Stakeholders({
     styles,
   ) {
     function onClickStakeholder() {
+      // POST that we talked to this stakeholder
       setCurrentStakeholder(() => ({
         name,
         id,
@@ -321,14 +346,6 @@ export default function Stakeholders({
 
       setShowStakeholders(false);
       toggleModal(id, false);
-      /* setGatheredInfo(infos => {
-        let ind = infos.findIndex(info => info.pageId === PAGE_ID_OF_PAGE_BEFORE_CONVERSATIONS);
-        if (ind < 0) { ind = infos.length; }
-        let newInfos = [...infos];
-        newInfos.splice(ind, 0,
-          { name: name, job: job, description: description, id: `stakeholder:${id}`, pageId: 'stakeholders'});
-        return newInfos;
-      }); */
     }
 
     function toggleModal(id, toggle) {
@@ -342,16 +359,14 @@ export default function Stakeholders({
     let cardClass;
     let nameClass;
     let jobClass;
-    let descriptionClass;
 
     if (stakeholdersDisabled[id]) {
       cardClass = `${styles.card} ${styles.disabled}`;
-      nameClass = descriptionClass = styles.disabled;
+      nameClass = styles.disabled;
     } else {
       cardClass = styles.card;
       nameClass = styles.name;
       jobClass = styles.job;
-      descriptionClass = styles.background;
     }
     return (
       <>
@@ -362,23 +377,25 @@ export default function Stakeholders({
         >
           <Paper elevation={2} className={cardClass}>
             <div
+              className={classes.stakeholderContainer}
               id="stakeholder-container"
               style={{ display: 'flex', justifyContent: 'center' }}
             >
               <Avatar
+                className={classes.stakeholderImg}
                 id="stakeholder-img"
                 alt="Stakeholder Photo"
                 src={photo}
               />
             </div>
-            <div id="info-container" style={{ flex: 1 }}>
+            <div id="info-container" className={classes.infoContainer} style={{ flex: 1 }}>
               <Box
                 fontSize="20px"
                 fontWeight="fontWeightBold"
                 className={nameClass}
                 align="left"
               >
-                <Typography variant="h5">
+                <Typography variant="h5" noWrap>
                   {name}
                 </Typography>
               </Box>
@@ -387,7 +404,7 @@ export default function Stakeholders({
                 className={jobClass}
                 align="left"
               >
-                <Typography variant="h5">
+                <Typography variant="h5" noWrap>
                   {job}
                 </Typography>
               </Box>
@@ -405,6 +422,24 @@ export default function Stakeholders({
           maxWidth="sm"
           fullWidth
         >
+          <DialogTitle disableTypography style={{ display: 'flex' }}>
+            <Typography
+              variant="h5"
+              align="center"
+              component="div"
+              style={{ display: 'flex' }}
+            >
+              {`Biography of ${name}`}
+            </Typography>
+            <Button
+              className={classes.exitOutButton}
+              variant="contained"
+              color="primary"
+              onClick={() => toggleModal(id, false)}
+            >
+              <HighlightOffIcon />
+            </Button>
+          </DialogTitle>
           <DialogContent>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Avatar
@@ -430,12 +465,21 @@ export default function Stakeholders({
             >
               {job}
             </Box>
-            <div dangerouslySetInnerHTML={{ __html: description }} />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <InnerHTML html={description.replace(/\\"/g, '"')} />
+            <div style={
+              {
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '1rem',
+                marginBottom: '1rem',
+              }
+            }
+            >
               <Button
                 disabled={stakeholdersDisabled[id]}
                 variant="contained"
                 onClick={onClickStakeholder}
+                color="primary"
               >
                 Speak to
                 {' '}
@@ -654,7 +698,7 @@ export default function Stakeholders({
           sessionID={sessionID}
           stakeholder={currentStakeholder}
           showStakeholders={showStakeholders}
-          versionID={versionID}
+          scenarioID={scenarioID}
           setShowStakeholders={setShowStakeholders}
         />
       )}

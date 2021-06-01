@@ -18,6 +18,11 @@ export const GenericPageHelpInfo = [
         What you see in the text editor is what the player will see in the scenario.`,
   },
   {
+    title: 'Page Preview',
+    description: `Selecting this button will show a page preview that will 
+        present exactly how the page will look like to the player.`,
+  },
+  {
     title: 'Save',
     description: 'Selecting "Save" will save your changes.',
   },

@@ -8,8 +8,9 @@ import {
   Button,
   Grid,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import { STUDENT_ID } from '../constants/config';
-import post from '../universalHTTPRequests/post';
+import post from '../universalHTTPRequestsEditor/post';
 import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,13 +51,13 @@ Action.propTypes = {
   getNextPage: PropTypes.func.isRequired,
   getPrevPage: PropTypes.func.isRequired,
   prevPageEndpoint: PropTypes.string,
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
   pageID: PropTypes.number.isRequired,
   choices: PropTypes.any,
   choiceChosen: PropTypes.any,
 };
 export default function Action({
-  versionID,
+  scenarioID,
   pageID,
   pageTitle,
   body,
@@ -68,50 +69,7 @@ export default function Action({
 }) {
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  body = body.replace(/\\"/g, '"');
-
-  choices = [
-    {
-      choices_id: 1000,
-      choice_text:
-        'Approve project assignment and work on it immediately to save time.',
-      next_page: 9000,
-    },
-    {
-      choices_id: 2000,
-      choice_text: 'Postpone and ask questions from stakeholders.',
-      next_page: 6000,
-    },
-  ];
-  if (pageTitle === 'Choose Initial Action') {
-    choices = [
-      {
-        choices_id: 1000,
-        choice_text:
-          'delay getting started and try to get answers for any lingering questions that you might have about the project?',
-        next_page: 11006,
-      },
-      {
-        choices_id: 2000,
-        choice_text: "get to work so that you don't feel stressed about completing your task assignment before the project deadline?",
-        next_page: 11010,
-      },
-    ];
-  } else if (pageTitle === 'Choose Final Action') {
-    choices = [
-      {
-        choices_id: 1000,
-        choice_text:
-          'move forward with your task as assigned in order to not further exceed the project deadline, confident that you can deal with any considerations later?',
-        next_page: 11010,
-      },
-      {
-        choices_id: 2000,
-        choice_text: "delay completing your task assignment and the entire project to invite your teammates to a meeting to discuss gathering more information and possible changes to the project based on what you've learned?",
-        next_page: 11010,
-      },
-    ];
-  }
+  console.log(choices);
   // eslint-disable-next-line
   const [chosenAction, setChosenAction] = React.useState(-1);
   // eslint-disable-next-line
@@ -126,8 +84,8 @@ export default function Action({
   // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
   // eslint-disable-next-line
   const endpointPost =
-    `/scenarios/action?versionId=${versionID}&pageId=${pageID}`;
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`;
+    `/scenarios/action?versionId=${scenarioID}&pageId=${pageID}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
 
   const getAction = (selectedAction, nextPageID) => {
     console.log(pageID);
@@ -142,8 +100,8 @@ export default function Action({
       let body = {
         response_id: response.data.result.response_id,
         choice: response.data.result.choice,
-        choice_text: response.data.result.choice_text,
-        next: response.data.result.next_page,
+        CHOICE: response.data.result.CHOICE,
+        next: response.data.result.RESULT_PAGE_id,
       };
       console.log(response);
       setChosenAction((cur) => selectedAction);
@@ -156,7 +114,7 @@ export default function Action({
       post(setFetchActionResponse, endpointSess, onFailure, startSess);
       // TODO Remove once post request finishes
       getNextPage(
-        `/scenarios/task?versionId=${versionID}&pageId=${nextPageID}`,
+        `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
       );
@@ -187,7 +145,7 @@ export default function Action({
           color="primary"
           disabled={!choiceChosen}
           onClick={() => getNextPage(
-            `/scenarios/task?versionId=${versionID}&pageId=${choiceChosen}`,
+            `/scenarios/task?versionId=${scenarioID}&pageId=${choiceChosen}`,
             contextObj.activeIndex,
             contextObj.pages,
           )}
@@ -211,20 +169,20 @@ export default function Action({
       <Grid container spacing={2}>
         <Grid item style={{ width: '100%' }}>
           <Grid item style={{ width: '100%' }}>
-            <div dangerouslySetInnerHTML={{ __html: body }} />
+            <InnerHTML html={body.replace(/\\"/g, '"')} />
           </Grid>
           <Box mx="auto">
-            {choices.map((choice) => (
-              <Box p={3} key={choice.choices_id}>
+            {choices.sort((a, b) => a.APC_ID - b.APC_ID).map((choice) => (
+              <Box p={3} key={choice.APC_ID}>
                 <Button
                   variant="outlined"
                   color="primary"
-                  disabled={choice.choices_id === choiceChosen}
+                  disabled={choice.APC_ID === choiceChosen}
                   className={classes.button}
                   size="large"
-                  onClick={() => getAction(choice.choices_id, choice.next_page)}
+                  onClick={() => getAction(choice.APC_ID, choice.RESULT_PAGE_id)}
                 >
-                  {choice.choice_text}
+                  {choice.CHOICE}
                 </Button>
               </Box>
             ))}
