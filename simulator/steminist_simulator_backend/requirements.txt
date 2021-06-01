@@ -3,3 +3,10 @@ djangorestframework==3.12.2
 psycopg2-binary==2.8.6
 django-cors-headers==3.7.0
 django-environ==0.4.5
+
+# Django==2.2.12
+# django_filter==2.4.0
+# djangorestframework==3.12.2
+# django-cors-headers==3.5.0
+# django-environ==0.4.5
+# psycopg2-binary==2.8.6

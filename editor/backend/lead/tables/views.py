@@ -117,6 +117,8 @@ class ScenariosForViewSet(viewsets.ModelViewSet):
         permissions.IsFaculty
     ]
     serializer_class = Scenarios_forSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['COURSE']
 
 class ScenariosViewSet(viewsets.ModelViewSet):
     queryset = scenarios.objects.all()
@@ -986,6 +988,34 @@ class coverages_page(APIView):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class IssueCoverage(APIView):
+    def post(self, request, *args, **kwargs):
+    
+        serializer = IssuesSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            issueid = serializer.data['ISSUE']
+            scenarioid = serializer.data['SCENARIO']
+            queryset = stakeholders.objects.filter(SCENARIO=scenarioid)
+            data = StakeholdersSerializer(queryset, many=True).data
+            for item in data:
+                itemdict = {}
+                itemdict['STAKEHOLDER'] = item['STAKEHOLDER']
+                itemdict['ISSUE'] = issueid
+                itemdict['NAME'] = serializer.data['NAME']
+                itemdict['COVERAGE_SCORE'] = 0
+                print(itemdict)
+                itemSerializer = coverageSerializer(data=itemdict)
+                if itemSerializer.is_valid():
+                    itemSerializer.save()
+                else:
+                    return Response(itemSerializer.errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class stakeholders_page(APIView):
