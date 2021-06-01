@@ -1,19 +1,28 @@
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import '../App.css';
-import deleteReq from '../universalHTTPRequests/delete';
-import post from '../universalHTTPRequests/post';
-import get from '../universalHTTPRequests/get';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Button, Tabs, Tab, Box, Typography } from '@material-ui/core';
-import ScenarioCard from './components/scenarioCard';
-import LoadingSpinner from './components/LoadingSpinner';
+import {
+  Grid,
+  Paper,
+  Button,
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+} from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import CodeButton from './components/classCodeDialog';
-import ProgressBar from './components/progressBar';
-import { STUDENT_ID,changeID } from './../constants/config';
+import ScenarioCard from './components/scenarioCard';
+import LoadingSpinner from './components/LoadingSpinner';
+import get from '../universalHTTPRequestsEditor/get';
+// eslint-disable-next-line
+import CodeButton from "./components/classCodeDialog";
+// eslint-disable-next-line
+import ProgressBar from "./components/progressBar";
+import { STUDENT_ID } from '../constants/config';
+import ErrorBanner from './components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,19 +40,13 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     background: theme.palette.primary,
     '&:hover': {
-      transform: "scale3d(1.05, 1.05, 1)",
-      backgroundColor: '#f3e4e3'
-
-    }
-  },
-
-  button: {
-    variant: 'contained',
-    color: 'primary',
+      transform: 'scale3d(1.05, 1.05, 1)',
+      backgroundColor: '#f3e4e3',
+    },
   },
   grid: {
-    justifyContent: "center",
-    textAlign: "center",
+    justifyContent: 'center',
+    textAlign: 'center',
     width: '100%',
     margin: '0px',
   },
@@ -52,14 +55,17 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     background: 'black',
   },
-
 }));
 
-const endpointGet = '/scenarios?userId=';
-const endpointPost = '/dashboard';
+// TODO change when backend gets implemented
+const endpointGet = '/dashboard?professor_id=';
+// eslint-disable-next-line
+const endpointPost = "/dashboard";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {
+    children, value, index, ...other
+  } = props;
 
   return (
     <div
@@ -91,15 +97,14 @@ const StyledTab = withStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(18),
     backgroundColor: 'white',
-    //backgroundColor: '#d9d9d9',
+    // backgroundColor: '#d9d9d9',
     '&:hover': {
-      backgroundColor: '#8c8c8c',
-      color: 'white',
+      backgroundColor: '#F7E7E7',
+      color: 'black',
       opacity: 1,
       selected: {
-        backgroundColor: '#8c8c8c'
-      }
-
+        backgroundColor: '#F7E7E7',
+      },
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
@@ -123,124 +128,93 @@ const StyledTabs = withStyles({
 
 export default function Home() {
   const classes = useStyles();
-
-
   // post on success, concatenating a scenario card to array
-  //delete on success, concatenating a scenario card to array
-
-  //when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
-
-  //post returns new id of scenario, when you concatenating to array set the id to that
-  const [menuCourseItems, setMenuCourseItems] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [scenarioList, setScenarioList] = useState({     //temporary array of scenarios
-      incompleteScenarios: [
-        {
-          title: " ",
-          course: " ",
-          num_conversations: 0,
-          is_finished: false,
-          first_page: 0,
-          date: " ",
-          completed: 10,
-          max: 10,
-        }
-      ],
-      completeScenarios: [
-        {
-          title: " ",
-          num_conversations: 0,
-          is_finished: true,
-          first_page: 0,
-          course: " ",
-          date: " ",
-          completed: 10,
-          max: 10,
-        }
-      ]
-    });
+  // delete on success, concatenating a scenario card to array
+  // when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
+  // post returns new id of scenario, when you concatenating to array set the id to that
+  const [scenarioList, setScenarioList] = useState({
+    // temporary array of scenarios
+    incompleteScenarios: null,
+    completeScenarios: null,
+  });
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
     loading: false,
     error: false,
   });
-
-
-  
-  // // eslint-disable-next-line
-  // const [fetchCourseResponse, setFetchCourseResponse] = useState({
-  //     data: null,
-  //     loading: false,
-  //     error: null,
-  // });
   // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
-  // eslint-disable-next-line
 
-  //Get Scenario
-  let getData = () => {
+  // Get Scenario
+  const getData = () => {
     function onSuccess(response) {
-      let incomplete = response.data.result.filter(
-        (data) => !data.is_finished
-      );
-      let complete = response.data.result.filter(
-          (data) => data.is_finished
-      );
-      incomplete = incomplete.map((data) => (
-        {
-          title: data.name,
-          num_conversations: data.num_conversation,
-          is_finished: data.is_finished,
-          date: data.date_created,
-          version_id: data.version_id,
-          first_page: data.first_page, 
-          course: data.course_name
+      console.log(response);
+      let incomplete = [];
+      // response.data.result.filter((data) => !data.is_finished);
+      const complete = [];
+      // response.data.result.filter((data) => data.is_finished);
+      incomplete = response.data.map((data) => ({
+        title: data.NAME,
+        numConversations: data.NUM_CONVERSATION,
+        isFinished: false,
+        date: data.DATE_CREATED,
+        scenarioID: data.SCENARIO,
+        firstPage: null,
+        courses: data.COURSES,
+      }));
+      // TODO temporary requests to get first Page field
+      incomplete.forEach((obj) => {
+        function onSuccess(resp) {
+          obj.firstPage = resp.data.PAGES.filter(({ PAGE_TYPE }) => PAGE_TYPE === 'I')[0].PAGE;
+          const scen = {
+            incompleteScenarios: incomplete,
+            completeScenarios: complete,
+          };
+          setScenarioList(scen);
         }
-      ));
-      complete = complete.map((data) => (
-        {
-          title: data.name,
-          num_conversations: data.num_conversation,
-          is_finished: data.is_finished,
-          date: data.last_date_modified,
-          version_id: data.version_id,
-          first_page: data.first_page,
-          course: data.course_name
-        }
-      ));
-      let scen = {
-        incompleteScenarios: incomplete,
-        completeScenarios: complete
-      };
-      setScenarioList(scen);
-      debugger;
+        get(
+          setFetchScenariosResponse,
+          `/logistics?scenario_id=${obj.scenarioID}`,
+          null,
+          onSuccess,
+        );
+      });
+
+      /*
+      complete = complete.map((data) => ({
+        title: data.name,
+        num_conversations: data.num_conversation,
+        is_finished: data.is_finished,
+        date: data.last_date_modified,
+        scenarioID: data.scenarioID,
+        firstPage: data.firstPage,
+        course: data.course_name,
+      }));
+      */
     }
 
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, (endpointGet + STUDENT_ID), onFailure, onSuccess);
+    get(
+      setFetchScenariosResponse,
+      endpointGet + STUDENT_ID,
+      onFailure,
+      onSuccess,
+    );
   };
 
-  // //Get Courses
-  // let getCourses = () => {
-  //     function onSuccessCourse(response) {
-  //         setMenuCourseItems(response.data);
-  //     }
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
 
-  //     function onFailureCourse() {
-  //         setErrorBannerMessage('Failed to get courses! Please try again.');
-  //         setErrorBannerFade(true);
-  //     }
-  //     get(
-  //         setFetchCourseResponse,
-  //         endpointGetCourses,
-  //         onFailureCourse,
-  //         onSuccessCourse
-  //     );
-  // };
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
 
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
 
   function a11yProps(index) {
     return {
@@ -248,6 +222,7 @@ export default function Home() {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -275,11 +250,7 @@ export default function Home() {
             <Typography align="center" variant="h3">
               Error in fetching Scenarios.
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getData}
-            >
+            <Button variant="contained" color="primary" onClick={getData}>
               <RefreshIcon className={classes.iconRefreshLarge} />
             </Button>
           </div>
@@ -290,83 +261,95 @@ export default function Home() {
 
   return (
     <div className={classes.root}>
-      <StyledTabs value={value} variant='fullWidth' centered onChange={handleChange} aria-label="simple tabs example">
+      <div className={classes.bannerContainer}>
+        <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
+      </div>
+      <StyledTabs
+        value={value}
+        variant="fullWidth"
+        centered
+        onChange={handleChange}
+        aria-label="simple tabs example"
+      >
         <StyledTab label="In Progress Scenarios" {...a11yProps(0)} />
         <StyledTab label="Completed Scenarios" {...a11yProps(1)} />
       </StyledTabs>
       <TabPanel value={value} index={0}>
-        <Grid container spacing={2} className={classes.grid}>   {/*incomplete scenarios section*/}
-          <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="baseline">
-            <h1>To-Do</h1>
+        <Grid container spacing={2} className={classes.grid}>
+          {' '}
+          {/* incomplete scenarios section */}
+          <Grid
+            container
+            direction="row"
+            item
+            xs={12}
+            justify="space-evenly"
+            alignItems="baseline"
+          >
+            <Typography variant="h2">To-Do</Typography>
           </Grid>
-          {scenarioList.incompleteScenarios.map(scenario => (
-            <Grid item xs={12} sm={6} md={4} lg={3}>
+          {scenarioList.incompleteScenarios ? scenarioList.incompleteScenarios.map((scenario) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished={false}
                   title={scenario.title}
-                  course = {scenario.course}
+                  courses={scenario.courses}
                   date={scenario.date}
                 />
                 <Button
-                    component={Link}
-                    to={{
-                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
-                        data: scenario,
-                    }}
-                    className={classes.button}
-                    variant="contained"
-                    color="primary"
-                >Select Scenario</Button>
-                {/* <Button onClick={() => {
-                  changeID(scenario.version_id)
-                  //TEMPORARY SOLUTION
-                  window.location.href="/simulation";
-                }} className={classes.button}>Select Scenario</Button> */}
-                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
+                  component={Link}
+                  to={{
+                    pathname: `/simulation/${scenario.scenarioID}/${scenario.firstPage}`,
+                    data: scenario,
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                >
+                  Select Scenario
+                  {' '}
+                  {scenario.firstPage}
+                </Button>
               </Paper>
             </Grid>
-          ))}
-          {/* <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
-            <Box m={2} pt={3}>
-              <CodeButton />
-            </Box>
-          </Grid> */}
+          )) : null}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid container spacing={2} className={classes.grid}>     {/*completed scenarioList section*/}
+        <Grid container spacing={2} className={classes.grid}>
+          {' '}
+          {/* completed scenarioList section */}
           <Grid item xs={12}>
-            <h1>Completed</h1>
+            <Typography variant="h2">Completed</Typography>
           </Grid>
-          {scenarioList.completeScenarios.map(scenario => (
-            <Grid item xs={12} sm={6} md={4} lg={3}>
+          {scenarioList.completeScenarios ? scenarioList.completeScenarios.map((scenario) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
-                  finished={true}
+                  finished
                   title={scenario.title}
-                  course={scenario.course}
+                  courses={scenario.courses}
                   date={scenario.date}
                 />
                 <Button
-                    component={Link}
-                    to={{
-                        pathname: '/simulation/'+scenario.version_id+'/'+scenario.first_page,
-                        data: scenario,
-                    }}
-                    className={classes.button}
-                    variant="contained"
-                    color="primary"
-                >Review Scenario</Button>
+                  component={Link}
+                  to={{
+                    pathname: `/simulation/${scenario.scenarioID}/${scenario.firstPage}`,
+                    data: scenario,
+                  }}
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                >
+                  Review Scenario
+                </Button>
                 {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
-          ))}
+          )) : null}
         </Grid>
       </TabPanel>
-
-
-
     </div>
   );
 }

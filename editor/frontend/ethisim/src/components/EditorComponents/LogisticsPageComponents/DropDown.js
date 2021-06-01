@@ -11,63 +11,59 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" color="primary" />;
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: 500,
-        '& > * + *': {
-            marginTop: theme.spacing(3),
-        },
+  root: {
+    width: 500,
+    '& > * + *': {
+      marginTop: theme.spacing(3),
     },
+  },
 }));
 
 Tags.propTypes = {
-    update: PropTypes.func,
-    courses: PropTypes.array,
-    current: PropTypes.array,
+  update: PropTypes.func,
+  courses: PropTypes.array,
+  current: PropTypes.array,
 };
 
 export default function Tags(props) {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    const onTagsChange = (event, values) => {
-        props.update(values);
-    };
+  const onTagsChange = (event, values) => {
+    props.update(values);
+  };
 
-    return (
-        <div className={classes.root}>
-            <Autocomplete
-                multiple
-                id="checkboxes-tags-demo"
-                options={props.courses}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option.NAME}
-                getOptionSelected={(option, value) => {
-                    return option.COURSE === value.COURSE;
-                }}
-                onChange={onTagsChange}
-                value={props.current}
-                renderOption={(option, { selected, inputValue }) => {
-                    return (
-                        <React.Fragment>
-                            <Checkbox
-                                icon={icon}
-                                checkedIcon={checkedIcon}
-                                style={{ marginRight: 8 }}
-                                checked={selected}
-                            />
-                            {option.NAME}
-                        </React.Fragment>
-                    );
-                }}
-                style={{ width: 500 }}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="outlined"
-                        placeholder="Courses"
-                        fullWidth
-                    />
-                )}
+  return (
+    <div className={classes.root}>
+      <Autocomplete
+        multiple
+        id="checkboxes-tags-demo"
+        options={props.courses}
+        disableCloseOnSelect
+        getOptionLabel={(option) => option.NAME}
+        getOptionSelected={(option, value) => option.COURSE === value.COURSE}
+        onChange={onTagsChange}
+        value={props.current}
+        renderOption={(option, { selected, inputValue }) => (
+          <>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
             />
-        </div>
-    );
+            {option.NAME}
+          </>
+        )}
+        style={{ width: 500 }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            placeholder="Courses"
+            fullWidth
+          />
+        )}
+      />
+    </div>
+  );
 }

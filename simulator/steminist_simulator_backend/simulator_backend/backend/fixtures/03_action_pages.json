@@ -1,64 +1,64 @@
 [
-    {
-        "model": "backend.Page",
-        "pk": 5000,
-        "fields": {
-            "page_type": "INITIALACTION",
-            "page_title": "Initial Action Page",
-            "version_id": 1000,
-            "body": "Based on what you have learned so far, do you want to approve the project now? Or do you feel like you need to postpone your decision and learn more from the stakeholders involved in this project?",
-            "next_page": -1,
-            "x_coordinate": 0,
-            "y_coordinate": 0
-        }
-    },
-    {
-        "model": "backend.ActionPageChoice",
-        "pk": 1000,
-        "fields": {
-            "page_id": 5000,
-            "choice": "Approve project assignment and work on it immediately to save time.",
-            "result_page": 9000
-        }
-    },
-    {
-        "model": "backend.ActionPageChoice",
-        "pk": 2000,
-        "fields": {
-            "page_id": 5000,
-            "choice": "Postpone and ask questions from stakeholders.",
-            "result_page": 6000
-        }
-    },
-    {
-        "model": "backend.Page",
-        "pk": 8000,
-        "fields": {
-            "page_type": "FINALACTION",
-            "page_title": "Final Action Page",
-            "version_id": 1000,
-            "body": "Having talked to the stakeholders, what is your course of action?",
-            "next_page": 9000,
-            "x_coordinate": 0,
-            "y_coordinate": 0
-        }
-    },
-    {
-        "model": "backend.ActionPageChoice",
-        "pk": 3000,
-        "fields": {
-            "page_id": 8000,
-            "choice": "Approve project assignment.",
-            "result_page": 9000
-        }
-    },
-    {
-        "model": "backend.ActionPageChoice",
-        "pk": 4000,
-        "fields": {
-            "page_id": 8000,
-            "choice": "Refuse project assignment.",
-            "result_page": 9000
-        }
+  {
+    "model": "backend.Page",
+    "pk": 5000,
+    "fields": {
+      "page_type": "INITIALACTION",
+      "page_title": "Initial Action Page",
+      "version_id": 1000,
+      "body": "Based on what you have learned so far, do you want to approve the project now? Or do you feel like you need to postpone your decision and learn more from the stakeholders involved in this project?",
+      "next_page": -1,
+      "x_coordinate": 0,
+      "y_coordinate": 0
     }
+  },
+  {
+    "model": "backend.ActionPageChoice",
+    "pk": 1000,
+    "fields": {
+      "page_id": 5000,
+      "choice": "Approve project assignment and work on it immediately to save time.",
+      "result_page": 9000
+    }
+  },
+  {
+    "model": "backend.ActionPageChoice",
+    "pk": 2000,
+    "fields": {
+      "page_id": 5000,
+      "choice": "Postpone and ask questions from stakeholders.",
+      "result_page": 6000
+    }
+  },
+  {
+    "model": "backend.Page",
+    "pk": 8000,
+    "fields": {
+      "page_type": "FINALACTION",
+      "page_title": "Final Action Page",
+      "version_id": 1000,
+      "body": "Having talked to the stakeholders, what is your course of action?",
+      "next_page": 9000,
+      "x_coordinate": 0,
+      "y_coordinate": 0
+    }
+  },
+  {
+    "model": "backend.ActionPageChoice",
+    "pk": 3000,
+    "fields": {
+      "page_id": 8000,
+      "choice": "Approve project assignment.",
+      "result_page": 9000
+    }
+  },
+  {
+    "model": "backend.ActionPageChoice",
+    "pk": 4000,
+    "fields": {
+      "page_id": 8000,
+      "choice": "Refuse project assignment.",
+      "result_page": 9000
+    }
+  }
 ]

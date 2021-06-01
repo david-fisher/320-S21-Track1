@@ -1,326 +1,194 @@
-import React,{useEffect,useState} from "react";
-import { useLocation } from 'react-router-dom';
-import { makeStyles, withStyles, Typography, Box, Button, Grid } from "@material-ui/core";
-import Checkbox from "./components/checkbox";
-import { BACK_URL, STUDENT_ID, SCENARIO_ID } from "../constants/config";
-import axios from 'axios';
-import { ScenariosContext } from "../Nav";
-import HTMLRenderer from "./components/htmlRenderer";
-import Introduction from "./introduction.js";
-import ProjectAssignment from "./projectAssignment.js";
-import Reflection from "./reflection.js";
-import Conclusion from "./conclusion.js";
-import Feedback from "./feedback.js";
-import GatheredInformation from "./gatheredInformation.js";
-import Stakeholders from "./stakeholders.js";
-import RefreshIcon from '@material-ui/icons/Refresh';
-import get from '../universalHTTPRequests/get';
-import post from '../universalHTTPRequests/post';
+import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
+import {
+  makeStyles,
+  withStyles,
+  Typography,
+  Box,
+  Button,
+  Grid,
+} from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
+import { STUDENT_ID } from '../constants/config';
+import post from '../universalHTTPRequestsEditor/post';
+import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    color: "#5b7f95"
+    color: '#5b7f95',
   },
   errorContainer: {
     marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  }
+  },
+  backButton: {
+    marginLeft: '0rem',
+    marginRight: '0rem',
+    marginTop: '1rem',
+  },
+  nextButton: {
+    marginRight: '0rem',
+    marginTop: '1rem',
+  },
+  button: {
+    width: '100%',
+    textTransform: 'unset',
+  },
 }));
 
 const TextTypography = withStyles({
   root: {
-    color: "#373a3c"
-  }
+    color: '#373a3c',
+  },
 })(Typography);
 
-function Action({ pages, sessionId, setPages, activePage, conversations, setActivePage, content_url, nextPageID, prevPageID, title }) {
-
-  const location = useLocation();
-
-
-  let pathArray = location.pathname.split( '/' );
-  const scenario_id = pathArray[pathArray.length - 2];
-  const first_page = pathArray[pathArray.length - 1];
-  const version_id = scenario_id;
-
-  function goToPage(pageID) {
-    if (!pages[pageID].visited) {
-      setPages((prevPages) => {
-        let copy = { ...prevPages };
-        copy[pageID].visited = true;
-        return copy;
-      });
-    }
-    setActivePage((prevPage) => pageID);
-  }
-
-
-  const [actionQuestion, setActionQuestion, setActionChoices] = React.useState('');
-  const [questionID, setQuestionID] = React.useState('');
-  const [scenarios, setScenarios] = React.useContext(ScenariosContext);
-  const [nextPage, setNextPage] = React.useState(-1);
+Action.propTypes = {
+  pageTitle: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  getNextPage: PropTypes.func.isRequired,
+  getPrevPage: PropTypes.func.isRequired,
+  prevPageEndpoint: PropTypes.string,
+  scenarioID: PropTypes.number.isRequired,
+  pageID: PropTypes.number.isRequired,
+  choices: PropTypes.any,
+  choiceChosen: PropTypes.any,
+};
+export default function Action({
+  scenarioID,
+  pageID,
+  pageTitle,
+  body,
+  choices,
+  choiceChosen,
+  getNextPage,
+  getPrevPage,
+  prevPageEndpoint,
+}) {
+  // eslint-disable-next-line
+  let [contextObj, setContextObj] = useContext(GlobalContext);
+  console.log(choices);
+  // eslint-disable-next-line
   const [chosenAction, setChosenAction] = React.useState(-1);
-
-  // useEffect(() => {
-  //   // backend call
-  //   (async () => {
-  //     axios({
-  //       method: 'get',
-  //       url: BACK_URL + content_url,
-  //       headers: {
-  //         scenarioID: scenarios.currentScenarioID,
-  //         studentID: STUDENT_ID,
-  //       }
-  //     }).then(response => {
-  //       console.log(response);
-  //       if (scenarios.currentScenarioID == 1)
-  //       {
-  //         setActionQuestion(text => response.data[0].question);
-  //         setQuestionID(id => response.data[0].option_id);
-  //       }
-  //       if (scenarios.currentScenarioID == 2){
-  //         setActionQuestion(text => response.data[1].question);
-  //         setQuestionID(id => response.data[1].option_id);
-  //       }
-  //     }).catch((err)=>{
-  //       console.log("err",err);
-  //       //alert(err);
-  //     });
-  //   })();
-  // }, [scenarios]);
-
-  // async function handleResponse(data) {
-  //   const request_data = {}
-  //   console.log("Question ID's " + questionID);
-  //   request_data[questionID[0].toString()] = data;
-  //   await axios({
-  //     url: BACK_URL + content_url,
-  //     method: 'put',
-  //     data: {
-  //       scenarioID: scenarios.currentScenarioID,
-  //       studentID: STUDENT_ID,
-  //       data: request_data
-  //     }
-  //   });
-  // }
-   // MAKE API CALL
-   let pageId = activePage
-   const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
-   const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
-   const endpointPost = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)
-   const endpointSess = '/scenarios/session/start?userId='+STUDENT_ID+'&versionId='+version_id
- 
-   const [action, setAction] = useState({     //temporary array of reflection
-    
-    page_id: 0,
-    page_type: "",
-    page_title: "",
-    version_id: 5,
-    body: "",
-    choices: []
-    
-   });
-   
-   const [fetchActionResponse, setFetchActionResponse] = useState({
-     data: null,
-     loading: false,
-     error: false,
-   });
-   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+  // eslint-disable-next-line
+  const [fetchActionResponse, setFetchActionResponse] = useState({
     data: null,
     loading: false,
     error: false,
   });
-   const [shouldFetch, setShouldFetch] = useState(0);
+  // MAKE API CALL
+  // let pageId = activePage
+  // const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
+  // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
+  // eslint-disable-next-line
+  const endpointPost =
+    `/scenarios/action?versionId=${scenarioID}&pageId=${pageID}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
 
-   function onFailure() {
-    //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-    //setErrorBannerFade(true);
-  }
-
-   function onSuccess2(response) {
-      console.log(response.data)
-      let npage = response.data.result.map((data) => (
-        {
-          next: data.next_page,
-          type: data.page_type,
-          title: data.page_title,
-          id: data.page_id,
-        }
-      ));
-      let next_html = (<Introduction activePage={npage[0].id}/>);
-      if(npage[0].type === "PLAIN"){
-        next_html = (<ProjectAssignment version_id={scenario_id} lastPage={activePage}/>);
-      } else if (npage[0].type === "REFLECTION"){
-        next_html = (<Reflection version_id={scenario_id} content_url="/scenarios/initialReflection" res_url="/scenarios/initialReflection/response" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
-      } else if (npage[0].type === "STAKEHOLDERPAGE"){
-        next_html = (<Stakeholders session_id={sessionId} version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next} numConversations={conversations}/>);
-      } else if (npage[0].type === "INITIALACTION" || npage[0].type === "FINALACTION"){
-        next_html = (<Action sessionId={sessionId} version_id={scenario_id} conversations={conversations} activePage={npage[0].id} content_url="/scenarios/action" nextPageID={npage[0].next} prevPageID={activePage} title={npage.title}/>);
-      } else if (npage[0].type === "CONCLUSION"){
-        next_html = (<Conclusion version_id={scenario_id} prevPageID={activePage}/>);
-      } else if (npage[0].type === "FEEDBACK"){
-        next_html = (<Feedback version_id={scenario_id} prevPageID={activePage} nextPageID={npage[0].next}/>);
-      } else {
-        next_html = (<Reflection version_id={scenario_id} activePage={npage[0].id} content_url="/scenarios/reflection" res_url="/scenarios/reflection/response" nextPageID="initialAction" prevPageID={activePage} title={npage.title}/>);
-      }
-      let len = Object.keys(pages).length
-      let next_page = {
-        visited: false,
-        completed: false,
-        title: npage[0].title,
-        pageNumber: len+1,
-        html: next_html
-      }
-      setPages((prevPages) => {
-        let copy = { ...prevPages };
-        copy[npage[0].id] = next_page;
-        return copy;
-      });
-      if(npage[0].next !== undefined){
-        let next = npage[0].next;
-        let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + next;
-        get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2);
-      }
-    }
- 
-   //Get Action Page
-   let getData = () => {
-     function onSuccess(response) {
-       // Right now hardcoded for middle reflection
-       //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-       let ppage = ({
-          page_id: response.data.result.page_id,
-          page_type: response.data.result.page_type,
-          page_title: response.data.result.page_title,
-          version_id: response.data.result.version_id,
-          body: response.data.result.body,
-          choices: response.data.result.choices
-       })
-       let pp = {
-        data: ppage
-       }
-       setAction(ppage);
-       //check if we've already submitted an action for this scen
-       get(setFetchScenariosResponse, (endpointGet2), onFailure, onSuccess1);
-       debugger;
-     }
-     function onSuccess1(response) {
-      // Right now hardcoded for middle reflection
-      //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-      if(response.data.status == 200){
-        setNextPage((cur) => response.data.result.next_page);
-        setChosenAction((cur) => response.data.result.choice);
-      }
-      let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + response.data.result.next_page;
-      get(setFetchScenariosResponse, endpoint, onFailure, onSuccess2)
-    }
-     get(setFetchActionResponse, (endpointGet), onFailure, onSuccess);
-   };
-
-   let getAction = (selectedAction) => {
+  const getAction = (selectedAction, nextPageID) => {
+    console.log(pageID);
     function startSess(response) {
-      //do nothing
+      // do nothing
     }
+    // eslint-disable-next-line
     function onSuccess(response) {
       // Right now hardcoded for middle reflection
-      //pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-      let body = ({
-         response_id: response.data.result.response_id,
-         choice: response.data.result.choice,
-         choice_text: response.data.result.choice_text,
-         next: response.data.result.next_page,
-      })
-      console.log(body.next);
-      setNextPage((cur) => body.next);
+      // pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
+      // eslint-disable-next-line
+      let body = {
+        response_id: response.data.result.response_id,
+        choice: response.data.result.choice,
+        CHOICE: response.data.result.CHOICE,
+        next: response.data.result.RESULT_PAGE_id,
+      };
+      console.log(response);
       setChosenAction((cur) => selectedAction);
-      let endpoint = "/scenarios/task?versionId="+version_id+"&pageId=" + body.next;
-      get(setFetchActionResponse, endpoint, onFailure, onSuccess2);
     }
     function onFailure() {
-      //setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      //setErrorBannerFade(true);
+      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      // setErrorBannerFade(true);
     }
-    post(setFetchActionResponse, (endpointSess), onFailure, startSess)
-    let body = {"choice_id" : selectedAction, "user_id" : STUDENT_ID};
-    post(setFetchActionResponse, (endpointPost), onFailure, onSuccess, JSON.stringify(body));
-   }
- 
+    if (!choiceChosen) {
+      post(setFetchActionResponse, endpointSess, onFailure, startSess);
+      // TODO Remove once post request finishes
+      getNextPage(
+        `/page?page_id=${nextPageID}`,
+        contextObj.activeIndex,
+        contextObj.pages,
+      );
+      // eslint-disable-next-line
+      let body = { choice_id: selectedAction, user_id: STUDENT_ID };
+      // TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
+    }
+  };
 
   const classes = useStyles();
- 
-  useEffect(getData, [shouldFetch]);
 
-  if (fetchActionResponse.error) {
-    return (
-      <div className={classes.errorContainer}>
-        <Box mt={5}>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <TextTypography variant="h4" align="center" gutterBottom>
-              Error fetching scenario data.
-            </TextTypography>
-          </Grid>
-        </Box>
+  const Buttons = (
+    <Grid container direction="row" justify="space-between">
+      <Grid item className={classes.backButton}>
         <Button
           variant="contained"
+          disableElevation
           color="primary"
-          onClick={getData}
+          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
         >
-          <RefreshIcon className={classes.iconRefreshLarge} />
+          Back
         </Button>
-      </div>)
-  }
+      </Grid>
+      <Grid item className={classes.nextButton}>
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          disabled={!choiceChosen}
+          onClick={() => getNextPage(
+            `/scenarios/task?versionId=${scenarioID}&pageId=${choiceChosen}`,
+            contextObj.activeIndex,
+            contextObj.pages,
+          )}
+        >
+          Next
+        </Button>
+      </Grid>
+    </Grid>
+  );
 
   return (
     <div>
+      {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
           <TextTypography variant="h4" align="center" gutterBottom>
-            {action.page_title}
+            {pageTitle}
           </TextTypography>
         </Box>
       </Grid>
-      <Grid container direction="row" justify="space-between">
-        <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation onClick={() => goToPage(activePage-1)}>Back</Button>
-        </Grid>
-        <Grid item style={{ marginRight: "0rem", marginTop: "-3rem" }}>
-          <Button variant="contained" disableElevation disabled={nextPage === -1} color="primary" onClick={() => goToPage(nextPage)} >Next</Button>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
-        <Grid item lg={12}>
-          {/* {action.data.map(d =>( */}
-            <TextTypography variant="h6" align="center" gutterBottom>
-                {action.body}
-              </TextTypography>
-            <Box mx="auto">
-            {action.choices.map((choice) => (
-              <Box p={3}>
+        <Grid item style={{ width: '100%' }}>
+          <Grid item style={{ width: '100%' }}>
+            <InnerHTML html={body.replace(/\\"/g, '"')} />
+          </Grid>
+          <Box mx="auto">
+            {choices.sort((a, b) => a.APC_ID - b.APC_ID).map((choice) => (
+              <Box p={3} key={choice.APC_ID}>
                 <Button
-                  variant={(choice.choices_id === chosenAction) ? "contained" : "outlined"}
-                  color={(choice.choices_id === chosenAction) ? "secondary" : "primary"}
-                  disabled={nextPage !== -1}
+                  variant="outlined"
+                  color="primary"
+                  disabled={choice.APC_ID === choiceChosen}
+                  className={classes.button}
                   size="large"
-                  onClick={() => getAction(choice.choices_id)} // save choice and do something According to this choice
+                  onClick={() => getAction(choice.APC_ID, choice.RESULT_PAGE_id)}
                 >
-                  {choice.choice_text}
-                </Button> 
+                  {choice.CHOICE}
+                </Button>
               </Box>
             ))}
-
-            </Box>
-          {/* ))} */}
-        </Grid>
-        <Grid item lg={12}>
-          {/* <Checkbox content_url = {content_url} nextPage={() => goToPage(nextPageID)} handleResponse={handleResponse} pages={pages} nextPageName={nextPageID} />  */}
+          </Box>
         </Grid>
       </Grid>
     </div>
   );
 }
-
-export default Action;

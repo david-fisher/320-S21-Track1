@@ -1,23 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import playerReducer from './redux/reducers';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import './index.css';
-import './pages/components/suneditor.min.css';
 import Nav from './Nav';
 import * as serviceWorker from './serviceWorker';
 
-const store = createStore(playerReducer, undefined,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#881c1c',
+      light: '#F7E7E7',
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <MuiThemeProvider theme={theme}>
       <Nav />
-    </Provider>
+    </MuiThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
