@@ -5,9 +5,9 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import Copyright from '../components/Copyright';
-import { DOMAIN } from '../Constants/Config';
 import HomepageNavBar from '../components/HomepageComponents/HomepageNavBar';
 import Background from '../shared/umass.jpg';
+import { DOMAIN } from '../Constants/Config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -94,25 +94,29 @@ function StudentAccess() {
     <div>
       <Container className={classes.studentButtonsContainer}>
         <Button
-          // component={Link}
-          // to={'/wait'}
+          component={Link}
+          onClick={() => {
+            window.location.href = `${DOMAIN}/Shibboleth.sso/Login?target=/loginSimulator`;
+          }}
           className={classes.accessButton}
           variant="contained"
           color="primary"
         >
           <Typography variant="h5" display="block" noWrap>
-            Learn More
+            Log in as Student
           </Typography>
         </Button>
         <Button
-          // component={Link}
-          // to={'/wait'}
+          component={Link}
+          onClick={() => {
+            window.location.href = `${DOMAIN}/Shibboleth.sso/Login?target=/loginEditor`;
+          }}
           className={classes.accessButton}
           variant="contained"
           color="primary"
         >
           <Typography variant="h5" display="block" noWrap>
-            Get Started
+            Log in as Editor
           </Typography>
         </Button>
       </Container>

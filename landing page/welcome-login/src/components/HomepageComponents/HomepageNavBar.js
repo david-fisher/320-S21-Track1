@@ -1,9 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, Typography, Button,
+  AppBar, Toolbar, Typography,
 } from '@material-ui/core/';
-import { Link } from 'react-router-dom';
 import WhiteLogo from '../../shared/WhiteLogo.png';
 import UMassLogo from '../../shared/longform.svg';
 
@@ -94,19 +93,6 @@ export default function HomepageNavBar() {
           <img src={UMassLogo} alt="UMassLogo" className={classes.umasslogo} />
           <img src={WhiteLogo} alt="EthismLogo" className={classes.logo} />
           <Typography className={classes.title} variant="h5" />
-
-          <Button
-            component={Link}
-            // to={'/login'}
-            // onClick={() => window.location.href = 'https://ethisim1.cs.umass.edu/Shibboleth.sso/Login'}
-            onClick={() => (window.location.href = '/Shibboleth.sso/Login?target=/wait')}
-            className={classes.signupButton}
-            variant="contained"
-          >
-            <Typography variant="h6" className={classes.signupButtonText}>
-              Log In
-            </Typography>
-          </Button>
         </Toolbar>
       </AppBar>
     </div>
