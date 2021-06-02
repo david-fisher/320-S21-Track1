@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseURL } from '../Constants/Config';
+import { BACK_URL_EDITOR } from '../Constants/Config';
 
 // Universal fetch request using axios
 export default function universalFetch(
@@ -15,7 +15,7 @@ export default function universalFetch(
     error: null,
   });
   axios
-    .get(baseURL + endpoint, { withCredentials: true })
+    .get(BACK_URL_EDITOR + endpoint, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

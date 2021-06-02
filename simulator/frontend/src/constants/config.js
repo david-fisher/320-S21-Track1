@@ -5,4 +5,4 @@ export const BACK_URL_SIMULATOR = `${DOMAIN}:7000/backend`;
 export const BACK_URL_EDITOR = `${DOMAIN}:8000`;
 export const SCENARIO_ID = 1;
 export const STUDENT_ID = 1;
-export const DEV_MODE = false;
+export const PRODUCTION = process.env.NODE_ENV === 'production';

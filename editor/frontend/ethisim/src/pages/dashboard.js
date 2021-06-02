@@ -19,6 +19,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ScenarioCard from '../components/DashboardComponents/ScenarioCard';
 import AddNewScenarioCard from '../components/DashboardComponents/AddNewScenarioCard';
 import Copyright from '../components/Copyright';
@@ -122,10 +124,16 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-// Passing props with React Router in Material UI: https://stackoverflow.com/questions/30115324/pass-props-in-link-react-router
-export default function Dashboard() {
-  const classes = useStyles();
+Dashboard.propTypes = {
+  location: PropTypes.any,
+};
 
+// Passing props with React Router in Material UI: https://stackoverflow.com/questions/30115324/pass-props-in-link-react-router
+export default function Dashboard(props) {
+  const classes = useStyles();
+  const history = useHistory();
+  const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginEditor');
+  console.log(userID);
   // post on success, concatenating a scenario card to array
   // delete on success, concatenating a scenario card to array
 

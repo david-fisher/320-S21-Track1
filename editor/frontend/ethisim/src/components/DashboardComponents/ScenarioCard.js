@@ -163,7 +163,7 @@ export default function ScenarioCard({
         <Button
           component={Link}
           to={{
-            pathname: `/editor/${scenarioID}`,
+            pathname: `/scenarioEditor/${scenarioID}`,
             data,
           }}
           className={classes.buttonText}

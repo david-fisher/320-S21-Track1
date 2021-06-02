@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -32,14 +32,16 @@ SimulationWindow.propTypes = {
 export default function SimulationWindow(props) {
   const classes = useStyles();
   const location = useLocation();
-
+  const history = useHistory();
+  // eslint-disable-next-line
   const pathArray = location.pathname.split('/');
+
   const scenarioID = props.location.data
     ? props.location.data.scenarioID
-    : pathArray[pathArray.length - 2];
+    : history.push('/dashboard'); // prevents users from manually inserting scenarioID - firstPage in URL
   const firstPage = props.location.data
     ? props.location.data.firstPage
-    : pathArray[pathArray.length - 1];
+    : history.push('/dashboard');
 
   const numConversations = props.location.data
     ? props.location.data.numConversations
