@@ -8,10 +8,12 @@ import UMassLogo from '../../shared/longform.svg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
     width: '100%',
     margin: theme.spacing(0),
     padding: theme.spacing(0),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   umasslogo: {
     height: '30px',
@@ -19,18 +21,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '15px',
     '@media (max-width:500px)': {
       marginRight: '5px',
+      height: '20px',
     },
   },
   logo: {
     height: '50px',
-    position: 'absolute',
-    left: '50%',
-    top: '40%',
-    transform: 'translate(-50%, -50%)',
     margin: theme.spacing(1),
-    marginRight: '15px',
-    '@media (max-width:500px)': {
-      marginRight: '5px',
+    '@media (max-width:530px)': {
+      display: 'none',
     },
   },
   title: {
@@ -88,7 +86,7 @@ export default function HomepageNavBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.root}>
         <Toolbar>
           <img src={UMassLogo} alt="UMassLogo" className={classes.umasslogo} />
           <img src={WhiteLogo} alt="EthismLogo" className={classes.logo} />
