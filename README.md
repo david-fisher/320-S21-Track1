@@ -92,7 +92,7 @@ One can develop locally by following these instructions.
 
 ![environment variables](./simulator/steminist_simulator_backend/img/environment_variables.png)
 
-3. Install dependencies, Follow [Editor backend instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#backend) and [Simulator backend instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#backend-1)
+3. Install dependencies, Follow [Editor backend instructions](#backend) and [Simulator backend instructions](#backend-1).
 ```
 pip install -r requirements.txt or pip3 install -r requirements.txt 
 ```
