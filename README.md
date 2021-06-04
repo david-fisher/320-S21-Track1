@@ -1,7 +1,9 @@
 # EthiSim
 Ethisim is a web application that allows you to easily create, assign, and play through ethics simulations. Run them for a participation grade, or develop them further into longer discussions for class.
-[Editor Schema](https://dbdiagram.io/d/60b569c6b29a09603d175d43)
-[Simulator Schema](https://dbdiagram.io/d/60b7cc7fb29a09603d17b3d7)
+- [Editor Schema](https://dbdiagram.io/d/60b569c6b29a09603d175d43)
+- [Simulator Schema](https://dbdiagram.io/d/60b7cc7fb29a09603d17b3d7)
+- [Editor Endpoints](https://docs.google.com/document/d/1QSiUe21Z_TgT5XZKyR0twevRM864_AswxzVdYLwqW1I/edit)
+- [Simulator Endpoints](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit)
 ## Table of Contents
 - [EthiSim](#ethisim)
 - [Development using Docker](#development-using-docker)
