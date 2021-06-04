@@ -30,7 +30,7 @@ One can develop locally by following these instructions.
 
 ![environment variables](../simulator/steminist_simulator_backend/img/environment_variables.png)
 
-3. Install dependencies, Follow [Editor backend instructions](#backend)
+3. Install dependencies, Follow [Editor backend instructions](#backend).
 ```
 pip install -r requirements.txt or pip3 install -r requirements.txt 
 ```
