@@ -1,6 +1,7 @@
 # EthiSim
 Ethisim is a web application that allows you to easily create, assign, and play through ethics simulations. Run them for a participation grade, or develop them further into longer discussions for class.
-
+[Editor Schema](https://dbdiagram.io/d/60b569c6b29a09603d175d43)
+[Simulator Schema](https://dbdiagram.io/d/60b7cc7fb29a09603d17b3d7)
 ## Table of Contents
 - [EthiSim](#ethisim)
 - [Development using Docker](#development-using-docker)
@@ -80,14 +81,14 @@ Since the react apps' source code is mounted as a volume on the respective conta
 
 ### **Database (PostgreSQL)**
 We will be developing using CSCF database servers and their credentials. 
-One can develop locally by following these instructions.
+One can develop locally by following these instructions. We use a 2 database architecture, so the following commands (steps 1 - 6) will be repeated twice in the /editor and /simulator directories.
 
 0. Make sure you can python https://www.python.org/downloads/  and postgres https://www.postgresql.org/download/ installed on your local machine.
 
-1. Setup your local POSTGRES database in creating your database, user, and password.
+1. Setup your local POSTGRES editor and simulator databases. You must create 2 databases, one for the editor and another for the simulator.
 - You can use the following to guide on how you can setup your local POSTGRES DB: https://medium.com/@rudipy/how-to-connecting-postgresql-with-a-django-application-f479dc949a11
 
-2. Connect local POSTGRES database to Django application
+2. Connect local POSTGRES editor and simulator databases to Django application
 - Navigate to ./simulator/simulator_backend/simulator_backend/ and ./editor/backend/lead directory and add .env files with the following environment variables:
 
 ![environment variables](./simulator/steminist_simulator_backend/img/environment_variables.png)
@@ -97,28 +98,26 @@ One can develop locally by following these instructions.
 pip install -r requirements.txt or pip3 install -r requirements.txt 
 ```
 
-4. Apply migrations to your local DB.
-- Navigate to ./simulator_backend and run the following command:
+4. Apply migrations to your local editor and simulator DB.
+- Navigate to ./simulator/simulator_backend/simulator_backend/simulator_backend and ./editor/backend/lead/lead and run the following command for both:
 ```
 python manage.py migrate or py install -r requirements.txt 
 ```
 
-5. Seed the database(add initial data).
+5. Seed the editor and simulator database (add initial data). This will add data to the editor and simulator databases respectfully.
 - In the same directory as above, run the following command:
 ```
 python manage.py loaddata data/dump.json or py manage.py loaddata data/dump.json
 ```
 
-6. Run server.
+6. Run servers. 
 - In the same directory as above, run the following command:
 ```
 python manage.py runserver or py manage.py runserver
 ```
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
-- Downlaod [DBeaver](https://dbeaver.io/) as a database GUI 
-- Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
-- Checkout this [link](https://www.getpostman.com/collections/d4f0f1fcd253d359e834) for our POSTMAN collection.
+- Download [DBeaver](https://dbeaver.io/) as a database GUI 
 
 ### If you run into errors with Postgres, it will be helpful to drop the database and start from scratch:
 1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
