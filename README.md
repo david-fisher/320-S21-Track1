@@ -1,5 +1,6 @@
 # EthiSim
 Ethisim is a web application that allows you to easily create, assign, and play through ethics simulations. Run them for a participation grade, or develop them further into longer discussions for class.
+
 ## Table of Contents
 - [EthiSim](#ethisim)
 - [Development using Docker](#development-using-docker)
@@ -8,34 +9,33 @@ Ethisim is a web application that allows you to easily create, assign, and play 
     + [Steps:](#steps)
     + [List of containers](#the-following-is-a-list-of-all-the-containers-that-are-run-after-performing-the-steps-outlined-above-along-with-their-port-mappings)
 - [How to run each component of EthiSim locally](#how-to-run-each-component-of-ethisim-locally)
-  * [**Preliminary:**](#preliminary)
-    + [**Frontend (React JS)**:](#frontend-react-js)
-    + [**Backend (Django REST framework)**:](#backend-django-rest-framework)
-    + [**Database (PostgreSQL)**:](#database-postgresql)
-  * [**How to run EthiSim Landing Page**:](#how-to-run-ethisim-landing-page)
+  * [Preliminary:](#preliminary)
+    + [Frontend (React JS):](#frontend-react-js)
+    + [Backend (Django REST framework):](#backend-django-rest-framework)
+    + [Database (PostgreSQL):](#database-postgresql)
+  * [How to run EthiSim Landing Page:](#how-to-run-ethisim-landing-page)
     + [Frontend:](#frontend)
-  * [**How to run EthiSim Editor**:](#how-to-run-ethisim-editor)
-    + [**Frontend**:](#frontend-1)
-    + [**Backend**:](#backend)
-    + [**Database**](#database)
-  * [**How to run EthiSim Simulator**:](#how-to-run-ethisim-simulator)
-    + [**Frontend**:](#frontend-2)
-    + [**Backend**:](#backend-1)
-    + [**Database**](#database-1)
+  * [How to run EthiSim Editor:](#how-to-run-ethisim-editor)
+    + [Frontend:](#frontend-1)
+    + [Backend:](#backend)
+    + [Database](#database)
+  * [How to run EthiSim Simulator:](#how-to-run-ethisim-simulator)
+    + [Frontend:](#frontend-2)
+    + [Backend:](#backend-1)
+    + [Database:](#database-1)
 - [Production](#production)
-      - [Preamble:](#preamble-1)
-      - [Steps:](#steps-1)
-- [CI/CD](#ci-cd)
-      - [Preamble](#preamble-2)
-      - [Note](#note)
-      - [How to get started](#how-to-get-started)
+      * [Preamble:](#preamble-1)
+      * [Steps:](#steps-1)
+- [CI/CD](#cicd)
+      * [Preamble](#preamble-2)
+      * [File Structure](#note)
+      * [How to get started](#how-to-get-started)
  
 # Development using Docker
 
 1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
 2. Replace .env file with specified parameters
 3. Get localhost-shiboleth from slack and place it within the apache-server. This folder contains files which override shibboleth files found in the base image. These files are setup to allow the host to run only on ethisim1.cs.umass.edu.  These updated files allow the dev to run on a localhost.
-
 
 ## How to use docker-compose to build and run the web application
 
@@ -70,9 +70,11 @@ Since the react apps' source code is mounted as a volume on the respective conta
 1. Download node.js version 12.18.4 and npm https://www.npmjs.com/get-npm
 
 ### **Backend (Django REST framework)**:
+
 #### On MAC
 1. Install python3 https://www.python.org/downloads/ 
 2. sudo pip3 install pipenv (do it globally)
+
 #### On WINDOWS
 1. https://www.python.org/downloads/ (Checkmark all optional features, add Python to environment variables)
 
@@ -114,7 +116,7 @@ python manage.py runserver or py manage.py runserver
 ```
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
-- Use [Dbeaver](https://dbeaver.io/) for a database GUI 
+- Downlaod [DBeaver](https://dbeaver.io/) as a database GUI 
 - Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
 - Checkout this [link](https://www.getpostman.com/collections/d4f0f1fcd253d359e834) for our POSTMAN collection.
 
@@ -138,9 +140,10 @@ GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
 \q
 ```
 5. Continue from Step 4 above(Apply migrations to your local DB).
-## **How to run EthiSim Landing Page**:
 
+## **How to run EthiSim Landing Page**:
 The landing page only has a frontend component.
+
 ### Frontend:
 1. CD into landing page/welcome-login
 2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
@@ -163,6 +166,7 @@ If it does not open up by itself, type [http://localhost:3001] and it should ope
 You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
 
 ### **Backend**:
+
 #### On MAC
 1. `cd editor/backend`
 2. `pipenv shell`
@@ -187,7 +191,7 @@ You are done, but note that you will need to have the back-end and database runn
 2. `py -m manage.py runserver`
 
 ### **Database**
-Follow [Database (PostgreSQL) instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#database-postgresql)
+Follow [Database (PostgreSQL) instructions](#database-postgresql)
 
 ## **How to run EthiSim Simulator**:
 The Editor has a frontend, backend, and database component.
@@ -203,6 +207,7 @@ If it does not open up by itself, type [http://localhost:3000] and it should ope
 You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
 
 ### **Backend**:
+
 #### On MAC
 1. `cd simulator/steminist_simulator_backend`
 2. `pipenv shell`
@@ -227,7 +232,7 @@ You are done, but note that you will need to have the back-end and database runn
 2. `py -m manage.py runserver`
 
 ### **Database**
-Follow [Database (PostgreSQL) instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#database-postgresql)
+Follow [Database (PostgreSQL) instructions](#database-postgresql)
 
 # Production
  #### Preamble:
