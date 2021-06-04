@@ -92,7 +92,7 @@ One can develop locally by following these instructions.
 
 ![environment variables](./simulator/steminist_simulator_backend/img/environment_variables.png)
 
-3. Install dependencies, Follow [Editor backend instructions](#backend) and [Simulator backend instructions](#backend-1)
+3. Install dependencies, Follow [Editor backend instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#backend) and [Simulator backend instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#backend-1)
 ```
 pip install -r requirements.txt or pip3 install -r requirements.txt 
 ```
@@ -145,9 +145,9 @@ GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
 The landing page only has a frontend component.
 
 ### Frontend
-1. CD into landing page/welcome-login
-2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
-3. Run [ npm start ] inside the terminal
+1. `cd landing page/welcome-login`
+2. Run `npm i` inside terminal/gitbash, this should install all dependencies.
+3. Run `npm start` inside the terminal
 
 The page should open in a browser in localhost:3006 when its ready. <br />
 If it does not open up by itself, type [http://localhost:3006/home] and it should open
@@ -156,9 +156,9 @@ If it does not open up by itself, type [http://localhost:3006/home] and it shoul
 The Editor has a frontend, backend, and database component.
 
 ### **Frontend**
-1. CD into the editor/frontend/ethisim
-2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
-3. Run [ npm start ] inside the terminal
+1. `cd editor/frontend/ethisim`
+2. Run `npm i` inside terminal/gitbash, this should install all dependencies.
+3. Run `npm start` inside the terminal
 
 The page should open in a browser in localhost:3001 when its ready.
 If it does not open up by itself, type [http://localhost:3001] and it should open
@@ -197,9 +197,9 @@ Follow [Database (PostgreSQL) instructions](#database-postgresql)
 The Editor has a frontend, backend, and database component.
 
 ### **Frontend**
-1. CD into the simulator/frontend
-2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
-3. Run [ npm start ] inside the terminal
+1. `cd simulator/frontend`
+2. Run `npm i` inside terminal/gitbash, this should install all dependencies.
+3. Run `npm start` inside the terminal
 
 The page should open in a browser in localhost:3000 when its ready.
 If it does not open up by itself, type [http://localhost:3000] and it should open
