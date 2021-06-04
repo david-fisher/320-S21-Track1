@@ -24,12 +24,12 @@ Ethisim is a web application that allows you to easily create, assign, and play 
     + [Backend:](#backend-1)
     + [Database:](#database-1)
 - [Production](#production)
-      * [Preamble:](#preamble-1)
-      * [Steps:](#steps-1)
+  * [Preamble:](#preamble-1)
+  * [Steps:](#steps-1)
 - [CI/CD](#cicd)
-      * [Preamble](#preamble-2)
-      * [File Structure](#note)
-      * [How to get started](#how-to-get-started)
+  * [Preamble](#preamble-2)
+  * [File Structure](#note)
+  * [How to get started](#how-to-get-started)
  
 # Development using Docker
 
