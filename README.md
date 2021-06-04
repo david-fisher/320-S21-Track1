@@ -5,27 +5,27 @@ Ethisim is a web application that allows you to easily create, assign, and play 
 - [EthiSim](#ethisim)
 - [Development using Docker](#development-using-docker)
   * [How to use docker-compose to build and run the web application](#how-to-use-docker-compose-to-build-and-run-the-web-application)
-    + [Preamble:](#preamble)
-    + [Steps:](#steps)
+    + [Preamble](#preamble)
+    + [Steps](#steps)
     + [List of containers](#the-following-is-a-list-of-all-the-containers-that-are-run-after-performing-the-steps-outlined-above-along-with-their-port-mappings)
 - [How to run each component of EthiSim locally](#how-to-run-each-component-of-ethisim-locally)
-  * [Preliminary:](#preliminary)
-    + [Frontend (React JS):](#frontend-react-js)
-    + [Backend (Django REST framework):](#backend-django-rest-framework)
-    + [Database (PostgreSQL):](#database-postgresql)
+  * [Preliminary](#preliminary)
+    + [Frontend (React JS)](#frontend-react-js)
+    + [Backend (Django REST framework)](#backend-django-rest-framework)
+    + [Database (PostgreSQL)](#database-postgresql)
   * [How to run EthiSim Landing Page:](#how-to-run-ethisim-landing-page)
-    + [Frontend:](#frontend)
+    + [Frontend](#frontend)
   * [How to run EthiSim Editor:](#how-to-run-ethisim-editor)
-    + [Frontend:](#frontend-1)
-    + [Backend:](#backend)
+    + [Frontend](#frontend-1)
+    + [Backend](#backend)
     + [Database](#database)
-  * [How to run EthiSim Simulator:](#how-to-run-ethisim-simulator)
-    + [Frontend:](#frontend-2)
-    + [Backend:](#backend-1)
-    + [Database:](#database-1)
-- [Production](#production)
-  * [Preamble:](#preamble-1)
-  * [Steps:](#steps-1)
+  * [How to run EthiSim Simulator](#how-to-run-ethisim-simulator)
+    + [Frontend](#frontend-2)
+    + [Backend](#backend-1)
+    + [Database](#database-1)
+- [Production:](#production)
+  * [Preamble](#preamble-1)
+  * [Steps](#steps-1)
 - [CI/CD](#cicd)
   * [Preamble](#preamble-2)
   * [File Structure](#note)
@@ -39,12 +39,12 @@ Ethisim is a web application that allows you to easily create, assign, and play 
 
 ## How to use docker-compose to build and run the web application
 
-### Preamble: 
+### Preamble
 When Docker compose creates a container, it will first check to see if it can use images already in the local machine's cache. Thus when pulling new code to your local machine, you must ensure that all the images are new as well, and you are not using old images with new code. We can check all our current images in Docker using the command _docker images_. You will see that each Docker image has an associated **IMAGE ID**. To remove a specific image use the command _docker image rmi **_IMAGE_ID_**, where **IMAGE_ID** should be replaced with the image ID of the image you wish to remove. To remove all images on your local machine, use the command **docker rmi $(docker image -a -q)**. **WARNING**: This command will remove ALL images, meaning even those not associated with the Ethism repository. If you are unsure which images to remove, we recommend you clear all images in your cache associated with the Ethism repository.
 
 Since the react apps' source code is mounted as a volume on the respective container, the frontend teams won't have to delete the frontend images everytime they change the code. However, the backend teams would have to do so, in case they want to run the backend server inside the docker container, since the backend server doesn't restart on file change. **Team Kubernators** will ensure to communicate if they update any Dockerfiles, in which case the images will have to be removed.
 
-### Steps:
+### Steps
 1. After following the steps outlined above, type _docker-compose up -d_ in your terminal window. The _-d_ argument stands for _detach_ and ensures that the containers spin up in the background and the terminal instance can be further used to run other commands.
 2. Since we have 3 different frontend components configured in one docker-compose file, there's a possibility, albeit remote, that if we run _docker-compose up -d_, we end up getting a timeout error for the frontend services. To remedy that, restart docker and paste these 2 commands in your terminal window:
       ###### _export DOCKER_CLIENT_TIMEOUT=120_
@@ -64,12 +64,12 @@ Since the react apps' source code is mounted as a volume on the respective conta
 
 # How to run each component of EthiSim locally
 
-## **Preliminary:**
+## **Preliminary**
 
-### **Frontend (React JS)**:
+### **Frontend (React JS)**
 1. Download node.js version 12.18.4 and npm https://www.npmjs.com/get-npm
 
-### **Backend (Django REST framework)**:
+### **Backend (Django REST framework)**
 
 #### On MAC
 1. Install python3 https://www.python.org/downloads/ 
@@ -78,7 +78,7 @@ Since the react apps' source code is mounted as a volume on the respective conta
 #### On WINDOWS
 1. https://www.python.org/downloads/ (Checkmark all optional features, add Python to environment variables)
 
-### **Database (PostgreSQL)**:
+### **Database (PostgreSQL)**
 We will be developing using CSCF database servers and their credentials. 
 One can develop locally by following these instructions.
 
@@ -141,10 +141,10 @@ GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
 ```
 5. Continue from Step 4 above(Apply migrations to your local DB).
 
-## **How to run EthiSim Landing Page**:
+## **How to run EthiSim Landing Page**
 The landing page only has a frontend component.
 
-### Frontend:
+### Frontend
 1. CD into landing page/welcome-login
 2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
 3. Run [ npm start ] inside the terminal
@@ -152,10 +152,10 @@ The landing page only has a frontend component.
 The page should open in a browser in localhost:3006 when its ready. <br />
 If it does not open up by itself, type [http://localhost:3006/home] and it should open
 
-## **How to run EthiSim Editor**:
+## **How to run EthiSim Editor**
 The Editor has a frontend, backend, and database component.
 
-### **Frontend**:
+### **Frontend**
 1. CD into the editor/frontend/ethisim
 2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
 3. Run [ npm start ] inside the terminal
@@ -165,7 +165,7 @@ If it does not open up by itself, type [http://localhost:3001] and it should ope
 
 You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
 
-### **Backend**:
+### **Backend**
 
 #### On MAC
 1. `cd editor/backend`
@@ -174,7 +174,7 @@ You are done, but note that you will need to have the back-end and database runn
 4. `cd lead` (editor/backend/lead)
 5. `python3 manage.py runserver`
 
-#### How to run server on MAC:
+#### How to run server on MAC
 1. `cd editor/backend`
 2. `pipenv shell`
 3. `cd lead` (editor/backend/lead)
@@ -186,17 +186,17 @@ You are done, but note that you will need to have the back-end and database runn
 3. `cd lead` (editor/backend/lead)
 4. `python manage.py runserver` (or `py manage.py runserver`)
 
-#### How to run server on Windows:
+#### How to run server on Windows
 1. `cd editor/backend/lead`
 2. `py -m manage.py runserver`
 
 ### **Database**
 Follow [Database (PostgreSQL) instructions](#database-postgresql)
 
-## **How to run EthiSim Simulator**:
+## **How to run EthiSim Simulator**
 The Editor has a frontend, backend, and database component.
 
-### **Frontend**:
+### **Frontend**
 1. CD into the simulator/frontend
 2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
 3. Run [ npm start ] inside the terminal
@@ -206,7 +206,7 @@ If it does not open up by itself, type [http://localhost:3000] and it should ope
 
 You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
 
-### **Backend**:
+### **Backend**
 
 #### On MAC
 1. `cd simulator/steminist_simulator_backend`
@@ -215,7 +215,7 @@ You are done, but note that you will need to have the back-end and database runn
 4. `cd simulator_backend` (simulator/steminist_simulator_backend/simulator_backend)
 5. `python3 manage.py runserver`
 
-#### How to run server on MAC:
+#### How to run server on MAC
 1. `cd simulator/steminist_simulator_backend`
 2. `pipenv shell`
 3. `cd simulator_backend` (simulator/steminist_simulator_backend/simulator_backend)
@@ -227,7 +227,7 @@ You are done, but note that you will need to have the back-end and database runn
 3. `cd simulator_backend` (simulator/steminist_simulator_backend/simulator_backend)
 4. `python manage.py runserver` (or `py manage.py runserver`)
 
-#### How to run server on Windows:
+#### How to run server on Windows
 1. `cd editor/backend/lead`
 2. `py -m manage.py runserver`
 
@@ -235,10 +235,10 @@ You are done, but note that you will need to have the back-end and database runn
 Follow [Database (PostgreSQL) instructions](#database-postgresql)
 
 # Production
- #### Preamble:
+ #### Preamble
  Running the bundled software in a production environment requires a custom Apache+Shibboleth image that is used as a base image for the container that runs all different facets of the software. For the purpose of Demo or Die, the base image will be pulled from Dockerhub where it resides inside **_ikhurana/kbtesting_** repository under the name **_apache_**. **_Team Kubernators_** will provide all the files necessary for the creation of the base image as well as outline steps that need to be performed to successfully use this base image to run the container in the production environment. This guide assumes that you have successfully installed and configured Apache and Shibboleth on your production server.
  
- #### Steps:
+ #### Steps
 1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1 to your local machine.
 2. Copy the Dockerfile and the docker-compose.yml file from the root directory of the project to any directory on your production server. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
 
@@ -274,7 +274,7 @@ This github repository has a continuous integration workflow configured in the f
 6. Pull newly built images from dacollins/ethisim
 7. Rebuild the application with the updated images
 
-#### Note
+#### File Structure
 ##### This is the file structure for this track
 
 ##### simulator
