@@ -1,3 +1,35 @@
+# EthiSim
+Ethisim is a web application that allows you to easily create, assign, and play through ethics simulations. Run them for a participation grade, or develop them further into longer discussions for class.
+## Table of Contents
+- [EthiSim](#ethisim)
+- [Development using Docker](#development-using-docker)
+  * [How to use docker-compose to build and run the web application](#how-to-use-docker-compose-to-build-and-run-the-web-application)
+    + [Preamble:](#preamble-)
+    + [Steps:](#steps-)
+    + [List of containers](#the-following-is-a-list-of-all-the-containers-that-are-run-after-performing-the-steps-outlined-above-along-with-their-port-mappings)
+- [How to run each component of EthiSim locally](#how-to-run-each-component-of-ethisim-locally)
+  * [**Preliminary:**](#--preliminary---)
+    + [**Frontend (React JS)**:](#--frontend--react-js----)
+    + [**Backend (Django REST framework)**:](#--backend--django-rest-framework----)
+    + [**Database (PostgreSQL)**:](#--database--postgresql----)
+  * [**How to run EthiSim Landing Page**:](#--how-to-run-ethisim-landing-page---)
+    + [Frontend:](#frontend-)
+  * [**How to run EthiSim Editor**:](#--how-to-run-ethisim-editor---)
+    + [**Frontend**:](#--frontend---)
+    + [**Backend**:](#--backend---)
+    + [**Database**](#--database--)
+  * [**How to run EthiSim Simulator**:](#--how-to-run-ethisim-simulator---)
+    + [**Frontend**:](#--frontend----1)
+    + [**Backend**:](#--backend----1)
+    + [**Database**](#--database---1)
+- [Production](#production)
+      - [Preamble:](#preamble--1)
+      - [Steps:](#steps--1)
+- [CI/CD](#ci-cd)
+      - [Preamble](#preamble)
+      - [Note](#note)
+      - [How to get started](#how-to-get-started)
+ 
 # Development using Docker
 
 1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
@@ -58,7 +90,7 @@ One can develop locally by following these instructions.
 
 ![environment variables](./simulator/steminist_simulator_backend/img/environment_variables.png)
 
-3. Install dependencies
+3. Install dependencies, Follow [Editor backend instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#backend) and [Simulator backend instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#backend-1)
 ```
 pip install -r requirements.txt or pip3 install -r requirements.txt 
 ```
@@ -82,10 +114,11 @@ python manage.py runserver or py manage.py runserver
 ```
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
+- Use [Dbeaver](https://dbeaver.io/) for a database GUI 
 - Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
 - Checkout this [link](https://www.getpostman.com/collections/d4f0f1fcd253d359e834) for our POSTMAN collection.
 
-### If you run into errors with Postgres, it will be helpful to drop the steminist_backend database and start from scratch:
+### If you run into errors with Postgres, it will be helpful to drop the database and start from scratch:
 1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
 There is more than 1 way to do this step.
 ```
@@ -124,8 +157,8 @@ The Editor has a frontend, backend, and database component.
 2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
 3. Run [ npm start ] inside the terminal
 
-The page should open in a browser in localhost:3000 when its ready.
-If it does not open up by itself, type [http://localhost:3000] and it should open
+The page should open in a browser in localhost:3001 when its ready.
+If it does not open up by itself, type [http://localhost:3001] and it should open
 
 You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
 
@@ -154,7 +187,7 @@ You are done, but note that you will need to have the back-end and database runn
 2. `py -m manage.py runserver`
 
 ### **Database**
-Follow https://github.com/david-fisher/320-S21-Track1#database-postgresql
+Follow [Database (PostgreSQL) instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#database-postgresql)
 
 ## **How to run EthiSim Simulator**:
 The Editor has a frontend, backend, and database component.
@@ -194,7 +227,7 @@ You are done, but note that you will need to have the back-end and database runn
 2. `py -m manage.py runserver`
 
 ### **Database**
-Read https://github.com/david-fisher/320-S21-Track1#database-postgresql
+Follow [Database (PostgreSQL) instructions](https://github.com/david-fisher/320-S21-Track1/tree/documentation-repo#database-postgresql)
 
 # Production
  #### Preamble:
