@@ -1,116 +1,127 @@
-# 320-S21-Track-I
-https://github.com/david-fisher/320-S21-Track1
-
-## SPIN UP ALL COMPONENTS OF THE SOFTWARE WITH JUST ONE COMMAND
-
-1. Clone this repo and cd into 320-S21-Track1 directory
-2. Key in 'docker-compose up'
-
-### Note
-
-This branch contains the .env file with all the required variables assigned their corresponding values. 
-In order to successfully boot the application without the .env file, the client will have to pass the 
-following environment variables and assign them appropriate values in the command line prior to running
-'docker-compose up' :
-
-1. POSTGRESDB - Name of the database
-2. POSTGRESUSERNAME - Username to connect to the database server
-3. POSTGRESPASSWORD - Password to connect to the database server
-4. POSTGRESHOST - Url of the host
-
-BELOW IS THE README FROM LAST SEMESTER'S TRACK III REPO
-
-Ethisim is a website that allows you to easily create and assign ethics
-simulations. Run them for a participation grade, or
-develop them further into longer discussions for class.
-
 This is the Editor's repository containing code for both the front-end and back-end of Ethisim. This README provides instruction on how to install and setup both the front-end and back-end in order to get the software running.
 
-## How to get the Front-end Running
+# How to run each component of the EthiSim Editor locally
+
+## **Preliminary**
+
+### **Frontend (React JS)**
 1. Download node.js version 12.18.4 and npm https://www.npmjs.com/get-npm
-2. Clone the Github repository
-3. cd into the ethisim folder(forontend -> ethisim )
-4. Run npm install, This should install all dependencies if this doesn't work see section below
-5. To run the front-end, use npm start to run the development build at local host:3000
-6. You are done, but note that you will need to have the back-end running as well for the front-end to connect to the database and see current scenarios on the dashboard
 
-### You can complete all of these steps by just using npm install
-#### Install Dependencies
-    - npm install react@16.13.1
-    - npm install react-device-detect@1.14.0
-    - npm install react-dom@16.13.1
-    - npm install react-flow-renderer@6.1.3
-    - npm install react-router-dom@5.2.0
-    - npm install react-scripts@3.4.4
-    - npm install @material-ui/core@4.11.0
-    - npm install @material-ui/icons@4.9.1
-    - npm install @material-ui/lab@4.0.0-alpha.56
-    - npm install @testing-library/jest-dom@5.11.4
-    - npm install @testing-library/react@11.0.4
-    - npm install @testing-library/user-event@12.1.6
-    - npm install axios@0.21.0
-    - npm install start@5.1.0
-    - npm install suneditor-react@2.14.2
+### **Backend (Django REST framework)**
 
-#### How to install Prettier, Eslint and Husky
-    1. Npm install --save-dev --save-exact prettier will install prettier
-    2. Make sure to install eslint before installing eslint-config-prettier which allows prettier and eslint to work together nicely
-    3. Npm install eslint --save-dev will install eslint
-    4. Run npx eslint --init to set up an configuration file
-       - Questions will appear and the directions tell you to use arrow keys to select an answer even though the arrow keys don’t work.
-       Think of the options presented to you in each question as an array starting at 0 or 1.
-       If you want for example option one out of three for the second question,
-       then type in 0 to the command line and press enter and that should select the answer that you want.
-       - Answer all the questions before moving forward, if you mess up on one of the answers, just press Ctrl^C and re-run the npx eslint --init command
-    5. You might also need to install eslint-plugin-react@latest, if so follow the directions on the command line after finishing the previous step
-    6. Make sure prettier and eslint are both installed  before we run npm install --save-dev eslint-config-prettier so prettier and eslint will work together nicely with each other
-    7. Then, add eslint-config-prettier to the "extends" array in your .eslintrc.* file. Make sure to put it last, so it gets the chance to override other configs. It might already be there.
-    { "extends": [ "some-other-config-you-use", "prettier"]}
-    8. To install Husky Make sure Prettier is installed and is in your devDependencies before you proceed and then run npx mrm lint-staged
-    9. This will install husky and lint-staged, then add a configuration to the project’s package.json that will automatically format supported files in a pre-commit hook. After this step you are done
-
-
-## How to get the Back-end Running
-### On MAC
-1. Install python3
+#### On MAC
+1. Install python3 https://www.python.org/downloads/ 
 2. sudo pip3 install pipenv (do it globally)
-3. go to the editor folder(320-S21-Track 1 --> editor)
-4. Navigate to backend folder
-5. pipenv shell
-6. pipenv install -r requirements.txt
-7. cd lead(backend --> lead)
-8. python3 manage.py runserver
 
-
-#### How to run server on MAC:
-1. Go to backend directory
-2. pipenv shell
-3. cd lead
-4. python3 manage.py runserver
-
-### On WINDOWS
+#### On WINDOWS
 1. https://www.python.org/downloads/ (Checkmark all optional features, add Python to environment variables)
-2. go to the editor folder(320-S21-Track 1 --> editor)
-3. Navigate to backend folder
-4. Open Terminal (IF RUN INTO ERRORS INSERT py -m before each command)
-5. pip install -r requirements.txt
-6. cd lead(backend --> lead)
-7. python manage.py runserver
-8. Might need to download https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 
-#### How to run server on Windows:
-1. Go to backend directory
-2. cd backend
-3. cd lead
-4. py -m manage.py runserver
+### **Database (PostgreSQL)**
+We will be developing using CSCF database servers and their credentials. 
+One can develop locally by following these instructions.
+
+0. Make sure you can python https://www.python.org/downloads/  and postgres https://www.postgresql.org/download/ installed on your local machine.
+
+1. Setup your local POSTGRES database in creating your database, user, and password.
+- You can use the following to guide on how you can setup your local POSTGRES DB: https://medium.com/@rudipy/how-to-connecting-postgresql-with-a-django-application-f479dc949a11
+
+2. Connect local POSTGRES database to Django application
+- Navigate to ./simulator/simulator_backend/simulator_backend/ and ./editor/backend/lead directory and add .env files with the following environment variables:
+
+![environment variables](../simulator/steminist_simulator_backend/img/environment_variables.png)
+
+3. Install dependencies, Follow [Editor backend instructions](#backend)
+```
+pip install -r requirements.txt or pip3 install -r requirements.txt 
+```
+
+4. Apply migrations to your local DB.
+- Navigate to ./simulator_backend and run the following command:
+```
+python manage.py migrate or py install -r requirements.txt 
+```
+
+5. Seed the database(add initial data).
+- In the same directory as above, run the following command:
+```
+python manage.py loaddata data/dump.json or py manage.py loaddata data/dump.json
+```
+
+6. Run server.
+- In the same directory as above, run the following command:
+```
+python manage.py runserver or py manage.py runserver
+```
+
+7. Voila. You can now interact with our API by making the appropriate API calls.
+- Downlaod [DBeaver](https://dbeaver.io/) as a database GUI 
+- Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
+- Checkout this [link](https://www.getpostman.com/collections/d4f0f1fcd253d359e834) for our POSTMAN collection.
+
+### If you run into errors with Postgres, it will be helpful to drop the database and start from scratch:
+1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
+There is more than 1 way to do this step.
+```
+psql -U postgres
+```
+2. Drop simulator_backend database and create it again.
+```
+DROP DATABASE simulator_backend;
+CREATE DATABASE simulator_backend;
+```
+3. Grant all privileges to your postgres user.
+```
+GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
+```
+4. Exit postgres command line.
+```
+\q
+```
+5. Continue from Step 4 above(Apply migrations to your local DB).
+
+## **How to run EthiSim Editor**
+The Editor has a frontend, backend, and database component.
+
+### **Frontend**
+1. CD into the editor/frontend/ethisim
+2. Run [ npm i ] inside terminal/gitbash, this should install all dependencies.
+3. Run [ npm start ] inside the terminal
+
+The page should open in a browser in localhost:3001 when its ready.
+If it does not open up by itself, type [http://localhost:3001] and it should open
+
+You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
+
+### **Backend**
+
+#### On MAC
+1. `cd editor/backend`
+2. `pipenv shell`
+3. `pipenv install -r requirements.txt`
+4. `cd lead` (editor/backend/lead)
+5. `python3 manage.py runserver`
+
+#### How to run server on MAC
+1. `cd editor/backend`
+2. `pipenv shell`
+3. `cd lead` (editor/backend/lead)
+4. `python3 manage.py runserver`
+
+#### On WINDOWS
+1. `cd editor/backend` 
+2. `pip install -r requirements.txt` (If you run into errors, insert py -m before each command)
+3. `cd lead` (editor/backend/lead)
+4. `python manage.py runserver` (or `py manage.py runserver`)
+
+#### How to run server on Windows
+1. `cd editor/backend/lead`
+2. `py -m manage.py runserver`
+
+### **Database**
+Follow [Database (PostgreSQL) instructions](#database-postgresql)
 
 ### TEST The back-end:
 Download postman
-
-### Database:
-Used ElephantSQL (postgreSQL)
-Schema Diagram: https://dbdiagram.io/d/5f8326e63a78976d7b772f0c
-
 
 ## API Endpoints and Rest Documentation
 You can find the list of endpoints here at:
