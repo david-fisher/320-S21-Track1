@@ -27,7 +27,7 @@ One can develop locally by following these instructions.
 2. Connect local POSTGRES database to Django application
 - Navigate to ./simulator/simulator_backend/simulator_backend/ and ./editor/backend/lead directory and add .env files with the following environment variables:
 
-![environment variables](./simulator/steminist_simulator_backend/img/environment_variables.png)
+![environment variables](./steminist_simulator_backend/img/environment_variables.png)
 
 3. Install dependencies, Follow [Simulator backend instructions](#backend).
 ```
