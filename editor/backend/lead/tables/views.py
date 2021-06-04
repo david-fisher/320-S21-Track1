@@ -88,7 +88,7 @@ class multi_coverage(APIView):
 
 class CoverageViewSet(viewsets.ModelViewSet):
     queryset = coverage.objects.all()
-    permission_classe = [permissions.IsFaculty]
+    permission_classes = [permissions.IsFaculty]
     serializer_class = coverageSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['STAKEHOLDER']
