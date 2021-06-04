@@ -54,9 +54,7 @@ python manage.py runserver or py manage.py runserver
 ```
 
 7. Voila. You can now interact with our API by making the appropriate API calls.
-- Downlaod [DBeaver](https://dbeaver.io/) as a database GUI 
-- Checkout this [link](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit?usp=sharing) for our latest API documentation.
-- Checkout this [link](https://www.getpostman.com/collections/d4f0f1fcd253d359e834) for our POSTMAN collection.
+- Download [DBeaver](https://dbeaver.io/) as a database GUI 
 
 ### If you run into errors with Postgres, it will be helpful to drop the database and start from scratch:
 1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
@@ -71,7 +69,7 @@ CREATE DATABASE simulator_backend;
 ```
 3. Grant all privileges to your postgres user.
 ```
-GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
+GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO [user];
 ```
 4. Exit postgres command line.
 ```
