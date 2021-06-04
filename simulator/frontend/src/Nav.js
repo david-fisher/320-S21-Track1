@@ -71,7 +71,7 @@ export default function Nav() {
                   <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                  <Link className={classes.link} to="/">
+                  <Link className={classes.link} to="/dashboard">
                     <Button className={classes.title} color="inherit">
                       Home
                     </Button>
@@ -98,7 +98,7 @@ export default function Nav() {
                 path="/simulation/:id"
                 render={(props) => <SimulationWindow {...props} />}
               />
-              <Redirect from="*" to="" />
+              <Redirect from="*" to="/loginSimulator" />
             </Switch>
           </ThemeProvider>
         </div>

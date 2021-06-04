@@ -24,7 +24,7 @@ export default function App() {
         render={(props) => <Editor {...props} />}
       />
       <Route path="/data/:id" render={(props) => <Data {...props} />} />
-      <Redirect from="*" to="/dashboard" />
+      <Redirect from="*" to="/loginEditor" />
     </Router>
   );
 }
