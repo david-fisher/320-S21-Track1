@@ -46,6 +46,16 @@ class ConversationsViewSet(viewsets.ModelViewSet):
     filterset_fields = ['STAKEHOLDER', 'QUESTION']
 
 
+class user_accessViewSet(viewsets.ModelViewSet):
+    queryset = user_access.objects.all()
+     # Will raise a PermissionDenied exception if the test fails.
+    permissions_classes = [
+        permissions.IsFaculty
+    ]
+    serializer_class = user_accessSerializer
+    filter_backends = [DjangoFilterBackend]
+
+
 class multi_conv(APIView):
     def put(self, request, *args, **kwargs):
         STAKEHOLDER = self.request.query_params.get('STAKEHOLDER')
@@ -103,12 +113,9 @@ class UsersViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = UserSerializer
 
-class UserTypesViewSet(viewsets.ModelViewSet):
-    queryset = UserTypes.objects.all()
-    permission_classes = [
-        permissions.IsFaculty
-    ]
-    serializer_class = UserTypesSerializer
+
+
+
 
 
 class ScenariosForViewSet(viewsets.ModelViewSet):
@@ -162,10 +169,6 @@ class Reflection_QuestionsViewSet(viewsets.ModelViewSet):
         permissions.IsFaculty
     ]
     serializer_class = Reflection_questionsSerializer
-
-
-
-
 
 
 class CoursesViewSet(viewsets.ModelViewSet):
