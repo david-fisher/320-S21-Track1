@@ -14,15 +14,15 @@ import {
 } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import ScenarioCard from './components/scenarioCard';
-import LoadingSpinner from './components/LoadingSpinner';
+import ScenarioCard from '../components/scenarioCard';
+import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsEditor/get';
 // eslint-disable-next-line
-import CodeButton from "./components/classCodeDialog";
+import CodeButton from '../components/classCodeDialog';
 // eslint-disable-next-line
-import ProgressBar from "./components/progressBar";
+import ProgressBar from '../components/progressBar';
 import { STUDENT_ID } from '../constants/config';
-import ErrorBanner from './components/Banners/ErrorBanner';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {

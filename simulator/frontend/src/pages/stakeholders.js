@@ -21,7 +21,7 @@ import { STUDENT_ID } from '../constants/config';
 import Conversation from './conversation';
 import get from '../universalHTTPRequestsEditor/get';
 import GlobalContext from '../Context/GlobalContext';
-import GenericWarning from './components/GenericWarning';
+import GenericWarning from '../components/GenericWarning';
 
 const TextTypography = withStyles({
   root: {

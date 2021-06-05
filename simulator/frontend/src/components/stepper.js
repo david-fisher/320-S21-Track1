@@ -11,7 +11,7 @@ import {
   Button,
   Box,
 } from '@material-ui/core';
-import GlobalContext from '../../Context/GlobalContext';
+import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {

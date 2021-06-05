@@ -3,17 +3,17 @@ import { useLocation } from 'react-router-dom';
 import { Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Stepper from './components/stepper';
+import Stepper from '../components/stepper';
 import GenericPage from './genericPage';
 import Reflection from './reflection';
 import Action from './action';
 import Stakeholders from './stakeholders';
 import Feedback from './feedback';
 import { STUDENT_ID } from '../constants/config';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsEditor/get';
 import post from '../universalHTTPRequestsEditor/post';
-import ErrorBanner from './components/Banners/ErrorBanner';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
