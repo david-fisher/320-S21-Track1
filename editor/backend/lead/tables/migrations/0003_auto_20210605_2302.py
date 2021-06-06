@@ -24,39 +24,39 @@ class Migration(migrations.Migration):
             new_name='USER_ID',
         ),
         migrations.RemoveField(
-            model_name='users',
+            model_name='Users',
             name='access_level',
         ),
         migrations.RemoveField(
-            model_name='users',
+            model_name='Users',
             name='user_id',
         ),
         migrations.RemoveField(
-            model_name='users',
+            model_name='Users',
             name='user_type',
         ),
         migrations.AddField(
-            model_name='users',
+            model_name='Users',
             name='AFFILIATION',
             field=models.CharField(default='Professor', max_length=50),
         ),
         migrations.AddField(
-            model_name='users',
+            model_name='Users',
             name='EMAIL',
             field=models.EmailField(default='phaas@cs.umass.edu', max_length=254),
         ),
         migrations.AddField(
-            model_name='users',
+            model_name='Users',
             name='NAME',
             field=models.CharField(default='Peter Haas', max_length=100),
         ),
         migrations.AddField(
-            model_name='users',
+            model_name='Users',
             name='USER_ID',
             field=models.CharField(default='phaas', max_length=50, primary_key=True, serialize=False),
         ),
         migrations.AlterModelTable(
-            name='users',
+            name='Users',
             table=None,
         ),
         migrations.DeleteModel(
@@ -71,5 +71,10 @@ class Migration(migrations.Migration):
             model_name='user_access',
             name='USER_ID',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='user_access1', to='tables.Users'),
+        ),
+         migrations.AlterField(
+            model_name='scenarios',
+            name='USER_ID',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='scenarios_user', to='tables.Users'),
         ),
     ]

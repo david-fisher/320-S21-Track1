@@ -47,6 +47,8 @@ class session_times(models.Model):
 
 
 class reflections_taken(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('RQ_ID'))
     REFLECTIONS = models.TextField()
     RQ_ID = models.IntegerField()
     SESSION_ID = models.ForeignKey(sessions, on_delete=CASCADE)
@@ -54,12 +56,16 @@ class reflections_taken(models.Model):
     DATE_TAKEN = models.DateTimeField(auto_now_add=True)
 
 class action_page_choices(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('APC_ID'))
     APC_ID = models.IntegerField()
     SESSION_ID = models.ForeignKey(sessions, on_delete=CASCADE)
     PAGE_ID = models.IntegerField()
     DATE_TAKEN = models.DateTimeField(auto_now_add=True)
 
 class conversations_had(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('STAKEHOLDER_ID'))
     SESSION_ID = models.ForeignKey(sessions, on_delete=CASCADE)
     DATE_TAKEN = models.DateTimeField(auto_now_add=True)
     STAKEHOLDER_ID = models.IntegerField()

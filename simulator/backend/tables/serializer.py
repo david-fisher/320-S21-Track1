@@ -44,9 +44,9 @@ class reflections_takenSerializer(serializers.ModelSerializer):
 class action_page_choicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = action_page_choices
-        fields = ('APC_ID', 'SESSION_ID', 'PAGE_ID')
+        fields = ('APC_ID', 'SESSION_ID', 'PAGE_ID', 'DATE_TAKEN')
 
 class conversations_hadSerializer(serializers.ModelSerializer):
     class Meta:
         model = conversations_had
-        fields = ('SESSION_ID', 'STAKEHOLDER_ID')
+        fields = ('SESSION_ID', 'STAKEHOLDER_ID', 'DATE_TAKEN')

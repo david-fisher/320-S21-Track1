@@ -101,7 +101,7 @@ class conversations_hadViewSet(viewsets.ModelViewSet):
     serializer_class = conversations_hadSerializer
 
 class multi_reflection(APIView):
-    def put(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         SESSION = self.request.query_params.get('SESSION_ID')
         if SESSION == None:
             return Response({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
