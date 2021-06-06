@@ -8,10 +8,12 @@ import {
   Step,
   StepLabel,
   StepContent,
+  StepConnector,
   Button,
   Box,
 } from '@material-ui/core';
 import GlobalContext from '../Context/GlobalContext';
+import useWindowDimensions from './windowDimension';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,19 +78,19 @@ VerticalLinearStepper.propTypes = {
 export default function VerticalLinearStepper({ setActivePage }) {
   // <Stepper activePage={activePage} pages={pages} />
   const classes = useStyles();
+  const { height, width } = useWindowDimensions();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   const { pages, activeIndex } = contextObj;
   function navigatePage(pageID) {
     setActivePage(pageID, pages);
-    // }
   }
 
   const steps = getSteps(pages, navigatePage);
   return (
     <div className={classes.root}>
       <Box mt={3} ml={1}>
-        <Stepper activeStep={activeIndex} orientation="vertical">
+        <Stepper activeStep={activeIndex} connector={width > 800 && <StepConnector />} orientation={width > 800 ? 'vertical' : 'horizontal'}>
           {steps.map((label, index) => (
             <Step
               key={index}
@@ -109,12 +111,14 @@ export default function VerticalLinearStepper({ setActivePage }) {
               >
                 {label}
               </StepLabel>
+              {width > 800 && (
               <StepContent>
                 <Typography>{}</Typography>
                 <div className={classes.actionsContainer}>
                   <div />
                 </div>
               </StepContent>
+              )}
             </Step>
           ))}
         </Stepper>

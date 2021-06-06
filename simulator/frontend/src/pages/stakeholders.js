@@ -87,7 +87,6 @@ const StyledTabs = withStyles({
     justifyContent: 'center',
     backgroundColor: 'transparent',
     '& > span': {
-      maxWidth: 200,
       width: '100%',
       backgroundColor: '#881c1c',
     },
@@ -98,7 +97,8 @@ const cardStyles = makeStyles({
   root: {},
 
   card: {
-    width: 600,
+    width: 'calc(100%)',
+    minWidth: '100%',
     height: 125,
     wordBreak: 'break-word',
     display: 'flex',
@@ -110,6 +110,8 @@ const cardStyles = makeStyles({
   name: {
     color: '#000000',
     fontWeight: 'fontWeightBold',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   selected: {
     borderRight: '6px solid lime',
@@ -120,6 +122,8 @@ const cardStyles = makeStyles({
   job: {
     color: '#881c1c',
     marginBottom: '10px',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   disabled: {
     backgroundColor: '#f9f9f9',
@@ -372,7 +376,7 @@ export default function Stakeholders({
       <>
         <Button
           disabled={stakeholdersDisabled[id]}
-          style={{ textTransform: 'none' }}
+          style={{ textTransform: 'none', minWidth: '100%', width: 'calc(100%)' }}
           onClick={() => toggleModal(id, true)}
         >
           <Paper elevation={2} className={cardClass}>
@@ -388,7 +392,7 @@ export default function Stakeholders({
                 src={photo}
               />
             </div>
-            <div id="info-container" className={classes.infoContainer} style={{ flex: 1 }}>
+            <div id="info-container" className={classes.infoContainer} style={{ flex: 1, minWidth: 'calc(100% - 125px)' }}>
               <Box
                 fontSize="20px"
                 fontWeight="fontWeightBold"
@@ -510,10 +514,10 @@ export default function Stakeholders({
         createdCardStyles,
       ));
       return (
-        <div>
+        <div style={{ minWidth: '100%' }}>
           <Grid container spacing={3} justify="center">
             {items.map((item) => (
-              <Grid item key={item.stakeholder_id}>
+              <Grid item key={item.stakeholder_id} style={{ minWidth: '100%' }}>
                 {item}
               </Grid>
             ))}
@@ -532,10 +536,10 @@ export default function Stakeholders({
       createdCardStyles,
     ));
     return (
-      <div>
+      <div style={{ minWidth: '100%' }}>
         <Grid container spacing={3} justify="center">
           {items.map((item) => (
-            <Grid item>{item}</Grid>
+            <Grid item style={{ minWidth: '100%' }}>{item}</Grid>
           ))}
         </Grid>
       </div>
@@ -627,7 +631,7 @@ export default function Stakeholders({
               </TextTypography>
             </Box>
           </Grid>
-          <Grid container spacing={2}>
+          <Grid spacing={2}>
             <Grid item lg={12} md={12} sm={12}>
               <Box m="1rem" align="center">
                 <TextTypography>
@@ -648,7 +652,7 @@ export default function Stakeholders({
                 {introText}
               </TextTypography>
             </Grid>
-            <Grid container direction="column">
+            <Grid direction="column">
               <StyledTabs
                 value={value}
                 variant="fullWidth"

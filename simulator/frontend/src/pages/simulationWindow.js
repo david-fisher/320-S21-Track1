@@ -22,6 +22,23 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  container: {
+    '@media (max-width:800px)': {
+      flexDirection: 'column',
+    },
+  },
+  stepper: {
+    '@media (max-width:800px)': {
+      maxWidth: '100%',
+      overflowX: 'scroll',
+    },
+  },
+  content: {
+    '@media (max-width:800px)': {
+      maxWidth: '100%',
+      padding: '5px',
+    },
+  },
 }));
 
 export const GatheredInfoContext = createContext();
@@ -299,12 +316,11 @@ export default function SimulationWindow(props) {
       <div className={classes.bannerContainer}>
         <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
       </div>
-      <Grid container spacing={2}>
-        {/* <GatheredInfoContext.Provider value={infoIdsState}> */}
-        <Grid item lg={3} md={2} sm={2}>
+      <Grid container className={classes.container}>
+        <Grid item xs={3} className={classes.stepper}>
           <Stepper setActivePage={getPrevPage} />
         </Grid>
-        <Grid item lg={8} md={8} sm={8}>
+        <Grid item xs={8} className={classes.content}>
           <Box>
             {playerContext.pages[playerContext.activeIndex]
               && playerContext.pages[playerContext.activeIndex].component}
