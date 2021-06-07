@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import SunEditor from 'suneditor-react';
 import PropTypes from 'prop-types';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import BasicTable from './table';
+import StakeholderCoverageTable from './StakeholderCoverage/StakeholderCoverageTable';
 import QuestionFields from './StakeholderQuestions/questions';
 import 'suneditor/dist/css/suneditor.min.css';
 import SuccessBanner from '../../../Banners/SuccessBanner';
@@ -666,7 +666,7 @@ export default function Stakeholder({
             onClick={handleClickOpenPointSelection}
             className={classes.button}
           >
-            Point Selection
+            Coverage
           </Button>
         </div>
 
@@ -677,12 +677,19 @@ export default function Stakeholder({
             onClick={handleClickOpenQuestions}
             className={classes.button}
           >
-            View Questions
+            Questions
           </Button>
         </div>
 
         <div id="stakeholderPreview">
-          <StakeholderPreview id={id} name={stakeholderName} job={stakeholderJob} bio={stakeholderBiography} mainConvo={stakeholderConversation} photo={stakeholderPhoto} />
+          <StakeholderPreview
+            id={id}
+            name={stakeholderName}
+            job={stakeholderJob}
+            bio={stakeholderBiography}
+            mainConvo={stakeholderConversation}
+            photo={stakeholderPhoto}
+          />
         </div>
       </div>
 
@@ -803,10 +810,10 @@ export default function Stakeholder({
               color="primary"
               disabled={stakeholderPUT.loading}
               onClick={
-                                unsavedMainConvo
-                                  ? handleOpenUnsavedWarningDialog
-                                  : handleCloseMainConvo
-                            }
+                unsavedMainConvo
+                  ? handleOpenUnsavedWarningDialog
+                  : handleCloseMainConvo
+              }
             >
               <HighlightOffIcon />
             </Button>
@@ -866,10 +873,10 @@ export default function Stakeholder({
             color="primary"
             disabled={stakeholderPUT.loading}
             onClick={
-                            unsavedQuestions
-                              ? handleOpenUnsavedWarningDialog
-                              : handleCloseQuestions
-                        }
+              unsavedQuestions
+                ? handleOpenUnsavedWarningDialog
+                : handleCloseQuestions
+            }
           >
             <HighlightOffIcon />
           </Button>
@@ -927,7 +934,7 @@ export default function Stakeholder({
           </Button>
         </DialogTitle>
         <DialogContent>
-          <BasicTable
+          <StakeholderCoverageTable
             setErrorBannerFade={setErrorBannerFade}
             setErrorBannerMessage={setErrorBannerMessage}
             setSuccessBannerMessage={setSuccessBannerMessage}
@@ -935,9 +942,15 @@ export default function Stakeholder({
             setUnsaved={setUnsavedPointSelection}
             unsaved={unsavedPointSelection}
             stakeholder_id={id}
-            passed_issues={
-                            getIssuesObj.data ? getIssuesObj.data.ISSUES : []
-                        }
+            coverage={
+              getIssuesObj.data ? getIssuesObj.data.ISSUES : []
+            }
+            id={id}
+            name={stakeholderName}
+            job={stakeholderJob}
+            bio={stakeholderBiography}
+            mainConvo={stakeholderConversation}
+            photo={stakeholderPhoto}
           />
         </DialogContent>
       </Dialog>

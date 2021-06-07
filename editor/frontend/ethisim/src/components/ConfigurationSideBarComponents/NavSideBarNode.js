@@ -47,7 +47,7 @@ NavSideBarNode.propTypes = {
   scenarioPages: PropTypes.any,
   isIntroPage: PropTypes.bool,
   curPage: PropTypes.any,
-  currentTime: PropTypes.number,
+  currentTime: PropTypes.string,
   setCurrentTime: PropTypes.func,
 };
 

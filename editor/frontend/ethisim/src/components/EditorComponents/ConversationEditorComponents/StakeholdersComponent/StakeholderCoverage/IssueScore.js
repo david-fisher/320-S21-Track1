@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
-import TableCell from '@material-ui/core/TableCell';
 
 // eslint-disable-next-line
 const useStyles = makeStyles((theme) => ({
@@ -13,30 +12,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-IssueRow.propTypes = {
-  name: PropTypes.string,
+IssueScore.propTypes = {
   score: PropTypes.any,
   issue_number: PropTypes.number,
-  scenario: PropTypes.number,
-  issues: PropTypes.any,
-  setIssues: PropTypes.any,
+  stakeholderCoverage: PropTypes.any,
+  setStakeholderCoverage: PropTypes.any,
   setUnsaved: PropTypes.any,
 };
 
-export default function IssueRow({
-  name,
+export default function IssueScore({
   score,
   issue_number,
-  issues,
-  setIssues,
+  stakeholderCoverage,
+  setStakeholderCoverage,
   setUnsaved,
 }) {
   const [issueScore, setIssueScore] = useState(score);
 
   function updateIssueScore(val) {
-    const updatedIssues = [...issues];
-    setIssues(
-      updatedIssues.map((i) => {
+    const coverage = [...stakeholderCoverage];
+    setStakeholderCoverage(
+      coverage.map((i) => {
         if (i.ISSUE === issue_number) {
           i.COVERAGE_SCORE = val;
         }
@@ -52,15 +48,12 @@ export default function IssueRow({
   };
 
   return (
-    <TableCell style={{ width: '100%' }}>
-      <TextField
-        id="filled"
-        defaultValue={issueScore}
-        variant="filled"
-        onChange={onChangeScore}
-        placeholder="0-5"
-        style={{ width: '100%' }}
-      />
-    </TableCell>
+    <TextField
+      defaultValue={issueScore}
+      variant="filled"
+      onChange={onChangeScore}
+      placeholder="Score from 0-5"
+      style={{ width: '100%' }}
+    />
   );
 }

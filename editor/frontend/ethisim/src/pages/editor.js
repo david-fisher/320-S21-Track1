@@ -459,7 +459,6 @@ export default function Editor(props) {
 
   const [shouldFetch, setShouldFetch] = useState(0);
   useEffect(handleLogisticsGet, [shouldFetch]);
-  console.log(scenarioComponent);
   const onClick = (id, title, scenarioPages) => {
     setCurrentPageID(id);
     if (id !== -1 && id !== -2 && id !== -3 && id !== -4) {
