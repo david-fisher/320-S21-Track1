@@ -127,7 +127,7 @@ class coverage(models.Model):
     ISSUE = models.ForeignKey('Issues', on_delete = models.CASCADE, related_name = "coverage1", null = True)
     # VERSION_ID = models.ForeignKey('stakeholders',on_delete = models.CASCADE, related_name = "coverage3", default = None)
     COVERAGE_SCORE = models.FloatField(validators = [MinValueValidator(0.0)])
-    SUMMARY = models.TextField(null = True, default = "")
+    SUMMARY = models.TextField(null = True, default = "", blank = True)
 
 
 class action_page_choices(models.Model):
