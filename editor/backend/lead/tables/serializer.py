@@ -116,7 +116,7 @@ class Pages_stakeholderSerializer(serializers.ModelSerializer):
 class coverageSerializer(serializers.ModelSerializer):
     class Meta:
         model = coverage
-        fields = ('STAKEHOLDER', 'ISSUE', 'COVERAGE_SCORE')
+        fields = ('STAKEHOLDER', 'ISSUE', 'COVERAGE_SCORE', 'SUMMARY')
 
 class SuperStakeholdersSerializer(serializers.ModelSerializer):
     coverages = coverageSerializer(many=True, read_only=True)

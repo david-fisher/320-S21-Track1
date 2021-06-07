@@ -1009,6 +1009,7 @@ class IssueCoverage(APIView):
                 itemdict['ISSUE'] = issueid
                 itemdict['NAME'] = serializer.data['NAME']
                 itemdict['COVERAGE_SCORE'] = 0
+                itemdict['SUMMARY'] = "default"
                 print(itemdict)
                 itemSerializer = coverageSerializer(data=itemdict)
                 if itemSerializer.is_valid():
@@ -1176,6 +1177,7 @@ class stakeholders_page(APIView):
                 itemdict['ISSUE'] = item['ISSUE']
                 itemdict['NAME'] = item['NAME']
                 itemdict['COVERAGE_SCORE'] = 0
+                itemdict['SUMMARY'] = "default"
                 print(itemdict)
                 itemSerializer = coverageSerializer(data=itemdict)
                 if itemSerializer.is_valid():

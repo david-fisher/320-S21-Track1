@@ -82,7 +82,7 @@ class reflections_takenViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = reflections_takenSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['RQ_ID']
+    filterset_fields = ['RQ_ID', 'SESSION_ID']
 
 
 class action_page_choicesViewSet(viewsets.ModelViewSet):
@@ -91,6 +91,8 @@ class action_page_choicesViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = action_page_choicesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['APC_ID', 'SESSION_ID']
 
 
 class conversations_hadViewSet(viewsets.ModelViewSet):
@@ -99,6 +101,8 @@ class conversations_hadViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = conversations_hadSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['STAKEHOLDER_ID', 'SESSION_ID']
 
 class multi_reflection(APIView):
     def post(self, request, *args, **kwargs):
