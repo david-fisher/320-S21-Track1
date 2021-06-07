@@ -6,6 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__'
+        level = 1
 
 class user_accessSerializer(serializers.ModelSerializer):
     class Meta:

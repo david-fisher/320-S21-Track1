@@ -40,7 +40,7 @@ class sessions(models.Model):
 
 class session_times(models.Model):
     SESSION_ID = models.ForeignKey(sessions, on_delete=CASCADE)
-    DATE_TAKEN = models.DateTimeField()
+    DATE_TAKEN = models.DateTimeField(null=True)
     PAGE_ID = models.IntegerField()
     START_TIME = models.DateTimeField(auto_now_add=True)
     END_TIME = models.DateTimeField(auto_now =True, null= True)

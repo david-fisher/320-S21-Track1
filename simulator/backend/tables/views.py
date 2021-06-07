@@ -16,6 +16,9 @@ from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework import mixins
 import urllib
+from datetime import datetime
+import tables.models as md   
+
 
 # Create your views here.
 
@@ -121,3 +124,83 @@ class multi_reflection(APIView):
                 serializer.save()
         refl_query = reflections_taken.objects.filter(SESSION_ID_id = SESSION).values()
         return Response(refl_query)
+
+
+def startSession(request):
+    if request.method == "POST":
+        userId = int(request.GET['userId'])
+        versionId = int(request.GET['acId'])
+
+        # Check if there is a Version given the versionId 
+        try:
+            version = md.Version.objects.get(version_id=versionId)
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No version found with the given versionId'})
+        
+        # Check if there is a User given the userId 
+        try:
+            user = md.User.objects.get(user_id=userId)
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        message = None
+        # Obtain session field based on given params
+        try:
+            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
+            session.most_recent_access = datetime.now()
+            session.save()
+            message = 'Session resumed successfully.'
+        except md.Session.DoesNotExist:
+            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version,
+                                 date_started=datetime.now(), most_recent_access=datetime.now())
+            session.save()
+            message = 'Session created succesfully.'
+
+        responseObj = {}
+        responseObj["sessionId"] = session.session_id
+        responseObj["versionId"] = session.version_id_id
+        responseObj["mostRecentAccess"] = session.most_recent_access
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+
+def endSession(request):
+    if request.method == "POST":
+        userId = int(request.GET['userId'])
+        versionId = int(request.GET['versionId'])
+
+        # Check if there is a Version given the versionId 
+        try:
+            version = md.Version.objects.get(version_id=versionId)
+        except md.Version.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No version found with the given versionId'})
+        
+        # Check if there is a User given the userId 
+        try:
+            user = md.User.objects.get(user_id=userId)
+        except md.User.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        try:
+            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
+            session.is_finished = True
+            session.save()
+        except md.Session.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'Session does not exist so it cannot be ended.'})
+
+        responseObj = {}
+        responseObj["sessionId"] = session.session_id
+        responseObj["mostRecentAccess"] = session.most_recent_access
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': 'Session successfully ended.'})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+

@@ -40,6 +40,7 @@ urlpatterns = [
     path('issue', IssueCoverage.as_view()),
     path('coverages', coverages_page.as_view()),
     path('page', pages_page.as_view()),
+    path('scenarios_for_user', scenarios_forapi.as_view()),
 ] 
 
 urlpatterns += router.urls

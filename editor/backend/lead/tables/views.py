@@ -1309,3 +1309,47 @@ class coverages_page(APIView):
 
         return Response(stkholder, status=status.HTTP_200_OK)
 
+
+class scenarios_forapi(APIView):
+
+    def add_detail(self, users):
+    
+        for user1 in users:
+            user_id = user1['user_id']
+
+            queryset = scenarios.objects.filter(user=user_id)
+            scenList = ScenariosSerializer(queryset, many=True).data
+            user1['SCENARIOS'] = scenList
+
+        return users
+
+
+    def get(self, request, *args, **kwargs):
+        # http://127.0.0.1:8000/scenario_for_user?netid=phaas
+
+        NET_ID = self.request.query_params.get('netid')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
+        if NET_ID != None:
+            # checking valid scenario ID
+            try:
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                Users.objects.get(user_id=NET_ID)
+                queryset = Users.objects.filter(
+                    user_id=NET_ID)
+                data = list(UserSerializer(queryset, many=True).data)
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
+
+            # return an error for non-existed scenario id
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
+
+    
+
+
+

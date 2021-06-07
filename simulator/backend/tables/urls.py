@@ -5,6 +5,7 @@ from django.conf import settings
 from .views import *
 from django.conf.urls import url
 from django.conf.urls.static import static
+from . import views
 
 router = routers.DefaultRouter()
 router.register('api/users', usersViewSet, 'users')
@@ -20,6 +21,8 @@ router.register('api/conversations_had', conversations_hadViewSet, 'conversation
 
 urlpatterns = [
     path('multi_reflection', multi_reflection.as_view()),
+    path('scenarios/session/start', views.startSession, name="startSession"),
+    path('scenarios/session/end', views.endSession, name="endSession"),
 ]
 
 urlpatterns += router.urls
