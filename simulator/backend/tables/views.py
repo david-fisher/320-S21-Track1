@@ -173,7 +173,7 @@ def endSession(request):
 
         try:
             session = sessions.objects.get(USER_ID_id=user.USER_ID, SCENARIO_ID=scenarioId)
-            session.is_finished = True
+            session.IS_FINISHED = True
             session.DATE_FINISHED = datetime.now()
             session.save()
         except sessions.DoesNotExist:
