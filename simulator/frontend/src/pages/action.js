@@ -80,7 +80,7 @@ export default function Action({
     error: false,
   });
   // gets player's action choice if they exist
-  const endpointGET = `/api/action_page_choices?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
+  const endpointGET = `/api/action_page_choices/?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
   // player submits action choice, can only submit once
   const endpointPOST = '/api/action_page_choices/';
   // eslint-disable-next-line

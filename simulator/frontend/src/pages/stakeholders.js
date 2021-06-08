@@ -200,7 +200,7 @@ export default function Stakeholders({
   const createdCardStyles = cardStyles();
 
   const endpointStakeholdersGET = `/api/stakeholders/?SCENARIO=${scenarioID}`;
-  const endpointConversationsHadGET = `/api/conversations_had?SESSION_ID=${contextObj.sessionID}`;
+  const endpointConversationsHadGET = `/api/conversations_had/?SESSION_ID=${contextObj.sessionID}`;
   const endpointPOST = '/api/conversations_had/';
 
   // eslint-disable-next-line
@@ -611,6 +611,28 @@ export default function Stakeholders({
             <Grid item lg={12} md={12} sm={12}>
               <Box m="1rem" align="center">
                 <TextTypography>
+                  You have
+                  {' '}
+                  <b>
+                    {stakeholders.length}
+                  </b>
+                  {' '}
+                  stakeholders to choose from.
+                </TextTypography>
+              </Box>
+              <Box m="1rem" align="center">
+                <TextTypography>
+                  You can choose up to a maximum of
+                  {' '}
+                  <b>
+                    {conversationLimit}
+                  </b>
+                  {' '}
+                  stakeholders.
+                </TextTypography>
+              </Box>
+              <Box m="1rem" align="center">
+                <TextTypography>
                   You've spoken to
                   {' '}
                   <b>
@@ -621,7 +643,7 @@ export default function Stakeholders({
                     {conversationLimit}
                   </b>
                   {' '}
-                  stakeholders
+                  available stakeholders.
                 </TextTypography>
               </Box>
               <TextTypography variant="body1" align="center">
@@ -639,7 +661,7 @@ export default function Stakeholders({
                 <StyledTab label="Available Stakeholders" {...a11yProps(0)} />
                 <StyledTab
                   className={classes.tab}
-                  label="Spoken To Stakeholders"
+                  label="Stakeholders I've Spoken to"
                   {...a11yProps(1)}
                 />
               </StyledTabs>

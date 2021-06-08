@@ -57,7 +57,16 @@ export default function Toggle({
         <ToggleButton value="CodeEditor" aria-label="centered">
           <CodeIcon />
         </ToggleButton>
+        <Typography
+          color="error"
+          style={{
+            marginLeft: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          Changing editors will erase all data.
+        </Typography>
       </ToggleButtonGroup>
+
       {option === 'TextEditor' ? (
         <Body
           body={body}

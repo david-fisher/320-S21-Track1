@@ -52,7 +52,7 @@ export default function IssueScore({
       defaultValue={issueScore}
       variant="filled"
       onChange={onChangeScore}
-      placeholder="Score from 0-5"
+      placeholder="Coverage Score from 0-5"
       style={{ width: '100%' }}
     />
   );
