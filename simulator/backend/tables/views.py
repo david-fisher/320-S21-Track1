@@ -129,39 +129,30 @@ class multi_reflection(APIView):
 def startSession(request):
     if request.method == "POST":
         userId = int(request.GET['userId'])
-        versionId = int(request.GET['acId'])
+        scenarioId = int(request.GET['scenarioId'])
 
-        # Check if there is a Version given the versionId 
-        try:
-            version = md.Version.objects.get(version_id=versionId)
-        except md.Version.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                'message': 'No version found with the given versionId'})
-        
         # Check if there is a User given the userId 
         try:
-            user = md.User.objects.get(user_id=userId)
-        except md.User.DoesNotExist:
+            user = md.users.objects.get(USER_ID=userId)
+        except md.users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
         message = None
         # Obtain session field based on given params
         try:
-            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
-            session.most_recent_access = datetime.now()
+            session = md.sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId)
+            session.MOST_RECENT_ACCESS = datetime.now()
             session.save()
             message = 'Session resumed successfully.'
-        except md.Session.DoesNotExist:
-            session = md.Session(user_id=user.user_id, scenario_id=version.scenario_id, version_id=version,
-                                 date_started=datetime.now(), most_recent_access=datetime.now())
-            session.save()
+        except md.sessions.DoesNotExist:
+            session = md.sessions(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId, DATE_STARTED=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
+            sessions.save()
             message = 'Session created succesfully.'
 
         responseObj = {}
-        responseObj["sessionId"] = session.session_id
-        responseObj["versionId"] = session.version_id_id
-        responseObj["mostRecentAccess"] = session.most_recent_access
+        responseObj["sessionId"] = session.SESSION_ID
+        responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
         
         return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
     
@@ -171,33 +162,27 @@ def startSession(request):
 def endSession(request):
     if request.method == "POST":
         userId = int(request.GET['userId'])
-        versionId = int(request.GET['versionId'])
+        scenarioId = int(request.GET['scenarioId'])
 
-        # Check if there is a Version given the versionId 
-        try:
-            version = md.Version.objects.get(version_id=versionId)
-        except md.Version.DoesNotExist:
-            return JsonResponse(status=404, data={'status': 404,
-                                                'message': 'No version found with the given versionId'})
-        
         # Check if there is a User given the userId 
         try:
-            user = md.User.objects.get(user_id=userId)
-        except md.User.DoesNotExist:
+            user = md.users.objects.get(USER_ID=userId)
+        except md.users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            session = md.Session.objects.get(user_id=user.user_id, version_id=version.version_id)
+            session = md.sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId)
             session.is_finished = True
+            session.DATE_FINISHED = datetime.now()
             session.save()
-        except md.Session.DoesNotExist:
+        except md.sessions.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'Session does not exist so it cannot be ended.'})
 
         responseObj = {}
-        responseObj["sessionId"] = session.session_id
-        responseObj["mostRecentAccess"] = session.most_recent_access
+        responseObj["sessionId"] = session.SESSION_ID
+        responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
         
         return JsonResponse(status=200, data={'status': 200, 'message': 'Session successfully ended.'})
     

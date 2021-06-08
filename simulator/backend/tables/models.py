@@ -33,17 +33,17 @@ class sessions(models.Model):
     SESSION_ID = models.AutoField(primary_key=True)
     USER_ID = models.ForeignKey(users, on_delete=CASCADE)
     SCENARIO_ID = models.IntegerField()
-    DATE_STARTED = models.DateTimeField(auto_now_add=True)
-    DATE_FINISHED = models.DateTimeField(auto_now =True, null= True)
+    DATE_STARTED = models.DateTimeField()
+    DATE_FINISHED = models.DateTimeField(null=True)
     IS_FINISHED = models.BooleanField(default=False)
-    MOST_RECENT_ACCESS = models.DateTimeField(null=True, auto_now =True)
+    MOST_RECENT_ACCESS = models.DateTimeField()
 
 class session_times(models.Model):
     SESSION_ID = models.ForeignKey(sessions, on_delete=CASCADE)
     DATE_TAKEN = models.DateTimeField(null=True)
     PAGE_ID = models.IntegerField()
-    START_TIME = models.DateTimeField(auto_now_add=True)
-    END_TIME = models.DateTimeField(auto_now =True, null= True)
+    START_TIME = models.DateTimeField()
+    END_TIME = models.DateTimeField(null=True)
 
 
 class reflections_taken(models.Model):
