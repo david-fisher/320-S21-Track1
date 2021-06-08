@@ -172,7 +172,7 @@ export default function Dashboard() {
     IS_FINISHED: false,
     PUBLIC: false,
     NUM_CONVERSATIONS: 0,
-    PROFESSOR: 1,
+    PROFESSOR: 'phaas', // TODO change
     COURSES: [],
   });
 
@@ -249,7 +249,7 @@ export default function Dashboard() {
         IS_FINISHED: false,
         PUBLIC: false,
         NUM_CONVERSATIONS: 0,
-        PROFESSOR: 1,
+        PROFESSOR: 'phaas',
         COURSES: [],
       });
       // Smooth loading animation, loading animation will not reset during POST and GET Request
@@ -276,7 +276,7 @@ export default function Dashboard() {
       IS_FINISHED: false,
       PUBLIC: false,
       NUM_CONVERSATIONS: 0,
-      PROFESSOR: 1,
+      PROFESSOR: 'phaas',
       COURSES: [],
     });
     setErrorName(false);

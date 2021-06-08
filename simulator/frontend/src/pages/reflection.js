@@ -12,6 +12,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
 import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
+// eslint-disable-next-line
 import { STUDENT_ID } from '../constants/config';
 import GlobalContext from '../Context/GlobalContext';
 import get from '../universalHTTPRequestsSimulator/get';
@@ -97,8 +98,9 @@ export default function Reflection({
   scenarioID,
   pageID,
 }) {
-  const [contextObj, setContextObj] = useContext(GlobalContext);
   const classes = useStyles();
+  // eslint-disable-next-line
+  const [contextObj, setContextObj] = useContext(GlobalContext);
 
   const [savedAnswers, setSavedAnswers] = useState(false);
   // variables to show error if not all reflection questions are answered
@@ -117,7 +119,6 @@ export default function Reflection({
   });
   const getReflectionData = () => {
     function onSuccess(response) {
-      console.log(response);
       // Player has already responded
       if (response.data.length !== 0) {
         setSavedAnswers(true);
@@ -131,7 +132,6 @@ export default function Reflection({
         })).sort((a, b) => a.RQ_ID - b.RQ_ID));
       }
     }
-    // eslint-disable-next-line
     function onFailure(e) {
       setErrorBannerFade(true);
       setErrorBannerMessage('Failed to get reflection question page! Please try again.');
@@ -141,18 +141,16 @@ export default function Reflection({
 
   useEffect(getReflectionData, []);
   const postData = () => {
-    // eslint-disable-next-line
     function onSuccess(response) {
       setSavedAnswers(true);
       setSuccessBannerFade(true);
       setSuccessBannerMessage('Successfully saved answers');
     }
-    // eslint-disable-next-line
+
     function onFailure() {
       setErrorBannerFade(true);
       setErrorBannerMessage('Failed to save your answers! Please try again.');
     }
-    // eslint-disable-next-line
 
     if (reflection.some(({ REFLECTIONS }) => !REFLECTIONS || !REFLECTIONS.trim())) {
       setErrorName(true);
@@ -161,8 +159,6 @@ export default function Reflection({
     setErrorName(false);
     post(setReflectionData, endpointPOST, onFailure, onSuccess, reflection);
   };
-
-  console.log(reflection);
 
   const updateResponse = (e, id) => {
     setReflection((prev) => {

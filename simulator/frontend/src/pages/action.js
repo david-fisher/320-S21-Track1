@@ -73,6 +73,7 @@ export default function Action({
   let [contextObj, setContextObj] = useContext(GlobalContext);
   const [actions, setActions] = useState([]);
   const [chosenAction, setChosenAction] = useState(-1);
+  // eslint-disable-next-line
   const [fetchActionResponse, setFetchActionResponse] = useState({
     data: null,
     loading: false,
@@ -82,6 +83,7 @@ export default function Action({
   const endpointGET = `/api/action_page_choices?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
   // player submits action choice, can only submit once
   const endpointPOST = '/api/action_page_choices/';
+  // eslint-disable-next-line
   const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
 
   const [actionData, setActionData] = useState({
@@ -89,10 +91,9 @@ export default function Action({
     loading: false,
     error: null,
   });
-  console.log(chosenAction);
+
   const getActionData = () => {
     function onSuccess(response) {
-      console.log(response);
       // Player has already chosen an action
       (response.data.length !== 0) ? setChosenAction(response.data[0].APC_ID) : setChosenAction(-1);
       setActions(choices.map((obj) => ({
@@ -120,7 +121,7 @@ export default function Action({
       setErrorBannerMessage('Failed to save action! Please try again.');
       setErrorBannerFade(true);
     }
-    if (!chosenAction) {
+    if (chosenAction === -1) {
       const requestBody = {
         APC_ID: selectedAction,
         SESSION_ID: contextObj.sessionID,
@@ -191,6 +192,12 @@ export default function Action({
 
   return (
     <div>
+      <div className={classes.bannerContainer}>
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
@@ -210,7 +217,7 @@ export default function Action({
                 <Button
                   variant="outlined"
                   color="primary"
-                  disabled={choice.APC_ID !== chosenAction}
+                  disabled={chosenAction !== -1 && choice.APC_ID !== chosenAction}
                   className={classes.button}
                   size="large"
                   onClick={() => getAction(choice.APC_ID, choice.RESULT_PAGE_id)}

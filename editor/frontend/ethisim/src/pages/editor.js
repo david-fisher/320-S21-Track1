@@ -346,6 +346,7 @@ export default function Editor(props) {
       const currPageInfo = resp.data;
       if (currPageInfo.PAGE_TYPE === 'I') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -364,6 +365,7 @@ export default function Editor(props) {
         c = <Introduction {...p} />;
       } else if (currPageInfo.PAGE_TYPE === 'G') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -382,6 +384,7 @@ export default function Editor(props) {
         c = <Generic {...p} />;
       } else if (currPageInfo.PAGE_TYPE === 'A') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -400,6 +403,7 @@ export default function Editor(props) {
         c = <Action {...p} />;
       } else if (currPageInfo.PAGE_TYPE === 'R') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,

@@ -11,7 +11,7 @@ import {
 import RadarPlot from './radarPlot';
 import GlobalContext from '../Context/GlobalContext';
 import { STUDENT_ID } from '../constants/config';
-import post from '../universalHTTPRequestsEditor/post';
+import post from '../universalHTTPRequestsSimulator/post';
 
 const TextTypography = withStyles({
   root: {
@@ -28,15 +28,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 Feedback.propTypes = {
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
   getPrevPage: PropTypes.func.isRequired,
   prevPageEndpoint: PropTypes.string.isRequired,
 };
-export default function Feedback({ versionID, getPrevPage, prevPageEndpoint }) {
+export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) {
   const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&versionId=${versionID}`;
+  const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
   // eslint-disable-next-line
   const [endSessionObj, setEndSessionObj] = useState({
     data: null,
@@ -101,7 +101,7 @@ export default function Feedback({ versionID, getPrevPage, prevPageEndpoint }) {
       <Grid container spacing={2}>
         <Grid lg={12}>
           <Box m="2rem">
-            <RadarPlot versionID={versionID} />
+            <RadarPlot scenarioID={scenarioID} />
           </Box>
         </Grid>
       </Grid>

@@ -96,6 +96,7 @@ export default function SimulationWindow(props) {
     loading: false,
     error: false,
   });
+  // eslint-disable-next-line
   const [startSession, setStartSession] = useState({
     data: null,
     loading: false,

@@ -88,16 +88,16 @@ const StyledTabs = withStyles({
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
 Radar.propTypes = {
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
 };
-function Radar({ versionID }) {
+function Radar({ scenarioID }) {
   const chartContainer = useRef(null);
   // eslint-disable-next-line
   const [chartInstance, setChartInstance] = useState(null);
   const [coverage, setCoverage] = useState([]);
   const [value, setValue] = React.useState(0);
 
-  const endpointGet = `/scenarios/radar?userId=${STUDENT_ID}&versionId=${versionID}`;
+  const endpointGet = `/scenarios/radar?userId=${STUDENT_ID}&scenarioID=${scenarioID}`;
   // eslint-disable-next-line
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
