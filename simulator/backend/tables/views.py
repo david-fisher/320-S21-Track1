@@ -85,7 +85,7 @@ class reflections_takenViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = reflections_takenSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['RQ_ID', 'SESSION_ID']
+    filterset_fields = ['RQ_ID', 'SESSION_ID', 'PAGE_ID']
 
 
 class action_page_choicesViewSet(viewsets.ModelViewSet):
@@ -95,7 +95,7 @@ class action_page_choicesViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = action_page_choicesSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['APC_ID', 'SESSION_ID']
+    filterset_fields = ['APC_ID', 'SESSION_ID', 'PAGE_ID']
 
 
 class conversations_hadViewSet(viewsets.ModelViewSet):
