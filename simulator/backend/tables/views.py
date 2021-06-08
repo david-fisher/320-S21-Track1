@@ -128,26 +128,26 @@ class multi_reflection(APIView):
 
 def startSession(request):
     if request.method == "POST":
-        userId = int(request.GET['userId'])
+        userId = (request.GET['userId'])
         scenarioId = int(request.GET['scenarioId'])
 
         # Check if there is a User given the userId 
         try:
-            user = md.users.objects.get(USER_ID=userId)
-        except md.users.DoesNotExist:
+            user = users.objects.get(USER_ID=userId)
+        except users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
         message = None
         # Obtain session field based on given params
         try:
-            session = md.sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId)
+            session = sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId)
             session.MOST_RECENT_ACCESS = datetime.now()
             session.save()
             message = 'Session resumed successfully.'
-        except md.sessions.DoesNotExist:
-            session = md.sessions(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId, DATE_STARTED=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
-            sessions.save()
+        except sessions.DoesNotExist:
+            session = sessions(USER_ID_id=user.USER_ID, SCENARIO_ID=scenarioId, DATE_STARTED=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
+            session.save()
             message = 'Session created succesfully.'
 
         responseObj = {}
@@ -161,22 +161,22 @@ def startSession(request):
 
 def endSession(request):
     if request.method == "POST":
-        userId = int(request.GET['userId'])
+        userId = (request.GET['userId'])
         scenarioId = int(request.GET['scenarioId'])
 
         # Check if there is a User given the userId 
         try:
-            user = md.users.objects.get(USER_ID=userId)
-        except md.users.DoesNotExist:
+            user = users.objects.get(USER_ID=userId)
+        except users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            session = md.sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId)
+            session = sessions.objects.get(USER_ID_id=user.USER_ID, SCENARIO_ID=scenarioId)
             session.is_finished = True
             session.DATE_FINISHED = datetime.now()
             session.save()
-        except md.sessions.DoesNotExist:
+        except sessions.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'Session does not exist so it cannot be ended.'})
 
