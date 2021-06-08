@@ -148,7 +148,6 @@ export default function Home() {
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      console.log(response);
       let incomplete = [];
       // response.data.result.filter((data) => !data.is_finished);
       const complete = [];
@@ -199,7 +198,7 @@ export default function Home() {
     }
     get(
       setFetchScenariosResponse,
-      endpointGet + STUDENT_ID,
+      `${endpointGet}phaas`,
       onFailure,
       onSuccess,
     );
@@ -309,7 +308,6 @@ export default function Home() {
                 >
                   Select Scenario
                   {' '}
-                  {scenario.firstPage}
                 </Button>
               </Paper>
             </Grid>

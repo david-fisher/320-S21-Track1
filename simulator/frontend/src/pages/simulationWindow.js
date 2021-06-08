@@ -1,7 +1,11 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Grid, Box } from '@material-ui/core';
+import {
+  Grid, Box, Typography, Button,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import ErrorIcon from '@material-ui/icons/Error';
 import PropTypes from 'prop-types';
 import Stepper from '../components/stepper';
 import GenericPage from './genericPage';
@@ -12,7 +16,7 @@ import Feedback from './feedback';
 import { STUDENT_ID } from '../constants/config';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsEditor/get';
-import post from '../universalHTTPRequestsEditor/post';
+import post from '../universalHTTPRequestsSimulator/post';
 import ErrorBanner from '../components/Banners/ErrorBanner';
 import GlobalContext from '../Context/GlobalContext';
 
@@ -38,6 +42,24 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: '100%',
       padding: '5px',
     },
+  },
+  errorContainer: {
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  issue: {
+    marginTop: theme.spacing(10),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  iconError: {
+    fontSize: '75px',
+  },
+  iconRefreshLarge: {
+    fontSize: '75px',
   },
 }));
 
@@ -65,11 +87,16 @@ export default function SimulationWindow(props) {
   const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
   const firstPageEndpoint = `/page?page_id=${firstPage}`;
   // eslint-disable-next-line
   const endpointGetMeta = "/scenarios?userId=" + STUDENT_ID;
-  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+  const [fetchFirstPage, setFirstPage] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  const [startSession, setStartSession] = useState({
     data: null,
     loading: false,
     error: false,
@@ -82,9 +109,9 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [],
       }));
+      get(setFirstPage, firstPageEndpoint, onFailure, onSuccess);
     }
     function onSuccess(response) {
-      console.log(response);
       const { data } = response;
       const next = data.NEXT_PAGE;
       const nextEndpoint = `/page?page_id=${next}`;
@@ -113,15 +140,18 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [...oldObj.pages, newPage],
       }));
-      // TODO replace null with onFailure once session endpoint is finished
-      post(setFetchScenariosResponse, endpointSess, null, startSess);
     }
     function onFailure() {
       setErrorBannerMessage('Failed to start session! Please try again.');
       setErrorBannerFade(true);
     }
-
-    get(setFetchScenariosResponse, firstPageEndpoint, onFailure, onSuccess);
+    // This allows for a cleaner loading spinner animation (rather than being cut up)
+    setFirstPage({
+      data: null,
+      loading: true,
+      error: false,
+    });
+    post(setStartSession, endpointSess, null, startSess);
   };
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
@@ -129,12 +159,13 @@ export default function SimulationWindow(props) {
       case 'G':
         return (
           <GenericPage
+            key={data.PAGE}
             isIntro={false}
             pageID={data.PAGE}
             pageTitle={data.PAGE_TITLE}
             body={data.PAGE_BODY}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -142,13 +173,14 @@ export default function SimulationWindow(props) {
       case 'R':
         return (
           <Reflection
+            key={data.PAGE}
             scenarioID={scenarioID}
             pageID={data.PAGE}
             pageTitle={data.PAGE_TITLE}
             body={data.PAGE_BODY}
             questions={data.REFLECTION_QUESTIONS}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -156,12 +188,13 @@ export default function SimulationWindow(props) {
       case 'S':
         return (
           <Stakeholders
+            key={data.PAGE}
             scenarioID={scenarioID}
             pageID={data.PAGE}
             pageTitle={data.PAGE_TITLE}
             body={data.PAGE_BODY}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -169,6 +202,7 @@ export default function SimulationWindow(props) {
       case 'A':
         return (
           <Action
+            key={data.PAGE}
             sessionID={sessionID}
             scenarioID={scenarioID}
             pageID={data.PAGE}
@@ -177,7 +211,7 @@ export default function SimulationWindow(props) {
             choices={data.CHOICES}
             choiceChosen={data.choiceChosen}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             prevPageEndpoint={prevPageEndpoint}
           />
         );
@@ -186,7 +220,7 @@ export default function SimulationWindow(props) {
           <Feedback
             sessionID={sessionID}
             scenarioID={scenarioID}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             prevPageEndpoint={prevPageEndpoint}
           />
         );
@@ -194,24 +228,18 @@ export default function SimulationWindow(props) {
     }
   }
 
-  let getPrevPage = (prevPageEndpoint, pages) => {
-    function onSuccess(response) {
-      const { data } = response;
-      const indexInPages = pages.findIndex((obj) => obj.id === data.PAGE);
-      setPlayerContext((oldObj) => ({
-        ...oldObj,
-        activeIndex: indexInPages,
-      }));
-    }
-
-    function onFailure() {
-      setErrorBannerMessage('Failed to get page! Please try again.');
-      setErrorBannerFade(true);
-    }
-
-    get(setFetchScenariosResponse, prevPageEndpoint, onFailure, onSuccess);
+  const getExistingPage = (index) => {
+    setPlayerContext((oldObj) => ({
+      ...oldObj,
+      activeIndex: index,
+    }));
   };
 
+  const [fetchNextPage, setNextPage] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
   let getNextPage = (nextPageEndpoint, index, pages) => {
     // Last page, show feedback page
     if (!nextPageEndpoint) {
@@ -285,7 +313,15 @@ export default function SimulationWindow(props) {
       setErrorBannerMessage('Failed to get page! Please try again.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, nextPageEndpoint, onFailure, onSuccess);
+
+    if ((index + 1) < pages.length) {
+      setPlayerContext((oldObj) => ({
+        ...oldObj,
+        activeIndex: oldObj.activeIndex + 1,
+      }));
+    } else {
+      get(setNextPage, nextPageEndpoint, onFailure, onSuccess);
+    }
   };
 
   useEffect(getFirstPage, []);
@@ -301,11 +337,23 @@ export default function SimulationWindow(props) {
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
 
-  if (fetchScenariosResponse.loading) {
+  if (fetchFirstPage.error) {
+    // TODO fix
+    const onClick = fetchFirstPage.error ? getFirstPage : fetchNextPage.error ? getNextPage : getExistingPage;
     return (
       <div>
-        <div style={{ marginTop: '100px' }}>
-          <LoadingSpinner />
+        <div className={classes.issue}>
+          <ErrorIcon className={classes.iconError} />
+          <Typography align="center" variant="h3">
+            Error in fetching page data.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onClick}
+          >
+            <RefreshIcon className={classes.iconRefreshLarge} />
+          </Button>
         </div>
       </div>
     );
@@ -318,13 +366,21 @@ export default function SimulationWindow(props) {
       </div>
       <Grid container className={classes.container}>
         <Grid item xs={3} className={classes.stepper}>
-          <Stepper setActivePage={getPrevPage} />
+          <Stepper setActivePage={getExistingPage} />
         </Grid>
         <Grid item xs={8} className={classes.content}>
-          <Box>
-            {playerContext.pages[playerContext.activeIndex]
+          {(fetchFirstPage.loading || fetchNextPage.loading)
+            ? (
+              <div style={{ marginTop: '100px' }}>
+                <LoadingSpinner />
+              </div>
+            )
+            : (
+              <Box>
+                {playerContext.pages[playerContext.activeIndex]
               && playerContext.pages[playerContext.activeIndex].component}
-          </Box>
+              </Box>
+            )}
         </Grid>
       </Grid>
     </GlobalContext.Provider>

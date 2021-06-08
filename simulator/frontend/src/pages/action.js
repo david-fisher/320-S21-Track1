@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   makeStyles,
@@ -10,8 +10,11 @@ import {
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
 import { STUDENT_ID } from '../constants/config';
-import post from '../universalHTTPRequestsEditor/post';
+import get from '../universalHTTPRequestsSimulator/get';
+import post from '../universalHTTPRequestsSimulator/post';
 import GlobalContext from '../Context/GlobalContext';
+import ErrorBanner from '../components/Banners/ErrorBanner';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +57,6 @@ Action.propTypes = {
   scenarioID: PropTypes.number.isRequired,
   pageID: PropTypes.number.isRequired,
   choices: PropTypes.any,
-  choiceChosen: PropTypes.any,
 };
 export default function Action({
   scenarioID,
@@ -62,70 +64,98 @@ export default function Action({
   pageTitle,
   body,
   choices,
-  choiceChosen,
   getNextPage,
   getPrevPage,
   prevPageEndpoint,
 }) {
+  const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  console.log(choices);
-  // eslint-disable-next-line
-  const [chosenAction, setChosenAction] = React.useState(-1);
-  // eslint-disable-next-line
+  const [actions, setActions] = useState([]);
+  const [chosenAction, setChosenAction] = useState(-1);
   const [fetchActionResponse, setFetchActionResponse] = useState({
     data: null,
     loading: false,
     error: false,
   });
-  // MAKE API CALL
-  // let pageId = activePage
-  // const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
-  // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
-  // eslint-disable-next-line
-  const endpointPost =
-    `/scenarios/action?versionId=${scenarioID}&pageId=${pageID}`;
+  // gets player's action choice if they exist
+  const endpointGET = `/api/action_page_choices?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
+  // player submits action choice, can only submit once
+  const endpointPOST = '/api/action_page_choices/';
   const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
 
-  const getAction = (selectedAction, nextPageID) => {
-    console.log(pageID);
-    function startSess(response) {
-      // do nothing
-    }
-    // eslint-disable-next-line
+  const [actionData, setActionData] = useState({
+    data: null,
+    loading: false,
+    error: null,
+  });
+  console.log(chosenAction);
+  const getActionData = () => {
     function onSuccess(response) {
-      // Right now hardcoded for middle reflection
-      // pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-      // eslint-disable-next-line
-      let body = {
-        response_id: response.data.result.response_id,
-        choice: response.data.result.choice,
-        CHOICE: response.data.result.CHOICE,
-        next: response.data.result.RESULT_PAGE_id,
-      };
       console.log(response);
-      setChosenAction((cur) => selectedAction);
+      // Player has already chosen an action
+      (response.data.length !== 0) ? setChosenAction(response.data[0].APC_ID) : setChosenAction(-1);
+      setActions(choices.map((obj) => ({
+        PAGE_ID: obj.PAGE_id, APC_ID: obj.APC_ID, SESSION_ID: contextObj.sessionID, CHOICE: obj.CHOICE, RESULT_PAGE_id: obj.RESULT_PAGE_id,
+      })).sort((a, b) => a.APC_ID - b.APC_ID));
     }
-    function onFailure() {
-      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      // setErrorBannerFade(true);
+    function onFailure(e) {
+      setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to get action data! Please try again.');
     }
-    if (!choiceChosen) {
-      post(setFetchActionResponse, endpointSess, onFailure, startSess);
-      // TODO Remove once post request finishes
+    get(setActionData, endpointGET, onFailure, onSuccess);
+  };
+  useEffect(getActionData, []);
+
+  const getAction = (selectedAction, nextPageID) => {
+    function onSuccess(response) {
       getNextPage(
         `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
       );
-      // eslint-disable-next-line
-      let body = { choice_id: selectedAction, user_id: STUDENT_ID };
-      // TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
+      setChosenAction((cur) => selectedAction);
+    }
+    function onFailure() {
+      setErrorBannerMessage('Failed to save action! Please try again.');
+      setErrorBannerFade(true);
+    }
+    if (!chosenAction) {
+      const requestBody = {
+        APC_ID: selectedAction,
+        SESSION_ID: contextObj.sessionID,
+        PAGE_ID: pageID,
+      };
+      post(setFetchActionResponse, endpointPOST, onFailure, onSuccess, requestBody);
+    } else if (selectedAction === chosenAction) {
+      getNextPage(
+        `/page?page_id=${nextPageID}`,
+        contextObj.activeIndex,
+        contextObj.pages,
+      );
     }
   };
 
-  const classes = useStyles();
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
+
+  if (actionData.loading) {
+    return (
+      <div>
+        <div style={{ marginTop: '100px' }}>
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
   const Buttons = (
     <Grid container direction="row" justify="space-between">
       <Grid item className={classes.backButton}>
@@ -133,7 +163,7 @@ export default function Action({
           variant="contained"
           disableElevation
           color="primary"
-          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+          onClick={() => getPrevPage(contextObj.activeIndex - 1)}
         >
           Back
         </Button>
@@ -143,12 +173,15 @@ export default function Action({
           variant="contained"
           disableElevation
           color="primary"
-          disabled={!choiceChosen}
-          onClick={() => getNextPage(
-            `/scenarios/task?versionId=${scenarioID}&pageId=${choiceChosen}`,
-            contextObj.activeIndex,
-            contextObj.pages,
-          )}
+          disabled={!chosenAction}
+          onClick={() => {
+            const nextPageID = actions.filter((obj) => obj.APC_ID === chosenAction)[0].RESULT_PAGE_id;
+            getNextPage(
+              `/page?page_id=${nextPageID}`,
+              contextObj.activeIndex,
+              contextObj.pages,
+            );
+          }}
         >
           Next
         </Button>
@@ -172,12 +205,12 @@ export default function Action({
             <InnerHTML html={body.replace(/\\"/g, '"')} />
           </Grid>
           <Box mx="auto">
-            {choices.sort((a, b) => a.APC_ID - b.APC_ID).map((choice) => (
+            {actions.map((choice) => (
               <Box p={3} key={choice.APC_ID}>
                 <Button
                   variant="outlined"
                   color="primary"
-                  disabled={choice.APC_ID === choiceChosen}
+                  disabled={choice.APC_ID !== chosenAction}
                   className={classes.button}
                   size="large"
                   onClick={() => getAction(choice.APC_ID, choice.RESULT_PAGE_id)}

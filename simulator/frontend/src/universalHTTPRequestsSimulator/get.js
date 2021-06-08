@@ -17,6 +17,7 @@ export default function universalFetch(
   axios
     .get(BACK_URL_SIMULATOR + endpoint, { withCredentials: true })
     .then((resp) => {
+      console.log(resp);
       setResponse({
         data: resp.data,
         loading: false,

@@ -64,7 +64,7 @@ export default function Feedback({ versionID, getPrevPage, prevPageEndpoint }) {
           variant="contained"
           disableElevation
           color="primary"
-          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+          onClick={() => getPrevPage(contextObj.activeIndex - 1)}
         >
           Back
         </Button>

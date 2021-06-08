@@ -50,7 +50,7 @@ function getSteps(pages, navigatePageFunc) {
     stepArr.push(
       <Button
         style={{ color: '#881c1c' }}
-        onClick={() => navigatePageFunc(pages[i].pageEndpoint)}
+        onClick={() => navigatePageFunc(i)}
       >
         {buttonName}
       </Button>,
@@ -78,12 +78,12 @@ VerticalLinearStepper.propTypes = {
 export default function VerticalLinearStepper({ setActivePage }) {
   // <Stepper activePage={activePage} pages={pages} />
   const classes = useStyles();
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   const { pages, activeIndex } = contextObj;
-  function navigatePage(pageID) {
-    setActivePage(pageID, pages);
+  function navigatePage(index) {
+    setActivePage(index);
   }
 
   const steps = getSteps(pages, navigatePage);
@@ -122,7 +122,7 @@ export default function VerticalLinearStepper({ setActivePage }) {
             </Step>
           ))}
         </Stepper>
-        {activeIndex === steps.length && (
+        {activeIndex !== 0 && activeIndex === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&apos;re finished</Typography>
           </Paper>

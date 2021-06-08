@@ -60,7 +60,7 @@ export default function GenericPage({
             variant="contained"
             disableElevation
             color="primary"
-            onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+            onClick={() => getPrevPage(contextObj.activeIndex - 1)}
           >
             Back
           </Button>
