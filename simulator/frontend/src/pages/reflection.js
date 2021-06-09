@@ -20,6 +20,7 @@ import post from '../universalHTTPRequestsSimulator/post';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import ErrorBanner from '../components/Banners/ErrorBanner';
+import GenericWarning from '../components/GenericWarning';
 
 const TextTypography = withStyles({
   root: {
@@ -140,6 +141,15 @@ export default function Reflection({
   };
 
   useEffect(getReflectionData, []);
+  const checkInvalidInput = () => {
+    if (reflection.some(({ REFLECTIONS }) => !REFLECTIONS || !REFLECTIONS.trim())) {
+      setErrorName(true);
+      return true;
+    }
+    setErrorName(false);
+    return false;
+  };
+
   const postData = () => {
     function onSuccess(response) {
       setSavedAnswers(true);
@@ -152,11 +162,7 @@ export default function Reflection({
       setErrorBannerMessage('Failed to save your answers! Please try again.');
     }
 
-    if (reflection.some(({ REFLECTIONS }) => !REFLECTIONS || !REFLECTIONS.trim())) {
-      setErrorName(true);
-      return;
-    }
-    setErrorName(false);
+    setOpenWarning(false);
     post(setReflectionData, endpointPOST, onFailure, onSuccess, reflection);
   };
 
@@ -193,6 +199,11 @@ export default function Reflection({
 
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
+
+  const [openWarning, setOpenWarning] = useState(false);
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
 
   if (reflectionData.error) {
     return (
@@ -314,12 +325,23 @@ export default function Reflection({
               color="primary"
               justify="right"
               disabled={savedAnswers}
-              onClick={postData}
+              onClick={() => {
+                if (!checkInvalidInput()) {
+                  handleOpenWarning();
+                }
+              }}
             >
               Submit Answers
             </Button>
           </Grid>
         </Grid>
+        <GenericWarning
+          func={postData}
+          setOpen={setOpenWarning}
+          open={openWarning}
+          title="Warning"
+          description="You will not be able to change your answers after you submit. Are you sure you want to submit?"
+        />
       </Grid>
     </div>
   );

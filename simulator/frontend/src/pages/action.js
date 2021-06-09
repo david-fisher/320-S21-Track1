@@ -15,6 +15,7 @@ import post from '../universalHTTPRequestsSimulator/post';
 import GlobalContext from '../Context/GlobalContext';
 import ErrorBanner from '../components/Banners/ErrorBanner';
 import LoadingSpinner from '../components/LoadingSpinner';
+import GenericWarning from '../components/GenericWarning';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +93,8 @@ export default function Action({
     error: null,
   });
 
+  const [selectActionFunc, setSelectActionFunc] = useState(null);
+
   const getActionData = () => {
     function onSuccess(response) {
       // Player has already chosen an action
@@ -121,6 +124,7 @@ export default function Action({
       setErrorBannerMessage('Failed to save action! Please try again.');
       setErrorBannerFade(true);
     }
+    console.log('hi1');
     if (chosenAction === -1) {
       const requestBody = {
         APC_ID: selectedAction,
@@ -147,6 +151,11 @@ export default function Action({
 
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
+
+  const [openWarning, setOpenWarning] = useState(false);
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
 
   if (actionData.loading) {
     return (
@@ -220,7 +229,10 @@ export default function Action({
                   disabled={chosenAction !== -1 && choice.APC_ID !== chosenAction}
                   className={classes.button}
                   size="large"
-                  onClick={() => getAction(choice.APC_ID, choice.RESULT_PAGE_id)}
+                  onClick={chosenAction !== -1 ? () => getAction(choice.APC_ID, choice.RESULT_PAGE_id) : () => {
+                    setSelectActionFunc(() => () => getAction(choice.APC_ID, choice.RESULT_PAGE_id));
+                    handleOpenWarning();
+                  }}
                 >
                   {choice.CHOICE}
                 </Button>
@@ -228,6 +240,13 @@ export default function Action({
             ))}
           </Box>
         </Grid>
+        <GenericWarning
+          func={selectActionFunc}
+          setOpen={setOpenWarning}
+          open={openWarning}
+          title="Warning"
+          description="You will not be able to change your selection after you submit. Are you sure you want to submit?"
+        />
       </Grid>
     </div>
   );
