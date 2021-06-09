@@ -10,8 +10,8 @@ from django.conf.urls.static import static
 # DemographicsViewSet, allScenariosViewSet, StudentsViewSet, ProfessorsViewSet, ScenariosViewSet, Choices_forViewSet, Stakeholder_pageViewSet, ConversationsViewSet, Stakeholder_inViewSet, StakeholdersViewSet
 
 router = routers.DefaultRouter()
-router.register('api/users', UsersViewSet, 'users')
-router.register('api/user_types', UserTypesViewSet, 'user_types')
+router.register('api/users', UsersViewSet, 'Users')
+router.register('api/user_access', user_accessViewSet, 'user_access')
 router.register('api/courses', CoursesViewSet, 'courses')
 router.register('api/professors_teach', Professors_teachViewSet, 'professors_teach')
 router.register('api/scenarios', ScenariosViewSet, 'scenarios')
@@ -40,6 +40,7 @@ urlpatterns = [
     path('issue', IssueCoverage.as_view()),
     path('coverages', coverages_page.as_view()),
     path('page', pages_page.as_view()),
+    path('scenarios_for_user', scenarios_forapi.as_view()),
 ] 
 
 urlpatterns += router.urls
