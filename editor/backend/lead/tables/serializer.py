@@ -6,11 +6,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__'
+        level = 1
 
-class UserTypesSerializer(serializers.ModelSerializer):
+class user_accessSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserTypes
+        model = user_access
         fields = '__all__'
+
 
 class ScenariosSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
@@ -115,7 +117,7 @@ class Pages_stakeholderSerializer(serializers.ModelSerializer):
 class coverageSerializer(serializers.ModelSerializer):
     class Meta:
         model = coverage
-        fields = ('STAKEHOLDER', 'ISSUE', 'COVERAGE_SCORE')
+        fields = ('STAKEHOLDER', 'ISSUE', 'COVERAGE_SCORE', 'SUMMARY')
 
 class SuperStakeholdersSerializer(serializers.ModelSerializer):
     coverages = coverageSerializer(many=True, read_only=True)
