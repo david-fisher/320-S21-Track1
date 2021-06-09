@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO when Shibboleth gets implemented
-const endpointGet = '/dashboard?professor_id=1';
+const endpointGet = '/dashboard?professor_id=phaas';
 const endpointGetCourses = '/api/courses/';
 const endpointPost = '/dashboard';
 const endpointDelete = '/api/scenarios/';
@@ -180,7 +180,7 @@ export default function Dashboard(props) {
     IS_FINISHED: false,
     PUBLIC: false,
     NUM_CONVERSATIONS: 0,
-    PROFESSOR: 1,
+    PROFESSOR: 'phaas', // TODO change
     COURSES: [],
   });
 
@@ -257,7 +257,7 @@ export default function Dashboard(props) {
         IS_FINISHED: false,
         PUBLIC: false,
         NUM_CONVERSATIONS: 0,
-        PROFESSOR: 1,
+        PROFESSOR: 'phaas',
         COURSES: [],
       });
       // Smooth loading animation, loading animation will not reset during POST and GET Request
@@ -284,7 +284,7 @@ export default function Dashboard(props) {
       IS_FINISHED: false,
       PUBLIC: false,
       NUM_CONVERSATIONS: 0,
-      PROFESSOR: 1,
+      PROFESSOR: 'phaas',
       COURSES: [],
     });
     setErrorName(false);

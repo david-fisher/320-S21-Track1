@@ -8,10 +8,12 @@ import {
   Step,
   StepLabel,
   StepContent,
+  StepConnector,
   Button,
   Box,
 } from '@material-ui/core';
-import GlobalContext from '../../Context/GlobalContext';
+import GlobalContext from '../Context/GlobalContext';
+import useWindowDimensions from './windowDimension';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,13 +44,13 @@ const useStyles = makeStyles((theme) => ({
 
 function getSteps(pages, navigatePageFunc) {
   const stepArr = [];
-  // console.log(pages);
+
   for (let i = 0; i < pages.length; i++) {
     const buttonName = pages[i].title;
     stepArr.push(
       <Button
         style={{ color: '#881c1c' }}
-        onClick={() => navigatePageFunc(pages[i].pageEndpoint)}
+        onClick={() => navigatePageFunc(i)}
       >
         {buttonName}
       </Button>,
@@ -76,19 +78,19 @@ VerticalLinearStepper.propTypes = {
 export default function VerticalLinearStepper({ setActivePage }) {
   // <Stepper activePage={activePage} pages={pages} />
   const classes = useStyles();
+  const { width } = useWindowDimensions();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
   const { pages, activeIndex } = contextObj;
-  function navigatePage(pageID) {
-    setActivePage(pageID, pages);
-    // }
+  function navigatePage(index) {
+    setActivePage(index);
   }
 
   const steps = getSteps(pages, navigatePage);
   return (
     <div className={classes.root}>
       <Box mt={3} ml={1}>
-        <Stepper activeStep={activeIndex} orientation="vertical">
+        <Stepper activeStep={activeIndex} connector={width > 800 && <StepConnector />} orientation={width > 800 ? 'vertical' : 'horizontal'}>
           {steps.map((label, index) => (
             <Step
               key={index}
@@ -109,16 +111,18 @@ export default function VerticalLinearStepper({ setActivePage }) {
               >
                 {label}
               </StepLabel>
+              {width > 800 && (
               <StepContent>
                 <Typography>{}</Typography>
                 <div className={classes.actionsContainer}>
                   <div />
                 </div>
               </StepContent>
+              )}
             </Step>
           ))}
         </Stepper>
-        {activeIndex === steps.length && (
+        {activeIndex !== 0 && activeIndex === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&apos;re finished</Typography>
           </Paper>

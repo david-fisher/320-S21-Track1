@@ -92,13 +92,20 @@ WSGI_APPLICATION = 'lead.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': env('POSTGRESDB'),
+    #     'USER': env('POSTGRESUSERNAME'),
+    #     'PASSWORD': env('POSTGRESPASSWORD'),
+    #     'HOST': env('POSTGRESHOST'),
+    #     'PORT': '5432'
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('POSTGRESDB'),
-        'USER': env('POSTGRESUSERNAME'),
-        'PASSWORD': env('POSTGRESPASSWORD'),
-        'HOST': env('POSTGRESHOST'),
-        'PORT': '5432'
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT')
     }
 }
 

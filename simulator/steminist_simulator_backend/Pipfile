@@ -5,9 +5,12 @@ name = "pypi"
 
 [packages]
 djangorestframework = "==3.12.2"
-psycopg2-binary = "*"
+psycopg2-binary = "==2.8.6"
 psycopg2 = "==2.8.6"
-Django = "==2.2.20"
+Django = "==2.2.22"
+django-cors-headers = "==3.5.0"
+django-environ = "==0.4.5"
+django-filter = "==2.4.0"
 
 [dev-packages]
 

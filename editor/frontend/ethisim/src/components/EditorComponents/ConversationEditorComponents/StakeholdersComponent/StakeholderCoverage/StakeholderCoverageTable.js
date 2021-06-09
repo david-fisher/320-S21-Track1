@@ -1,38 +1,43 @@
 import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import IssueRow from './IssueRow';
-import put from '../../../../universalHTTPRequests/put';
+import IssueScore from './IssueScore';
+import put from '../../../../../universalHTTPRequests/put';
 import { PointSelectionHelpInfo } from './PointSelectionHelpInfo';
-import GenericHelpButton from '../../../HelpButton/GenericHelpButton';
+import GenericHelpButton from '../../../../HelpButton/GenericHelpButton';
+import StakeholderSummary from './StakeholderSummary';
+import ConvoPreview from './ConvoPreview';
 
 const useStyles = makeStyles({
   table: {
     minWidth: 300,
   },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
-BasicTable.propTypes = {
+StakeholderCoverageTable.propTypes = {
   stakeholder_id: PropTypes.number,
-  passed_issues: PropTypes.any,
+  coverage: PropTypes.any,
   setSuccessBannerFade: PropTypes.any,
   setSuccessBannerMessage: PropTypes.any,
   setErrorBannerFade: PropTypes.any,
   setErrorBannerMessage: PropTypes.any,
   setUnsaved: PropTypes.any,
   unsaved: PropTypes.any,
+  name: PropTypes.string.isRequired,
+  job: PropTypes.string,
+  bio: PropTypes.string,
+  mainConvo: PropTypes.string,
+  photo: PropTypes.string,
 };
 
-export default function BasicTable({
+export default function StakeholderCoverageTable({
   setSuccessBannerFade,
   setSuccessBannerMessage,
   setErrorBannerFade,
@@ -40,12 +45,16 @@ export default function BasicTable({
   setUnsaved,
   unsaved,
   stakeholder_id,
-  passed_issues,
+  coverage,
+  name,
+  job,
+  bio,
+  mainConvo,
+  photo,
 }) {
   // used to track if we are waiting on a HTTP GET/POST/PUT request
   // not needed for DELETE
-  const [issues, setIssues] = useState(passed_issues);
-
+  const [stakeholderCoverage, setStakeholderCoverage] = useState(coverage);
   const classes = useStyles();
 
   const [error, setError] = useState(false);
@@ -56,10 +65,7 @@ export default function BasicTable({
     error: null,
   });
   const handleSave = (e) => {
-    if (!checkTime(setCurrentTime, currentTime)) {
-      return;
-    }
-    let data = [...issues];
+    let data = [...stakeholderCoverage];
     const checkInvalidScore = (obj) => {
       const issueScore = obj.COVERAGE_SCORE.toString()
         ? Number(obj.COVERAGE_SCORE)
@@ -96,39 +102,19 @@ export default function BasicTable({
     put(setPut, endpointPUT, onFailure, onSuccess, data);
   };
 
-  /*
-     * This section is about managing time to prevent sending a combination of multiple
-     *    HTTP GET/POST/PUT/DELETE calls before a response is returned
-     */
-  const [currentTime, setCurrentTime] = useState(getCurrentTimeInt());
-  // gets the current time in hms and converts it to an int
-  function getCurrentTimeInt() {
-    const d = Date();
-    const h = d.substring(16, 18);
-    const m = d.substring(19, 21);
-    const s = d.substring(22, 24);
-    return 60 * (60 * h + m) + s;
-  }
-
-  // checks if at least 1 second has elapsed since last action
-  // if someone waits a multiple of exactly 24 hours since their last action they will
-  //    not be able to take an action for an additional second
-  function checkTime(setTime, t) {
-    let ret = false;
-    // current time difference is at least 1 second, but that SHOULD be ample time for
-    // the database to get back to the frontend
-    if (getCurrentTimeInt() - t !== 0) {
-      ret = true;
-    }
-    setTime(getCurrentTimeInt());
-    return ret;
-  }
-
   return (
     <div>
       <GenericHelpButton
         description={PointSelectionHelpInfo}
         title="Point Selection Help"
+      />
+      <ConvoPreview
+        id={stakeholder_id}
+        name={name}
+        job={job}
+        bio={bio}
+        mainConvo={mainConvo}
+        photo={photo}
       />
       <Button
         id="button-save"
@@ -159,37 +145,30 @@ export default function BasicTable({
           Scores must be an integer between 0 and 5.
         </Typography>
       ) : null}
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ width: '50%' }}>
-                Issue
-              </TableCell>
-              <TableCell align="left">Score</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {issues.map((i) => (
-              <TableRow key={i.ISSUE}>
-                <TableCell component="th" scope="row">
-                  <Typography variant="h6">
-                    {i.NAME}
-                  </Typography>
-                </TableCell>
-                <IssueRow
-                  name={i.NAME}
-                  score={i.COVERAGE_SCORE}
-                  setUnsaved={setUnsaved}
-                  issue_number={i.ISSUE}
-                  issues={issues}
-                  setIssues={setIssues}
-                />
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {stakeholderCoverage.map((i) => (
+        <div key={i.ISSUE} style={{ marginBottom: '10px' }}>
+          <div className={classes.container}>
+            <Typography variant="h6" style={{ width: '100%' }}>
+              {i.NAME}
+            </Typography>
+            <IssueScore
+              name={i.NAME}
+              score={i.COVERAGE_SCORE}
+              setUnsaved={setUnsaved}
+              issue_number={i.ISSUE}
+              stakeholderCoverage={stakeholderCoverage}
+              setStakeholderCoverage={setStakeholderCoverage}
+            />
+          </div>
+          <StakeholderSummary
+            summary={i.SUMMARY}
+            setUnsaved={setUnsaved}
+            issue_number={i.ISSUE}
+            stakeholderCoverage={stakeholderCoverage}
+            setStakeholderCoverage={setStakeholderCoverage}
+          />
+        </div>
+      ))}
     </div>
   );
 }

@@ -61,12 +61,12 @@
   "model": "tables.scenarios",
   "pk": 91,
   "fields": {
-    "user": 1,
+    "user": "phaas",
     "NAME": "ML - My Medical Advice Website",
     "PUBLIC": true,
     "IS_FINISHED": true,
     "DATE_CREATED": "2021-05-20",
-    "NUM_CONVERSATION": 1
+    "NUM_CONVERSATION": 5
   }
 },
 {
@@ -920,32 +920,12 @@
   }
 },
 {
-  "model": "tables.usertypes",
-  "pk": 1,
-  "fields": {
-    "name": "ADMIN"
-  }
-},
-{
-  "model": "tables.usertypes",
-  "pk": 2,
-  "fields": {
-    "name": "EDITOR"
-  }
-},
-{
-  "model": "tables.usertypes",
-  "pk": 3,
-  "fields": {
-    "name": "READ_ONLY"
-  }
-},
-{
   "model": "tables.users",
-  "pk": 1,
+  "pk": "phaas",
   "fields": {
-    "user_type": null,
-    "access_level": 2
+    "NAME": "Peter Haas",
+    "AFFILIATION": "Professor",
+    "EMAIL": "phaas@umass.edu"
   }
 },
 {

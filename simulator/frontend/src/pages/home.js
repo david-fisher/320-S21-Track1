@@ -14,15 +14,17 @@ import {
 } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import ScenarioCard from './components/scenarioCard';
-import LoadingSpinner from './components/LoadingSpinner';
-import get from '../universalHTTPRequestsEditor/get';
+import ScenarioCard from '../components/scenarioCard';
+import LoadingSpinner from '../components/LoadingSpinner';
+import getSimulator from '../universalHTTPRequestsSimulator/get';
+import getEditor from '../universalHTTPRequestsEditor/get';
 // eslint-disable-next-line
-import CodeButton from "./components/classCodeDialog";
+import CodeButton from '../components/classCodeDialog';
 // eslint-disable-next-line
-import ProgressBar from "./components/progressBar";
+import ProgressBar from '../components/progressBar';
+// eslint-disable-next-line
 import { STUDENT_ID } from '../constants/config';
-import ErrorBanner from './components/Banners/ErrorBanner';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -154,12 +156,7 @@ export default function Home(props) {
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      console.log(response);
-      let incomplete = [];
-      // response.data.result.filter((data) => !data.is_finished);
-      const complete = [];
-      // response.data.result.filter((data) => data.is_finished);
-      incomplete = response.data.map((data) => ({
+      const scenarios = response.data.map((data) => ({
         title: data.NAME,
         numConversations: data.NUM_CONVERSATION,
         isFinished: false,
@@ -169,16 +166,27 @@ export default function Home(props) {
         courses: data.COURSES,
       }));
       // TODO temporary requests to get first Page field
-      incomplete.forEach((obj) => {
-        function onSuccess(resp) {
-          obj.firstPage = resp.data.PAGES.filter(({ PAGE_TYPE }) => PAGE_TYPE === 'I')[0].PAGE;
+      scenarios.forEach((obj) => {
+        function onSuccessSessions(resp) {
+          if (resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID).length) {
+            obj.isFinished = resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID)[0].IS_FINISHED;
+          }
           const scen = {
-            incompleteScenarios: incomplete,
-            completeScenarios: complete,
+            incompleteScenarios: scenarios.filter((s) => !s.isFinished),
+            completeScenarios: scenarios.filter((s) => s.isFinished),
           };
           setScenarioList(scen);
         }
-        get(
+        function onSuccess(resp) {
+          obj.firstPage = resp.data.PAGES.filter(({ PAGE_TYPE }) => PAGE_TYPE === 'I')[0].PAGE;
+          getSimulator(
+            setFetchScenariosResponse,
+            '/api/sessions/',
+            null,
+            onSuccessSessions,
+          );
+        }
+        getEditor(
           setFetchScenariosResponse,
           `/logistics?scenario_id=${obj.scenarioID}`,
           null,
@@ -199,13 +207,13 @@ export default function Home(props) {
       */
     }
 
-    function onFailure() {
-      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+    function onFailure(e) {
+      setErrorBannerMessage('Failed to get scenarios! Please refresh the page.');
       setErrorBannerFade(true);
     }
-    get(
+    getEditor(
       setFetchScenariosResponse,
-      endpointGet + STUDENT_ID,
+      `${endpointGet}phaas`,
       onFailure,
       onSuccess,
     );
@@ -315,7 +323,6 @@ export default function Home(props) {
                 >
                   Select Scenario
                   {' '}
-                  {scenario.firstPage}
                 </Button>
               </Paper>
             </Grid>
@@ -350,7 +357,6 @@ export default function Home(props) {
                 >
                   Review Scenario
                 </Button>
-                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
           )) : null}

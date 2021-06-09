@@ -5,11 +5,12 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class scenarios(models.Model):
     SCENARIO = models.AutoField(primary_key = True, editable=False)
-    user = models.ForeignKey('users', to_field = 'user_id', on_delete =models.CASCADE, related_name="scenario_creator2", null=True, db_column="USER_ID")
+    user = models.ForeignKey('Users', to_field = 'user_id', on_delete =models.CASCADE, related_name="scenario_creator2", null=True, db_column="USER_ID", default="phaas")
     NAME = models.CharField(max_length = 1000)
     PUBLIC = models.BooleanField(default = False)
     IS_FINISHED = models.BooleanField(default = False)
     DATE_CREATED = models.DateField(auto_now_add=True)
+    NUM_CONVERSATION = models.IntegerField(db_column='NUM_CONVERSATION', blank=True, null=True)  # Field name made lowercase.
     # models.OneToOneField('pages', on_delete = models.CASCADE, related_name = "scenarios1", default = 1)
     # def __str__(self):
     #     return "%s the scenario" % self.name
@@ -91,25 +92,22 @@ class scenarios_for(models.Model):
 
 
 class professors_teach(models.Model):   
-    USER_ID = models.ForeignKey('users', to_field = 'user_id', on_delete = models.CASCADE, related_name="professors_teach1", null=True)
+    USER_ID = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="professors_teach1", null=True)
     COURSE = models.ForeignKey(courses, to_field = 'COURSE', on_delete = models.CASCADE, related_name="professors_teach2")
 
 
-class UserTypes(models.Model):
-    user_type_id = models.AutoField(db_column='USER_TYPE_ID', primary_key=True)  # Field name made lowercase.
-    name = models.TextField(db_column='NAME', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        db_table = 'user_types'
-
-
 class Users(models.Model):
-    user_id = models.AutoField(db_column='USER_ID', primary_key=True)  # Field name made lowercase.
-    user_type = models.ForeignKey(UserTypes, models.DO_NOTHING, db_column='USER_TYPE_ID', blank=True, null=True)  # Field name made lowercase.
-    access_level = models.IntegerField(db_column='ACCESS_LEVEL', blank=True, null=True)  # Field name made lowercase.
+    user_id = models.CharField(db_column='USER_ID', primary_key=True, default = "phaas", max_length=50)
+    NAME = models.CharField(max_length = 100, default="Peter Haas")
+    AFFILIATION = models.CharField(max_length = 50, default="Professor")
+    EMAIL = models.EmailField(default = "phaas@cs.umass.edu")
 
+class user_access(models.Model):
     class Meta:
-        db_table = 'users'
+        unique_together = (('USER_ID'), ('SCENARIO_ID'))
+    USER_ID = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access1", null=True)
+    ACCESS_LEVEL = models.IntegerField()
+    SCENARIO_ID = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name = "user_access1", null = True)
 
 
 class Issues(models.Model):
@@ -129,6 +127,7 @@ class coverage(models.Model):
     ISSUE = models.ForeignKey('Issues', on_delete = models.CASCADE, related_name = "coverage1", null = True)
     # VERSION_ID = models.ForeignKey('stakeholders',on_delete = models.CASCADE, related_name = "coverage3", default = None)
     COVERAGE_SCORE = models.FloatField(validators = [MinValueValidator(0.0)])
+    SUMMARY = models.TextField(null = True, default = "", blank = True)
 
 
 class action_page_choices(models.Model):
