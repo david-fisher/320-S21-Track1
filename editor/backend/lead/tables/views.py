@@ -1317,9 +1317,18 @@ class scenarios_forapi(APIView):
         for user1 in users:
             user_id = user1['user_id']
 
-            queryset = scenarios.objects.filter(user=user_id)
-            scenList = ScenariosSerializer(queryset, many=True).data
-            user1['SCENARIOS'] = scenList
+            queryset1 = scenarios.objects.filter(user=user_id)
+            scenList1 = ScenariosSerializer(queryset1, many=True).data
+            
+            for scen in scenList1:
+                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print(queryset2)
+                scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
+                if(not len(scenList2) == 0):
+                    scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+            user1['SCENARIO'] = scenList1
 
         return users
 
