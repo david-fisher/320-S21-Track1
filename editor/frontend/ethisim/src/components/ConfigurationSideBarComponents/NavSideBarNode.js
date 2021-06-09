@@ -6,7 +6,6 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import GenericUnsavedWarning from '../WarningDialogs/GenericUnsavedWarning';
 import GenericDeleteWarning from '../WarningDialogs/GenericDeleteWarning';
 import GlobalUnsavedContext from '../Context/GlobalUnsavedContext';
-import { checkTime } from '../CheckTime';
 
 const useStyles = makeStyles((theme) => ({
   pageButton: {
@@ -47,7 +46,7 @@ NavSideBarNode.propTypes = {
   scenarioPages: PropTypes.any,
   isIntroPage: PropTypes.bool,
   curPage: PropTypes.any,
-  currentTime: PropTypes.number,
+  currentTime: PropTypes.string,
   setCurrentTime: PropTypes.func,
 };
 
@@ -61,8 +60,6 @@ export default function NavSideBarNode(props) {
     scenarioPages,
     isIntroPage,
     curPage,
-    currentTime,
-    setCurrentTime,
   } = props;
 
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
@@ -151,8 +148,7 @@ export default function NavSideBarNode(props) {
   }
 
   function handleDisplayComponent() {
-    if (checkTime(currentTime, setCurrentTime) && !curPage) {
-      // Reset global unsaved to false when going to new component
+    if (!curPage) {
       setGlobalUnsaved(false);
       onClick(id, title, scenarioPages);
     }
