@@ -78,57 +78,12 @@ export default function Conversation({
     }
 
     function onFailure(err) {
-      // TODO stakeholder does not have questions
       setHasQuestions(false);
     }
     get(setFetchConversationResponse, endpointGet, onFailure, onSuccess);
   };
 
-  // TODO
-  const checkQuestionAnswered = () => {
-    // const endpoint = `/scenarios/conversation/had?versionId=${versionID}&stakeholderId=${stakeholder.id}&userId=${STUDENT_ID}`;
-
-    // eslint-disable-next-line
-    function onSuccess(response) {
-      if (response.data.message === 'succes') {
-        // Yes, there is a typo in the endpoint.
-        setSelectedConversation(response.data.result[0].CONVERSATION);
-        setAnswer(response.data.result[0].RESPONSE);
-      }
-    }
-
-    // eslint-disable-next-line
-    function onFailure(err) {
-      console.log('Error');
-    }
-
-    // get(setFetchConversationResponse, endpoint, onFailure, onSuccess);
-  };
-
   useEffect(getData, [shouldFetch]);
-  useEffect(checkQuestionAnswered, [shouldFetch]);
-
-  // TODO, POST that we selected the stakeholder once you click on the stakeholder, not once you return (Look at stakeholder.js function onClickStakeholder)
-  // TODO, if we want to keep track of what questions the player asked the stakeholder, this is where we would POST that data
-  // eslint-disable-next-line
-  const postData = () => {
-    // eslint-disable-next-line
-    function onSuccess(response) {
-      console.log(response);
-      setAnswer(response.data.result.RESPONSE);
-    }
-    // eslint-disable-next-line
-    function onFailure(err) {
-      console.log('Error');
-    }
-
-    // const endpointPost = `/scenarios/conversation?versionId=${versionID}&scenarioId=${versionID}&stakeholderId=${stakeholder.id}&conversationId=${selectedConversation}&sessionId=${sessionID}`;
-
-    // post(setFetchConversationResponse, endpointPost, onFailure, onSuccess, {
-    //  already_exist: true,
-    // });
-    setSelectedConversation(-1);
-  };
 
   const handleToggle = (value) => () => {
     setSelectedConversation(value);
@@ -136,8 +91,6 @@ export default function Conversation({
 
   const handleSubmit = () => {
     setAnswer(conversations.filter((obj) => obj.CONVERSATION === selectedConversation)[0].RESPONSE);
-    // postData();
-    // setQuestionAnswered(true);
   };
 
   return (

@@ -12,6 +12,7 @@ import RadarPlot from './radarPlot';
 import GlobalContext from '../Context/GlobalContext';
 import { STUDENT_ID } from '../constants/config';
 import post from '../universalHTTPRequestsSimulator/post';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 
 const TextTypography = withStyles({
   root: {
@@ -25,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '0rem',
     marginTop: '1rem',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 Feedback.propTypes = {
@@ -36,6 +42,17 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
   const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
+
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
   const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
   // eslint-disable-next-line
   const [endSessionObj, setEndSessionObj] = useState({
@@ -49,8 +66,8 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
     }
 
     function onFailure() {
-      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      // setErrorBannerFade(true);
+      setErrorBannerMessage('Unknown error! Please refresh the page.');
+      setErrorBannerFade(true);
     }
     post(setEndSessionObj, endpointSess, onFailure, onSuccess);
   };
@@ -74,6 +91,12 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
 
   return (
     <div>
+      <div className={classes.bannerContainer}>
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>

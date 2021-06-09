@@ -41,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     textTransform: 'unset',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 const TextTypography = withStyles({
@@ -124,7 +129,7 @@ export default function Action({
       setErrorBannerMessage('Failed to save action! Please try again.');
       setErrorBannerFade(true);
     }
-    console.log('hi1');
+
     if (chosenAction === -1) {
       const requestBody = {
         APC_ID: selectedAction,
@@ -183,7 +188,7 @@ export default function Action({
           variant="contained"
           disableElevation
           color="primary"
-          disabled={!chosenAction}
+          disabled={chosenAction === -1}
           onClick={() => {
             const nextPageID = actions.filter((obj) => obj.APC_ID === chosenAction)[0].RESULT_PAGE_id;
             getNextPage(

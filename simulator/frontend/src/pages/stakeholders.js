@@ -24,6 +24,7 @@ import getSimulator from '../universalHTTPRequestsSimulator/get';
 import getEditor from '../universalHTTPRequestsEditor/get';
 import GlobalContext from '../Context/GlobalContext';
 import GenericWarning from '../components/GenericWarning';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 
 const TextTypography = withStyles({
   root: {
@@ -95,7 +96,7 @@ const StyledTabs = withStyles({
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
-const cardStyles = makeStyles({
+const cardStyles = makeStyles((theme) => ({
   root: {},
 
   card: {
@@ -167,7 +168,12 @@ const cardStyles = makeStyles({
     marginLeft: '10px',
     maxWidth: '400px',
   },
-});
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+}));
 
 Stakeholders.propTypes = {
   getNextPage: PropTypes.any.isRequired,
@@ -199,6 +205,17 @@ export default function Stakeholders({
   const [hasTalkedWithStakeholders, setHasTalkedWithStakeholders] = useState(false);
   const createdCardStyles = cardStyles();
 
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
+
   const endpointStakeholdersGET = `/api/stakeholders/?SCENARIO=${scenarioID}`;
   const endpointConversationsHadGET = `/api/conversations_had/?SESSION_ID=${contextObj.sessionID}`;
   const endpointPOST = '/api/conversations_had/';
@@ -224,7 +241,8 @@ export default function Stakeholders({
       checkStakeholderVisited(stakeholders);
     }
     function onFailure(e) {
-      console.log(e);
+      setErrorBannerMessage('Failed to get stakeholder data! Please refresh the page.');
+      setErrorBannerFade(true);
     }
     setFetchConversationsHad({
       data: null,
@@ -255,7 +273,8 @@ export default function Stakeholders({
     }
 
     function onFailure(e) {
-      console.log(e);
+      setErrorBannerMessage('Failed to get stakeholder data! Please refresh the page.');
+      setErrorBannerFade(true);
     }
 
     getSimulator(setFetchConversationsHad, endpointConversationsHadGET, onFailure, onSuccess);
@@ -296,8 +315,9 @@ export default function Stakeholders({
         toggleModal(id, false);
       }
 
-      function onFailure() {
-        console.log('Error');
+      function onFailure(e) {
+        setErrorBannerMessage('Failed to get stakeholder data! Please refresh the page.');
+        setErrorBannerFade(true);
       }
 
       const requestBody = {
@@ -598,6 +618,12 @@ export default function Stakeholders({
   return (
     <>
       {Buttons}
+      <div className={classes.bannerContainer}>
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       {showStakeholders && (
         <div>
           <Grid container direction="row" justify="center" alignItems="center">

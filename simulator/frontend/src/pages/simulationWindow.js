@@ -310,7 +310,6 @@ export default function SimulationWindow(props) {
     }
 
     function onFailure(e) {
-      console.log(e);
       setErrorBannerMessage('Failed to get page! Please try again.');
       setErrorBannerFade(true);
     }

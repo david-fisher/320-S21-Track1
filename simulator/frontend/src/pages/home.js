@@ -201,8 +201,7 @@ export default function Home() {
     }
 
     function onFailure(e) {
-      console.log(e);
-      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      setErrorBannerMessage('Failed to get scenarios! Please refresh the page.');
       setErrorBannerFade(true);
     }
     getEditor(
