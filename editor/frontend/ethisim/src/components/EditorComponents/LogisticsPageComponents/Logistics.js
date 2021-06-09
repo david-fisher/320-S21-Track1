@@ -247,7 +247,7 @@ export default function Logistics({ scenario_ID }) {
 
   const [NewScenario, setEdit] = useState({
     SCENARIO: 0,
-    VERSION: 0,
+    VERSION: null,
     NAME: '',
     PUBLIC: false,
     NUM_CONVERSATION: 0,

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   withStyles,
@@ -8,9 +8,19 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import ErrorIcon from '@material-ui/icons/Error';
+import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
+// eslint-disable-next-line
 import { STUDENT_ID } from '../constants/config';
 import GlobalContext from '../Context/GlobalContext';
+import get from '../universalHTTPRequestsSimulator/get';
+import post from '../universalHTTPRequestsSimulator/post';
+import LoadingSpinner from '../components/LoadingSpinner';
+import SuccessBanner from '../components/Banners/SuccessBanner';
+import ErrorBanner from '../components/Banners/ErrorBanner';
+import GenericWarning from '../components/GenericWarning';
 
 const TextTypography = withStyles({
   root: {
@@ -42,6 +52,29 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '0rem',
     marginTop: '1rem',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  container: {
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  issue: {
+    marginTop: theme.spacing(10),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  iconError: {
+    fontSize: '75px',
+  },
+  iconRefreshLarge: {
+    fontSize: '75px',
+  },
 }));
 
 Reflection.propTypes = {
@@ -52,7 +85,7 @@ Reflection.propTypes = {
   getPrevPage: PropTypes.func.isRequired,
   nextPageEndpoint: PropTypes.string.isRequired,
   prevPageEndpoint: PropTypes.string.isRequired,
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
   pageID: PropTypes.number.isRequired,
 };
 export default function Reflection({
@@ -63,135 +96,144 @@ export default function Reflection({
   getPrevPage,
   nextPageEndpoint,
   prevPageEndpoint,
-  versionID,
+  scenarioID,
   pageID,
 }) {
-  body = body.replace(/\\"/g, '"');
-  // eslint-disable-next-line
-  let [contextObj, setContextObj] = useContext(GlobalContext);
-
-  // For the sake of the demo
-  questions = [
-    {
-      id: 1,
-      page: 1,
-      reflection_question: 'What are your initial thoughts on autonomous cars?',
-      response: '',
-    },
-    {
-      id: 2,
-      page: 1,
-      reflection_question:
-        'What are the ethical conundrums that comes to mind right away for you when you hear about autonomous cars?',
-      response: '',
-    },
-  ];
-  if (pageTitle === 'Reflect on Initial Information') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'What new responsibilities do you have after being assigned to this project?',
-        response: '',
-      },
-      {
-        id: 2,
-        page: 1,
-        reflection_question:
-          "What aren't you sure about, or what questions are raised for you about those responsibilities?",
-        response: '',
-      },
-    ];
-  } else if (pageTitle === 'Reflect on Additional Information') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'Why did you select your chosen source(s) of information?',
-        response: '',
-      },
-      {
-        id: 2,
-        page: 1,
-        reflection_question:
-          'What did you learn that most affects the action that you will take next?',
-        response: '',
-      },
-    ];
-  } else if (pageTitle === 'Reflect on Consequences') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'Do the consequences presented match your expectations for what you thought would happen? Explain your answer.',
-        response: '',
-      },
-      {
-        id: 2,
-        page: 1,
-        reflection_question:
-          'Considering these consequences, how satisfied are you with your choices? In other words, how would you approach a similar situation in the future? Be sure to explain what you might keep the same and what you would change.',
-        response: '',
-      },
-    ];
-  } else if (pageTitle === 'Conclusion') {
-    questions = [
-      {
-        id: 1,
-        page: 1,
-        reflection_question: 'We would appreciate receiving any comments that you have on this online ethics simulation:',
-        response: '',
-      },
-    ];
-  }
-
   const classes = useStyles();
-
-  const [savedAnswers, setSavedAnswers] = React.useState(false);
-
-  // MAKE API CALL
-  const [reflection, setReflection] = useState(questions);
-
   // eslint-disable-next-line
-  const endpointPost =
-    `/scenarios/reflection?versionId=${
-      versionID
-    }&pageId=${
-      pageID
-    }&userId=${
-      STUDENT_ID}`;
-  const postData = () => {
-    // eslint-disable-next-line
-    function onSuccess(response) {
-      console.log(response);
-    }
-    // eslint-disable-next-line
-    function onFailure() {
-      console.log('Error');
-    }
-    // eslint-disable-next-line
-    let data = {
-      body: reflection.prompts,
-    };
+  const [contextObj, setContextObj] = useContext(GlobalContext);
 
-    // TODO post(setFetchScenariosResponse, (endpointPost), onFailure, onSuccess, data)
-    setSavedAnswers(true);
+  const [savedAnswers, setSavedAnswers] = useState(false);
+  // variables to show error if not all reflection questions are answered
+  const [errorName, setErrorName] = useState(false);
+  // MAKE API CALL
+  const [reflection, setReflection] = useState([]);
+  // gets reflection responses if they exist
+  const endpointGET = `/api/reflections_taken/?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
+  // player submits responses to reflection questions, can only submit once
+  const endpointPOST = `/multi_reflection?SESSION_ID=${contextObj.sessionID}`;
+
+  const [reflectionData, setReflectionData] = useState({
+    data: null,
+    loading: false,
+    error: null,
+  });
+  const getReflectionData = () => {
+    function onSuccess(response) {
+      // Player has already responded
+      if (response.data.length !== 0) {
+        setSavedAnswers(true);
+        setReflection(response.data.map((obj, index) => ({
+          ...obj, REFLECTION_QUESTION: questions.filter((o) => o.RQ_ID = obj.RQ_ID)[0].REFLECTION_QUESTION,
+        })).sort((a, b) => a.RQ_ID - b.RQ_ID));
+      } else {
+        setSavedAnswers(false);
+        setReflection(questions.map((obj) => ({
+          PAGE_ID: obj.PAGE_id, RQ_ID: obj.RQ_ID, SESSION_ID: contextObj.sessionID, REFLECTIONS: '', REFLECTION_QUESTION: obj.REFLECTION_QUESTION,
+        })).sort((a, b) => a.RQ_ID - b.RQ_ID));
+      }
+    }
+    function onFailure(e) {
+      setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to get reflection question page! Please try again.');
+    }
+    get(setReflectionData, endpointGET, onFailure, onSuccess);
   };
 
-  console.log(savedAnswers);
-  console.log(reflection);
+  useEffect(getReflectionData, []);
+  const checkInvalidInput = () => {
+    if (reflection.some(({ REFLECTIONS }) => !REFLECTIONS || !REFLECTIONS.trim())) {
+      setErrorName(true);
+      return true;
+    }
+    setErrorName(false);
+    return false;
+  };
+
+  const postData = () => {
+    function onSuccess(response) {
+      setSavedAnswers(true);
+      setSuccessBannerFade(true);
+      setSuccessBannerMessage('Successfully saved answers');
+    }
+
+    function onFailure() {
+      setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to save your answers! Please try again.');
+    }
+
+    setOpenWarning(false);
+    post(setReflectionData, endpointPOST, onFailure, onSuccess, reflection);
+  };
 
   const updateResponse = (e, id) => {
     setReflection((prev) => {
-      for (let i = 0; i < questions.length; ++i) {
-        if (questions[i].id === id) {
-          questions[i].response = e.target.value;
+      for (let i = 0; i < prev.length; ++i) {
+        if (prev[i].RQ_ID === id) {
+          prev[i].REFLECTIONS = e.target.value;
           break;
         }
       }
       return prev;
     });
   };
+
+  const [successBannerMessage, setSuccessBannerMessage] = useState('');
+  const [successBannerFade, setSuccessBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSuccessBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [successBannerFade]);
+
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
+
+  const [openWarning, setOpenWarning] = useState(false);
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
+
+  if (reflectionData.error) {
+    return (
+      <div>
+        <div className={classes.issue}>
+          <ErrorIcon className={classes.iconError} />
+          <Typography align="center" variant="h3">
+            Error in fetching reflection question data.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={getReflectionData}
+          >
+            <RefreshIcon className={classes.iconRefreshLarge} />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (reflectionData.loading) {
+    return (
+      <div>
+        <div style={{ marginTop: '100px' }}>
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
 
   const Buttons = (
     <Grid container direction="row" justify="space-between">
@@ -200,7 +242,7 @@ export default function Reflection({
           variant="contained"
           color="primary"
           disableElevation
-          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+          onClick={() => getPrevPage(contextObj.activeIndex - 1)}
         >
           Back
         </Button>
@@ -222,8 +264,19 @@ export default function Reflection({
       </Grid>
     </Grid>
   );
+
   return (
     <div>
+      <div className={classes.bannerContainer}>
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
@@ -234,24 +287,34 @@ export default function Reflection({
       </Grid>
       <Grid containerstyle={{ width: '100%' }}>
         <Grid item style={{ width: '100%' }}>
-          <div dangerouslySetInnerHTML={{ __html: body }} />
+          <InnerHTML html={body.replace(/\\"/g, '"')} />
         </Grid>
       </Grid>
 
       <Grid container style={{ width: '100%' }}>
+        {errorName ? (
+          <Typography
+            style={{ }}
+            variant="h6"
+            align="center"
+            color="error"
+          >
+            You must answer all questions!
+          </Typography>
+        ) : null}
         <Grid item style={{ width: '100%' }}>
-          {questions.map((prompt) => (
-            <Box m="2rem" p={1} className={classes.textBox} key={prompt.id}>
-              <p>{prompt.reflection_question}</p>
+          {reflection.map((prompt) => (
+            <Box m="2rem" p={1} className={classes.textBox} key={prompt.RQ_ID}>
+              <p>{prompt.REFLECTION_QUESTION}</p>
               <TextField
                 style={{ width: '100%' }}
                 id="outlined-multiline-static"
-                label="Answer"
                 multiline
-                defaultValue={prompt.response}
+                disabled={savedAnswers}
+                defaultValue={prompt.REFLECTIONS}
                 variant="outlined"
                 onChange={(e) => {
-                  updateResponse(e, prompt.id);
+                  updateResponse(e, prompt.RQ_ID);
                 }}
               />
             </Box>
@@ -262,12 +325,23 @@ export default function Reflection({
               color="primary"
               justify="right"
               disabled={savedAnswers}
-              onClick={postData}
+              onClick={() => {
+                if (!checkInvalidInput()) {
+                  handleOpenWarning();
+                }
+              }}
             >
               Submit Answers
             </Button>
           </Grid>
         </Grid>
+        <GenericWarning
+          func={postData}
+          setOpen={setOpenWarning}
+          open={openWarning}
+          title="Warning"
+          description="You will not be able to change your answers after you submit. Are you sure you want to submit?"
+        />
       </Grid>
     </div>
   );

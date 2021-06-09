@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   makeStyles,
@@ -8,9 +8,14 @@ import {
   Button,
   Grid,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import { STUDENT_ID } from '../constants/config';
-import post from '../universalHTTPRequests/post';
+import get from '../universalHTTPRequestsSimulator/get';
+import post from '../universalHTTPRequestsSimulator/post';
 import GlobalContext from '../Context/GlobalContext';
+import ErrorBanner from '../components/Banners/ErrorBanner';
+import LoadingSpinner from '../components/LoadingSpinner';
+import GenericWarning from '../components/GenericWarning';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     textTransform: 'unset',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 const TextTypography = withStyles({
@@ -50,124 +60,117 @@ Action.propTypes = {
   getNextPage: PropTypes.func.isRequired,
   getPrevPage: PropTypes.func.isRequired,
   prevPageEndpoint: PropTypes.string,
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
   pageID: PropTypes.number.isRequired,
   choices: PropTypes.any,
-  choiceChosen: PropTypes.any,
 };
 export default function Action({
-  versionID,
+  scenarioID,
   pageID,
   pageTitle,
   body,
   choices,
-  choiceChosen,
   getNextPage,
   getPrevPage,
   prevPageEndpoint,
 }) {
+  const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  body = body.replace(/\\"/g, '"');
-
-  choices = [
-    {
-      choices_id: 1000,
-      choice_text:
-        'Approve project assignment and work on it immediately to save time.',
-      next_page: 9000,
-    },
-    {
-      choices_id: 2000,
-      choice_text: 'Postpone and ask questions from stakeholders.',
-      next_page: 6000,
-    },
-  ];
-  if (pageTitle === 'Choose Initial Action') {
-    choices = [
-      {
-        choices_id: 1000,
-        choice_text:
-          'delay getting started and try to get answers for any lingering questions that you might have about the project?',
-        next_page: 11006,
-      },
-      {
-        choices_id: 2000,
-        choice_text: "get to work so that you don't feel stressed about completing your task assignment before the project deadline?",
-        next_page: 11010,
-      },
-    ];
-  } else if (pageTitle === 'Choose Final Action') {
-    choices = [
-      {
-        choices_id: 1000,
-        choice_text:
-          'move forward with your task as assigned in order to not further exceed the project deadline, confident that you can deal with any considerations later?',
-        next_page: 11010,
-      },
-      {
-        choices_id: 2000,
-        choice_text: "delay completing your task assignment and the entire project to invite your teammates to a meeting to discuss gathering more information and possible changes to the project based on what you've learned?",
-        next_page: 11010,
-      },
-    ];
-  }
-  // eslint-disable-next-line
-  const [chosenAction, setChosenAction] = React.useState(-1);
+  const [actions, setActions] = useState([]);
+  const [chosenAction, setChosenAction] = useState(-1);
   // eslint-disable-next-line
   const [fetchActionResponse, setFetchActionResponse] = useState({
     data: null,
     loading: false,
     error: false,
   });
-  // MAKE API CALL
-  // let pageId = activePage
-  // const endpointGet = '/scenarios/action/prompt?versionId='+version_id+'&pageId='+(activePage)// version id hardcoded
-  // const endpointGet2 = '/scenarios/action?versionId='+version_id+'&pageId='+(activePage)+'&userId='+STUDENT_ID
+  // gets player's action choice if they exist
+  const endpointGET = `/api/action_page_choices/?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
+  // player submits action choice, can only submit once
+  const endpointPOST = '/api/action_page_choices/';
   // eslint-disable-next-line
-  const endpointPost =
-    `/scenarios/action?versionId=${versionID}&pageId=${pageID}`;
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
+
+  const [actionData, setActionData] = useState({
+    data: null,
+    loading: false,
+    error: null,
+  });
+
+  const [selectActionFunc, setSelectActionFunc] = useState(null);
+
+  const getActionData = () => {
+    function onSuccess(response) {
+      // Player has already chosen an action
+      (response.data.length !== 0) ? setChosenAction(response.data[0].APC_ID) : setChosenAction(-1);
+      setActions(choices.map((obj) => ({
+        PAGE_ID: obj.PAGE_id, APC_ID: obj.APC_ID, SESSION_ID: contextObj.sessionID, CHOICE: obj.CHOICE, RESULT_PAGE_id: obj.RESULT_PAGE_id,
+      })).sort((a, b) => a.APC_ID - b.APC_ID));
+    }
+    function onFailure(e) {
+      setErrorBannerFade(true);
+      setErrorBannerMessage('Failed to get action data! Please try again.');
+    }
+    get(setActionData, endpointGET, onFailure, onSuccess);
+  };
+  useEffect(getActionData, []);
 
   const getAction = (selectedAction, nextPageID) => {
-    console.log(pageID);
-    function startSess(response) {
-      // do nothing
-    }
-    // eslint-disable-next-line
     function onSuccess(response) {
-      // Right now hardcoded for middle reflection
-      // pages["middleReflection"].pid = parseInt(pages[activePage].pid)+4 // Set next page id
-      // eslint-disable-next-line
-      let body = {
-        response_id: response.data.result.response_id,
-        choice: response.data.result.choice,
-        choice_text: response.data.result.choice_text,
-        next: response.data.result.next_page,
-      };
-      console.log(response);
-      setChosenAction((cur) => selectedAction);
-    }
-    function onFailure() {
-      // setErrorBannerMessage('Failed to get scenarios! Please try again.');
-      // setErrorBannerFade(true);
-    }
-    if (!choiceChosen) {
-      post(setFetchActionResponse, endpointSess, onFailure, startSess);
-      // TODO Remove once post request finishes
       getNextPage(
-        `/scenarios/task?versionId=${versionID}&pageId=${nextPageID}`,
+        `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
       );
-      // eslint-disable-next-line
-      let body = { choice_id: selectedAction, user_id: STUDENT_ID };
-      // TODO post(setFetchActionResponse, endpointPost, onFailure, onSuccess, JSON.stringify(body));
+      setChosenAction((cur) => selectedAction);
+    }
+    function onFailure() {
+      setErrorBannerMessage('Failed to save action! Please try again.');
+      setErrorBannerFade(true);
+    }
+
+    if (chosenAction === -1) {
+      const requestBody = {
+        APC_ID: selectedAction,
+        SESSION_ID: contextObj.sessionID,
+        PAGE_ID: pageID,
+      };
+      post(setFetchActionResponse, endpointPOST, onFailure, onSuccess, requestBody);
+    } else if (selectedAction === chosenAction) {
+      getNextPage(
+        `/page?page_id=${nextPageID}`,
+        contextObj.activeIndex,
+        contextObj.pages,
+      );
     }
   };
 
-  const classes = useStyles();
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
+
+  const [openWarning, setOpenWarning] = useState(false);
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
+
+  if (actionData.loading) {
+    return (
+      <div>
+        <div style={{ marginTop: '100px' }}>
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
   const Buttons = (
     <Grid container direction="row" justify="space-between">
       <Grid item className={classes.backButton}>
@@ -175,7 +178,7 @@ export default function Action({
           variant="contained"
           disableElevation
           color="primary"
-          onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+          onClick={() => getPrevPage(contextObj.activeIndex - 1)}
         >
           Back
         </Button>
@@ -185,12 +188,15 @@ export default function Action({
           variant="contained"
           disableElevation
           color="primary"
-          disabled={!choiceChosen}
-          onClick={() => getNextPage(
-            `/scenarios/task?versionId=${versionID}&pageId=${choiceChosen}`,
-            contextObj.activeIndex,
-            contextObj.pages,
-          )}
+          disabled={chosenAction === -1}
+          onClick={() => {
+            const nextPageID = actions.filter((obj) => obj.APC_ID === chosenAction)[0].RESULT_PAGE_id;
+            getNextPage(
+              `/page?page_id=${nextPageID}`,
+              contextObj.activeIndex,
+              contextObj.pages,
+            );
+          }}
         >
           Next
         </Button>
@@ -200,6 +206,12 @@ export default function Action({
 
   return (
     <div>
+      <div className={classes.bannerContainer}>
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       {Buttons}
       <Grid container direction="row" justify="center" alignItems="center">
         <Box mt={5}>
@@ -211,25 +223,35 @@ export default function Action({
       <Grid container spacing={2}>
         <Grid item style={{ width: '100%' }}>
           <Grid item style={{ width: '100%' }}>
-            <div dangerouslySetInnerHTML={{ __html: body }} />
+            <InnerHTML html={body.replace(/\\"/g, '"')} />
           </Grid>
           <Box mx="auto">
-            {choices.map((choice) => (
-              <Box p={3} key={choice.choices_id}>
+            {actions.map((choice) => (
+              <Box p={3} key={choice.APC_ID}>
                 <Button
                   variant="outlined"
                   color="primary"
-                  disabled={choice.choices_id === choiceChosen}
+                  disabled={chosenAction !== -1 && choice.APC_ID !== chosenAction}
                   className={classes.button}
                   size="large"
-                  onClick={() => getAction(choice.choices_id, choice.next_page)}
+                  onClick={chosenAction !== -1 ? () => getAction(choice.APC_ID, choice.RESULT_PAGE_id) : () => {
+                    setSelectActionFunc(() => () => getAction(choice.APC_ID, choice.RESULT_PAGE_id));
+                    handleOpenWarning();
+                  }}
                 >
-                  {choice.choice_text}
+                  {choice.CHOICE}
                 </Button>
               </Box>
             ))}
           </Box>
         </Grid>
+        <GenericWarning
+          func={selectActionFunc}
+          setOpen={setOpenWarning}
+          open={openWarning}
+          title="Warning"
+          description="You will not be able to change your selection after you submit. Are you sure you want to submit?"
+        />
       </Grid>
     </div>
   );

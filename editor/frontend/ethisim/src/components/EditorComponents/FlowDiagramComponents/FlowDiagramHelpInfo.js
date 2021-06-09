@@ -19,16 +19,20 @@ export const FlowDiagramHelpInfo = [
   },
   {
     title: 'Connecting Edges for Action Page Components',
-    description: `The first option is the left bottom dot.
-        The second option is the right bottom dot.
-        If a player selects the first option, the player will go to the page that the left bottom dot connects to.
-        If a player selects the second option, the player will go to the page that the right bottom dot connects to.`,
+    description: `The first option is the leftest most dot,
+        the second option is the second leftest most dot, and so on.
+        If a player selects the first option, the player will go to the page that the leftest most dot connects to, and so on.`,
   },
   {
     title: 'Remove Edge',
     description: `To remove an edge, you must select an edge.
         The "Remove Edge" button will become active.
         Selecting "Remove Edge" will remove the edge.`,
+  },
+  {
+    title: 'Expand | Page Preview',
+    description: `Selecting the expand button that is above each component will show a page preview that will 
+        present exactly how the page will look like to the player.`,
   },
   {
     title: 'Reset',

@@ -1,0 +1,2227 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$216000$SzWhRQ989YFZ$nRgkkdDRkIVfLMIQcJNALsdQzazrXWCxnRmjNCNRCa8=",
+    "last_login": "2021-03-06T21:10:01.940Z",
+    "is_superuser": true,
+    "username": "kcc",
+    "first_name": "",
+    "last_name": "",
+    "email": "kchai@umass.edu",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-03-06T21:09:39.198Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$150000$nUWfhbWKVsNl$6fQoj75e1tKa6B+KEyYJEiRD9SJnXRAo293EjW4oGpw=",
+    "last_login": "2021-04-15T00:19:22.775Z",
+    "is_superuser": true,
+    "username": "hongyue",
+    "first_name": "",
+    "last_name": "",
+    "email": "hongyuelin@umass.edu",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-03-18T16:26:22.501Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "1hopvx79hdkrxqthf8yi8yosuhb063ou",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSGd4SG4dN9vIAwwUjU0Ke3K-O_apAvd3nPOfYkQt7WGrZclTFlcBIjT70YxPUrbQb7Hdptlmtu6TCR3RR60y3HO5Xk93L-DGnv91qjZ2XgGjdqiLmTYe_SK0cQ8IIFJGh15tAUUKMNWOQaGzHZgJG_E-wO31jbn:1lIeBV:Q1R8O4MuDDUowLQiKoiJ_kHseRmNSmYLe_J_QHbVV9M",
+    "expire_date": "2021-03-20T21:10:01.974Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "cwlj21wkg6hbg72ic0yeitlgevqncx4h",
+  "fields": {
+    "session_data": "NWQ2ZmEyNWViNmQxZjY4NDg4MjFlYjI1ZjkxY2M1OTM5NjY0M2UxOTp7Il9hdXRoX3VzZXJfaWQiOiIyIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIyYWU3MjliMzliYjkwZWM5ZjRlMTMyYzQ5OTk0MjcxM2Y1NDU4YjAxIn0=",
+    "expire_date": "2021-04-01T16:26:40.840Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "th5mj1fkw9vy4e45bzddifelod7kfee4",
+  "fields": {
+    "session_data": "NWQ2ZmEyNWViNmQxZjY4NDg4MjFlYjI1ZjkxY2M1OTM5NjY0M2UxOTp7Il9hdXRoX3VzZXJfaWQiOiIyIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIyYWU3MjliMzliYjkwZWM5ZjRlMTMyYzQ5OTk0MjcxM2Y1NDU4YjAxIn0=",
+    "expire_date": "2021-04-29T00:19:22.800Z"
+  }
+},
+{
+  "model": "tables.scenarios",
+  "pk": 91,
+  "fields": {
+    "user": "phaas",
+    "NAME": "ML - My Medical Advice Website",
+    "PUBLIC": true,
+    "IS_FINISHED": true,
+    "DATE_CREATED": "2021-05-20",
+    "NUM_CONVERSATION": 5
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 593,
+  "fields": {
+    "PAGE_TYPE": "S",
+    "PAGE_TITLE": "Stakeholders",
+    "PAGE_BODY": "Page of Stakeholders",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 606,
+    "X_COORDINATE": 225,
+    "Y_COORDINATE": 559
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 597,
+  "fields": {
+    "PAGE_TYPE": "G",
+    "PAGE_TITLE": "Project Task Assignment",
+    "PAGE_BODY": "<p><span style=\"font-size: 18px; font-family: Arial;\">\u200b<strong><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">We want to use data scraping of our website data and outside sources to sharpen our ML model to predict which of our users, or their family members, have cognitive decline. The data scraping tool might collect the following additional data for potential new features of the model:</span></strong></span></p><ol><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">My Medical Advisor website user interactions</span></p></li><ol><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Typing speed</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Spelling errors</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Rate of typing errors</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Incidence of repetitive requests</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Reading speed</span></p></li></ol><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Users\u2019 social media content</span></p></li><ol><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Posts by and about the user</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Pictures and videos</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Relationships: Family, significant other, friends</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Hobbies, exercise, and other activities</span></p></li></ol><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Other websites\u2019 data</span></p></li><ol><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Loyalty card purchases</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Browser histories</span></p></li><li style=\"font-weight: 400; color: rgb(0, 0, 0); font-size: 18px;\"><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Email </span></p><p><br></p></li></ol></ol><p><span style=\"font-size: 18px; font-family: Arial;\">\u200b<strong><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">Part of your assignment is to identify specific sources who would be willing to provide data and also make recommendations for further data to collect, in order to refine the above list. Once the data is in hand, you will use it to improve the existing predictive model for cognitive decline, by incorporating new training features as appropriate.</span></strong><br></span><br><br></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 600,
+    "X_COORDINATE": 308,
+    "Y_COORDINATE": 93
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 600,
+  "fields": {
+    "PAGE_TYPE": "R",
+    "PAGE_TITLE": "Reflect on Initial Information",
+    "PAGE_BODY": "<p><span style=\"font-family: Arial; font-size: 18px;\">You've just been presented with a scenario with a scenario about a new project that your company is developing. You have a role to play in the development and eventual launch of that project. Thinking about that role and about what you've learned about this new project, please provide responses to the following questions. You must write something, but your responses don't need to be highly polished; you should aim for a few thoughtful sentences.</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 615,
+    "X_COORDINATE": 448,
+    "Y_COORDINATE": 232
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 606,
+  "fields": {
+    "PAGE_TYPE": "R",
+    "PAGE_TITLE": "Reflect on Additional Information",
+    "PAGE_BODY": "<p><span style=\"font-family: Arial; font-size: 18px;\">You've been presented with a scenario about a new project that your company is developing. You've learned more about your role in its development and eventual launch, and you've had an opportunity to gather more information about what you are being asked to do. Taking into consideration what you've most recently learned about the project, please provide responses to the following questions. You must write something, but your responses don't need to be highly polished; you should aim for a few thoughtful sentences.</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 614,
+    "X_COORDINATE": 178,
+    "Y_COORDINATE": 615
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 610,
+  "fields": {
+    "PAGE_TYPE": "R",
+    "PAGE_TITLE": "Reflect on Consequences",
+    "PAGE_BODY": "<p><span style=\"font-family: Arial; font-size: 18px;\">You've been presented with a scenario about a new project that your company is developing. You've learned more about your role in its development and eventual launch, and you've had an opportunity to gather more information about what you are being asked to do. After selecting a course of action to take, you were presented with a set of possible consequences resulting from your choices within the scenario. Taking into consideration your experience across the entire scenario, please provide responses to the following questions. You must write something, but your responses don't need to be highly polished; you should aim for a few thoughtful sentences.</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 612,
+    "X_COORDINATE": 814,
+    "Y_COORDINATE": 974
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 612,
+  "fields": {
+    "PAGE_TYPE": "R",
+    "PAGE_TITLE": "Conclusion",
+    "PAGE_BODY": "<p><span style=\"font-family: Arial; font-size: 18px;\">As illustrated by the scenario that you just explored, project design decisions almost always have ethical consequences, sometimes causing unintended physical, economic, political, or emotional harm, often to innocent or vulnerable members of society. When considering involvement in a computing project, it is a good idea to step back and try to imagine the possible consequences, both positive and negative. Ask yourself whether the technology that are are developing will make the world a better place, and whether you will be proud of your involvement.&nbsp;</span></p><p><span style=\"font-family: Arial; font-size: 18px;\">To envision consequences and develop empathy and understanding, it is important to talk to the various stakeholders involved, especially those who will be most strongly or directly impacted by the new technology. Is your project team sufficiently representative? A common source of ethical problems for a given computer science or data science technology is that the people impacted the most were never consulted or represented on the development team.</span></p><p><span style=\"font-family: Arial; font-size: 18px;\">In any organization, it is up to every employee to speak up, and to say something if there is the potential to do harm. For computer scientists, there is the added professional responsibility to <span style=\"color: rgb(0, 216, 255);\">use their computing skills for the common good</span>, seeing all people as potential stakeholders in any given computing project. By taking the time to learn a little more about how a new technology might affect people or a company, and by speaking up and asking questions, you will provide the check in the system that is expected of you.</span></p><p><span style=\"font-family: Arial; font-size: 18px;\"><br></span></p><p><span style=\"font-family: Arial; font-size: 18px;\">If you would like to sign up for a focus group, send an email to ethics-project@cs.umass.edu.</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": null,
+    "X_COORDINATE": 1026,
+    "Y_COORDINATE": 1113
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 614,
+  "fields": {
+    "PAGE_TYPE": "A",
+    "PAGE_TITLE": "Choose Final Action",
+    "PAGE_BODY": "<p><span style=\"font-family: Arial; font-size: 18px;\">You've had an opportunity to learn more about the project that you task assignment will help build, and you've had a chance to reflect on your selections of stakeholders to expand your understanding further. You've also spent a little time thinking about how what you have learned is going to shape your actions moving forward.</span></p><p><span style=\"font-family: Arial; font-size: 18px;\">At this point, your task assignment is one day behind schedule, and you have an early morning meeting with the team leader to discuss your profress. Your teammate, Alex, reminded you last night on your way out of the building that bonuses this year are adding on-time performance as a criterion. At lunch, there was talk about the company adding an 'efficiency' rating to the evaluation for all technical employees in the annual performance reviews. So, you aren't surprised that Alex expressed concern that the delay you've already caused could lower this year's bonus for the members of your team.&nbsp;<br></span></p><p><span style=\"font-family: Arial; font-size: 18px;\">Considering everything that you have learned, what action will you take next?<br></span></p><p><span style=\"font-family: Arial; font-size: 18px;\">Will you:</span><br></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": null,
+    "X_COORDINATE": 404,
+    "Y_COORDINATE": 737
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 615,
+  "fields": {
+    "PAGE_TYPE": "A",
+    "PAGE_TITLE": "Choose Initial Action",
+    "PAGE_BODY": "<p><span style=\"font-family: Arial; font-size: 18px;\">You're a new employee working on a data science team that is working on a larger project. You've also had an opportunity to reflect on your understanding of the task that you have been assigned on this project and to list any questions that still remain to you.</span></p><p><span style=\"font-family: Arial; font-size: 18px;\"><br></span></p><p><span style=\"font-family: Arial; font-size: 18px;\">Please select what you would like to do next.</span></p><p><br></p><p><span style=\"font-size: 18px; font-family: Arial;\">Would you:</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": null,
+    "X_COORDINATE": 611,
+    "Y_COORDINATE": 354
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 617,
+  "fields": {
+    "PAGE_TYPE": "G",
+    "PAGE_TITLE": "Start to Gather Information",
+    "PAGE_BODY": "<p><span style=\"font-size: 18px; font-family: Arial;\">You've chosen to delay starting the project in order to get more information. You realize that there are a number of stakeholders with whom you could have a face-to-face conversation about the project without breaking the confidentiality rules imposed by your boss.</span></p><p><span style=\"font-size: 18px; font-family: Arial;\">There is just enough time for you to hear from at most six different people and still complete your task assignment within one day of the original project deadline. You should also hear from at least one person.</span></p><p><span style=\"font-size: 18px; font-family: Arial;\">In the following screen, you will be presented with fourteen possible stakeholders. Each stakeholder that you choose to hear from will share their professional knowledge and opinions based on their individual perspective. Time is short, so be mindful of who is best positioned to fill in your understanding of the project and who will help you think critically about your assigned task.</span></p><p><br></p><p><span style=\"font-size: 18px; font-family: Arial;\">Make your selection on the next screen.</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 593,
+    "X_COORDINATE": 400,
+    "Y_COORDINATE": 465
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 618,
+  "fields": {
+    "PAGE_TYPE": "I",
+    "PAGE_TITLE": "Introduction",
+    "PAGE_BODY": "<p><span style=\"font-family: Cambria, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\"><span style=\"font-family: Arial;\">My Medical Advisor is a well-established website that fields millions of queries about diseases, symptoms, and so forth from their registered users.&nbsp; For each query the system provides general information, as well as suggestions for relevant healthcare providers and products such as medical equipment and medications.&nbsp;</span></span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">MMA, Inc., the company developing and running this website, has developed </span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">Machine Learning (ML) models to identify patterns in the query streams coming from their different users.&nbsp; In particular, they have a preliminary model that can </span><span style=\"background-color: transparent; letter-spacing: 0.01071em; color: rgb(0, 0, 0); font-variant-numeric: normal; font-variant-east-asian: normal; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">identify users who are concerned about </span><span style=\"background-color: transparent; letter-spacing: 0.01071em; color: rgb(0, 0, 0); font-style: italic; font-variant-numeric: normal; font-variant-east-asian: normal; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">cognitive decline</span><span style=\"background-color: transparent; letter-spacing: 0.01071em; color: rgb(0, 0, 0); font-variant-numeric: normal; font-variant-east-asian: normal; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">\u2014that is, trouble&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">remembering, learning new things, concentrating, or making decisions that affect&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">everyday life.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">MMA plans to use its data and models to create lists of users most concerned about&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">cognitive decline, both caregivers and actual sufferers, and then sell those lists to&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">advertisers of pertinent products and services.&nbsp; In this way, MMA can create a new&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">line of business, and also aid its users in navigating the healthcare market, helping&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">them choose from among the ever-increasing number of providers and products so&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">that they won\u2019t feel overwhelmed or confused.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">MMA would now like to go further and provide these lists to the Department of&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">Motor Vehicles (DMV), for the DMV\u2019s use in attempting to proactively remove from&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">the roadways people whose cognitive decline has made them unsafe drivers. Those&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">on one of these lists will be required to provide frequent medical certification of&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">their fitness to drive.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Before trusting these lists, however, the DMV wants greater assurance of their&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; letter-spacing: 0.01071em; font-size: 18px; font-family: Arial;\">accuracy.&nbsp; MMA has therefore embarked upon a new project aimed at sharpening the&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; letter-spacing: 0.01071em; font-size: 18px; font-family: Arial;\">existing ML model by analyzing: </span></p><ol><li style=\"color: rgb(0, 0, 0); font-size: 18px;\"><span style=\"background-color: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; letter-spacing: 0.01071em; font-size: 18px; font-family: Arial;\">additional MMA site-usage data, such as typing&nbsp;speed, typing accuracy, and repetitive requests, </span></li><li style=\"font-size: 18px;\"><span style=\"font-size: 18px; font-family: Arial;\"><span style=\"font-family: Arial;\"><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">data such as posts, videos,&nbsp; and&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; letter-spacing: 0.01071em;\">photographs that have been scraped from social media sites</span></span></span></li><li style=\"color: rgb(0, 0, 0); font-size: 18px;\"><span style=\"background-color: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; letter-spacing: 0.01071em; font-size: 18px; font-family: Arial;\">data from other sites, such as loyalty sites, that may be accessible.</span></li></ol><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">You have been hired by the company as a&nbsp;junior data scientist, and have been&nbsp;</span><span style=\"background-color: transparent; color: rgb(0, 0, 0); font-size: 18px; white-space: pre-wrap; letter-spacing: 0.01071em; font-family: Arial;\">assigned to this project.</span></p><p><span style=\"font-size: 18px; font-family: Arial;\">\u200b</span></p>",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 597,
+    "X_COORDINATE": 184,
+    "Y_COORDINATE": -16
+  }
+},
+{
+  "model": "tables.pages",
+  "pk": 665,
+  "fields": {
+    "PAGE_TYPE": "G",
+    "PAGE_TITLE": "Summary of the Scenario",
+    "PAGE_BODY": "<html>\n  <head>\n        <style type=\"text/css\">\n        /* Remove default bullets */\n        #myTree {\n          list-style-type: none;\n        }\n        \n        /* Remove margins and padding from the parent ul */\n        #myTree {\n          margin: 0;\n          padding: 0;\n        }\n        \n        /* Style the caret/arrow */\n        .tree-caret {\n          cursor: pointer;\n          user-select: none; /* Prevent text selection */\n        }\n        \n        /* Create the caret/arrow with a unicode, and style it */\n        .tree-caret::before {\n          content: \"\\25B6\";\n          color: black;\n          display: inline-block;\n          margin-right: 6px;\n        }\n        \n        /* Rotate the caret/arrow icon when clicked on (using JavaScript) */\n        .tree-caret-down::before {\n          transform: rotate(90deg);\n        }\n        \n        /* Hide the nested list */\n        .tree-nested {\n          list-style-type: none;\n          display: none;\n        }\n        \n        /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */\n        .tree-active {\n          display: block;\n        }\n        \n        img {\n          max-width: 100%;\n          height: auto;\n        }\n    </style>\n  </head>\n  \n  <body>\n<h3>Consequences of your chosen action</h3>\n    \n<h4>The quandary...</h4><p>The company's plan to try to spot incipient\n      cognitive decline should be valuable to its users, important to\n      the DMV, and a useful marketing tool for its corporate\n      teammates. And, indeed, it is easy to see that greater value to\n      users and teammates will be derived by including in the\n      analysis more personal information, such as social interactions,\n      keystroke speed and errors, and time series analyses to track\n      rates of decline. But all of this depends upon the company's\n      ability to successfully analyze personal information about its\n      users. This raises technical questions about accurately\n      inferring causal links between various activities and cognitive\n      decline, including the question of whether the model might be\n      inadvertently biased by interpreting ethnic, cultural, or gender\n      attributes as evidence of cognitive decline. (Say a slow\n      southern accent.) There is also the question of whether the\n      company should be allowed to sell this data to anyone they want\n      to. Also, unlimited monitoring of citizens for cognitive decline\n      raises ethical issues about user privacy and consent,\n      invasiveness as a threat to dignity, and whether the money that\n      the company will earn and the potential increase in traffic\n      safety is a fair exchange for the social price that citizens\n      will pay.</p><h4>A discussion of the issues...</h4><p>To gather\n      information, you had conversations with the following\n      stakeholders: <ul><li>Felipe, a current\n\t  advertiser</li><li>Patricia, a corporate executive\n\t  advocating for this project</li><li>Jordan, your\n\t  parent</li></ul></p><p>After those conversations, you\n      decided to move forward with your task as assigned in order to\n      not further exceed the project deadline, confident that you can\n      deal with any issues later.</p><p>The potential issues\n      are:</p>\n<ul id='myTree'><li><span class='tree-caret'>Helps the\n      DMV remove dangerous drivers from the roads, improving public\n      safety.</span><ul class='tree-nested'><li><p><b>What people said\n\t    in their\n\t    conversations:</b> </p></li></ul><li><span class='tree-caret'>Excessive\n      violations of users' privacy needed to gather data to create\n      advertiser and DMV\n      lists.</span><ul class='tree-nested'><li><p><b>What people said\n\t    in their conversations:</b> </p></li><li><p><b>What people\n\t    are saying in the real-world:</b> Here is an interesting\n\t  discussion\n\t  of <a href='https://www.lexalytics.com/lexablog/ai-healthcare-data-privacy-ethics-issues'\n\t\ttarget='_blank'>data privacy and AI in\n\t    healthcare</a>.</p></li></ul><li><span class='tree-caret'>Incorrect\n      ML-generated advice can cause harm to users and to the public at\n      large.</span><ul class='tree-nested'><li><p><b>What people said\n\t    in their\n\t    conversations:</b> </p></li></ul><li><span class='tree-caret'>ML\n      misuse might be publicized, perhaps widely, leading to\n      embarrassment and damage to the company's\n      reputation.</span><ul class='tree-nested'><li><p><b>What people\n\t    said in their\n\t    conversations:</b> </p></li></ul><li><span class='tree-caret'>Project\n      could fail and you could share some of the blame, stigmatizing\n      you within the company and on the job\n      market.</span><ul class='tree-nested'><li><p><b>What people said\n\t    in their conversations:</b> </p></li></ul></ul><h4>Your\n  responsibility...</h4><p>In any organization, it is up to every\n      employee to speak up, and to say something if there is the\n      potential to do harm. For computer scientists, there is the\n      added professional responsibility\n      to <a href='https://www.acm.org/code-of-ethics#h-3.-professional-leadership-principles.'\n\t    target='_blank'>use their computing skills for the common\n\tgood</a>, seeing all people as potential stakeholders in any\n      given computing project. By just going along and not taking the\n      time to learn a little more about how this model might affect\n      people or the company, you did not provide the check in the\n      system that was expected of you. </p>\n\n    <script type=\"text/javascript\">\n\n         var toggler = document.getElementsByClassName(\"tree-caret\");\n          var i;\n          \n          for (i = 0; i < toggler.length; i++) {\n            toggler[i].addEventListener(\"click\", function() {\n              this.parentElement.querySelector(\".tree-nested\").classList.toggle(\"tree-active\");\n              this.classList.toggle(\"tree-caret-down\");\n            });\n          }\n\n    </script>\n\n  </body>\n</html><!--CodeEditor-->",
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NEXT_PAGE": 610,
+    "X_COORDINATE": 625,
+    "Y_COORDINATE": 851
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 16,
+  "fields": {
+    "PAGE": 600,
+    "REFLECTION_QUESTION": "What new responsibilities do you have after being assigned to this project?",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 17,
+  "fields": {
+    "PAGE": 600,
+    "REFLECTION_QUESTION": "What aren't you sure about, or what questions are raised for you about those responsibilities?",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 18,
+  "fields": {
+    "PAGE": 606,
+    "REFLECTION_QUESTION": "Why did you select your chosen source(s) of information?",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 19,
+  "fields": {
+    "PAGE": 606,
+    "REFLECTION_QUESTION": "What did you learn that most affects the action that you will take next?",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 20,
+  "fields": {
+    "PAGE": 610,
+    "REFLECTION_QUESTION": "Do the consequences presented match your expectations for what you thought would happen? Explain your answer.",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 21,
+  "fields": {
+    "PAGE": 610,
+    "REFLECTION_QUESTION": "Considering these consequences, how satisfied are you with your choices? In other words, how would you approach a similar situation in the future? Be sure to explain what you might keep the same and what you would change.",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.reflection_question",
+  "pk": 22,
+  "fields": {
+    "PAGE": 612,
+    "REFLECTION_QUESTION": "We would appreciate receiving any comments that you have on this online ethics simulation:",
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 274,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Alex",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Alex has worked for the company for several years.&nbsp; The company has treated him well and Alex is very loyal.&nbsp; Alex is a solid performer, but not a superstar. Alex has a reputation for being a strong team player who is typically a solid asset on a difficult project.</span></p>",
+    "JOB": "A Colleague at Work",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">So you are the new Data Scientist\u2014glad to meet you.&nbsp; You probably don\u2019t know this, but pretty much everyone I know in this company is angling to get in on your project.&nbsp; Lots of us think that this is going to make the company a ton of money, sending sharp recommendations about prospective customers to our advertisers. And getting us connected up with the DMV and getting into public service, like improving highway safety, will be profitable and also give us the chance to do good at the same time. I\u2019ll bet other DMVs around the country will take note.&nbsp; All of this should boost our stock options, get us bonuses and promotions, and all the other good stuff</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">All you have to do is to make it work. I hear that we have already been using ML models that use customer queries to our website to draw conclusions about the diseases or treatments they\u2019re interested in.&nbsp; But our advertisers, and now the DMV, want to be surer of the user lists we give them, and we are going to be doing that by sharpening our models based on things like user social media posts, and data we can access from users\u2019 activity on other websites, like their loyalty program purchases.&nbsp; I really like the way this is going to help people in need, help our advertisers\u2019 business, help the DMV keep the roads safer\u2014while also helping our company\u2019s bottom line and our careers.&nbsp; Some of our folks worry that we might wrongly identify some people as having cognitive decline, but what\u2019s the harm?&nbsp; They\u2019ll just go and reassure the DMV. Maybe some people get a bunch of ads they don\u2019t care about; they can just delete them. Seems like a pretty small price to pay for getting needy people more timely help, and keeping dangerous drivers off the road.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Welcome to the company. Great things are going to happen.</span></p><p><span style=\"font-size: 18px; font-family: Arial;\">\u200b</span></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 275,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Cecily",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Cecily has been with the DMV for many years and has been moving up in the management ranks.&nbsp;Her job now requires her to look beyond the day-to-day workings of the DMV and to focus more on the DMV\u2019s mission to keep the roads safe. She is a prospective purchaser of lists of drivers flagged as being potentially dangerous.</span><br></p>",
+    "JOB": "DMV Manager",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">This is an exciting project that you are working on.&nbsp; A lot of us here at DMV have wished for a long time that there was some way that we could be more proactive in getting dangerous drivers off the roads.&nbsp; In this state a driver\u2019s license is good for five years, during which time we have very few ways of identifying problem drivers and getting them off the roads.&nbsp; Mostly this happens only after the driver has been cited for doing something dangerous or for actually causing harm.&nbsp; We have statistics that show that older drivers are at greater risk of causing accidents, and a lot of that is probably at least partly due cognitive decline. There should be laws requiring more frequent checks for older drivers, but that could be viewed as age discrimination, so we don\u2019t do that.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">But bringing drivers in \u201cfor cause\u201d seems to me like a different story.&nbsp; If there is evidence that a driver is suffering from cognitive decline, then that evidence ought to be suitable grounds for more frequent retesting.&nbsp; That is no longer age discrimination, especially since younger drivers can suffer from such decline as well.&nbsp; Your company has its hands on the raw data that can be the basis for such evidence of decline and impairment, and a lot of us at DMV are really pleased that you are now willing to go through it, search other sites for supporting evidence, and then give us leads on these drivers.&nbsp; This could be a really big step forward for public safety.&nbsp; As you probably already know, state DMVs share a lot of information with each other.&nbsp; Fretting about how to identify problematic drivers and take them off the road is a frequent topic of discussion among the state DMVs.&nbsp; You can bet that, if this project of yours works out well for us, we will definitely be telling our colleagues in other states.&nbsp; That could be quite lucrative for your company.&nbsp; And being a key player in this project should then be a great career booster for you personally.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">We certainly are sensitive to concerns about mis-identifying drivers who still have sharp cognition.&nbsp; Such drivers would just need to bring in a letter from an approved medical authority, such as their personal physician, and then they would on their way. The modest inconvenience of a few such people seems to me to be a very small drawback compared to the benefits of taking off the roads people who pose a high risk of causing property damage, injury, and even death.</span></p><p><span style=\"font-size: 18px; font-family: Arial;\">\u200b</span></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 276,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Chris",
+    "DESCRIPTION": "<p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">Chris has worked for the company for several years, and has built a reputation for having strong opinions.&nbsp; Chris is respected for being very smart and very productive, but Chris does not hesitate to be critical of other employees and of the company, even if that can be disruptive.</span><br></p>",
+    "JOB": "A Colleague at Work",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Hi, and welcome to the team.&nbsp; I\u2019m glad we\u2019re having lunch off-site because I wouldn\u2019t want a lot of people in the company hearing some of this.&nbsp; I guess you\u2019ve heard the positive spin about this project from management, and maybe from some of the other team members.&nbsp; But I think somebody needs to give you a reality check, and I guess that\u2019s going to be me.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">First let me be clear that I\u2019m all in favor of using computers to help people.&nbsp; I\u2019ve been on some projects that have actually done that.&nbsp; But I\u2019m not at all sure that this project is likely to help people all that much.&nbsp; More important, though, I think it crosses a line that I think we should respect.&nbsp; Let me explain.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">First, I am not a Machine Learning expert, but I do know something about it.&nbsp; I know, for example, that it works best when it is trained on huge datasets.&nbsp; I don\u2019t know that we have enough data to get it right, and I don\u2019t know that we have the right data.&nbsp; For example, we are going to scrutinize character streams for backspaces, typos, misspellings, and all.&nbsp; But sometimes users are tired, angry, temporarily \u201cimpaired\u201d, or just poor spellers. Maybe slow speech just means that English is not a person\u2019s first language. Maybe someone is just speaking figuratively or jokingly when they call a relative \u201csenile\u201d in a post, or when someone calls themself \u201csenile\u201d. If we provide inaccurate lists that our advertisers pay too much money for, then users get pounded with ads that they will ignore, our advertisers will get mad, and our company will have wasted time and money on a loser.&nbsp; And that sure doesn\u2019t help your resume or your career here.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">But what really bothers me is that the company is going to decide which of our users we think the DMV should be worried about.&nbsp; And to \u201cbe sure\u201d that we identify the right people as cognitively impaired, the company is going to seriously invade people\u2019s privacy. Users probably won\u2019t realize that the fine print they have clicked through has given us permission to do this.&nbsp; Are we really going to wind up being more sure about possible cognitive decline by reading people\u2019s posts and tweets?&nbsp; I\u2019m skeptical.&nbsp; Even if we somehow get it right some of the time, then some of the time we are going to be wrong and we will essentially be helping the DMV to harass perfectly healthy clients of ours. Maybe the model will even be systematically biased against groups of clients based on their race, gender, and so on. Maybe people won\u2019t seek online information in order to help Dad, for fear that this will trigger the DMV to swoop in and take away Dad\u2019s license, even though he is still a perfectly capable driver. I\u2019m not sure that I want to live in a world where people are always under observation.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Sorry if this has ruined your lunch.&nbsp; I\u2019ll grab the check. </span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 277,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Jordan",
+    "DESCRIPTION": "<p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">Jordan is a loving parent with whom you have a very strong bond.&nbsp; Jordan was a strong supporter as you went through college, and is now very proud of how hard you work, and how well you have succeeded. You have talked over all of your major life decisions with Jordan, although you have not always followed Jordan\u2019s advice.</span><br></p>",
+    "JOB": "Parent",
+    "INTRODUCTION": "<p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">What a really interesting project you are working on! I am so glad you decided to major in Computer Science. They have really changed the world and now you\u2019re a part of it. We are so proud.</span></p><p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">So now your company thinks it can help people suffering from things like cognitive decline by giving them good advice about the best medicines and treatments for their specific health situation?&nbsp; And based upon their use of internet web sites?&nbsp; That sort of thing could be so important to people like your grandfather who is having just those kinds of problems.&nbsp; This could put your company out in front of a great new idea. Sounds like a great thing for your company\u2014gently guiding people in need, making a lot of money, and grabbing leadership of a great new industry. And that would be a wonderful thing for you, being right there where this is being done. You\u2019d be a leader in a company that is leading an industry. What a great position for you, and so soon out of college. Of course, grandpa would be not be very happy about having the DMV notified about his problems. But, on the other hand, the roads might indeed be safer if he wasn\u2019t driving at night.</span></p><p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">I don\u2019t pretend to understand what exactly you will be doing as part of this project. It sounds really innovative! It\u2019s amazing to have a system that can take someone\u2019s use of different web sites and use that to get a handle on what may be wrong with the user\u2019s health. It\u2019s incredible that you are really able to do that.&nbsp; I do worry a bit, though, about whether some of that web searching, could get a little too intrusive into the lives of people like your grandfather, especially when they are in vulnerable conditions. I don\u2019t mind hearing from Amazon once in a while about a book or an appliance they think I need, but even some of their advice can go way beyond books, and sometimes get pretty personal.&nbsp; What your company is talking about doing seems like it could go even beyond what Amazon does at their snoopiest. I just hope your company will be respectful, and very careful about the information it provides to the DMV. If you guys get it wrong, it could be very bad for your company, and maybe bad for your career, too?&nbsp;&nbsp;</span></p><p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">Well, I know that you will make sure that what you are doing is trying to help people and not hurt them.</span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 278,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Junchao",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">All of your company\u2019s projects and products have to be studied by the Legal Department to assess whether the project exposes the company to legal liability. Junchao is the attorney who has studied the one you have just been assigned to, and has rendered a careful legal opinion.</span><br></p>",
+    "JOB": "Corporate Lawyer",
+    "INTRODUCTION": "<p><span style=\"font-size: 18px;\"><span style=\"font-family: Arial;\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">OK, so you want to talk to me about the new project that\u2019s going to better guide users to medications and services that address cognitive decline, and to sell the lists to the DMV too.&nbsp; </span><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">So m</span><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">aybe notify public safety officials even before the user is fully aware that help is needed, or that they are a threat to public safety.&nbsp; Interesting idea.&nbsp; Has the potential to help a lot of people, and a nice line of business for the company to get into.&nbsp;&nbsp;</span></span></span><span style=\"font-family: Arial;\"></span></p><p><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">But I\u2019m not sure I have much to offer you from the legal point of view.&nbsp; In the end we are just going to be giving lists to advertisers, and advisory notifications to public safety authorities.&nbsp; The advertisers are going to be sending more focused advertising to a group that is presumably more likely to be interested in the products.&nbsp; And the DMV is going to be able to do its job better. Sounds like some nice ideas to me.&nbsp; Using high tech to help people.&nbsp; Yes, you are going to be starting with information that we get from the usage of our own web site.&nbsp; I don\u2019t see any problem with that, especially since users of our site have already clicked on our agreement, which lets us use the data we gather in any way we want. So the initial lists are ours to create and use as we see fit.&nbsp; It is also fine to sharpen up these lists to also use information gathered from public sites or from strategic partners who share information to which they are entitled via their own click-through agreements.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Let\u2019s be sure that the information we give to the DMV cannot be considered to be any kind of medical diagnosis. Our lists are just summaries of statistical information. And of course we will need to stick with our usual fine-print \u201cterms of use\u201d disclaimer that we are not providing medical advice to our customers directly or indirectly through our advertisers. Our advertising customers and the DMV will surely be evaluating whether our lists are worth the money we are charging them.&nbsp; If your project doesn\u2019t seem to deliver results that are worth the money, then these folks are free to stop buying.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">So, just steer clear of the dangers I have just outlined, and this project looks fine to me. Good luck!</span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 279,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Kareem",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">You and Kareem go back a long way, having gone through college together.&nbsp; You two have stayed close ever since, jogging together, and sharing meals. You often talk about problems, challenges, and successes, and give each other advice from time to time.</span><br></p>",
+    "JOB": "College Classmate",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Hey, it\u2019s nice to hear from you\u2014it\u2019s been a while! You sure have a way of getting yourself into interesting situations.&nbsp;&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">I like the idea of getting early help to oldsters who are starting to have cognition problems.&nbsp; I\u2019ve got an uncle and a grandmother who could use that kind of help right now.&nbsp; And I like the idea of helping the DMV get these people off the roads before they hurt themselves or someone else. I can see where this could help your company too by being able to sell very sharply focused prospect lists to companies so that they can spend their advertising dollars more effectively. Web-based advertising is such a huge business these days this has got to be a great market.&nbsp; If you can differentiate your company, that will be huge.&nbsp; You would probably move up the chain fast, or would be well positioned for the job market if your own company doesn\u2019t reward you enough.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">It does seem a little weird, though, to be digging around in people\u2019s private business that way, especially where your goal is to help some advertisers make more money. Also, your model had better be very good, or you might cause thousands of perfectly capable people to get hauled down to the DMV for no good reason, wasting everyone\u2019s time and money. You wouldn\u2019t want to say that someone has cognitive decline when they just have a broken finger, or speak with a southern accent. From what I understand about Machine Learning,&nbsp; you need a lot of data to be accurate, but more data comes from more and more snooping.&nbsp; Not sure that\u2019s my idea of a better world.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Well, I\u2019m sure that you will work this all out. It was definitely easier back in school to just study for an exam, without worrying whether or not your answers were good for the world.</span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 280,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Keshawn",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Keshawn has had long experience in applying ML to practical problems. Over the years he has become the company ML guru.&nbsp; He is a consultant to your project, and is very enthusiastic about it.&nbsp; He is very eager to help.</span></p>",
+    "JOB": "Company ML Expert",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">So, you\u2019ve been assigned to the new project\u2014excellent!&nbsp; We\u2019ve been using ML for years now, using streams of queries from individual users to create prospect lists for our advertisers.&nbsp; The results have been good, but we could do a whole lot better if we extend our approach to new kinds of user data.&nbsp; We\u2019ve been pitching the idea of sharpening our lists by looking at things like keystroke analysis, social media posts, and getting data through strategic partnerships with other websites.&nbsp; Now it seems that the execs have finally come around.&nbsp; Since we\u2019re focusing on cognitive decline, we should be able to get a fast start by initially just spotting telltale keystroke patterns on our own site, such as a lot of backspacing, slow typing, spelling errors, and asking the same questions over and over, again.&nbsp; But we think the real big payoffs will come from enriching our model with data not just from our website, but from social media posts and other websites as well. If someone is asking questions about an unnamed relative, for example, we can use social media data to help pinpoint who that relative is. We could analyze online postings, videos, and emails for signs of confusion, forgetfulness, or slow speech. So we might&nbsp; be able to spot cognitive decline before these users are fully aware of it themselves.&nbsp; If so, we could start them towards help early.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">And that brings me to the DMV.&nbsp; We all know that there are a lot of dangerous drivers out on the road.&nbsp; A lot of them are folks who are suffering from cognitive decline.&nbsp; Some of them know it, but others are not as aware as they should be.&nbsp; All of them ought to be evaluated so that the really dangerous ones can be identified and taken off the road. The execs are excited about this because they think we can get the DMV to pay us big bucks for these lists of dangerous drivers. Making money is great, but I am more excited about being able to use ML to help people and make our roads safer.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">To succeed, we will need lots of data to analyze, and skill in creating good training sets too.&nbsp; &nbsp; That is going to require a fair amount of data scraping from other websites. But that seems like a small price for a big gain. I\u2019ll be honest about this: we might get off to a bit of a wobbly start while we accumulate the right kinds of training sets and tune our models.&nbsp; So we will have to make sure that our marketing folks keep advertiser and DMV expectations in check at first.&nbsp; But over time our lists will get sharper, our advertisers will get happier, and we will be helping more and more people.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">I am really excited about applying computing and ML to make the world a better place and help people.&nbsp; I love this job.</span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 281,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Kokichi",
+    "DESCRIPTION": "<p><span style=\"font-family: Arial; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px;\">The company hires consultants with expertise in the areas addressed by its products and services.&nbsp; Kokichi is one such expert, having considerable real-world knowledge of the products currently being sold in the marketplace for treating cognitive decline.</span><br></p>",
+    "JOB": "Cognition Medication Expert",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">I see the potential for a lot of good in what you are proposing to do.&nbsp; Cognitive decline is a serious problem as it often comes on very gradually, and sufferers are often not aware of it until it is well along.&nbsp; The longer it goes unnoticed and untreated the harder it can be to deal with.&nbsp; And with the aging of our population, the problem is becoming more widespread and more serious. So, it is not surprising that there are a lot of different medications on the market to treat different types of cognitive impairment.&nbsp; I won\u2019t go into medication names and specifics here, but suffice it to say that some of them are much better than others.&nbsp; So your idea of providing proactive identification of cognitive decline and then providing guidance through this confusing market does have promise. And, as your company is one of the first to try this, success in this area could be lucrative, in addition to being beneficial to ailing elders, and to society in general.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">But I do need to caution you that success is not going to be easy.&nbsp; Real success will require that you correctly suggest the best medication to aid patients based on your perceived view of their overall health condition, while taking into account a drug\u2019s effectiveness, side effects, and interaction with other drugs that the patient is taking. I understand that you are going to be looking at the online activity of your users to gain a more complete view of their symptoms and situation, and that is important to gaining a full enough understanding of the user.&nbsp; But I wonder if you can gain a full enough understanding without violating the user\u2019s privacy? Gathering a huge amount of data about users and their lives seems very intrusive.&nbsp; Although I certainly agree that, without a sufficiently full understanding you could wind up recommending an inappropriate medication that could be ineffective, or even harmful.&nbsp; So I think it will be quite a challenge for you to somehow find that balance point between gaining an adequate view of the user and being overly invasive of their privacy.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Yes, quite a challenge, but I applaud your goal of trying to help the growing population of the cognitively impaired.</span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 282,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Nicolas",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">The company uses focus groups to try to stay in touch with user sentiment.&nbsp; Nicolas is a frequent participant.&nbsp; The company likes him because he is quite outspoken and generally enthusiastic.</span><br></p>",
+    "JOB": "User of the Company Web Site",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Thanks for getting in touch with me.&nbsp; I love your web site!&nbsp; I use it all the time.&nbsp; I think it has saved me a fortune in trips to the doctor.&nbsp; I used to be running over to the doctor all the time for every little thing.&nbsp; Now I check with you guys first, and usually I get reassured.&nbsp; Saves me money and time.&nbsp; And gives my doctor more time to spend with patients who are really sick.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">So, hearing that you are going to make the site even more helpful is really exciting.&nbsp; Frankly I do get a little confused with the medical terms.&nbsp; You do a good job of trying to explain them, but I still get confused.&nbsp; So, if you can track what I am asking about, how my typing is looking, what I am doing on other web sites, and use all of that to get a better handle on what might be wrong with me, that sounds good.&nbsp; And you know all about these doctors, hospitals, and meds, so you can point me in the right direction.&nbsp; I like the sound of this.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">I know that it is illegal for you to be practicing medicine without a license, so I know that you are not going to go too far with what you say directly to us users, and that\u2019s reassuring.&nbsp; In the end, it\u2019s my health and my body, so what I am getting from you and your advertisers is just advice, right?</span></p><p><span style=\"font-size: 18px; font-family: Arial;\"><strong><br><span style=\"font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">I also like the idea of going to the DMV with lists of potentially dangerous drivers.&nbsp; I can\u2019t believe some of what I am seeing on the roads these days.&nbsp; I\u2019ve often thought that </span><span style=\"font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: italic; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\">someone</span><span style=\"font-family: Calibri, sans-serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap;\"> ought to be getting these people off the road.&nbsp; But DMV gets to renew their licenses only every five years.&nbsp; And even then they don\u2019t seem to look very hard.&nbsp; DMV needs some help.&nbsp; You guys are going to provide it.&nbsp; Good for you!&nbsp; I guess maybe some OK drivers might need to show up and reassure DMV of their competence.&nbsp; I think that\u2019s a small price to pay for taking dangerous drivers off the road.</span></strong></span></p><p><span style=\"font-size: 18px; font-family: Arial;\">\u200b</span></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 283,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Patricia",
+    "DESCRIPTION": "<p><span style=\"font-family: Arial; font-size: 20px; color: rgb(0, 0, 0);\">Patricia is the Corporate Vice President who is responsible for leading this new project. Patricia is considered to be one of the company\u2019s rising stars because of her insight and shrewdness.&nbsp;</span><br></p>",
+    "JOB": "A Company Executive",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Welcome to the team!&nbsp; I\u2019m really pleased and impressed that you are taking the time to come by to see me.&nbsp; I\u2019m happy to give you the big picture of what we are doing here.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">We are upgrading our web service to deploy something that will improve public health and safety, especially for elders, create a lucrative line of business for the company, boost our advertising revenues, giving our company a solid lock on a market with huge potential. This project will boost the careers of everyone involved\u2014and that includes both you and me.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">You are too young to be worrying about losing your mental acuity, but you probably have a parent or grandparent struggling with that sort of thing, along with millions of other people.&nbsp; Some of them are simply in need of comfort and help, but some of them are out on the roads driving, creating a safety hazard for themselves and everyone around them. There are more and more products and services entering the market that can really help with this problem, but the choices can be overwhelming for both elders and their caregivers. We\u2019re going to connect those in need with those who can help.&nbsp; And we are going to make a lot of money by putting together lists of those in need and selling the lists to companies that can help and to the Department of Motor Vehicles, the DMV, so that dangerous drivers can be identified and dealt with.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">The DMV and some other likely customers for these lists are very excited. As we monetize the lists, we will be building ourselves a firm leadership position in what is going to be a huge market.&nbsp; Like I said before:&nbsp; this is going to be a great career-building opportunity for all of us if we do this right.&nbsp; But we are going to have to move fast because I hear that there are other companies who are on to the same kind of idea.&nbsp; Nobody wants to be the person who slows down the project and causes us to miss this great big open market window.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Your job is to apply the latest AI techniques to make sure that the lists that we provide are trustworthy. So let\u2019s get to work.&nbsp; And be sure to tell all of your teammates that my door is always open. This is going to be great.</span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 284,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Raisa",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Raisa is a consultant for the company.&nbsp; She has advanced degrees in neurology and cognition.&nbsp; She does research in this area and directs a clinic where patients suffering from cognitive decline are treated. She stays in close touch with the latest research and treatment results in this area.</span><br></p>",
+    "JOB": "Neurology Researcher Specializing in Cognitive Decline",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">I like anything that can be done to help people who are dealing with cognitive decline.&nbsp; It is sad to see how this condition can develop and slowly destroy people\u2019s lives. But we are learning more and more about the pathology of cognitive decline, and there are more and more products and services to provide relief. We know, for example, that cognitive decline often comes on quite gradually and can escape notice for quite some time. Often something can be done to at least slow the decline, although that may wind up being the best we can do.&nbsp; But slowing the decline can mean quite a lot to these patients and their families, and can be especially important in the early stages.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">But this is a very complex area. There are different kinds of cognitive decline, and many different approaches to treatment.&nbsp; Some kinds of decline are easier to identify than others, and some of them can be addressed more effectively than others. So accurately diagnosing the patient is of utmost importance.&nbsp; We want to be sure that each patient receives the best treatment for their specific situation.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Typically our diagnosis is done through extensive observation and careful testing.&nbsp; And we typically like to track patients with regular checkups and visits to assess the effectiveness of the medications and treatments. We think that this in-person contact is essential to accurate diagnosis and effective treatment. So I am concerned that you are not likely to be able to gain a sufficiently thorough understanding of a patient\u2019s condition only by analyzing their online data.&nbsp; And I am also concerned that the interests of your advertisers, rather than the health of your users, may unduly influence the guidance you provide. This is a rather tricky area of health care, and mistakes can have serious effects on patients\u2019 quality of life. You don\u2019t want to make mistakes here. That would be bad for all involved.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">I do see a real promising possibility in using observations of online behavior to augment the treatment that we currently provide. We might, for example, have professionals prescribe exercises and tests accessed via the web.&nbsp; We might be able to monitor patients more effectively by augmenting our regular visits by looking at the results of more frequent and regular web-based observations. I think the difference here is that your web services would be merged in as part of the overall treatment provided by professional cognition experts. I cannot endorse your idea of basing diagnosis and treatment solely upon web presence analysis.&nbsp; This sounds very hard, and very risky in view of the damage that could be done by erroneous analysis and bad recommendations.</span></p><p><span style=\"font-family: Arial; font-size: 18px;\">\u200b</span></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 285,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Sheila",
+    "DESCRIPTION": "<p><span style=\"font-size: 18px;\"><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial;\">Sheila is your boss.&nbsp; The group she is managing currently has 8 employees (including you).&nbsp; Sheila\u2019s group has primary responsibility for applying ML effectively in the project described here.&nbsp; Sheila gives you task assignments and monitors your progress. She also does periodic evaluations of your work for raises, bonuses, and promotions.</span></span><br></p>",
+    "JOB": "Direct Supervisor",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">I am glad to spend some time with you today giving you a little more background and context for the project, since you\u2019ve asked.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">This is a very important new initiative for us. Up until now we have been applying Machine Learning solely to user activities on our site to build a predictive model of cognitive decline. We have used the model to build lists of sufferers (and their caregivers) that our advertisers should focus on. Our advertisers are always interested in making these lists as sharp as possible, and so we have come up with some initial ideas for how to do that by looking beyond our own website to other potential data sources such as social media and other websites. And it has occurred to us that the lists should also be of particular interest to the Department of Motor Vehicles. We will be making good money from helping both our advertisers and the government, while also giving our users sharply tailored advice.</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">So now we need capabilities for building a more accurate profile of cognitive decline for each user.&nbsp; For each user of our site, we have been analyzing their queries, looking for repeated questions and apparent forgetfulness, and also their keystrokes, to look for things like misspellings, excessive backspace usage, and the like.&nbsp; Now we want to check social media posts by and about the user to further look for evidence of decline. We want to examine videos for signs of slow or confused speech, uncertain gait, confused expressions, and so on. And there are other sites worth checking out too.&nbsp; Are these users looking at sites that rate doctors and hospitals, are they already buying devices and medications that tend to confirm our own analyses? Have they slackened in activities such as buying books or doing crossword puzzles? Because of your background in Machine Learning you seem to be an ideal person to figure out a good set of predictive features that are both accessible to us and have strong predictive power.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">We are well aware that there are risks and challenges. Giving out bad information or advice could ruin our credibility with advertisers and the DMV, and could potentially harm users. If that were to happen, your career here would be harmed too.&nbsp; So you need to be careful in what you do, being sure to help and not harm. So you will need to use machine learning carefully and correctly.&nbsp; We have experts on staff here to help you with Machine Learning technology problems. And we have data analysts who have been poring over our user characteristics for years.&nbsp; They have assembled the kinds of databases that you should need, and can build you more if necessary. If you succeed you can expect that your career will soar.&nbsp; This is a company that rewards its heroes and heroines with raises, stock options, and promotions.&nbsp; </span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 286,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Tom",
+    "DESCRIPTION": "<p><span style=\"font-size: 18px;\"><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial;\">The company uses focus groups to try to stay in touch with user sentiment.&nbsp; Tom has participated in these groups from time to time.&nbsp; He tends to ask a lot of hard questions, and is considered to be thoughtful and perceptive. </span></span><br></p>",
+    "JOB": "User of the Company Web Site",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">I am glad you asked me for my opinion.&nbsp; I hope you listen carefully and take it seriously.&nbsp; What you are describing really worries me.&nbsp; I like using your web site now, but if you do go ahead with what you are suggesting, I think I would stop using it.&nbsp; Here\u2019s why\u2014</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">The last thing I want is for some web site to start snooping around about the most personal parts of my life\u2014those relating to my physical and mental health.&nbsp; Frankly, having your company try to figure out what might be wrong with me is creepy.&nbsp; None of your business!&nbsp; And the idea that you might be telling the DMV what you think of my fitness to drive a car\u2014are you seriously thinking about that??&nbsp;&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">&nbsp;I don\u2019t even think there is much of a chance that you would get it right.&nbsp; Sometimes I see a medical term in the news and I look that up just for information, not because it has anything to do with my current health. Sometimes I type too fast and make a lot of mistakes. I speak English slowly because I was born in Serbia. Sometimes I gossip about other people and their issues on social media sites.&nbsp; Will the DMV use that against them? Are you going to snoop around at what I buy online, what I have been buying at the grocery store?&nbsp; I think that kind of thing is just too intrusive.&nbsp; Even if you were to go through with this intrusive data collection, you would need to be sure that you get your analyses right, because if you don\u2019t people could get pushed to take harmful meds or treatments, or have to make a special trip to their doctor to get a completely unnecessary letter--what a waste of time and effort.&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">Like I said, I will probably stop using your site.&nbsp; I never thought much about how you might be keeping track of what I am asking, how fast I am typing, and what I have been doing on social media. But now it's in the back of my mind every time I log into your site. I will watch the news and see if you wind up getting caught giving bad advice and harming someone.&nbsp; It wouldn\u2019t surprise me. </span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.stakeholders",
+  "pk": 287,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Felipe",
+    "DESCRIPTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-family: Arial; font-size: 18px;\">Felipe is a high-level manager in the marketing department of a large pharmaceutical company, with a special focus on using internet-based advertising to increase sales and profits.&nbsp; He is a potential purchaser of sharpened lists of prospective customers.</span><br></p>",
+    "JOB": "Pharmaceutical Company Marketing Manager",
+    "INTRODUCTION": "<p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">I am really glad to meet you.&nbsp; I have been hearing about this project for quite a while now.&nbsp; Our management is very intrigued.&nbsp; We have been marketing to the users of your web site for quite some time now.&nbsp; We like pitching to them because they seem to be generally well-informed and intelligent buyers.&nbsp; But visitors to your site often click on many pages, or ask vague questions, so it is inevitable that our advertising for our Cognitive Improvement products often goes to people who are not very interested.&nbsp; We have been looking for a way to improve on this scatter-shot approach, so that we can pitch just the right products to users who are likely to need them, use them, and like them.&nbsp; This will be good for their health, good for our company\u2019s marketing effectiveness, and great for your company.&nbsp; Your company could make a lot of money by sharpening up the lists you are selling.&nbsp; If they turn out to really be as accurate as you are telling us, it will be something of an advertising breakthrough and will give your company a dominating position in a market with enormous potential.&nbsp;&nbsp;</span></p><p><span style=\"color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 18px; font-family: Arial;\">We love the idea of using Machine Learning to do all of this.&nbsp; Frankly, though, it sounds a lot like magic to me.&nbsp; I guess you could try to explain how this works, but I doubt that I would understand much of it.&nbsp; So, let me just say that if you can really pull it off\u2014sell us lists of potential customers for our products who will in fact strongly and positively respond to our advertising\u2014then we are all going to be big winners.&nbsp; But I need to tell you that we are going to be measuring the effectiveness of using these lists pretty carefully.&nbsp; If your magic doesn\u2019t seem to work, then we are going to drop you really fast.&nbsp; And that won\u2019t look good for your company. </span></p><p><br></p>",
+    "PHOTO": ""
+  }
+},
+{
+  "model": "tables.conversations",
+  "pk": 90,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "QUESTION": "Why did you choose me?",
+    "RESPONSE": "You have shown a significant amount of growth since you started working here. Your technical knowledge and leadership skills made you stand out to me as someone I should put on this assignment. I hope to see you grow professionally, and working on an important project like this would make you an ideal candidate for promotions. I trust you to contribute to the success of this project which will give the company dominance in the market.",
+    "SCENARIO_ID": null
+  }
+},
+{
+  "model": "tables.conversations",
+  "pk": 91,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "QUESTION": "Are you worried about the project?",
+    "RESPONSE": "Not at all. I believe that this project is very beneficial to our society and has no issues whatsoever.",
+    "SCENARIO_ID": null
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 4,
+  "fields": {
+    "NAME": "120"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 5,
+  "fields": {
+    "NAME": "187"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 6,
+  "fields": {
+    "NAME": "220"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 7,
+  "fields": {
+    "NAME": "230"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 8,
+  "fields": {
+    "NAME": "240"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 9,
+  "fields": {
+    "NAME": "250"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 10,
+  "fields": {
+    "NAME": "311"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 11,
+  "fields": {
+    "NAME": "320"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 12,
+  "fields": {
+    "NAME": "326"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 13,
+  "fields": {
+    "NAME": "328"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 14,
+  "fields": {
+    "NAME": "345"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 15,
+  "fields": {
+    "NAME": "370"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 16,
+  "fields": {
+    "NAME": "377"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 17,
+  "fields": {
+    "NAME": "383"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 18,
+  "fields": {
+    "NAME": "390A"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 19,
+  "fields": {
+    "NAME": "445"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 20,
+  "fields": {
+    "NAME": "446"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 21,
+  "fields": {
+    "NAME": "453"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 22,
+  "fields": {
+    "NAME": "466"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 23,
+  "fields": {
+    "NAME": "490S"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 24,
+  "fields": {
+    "NAME": "501"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 25,
+  "fields": {
+    "NAME": "514"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 26,
+  "fields": {
+    "NAME": "520"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 27,
+  "fields": {
+    "NAME": "529"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 28,
+  "fields": {
+    "NAME": "532"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 29,
+  "fields": {
+    "NAME": "535"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 30,
+  "fields": {
+    "NAME": "546"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 31,
+  "fields": {
+    "NAME": "574"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 32,
+  "fields": {
+    "NAME": "589"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 33,
+  "fields": {
+    "NAME": "590A"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 34,
+  "fields": {
+    "NAME": "590E"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 35,
+  "fields": {
+    "NAME": "590J"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 36,
+  "fields": {
+    "NAME": "590M"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 37,
+  "fields": {
+    "NAME": "590U"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 38,
+  "fields": {
+    "NAME": "590V"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 39,
+  "fields": {
+    "NAME": "590W"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 40,
+  "fields": {
+    "NAME": "591NR"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 41,
+  "fields": {
+    "NAME": "601"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 42,
+  "fields": {
+    "NAME": "603"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 43,
+  "fields": {
+    "NAME": "611"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 44,
+  "fields": {
+    "NAME": "630"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 45,
+  "fields": {
+    "NAME": "645"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 46,
+  "fields": {
+    "NAME": "674"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 47,
+  "fields": {
+    "NAME": "677"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 48,
+  "fields": {
+    "NAME": "683"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 49,
+  "fields": {
+    "NAME": "685"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 50,
+  "fields": {
+    "NAME": "688"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 51,
+  "fields": {
+    "NAME": "690A"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 52,
+  "fields": {
+    "NAME": "690OP"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 53,
+  "fields": {
+    "NAME": "691DD"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 54,
+  "fields": {
+    "NAME": "691NR"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 55,
+  "fields": {
+    "NAME": "697M"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 56,
+  "fields": {
+    "NAME": "701"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 57,
+  "fields": {
+    "NAME": "701Y"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 58,
+  "fields": {
+    "NAME": "791U"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 59,
+  "fields": {
+    "NAME": "891M"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 60,
+  "fields": {
+    "NAME": "899"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 61,
+  "fields": {
+    "NAME": "900"
+  }
+},
+{
+  "model": "tables.courses",
+  "pk": 62,
+  "fields": {
+    "NAME": "testcourse"
+  }
+},
+{
+  "model": "tables.scenarios_for",
+  "pk": 769,
+  "fields": {
+    "SCENARIO": 91,
+    "COURSE": 25,
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.scenarios_for",
+  "pk": 770,
+  "fields": {
+    "SCENARIO": 91,
+    "COURSE": 32,
+    "VERSION": null
+  }
+},
+{
+  "model": "tables.users",
+  "pk": "phaas",
+  "fields": {
+    "NAME": "Peter Haas",
+    "AFFILIATION": "Professor",
+    "EMAIL": "phaas@umass.edu"
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 98,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Public Safety Improvement",
+    "IMPORTANCE_SCORE": 5
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 99,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "User Health Improvement",
+    "IMPORTANCE_SCORE": 5
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 100,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Career-Building Opportunity",
+    "IMPORTANCE_SCORE": 1
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 101,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Long-term Company Benefits",
+    "IMPORTANCE_SCORE": 2
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 102,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Short-term Company Profits",
+    "IMPORTANCE_SCORE": 2
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 103,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Violation of User Privacy",
+    "IMPORTANCE_SCORE": 5
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 104,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "ML Misuse Harms Users and Public",
+    "IMPORTANCE_SCORE": 5
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 105,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "ML Misuse Damages Company Reputation",
+    "IMPORTANCE_SCORE": 2
+  }
+},
+{
+  "model": "tables.issues",
+  "pk": 106,
+  "fields": {
+    "SCENARIO": 91,
+    "VERSION": null,
+    "NAME": "Project Harms Career",
+    "IMPORTANCE_SCORE": 1
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 520,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 521,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 522,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 523,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 524,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 525,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 526,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 527,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 528,
+  "fields": {
+    "STAKEHOLDER": 274,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 529,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 530,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 531,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 532,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 533,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 534,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 535,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 536,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 537,
+  "fields": {
+    "STAKEHOLDER": 275,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 538,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 539,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 540,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 541,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 542,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 543,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 544,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 545,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 546,
+  "fields": {
+    "STAKEHOLDER": 276,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 547,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 548,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 549,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 550,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 551,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 552,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 553,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 554,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 555,
+  "fields": {
+    "STAKEHOLDER": 277,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 556,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 557,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 558,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 559,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 560,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 561,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 562,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 563,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 564,
+  "fields": {
+    "STAKEHOLDER": 278,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 565,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 566,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 567,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 568,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 569,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 570,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 571,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 572,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 573,
+  "fields": {
+    "STAKEHOLDER": 279,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 574,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 575,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 576,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 577,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 578,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 579,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 580,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 581,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 582,
+  "fields": {
+    "STAKEHOLDER": 280,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 583,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 584,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 585,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 586,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 587,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 588,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 589,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 590,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 591,
+  "fields": {
+    "STAKEHOLDER": 281,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 592,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 593,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 594,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 595,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 596,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 597,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 598,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 599,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 600,
+  "fields": {
+    "STAKEHOLDER": 282,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 601,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 602,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 603,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 604,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 605,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 606,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 607,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 608,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 609,
+  "fields": {
+    "STAKEHOLDER": 283,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 610,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 611,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 612,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 613,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 614,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 615,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 616,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 617,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 618,
+  "fields": {
+    "STAKEHOLDER": 284,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 619,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 620,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 621,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 622,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 623,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 624,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 625,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 626,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 627,
+  "fields": {
+    "STAKEHOLDER": 285,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 628,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 629,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 630,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 631,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 632,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 633,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 634,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 635,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 636,
+  "fields": {
+    "STAKEHOLDER": 286,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 637,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 98,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 638,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 99,
+    "COVERAGE_SCORE": 2.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 639,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 100,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 640,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 101,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 641,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 102,
+    "COVERAGE_SCORE": 3.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 642,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 103,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 643,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 104,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 644,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 105,
+    "COVERAGE_SCORE": 1.0
+  }
+},
+{
+  "model": "tables.coverage",
+  "pk": 645,
+  "fields": {
+    "STAKEHOLDER": 287,
+    "ISSUE": 106,
+    "COVERAGE_SCORE": 0.0
+  }
+},
+{
+  "model": "tables.action_page_choices",
+  "pk": 25,
+  "fields": {
+    "PAGE": 614,
+    "CHOICE": "move forward with your task as assigned in order to not further exceed the project deadline, confident that you can deal with any considerations later?",
+    "RESULT_PAGE": null
+  }
+},
+{
+  "model": "tables.action_page_choices",
+  "pk": 26,
+  "fields": {
+    "PAGE": 614,
+    "CHOICE": "delay completing your task assignment and the entire project to invite your teammates to a meeting to discuss gathering more information and possible changes to the project based on what you've learned?",
+    "RESULT_PAGE": null
+  }
+},
+{
+  "model": "tables.action_page_choices",
+  "pk": 27,
+  "fields": {
+    "PAGE": 615,
+    "CHOICE": "delay getting started and try to get answers for any lingering questions that you might have about the project?",
+    "RESULT_PAGE": 617
+  }
+},
+{
+  "model": "tables.action_page_choices",
+  "pk": 28,
+  "fields": {
+    "PAGE": 615,
+    "CHOICE": "get to work so that you don't feel stressed about completing your task assignment before the project deadline?",
+    "RESULT_PAGE": null
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2021-04-15T00:22:34.790Z",
+    "user": [
+      "hongyue"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "3",
+    "object_repr": "test",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2021-04-15T00:22:46.749Z",
+    "user": [
+      "hongyue"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "3",
+    "object_repr": "test",
+    "action_flag": 3,
+    "change_message": ""
+  }
+}
+]

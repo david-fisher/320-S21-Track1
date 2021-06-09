@@ -14,15 +14,17 @@ import {
 } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import ScenarioCard from './components/scenarioCard';
-import LoadingSpinner from './components/LoadingSpinner';
-import get from '../universalHTTPRequests/get';
+import ScenarioCard from '../components/scenarioCard';
+import LoadingSpinner from '../components/LoadingSpinner';
+import getSimulator from '../universalHTTPRequestsSimulator/get';
+import getEditor from '../universalHTTPRequestsEditor/get';
 // eslint-disable-next-line
-import CodeButton from "./components/classCodeDialog";
+import CodeButton from '../components/classCodeDialog';
 // eslint-disable-next-line
-import ProgressBar from "./components/progressBar";
+import ProgressBar from '../components/progressBar';
+// eslint-disable-next-line
 import { STUDENT_ID } from '../constants/config';
-import ErrorBanner from './components/Banners/ErrorBanner';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +59,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const endpointGet = '/scenarios?userId=';
+// TODO change when backend gets implemented
+const endpointGet = '/dashboard?professor_id=';
 // eslint-disable-next-line
 const endpointPost = "/dashboard";
 
@@ -98,18 +101,20 @@ const StyledTab = withStyles((theme) => ({
     backgroundColor: 'white',
     // backgroundColor: '#d9d9d9',
     '&:hover': {
-      backgroundColor: '#8c8c8c',
-      color: 'white',
+      backgroundColor: '#F7E7E7',
+      color: 'black',
       opacity: 1,
       selected: {
-        backgroundColor: '#8c8c8c',
+        backgroundColor: '#F7E7E7',
       },
     },
   },
 }))((props) => <Tab disableRipple {...props} />);
 
 const StyledTabs = withStyles({
-  root: {},
+  root: {
+
+  },
 
   indicator: {
     display: 'flex',
@@ -131,30 +136,8 @@ export default function Home() {
   // post returns new id of scenario, when you concatenating to array set the id to that
   const [scenarioList, setScenarioList] = useState({
     // temporary array of scenarios
-    incompleteScenarios: [
-      {
-        title: ' ',
-        course: ' ',
-        num_conversations: 0,
-        is_finished: false,
-        first_page: 0,
-        date: ' ',
-        completed: 10,
-        max: 10,
-      },
-    ],
-    completeScenarios: [
-      {
-        title: ' ',
-        num_conversations: 0,
-        is_finished: true,
-        first_page: 0,
-        course: ' ',
-        date: ' ',
-        completed: 10,
-        max: 10,
-      },
-    ],
+    incompleteScenarios: null,
+    completeScenarios: null,
   });
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
@@ -163,45 +146,67 @@ export default function Home() {
   });
   // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
-
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      console.log(response.data.result);
-      let incomplete = response.data.result.filter((data) => !data.is_finished);
-      let complete = response.data.result.filter((data) => data.is_finished);
-      incomplete = incomplete.map((data) => ({
-        title: data.name,
-        num_conversations: data.num_conversation,
-        is_finished: data.is_finished,
-        date: data.date_created,
-        version_id: data.version_id,
-        first_page: data.first_page,
-        course: data.course_name,
+      const scenarios = response.data.map((data) => ({
+        title: data.NAME,
+        numConversations: data.NUM_CONVERSATION,
+        isFinished: false,
+        date: data.DATE_CREATED,
+        scenarioID: data.SCENARIO,
+        firstPage: null,
+        courses: data.COURSES,
       }));
+      // TODO temporary requests to get first Page field
+      scenarios.forEach((obj) => {
+        function onSuccessSessions(resp) {
+          if (resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID).length) {
+            obj.isFinished = resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID)[0].IS_FINISHED;
+          }
+          const scen = {
+            incompleteScenarios: scenarios.filter((s) => !s.isFinished),
+            completeScenarios: scenarios.filter((s) => s.isFinished),
+          };
+          setScenarioList(scen);
+        }
+        function onSuccess(resp) {
+          obj.firstPage = resp.data.PAGES.filter(({ PAGE_TYPE }) => PAGE_TYPE === 'I')[0].PAGE;
+          getSimulator(
+            setFetchScenariosResponse,
+            '/api/sessions/',
+            null,
+            onSuccessSessions,
+          );
+        }
+        getEditor(
+          setFetchScenariosResponse,
+          `/logistics?scenario_id=${obj.scenarioID}`,
+          null,
+          onSuccess,
+        );
+      });
+
+      /*
       complete = complete.map((data) => ({
         title: data.name,
         num_conversations: data.num_conversation,
         is_finished: data.is_finished,
         date: data.last_date_modified,
-        version_id: data.version_id,
-        first_page: data.first_page,
+        scenarioID: data.scenarioID,
+        firstPage: data.firstPage,
         course: data.course_name,
       }));
-      const scen = {
-        incompleteScenarios: incomplete,
-        completeScenarios: complete,
-      };
-      setScenarioList(scen);
+      */
     }
 
-    function onFailure() {
-      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+    function onFailure(e) {
+      setErrorBannerMessage('Failed to get scenarios! Please refresh the page.');
       setErrorBannerFade(true);
     }
-    get(
+    getEditor(
       setFetchScenariosResponse,
-      endpointGet + STUDENT_ID,
+      `${endpointGet}phaas`,
       onFailure,
       onSuccess,
     );
@@ -217,7 +222,7 @@ export default function Home() {
 
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
-  // //Get Cours
+
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -290,19 +295,19 @@ export default function Home() {
           >
             <Typography variant="h2">To-Do</Typography>
           </Grid>
-          {scenarioList.incompleteScenarios.map((scenario) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
+          {scenarioList.incompleteScenarios ? scenarioList.incompleteScenarios.map((scenario) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished={false}
                   title={scenario.title}
-                  course={scenario.course}
+                  courses={scenario.courses}
                   date={scenario.date}
                 />
                 <Button
                   component={Link}
                   to={{
-                    pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
+                    pathname: `/simulation/${scenario.scenarioID}/${scenario.firstPage}`,
                     data: scenario,
                   }}
                   className={classes.button}
@@ -310,21 +315,11 @@ export default function Home() {
                   color="primary"
                 >
                   Select Scenario
+                  {' '}
                 </Button>
-                {/* <Button onClick={() => {
-                  changeID(scenario.version_id)
-                  //TEMPORARY SOLUTION
-                  window.location.href="/simulation";
-                }} className={classes.button}>Select Scenario</Button> */}
-                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
-          ))}
-          {/* <Grid container direction="row" item xs={12} justify="space-evenly" alignItems="center">
-            <Box m={2} pt={3}>
-              <CodeButton />
-            </Box>
-          </Grid> */}
+          )) : null}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -334,19 +329,19 @@ export default function Home() {
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>
-          {scenarioList.completeScenarios.map((scenario) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.version_id}>
+          {scenarioList.completeScenarios ? scenarioList.completeScenarios.map((scenario) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={scenario.scenarioID}>
               <Paper elevation={5} className={classes.paper}>
                 <ScenarioCard
                   finished
                   title={scenario.title}
-                  course={scenario.course}
+                  courses={scenario.courses}
                   date={scenario.date}
                 />
                 <Button
                   component={Link}
                   to={{
-                    pathname: `/simulation/${scenario.version_id}/${scenario.first_page}`,
+                    pathname: `/simulation/${scenario.scenarioID}/${scenario.firstPage}`,
                     data: scenario,
                   }}
                   className={classes.button}
@@ -355,10 +350,9 @@ export default function Home() {
                 >
                   Review Scenario
                 </Button>
-                {/* <ProgressBar completed={scenario.completed} max={scenario.max} size={10} /> */}
               </Paper>
             </Grid>
-          ))}
+          )) : null}
         </Grid>
       </TabPanel>
     </div>

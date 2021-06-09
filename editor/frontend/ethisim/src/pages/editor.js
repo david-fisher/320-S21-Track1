@@ -172,7 +172,7 @@ export default function Editor(props) {
     : scenarioIDFromURL;
 
   // TODO when version control is implemented
-  const tempVersionID = 1;
+  const tempVersionID = null;
 
   const [getValues, setGetValues] = useState({
     data: null,
@@ -263,6 +263,7 @@ export default function Editor(props) {
       );
 
       const pages = logistics_and_pages.PAGES;
+      pages.sort((a, b) => b.PAGE - a.PAGE);
 
       for (let i = 0; i < pages.length; i++) {
         // Already have component in initial components
@@ -305,10 +306,15 @@ export default function Editor(props) {
     });
   };
 
-  // TODO implement banner
-  function handleDelete(setDeleteValues, d_id) {
+  function handleDelete(setDeleteValues, d_id, samePage) {
     const endpoint = `/page?page_id=${d_id}`;
     function onSuccess(resp) {
+      // we deleted the page that we are currently on,
+      // if there were unsaved changes on that page,
+      // we can set global unsaved context to false, as there are no unsaved changes
+      if (samePage) {
+        setGlobalUnsaved(false);
+      }
       setSuccessBannerFade(true);
       setSuccessBannerMessage('Successfully deleted page!');
       setShowEditor(true);
@@ -340,6 +346,7 @@ export default function Editor(props) {
       const currPageInfo = resp.data;
       if (currPageInfo.PAGE_TYPE === 'I') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -358,6 +365,7 @@ export default function Editor(props) {
         c = <Introduction {...p} />;
       } else if (currPageInfo.PAGE_TYPE === 'G') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -376,6 +384,7 @@ export default function Editor(props) {
         c = <Generic {...p} />;
       } else if (currPageInfo.PAGE_TYPE === 'A') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -386,18 +395,7 @@ export default function Editor(props) {
           next_page_id: currPageInfo.NEXT_PAGE,
           version_ID: tempVersionID,
           body: currPageInfo.PAGE_BODY,
-          choice1: currPageInfo.CHOICES[0]
-            ? currPageInfo.CHOICES[0].CHOICE
-            : '',
-          r1: currPageInfo.CHOICES[0]
-            ? currPageInfo.CHOICES[0].RESULT_PAGE
-            : null,
-          choice2: currPageInfo.CHOICES[1]
-            ? currPageInfo.CHOICES[1].CHOICE
-            : '',
-          r2: currPageInfo.CHOICES[1]
-            ? currPageInfo.CHOICES[1].RESULT_PAGE
-            : null,
+          choices: currPageInfo.CHOICES,
           xCoord: currPageInfo.X_COORDINATE,
           yCoord: currPageInfo.Y_COORDINATE,
           created: false,
@@ -405,6 +403,7 @@ export default function Editor(props) {
         c = <Action {...p} />;
       } else if (currPageInfo.PAGE_TYPE === 'R') {
         p = {
+          key: currPageInfo.PAGE,
           scenarioComponents: newScenarioComponents,
           setScenarioComponents,
           setCurrentPageID,
@@ -464,23 +463,24 @@ export default function Editor(props) {
 
   const [shouldFetch, setShouldFetch] = useState(0);
   useEffect(handleLogisticsGet, [shouldFetch]);
-
   const onClick = (id, title, scenarioPages) => {
     setCurrentPageID(id);
     if (id !== -1 && id !== -2 && id !== -3 && id !== -4) {
+      setScenarioComponent(null);
       handlePageGet(setGetValues, id, scenarioPages);
     } else {
       let arr = [...scenarioPages];
       arr = arr.map((x) => ({ ...x, curPage: false }));
       arr[Math.abs(id) - 1].curPage = true;
       setScenarioComponents(arr);
+      setScenarioComponent(
+        scenarioComponents.find((x) => x.id === id).component,
+      );
     }
-    setScenarioComponent(
-      scenarioComponents.find((x) => x.id === id).component,
-    );
   };
 
   const deleteByID = (d_id) => {
+    let samePage = false;
     // If on page that is going to be deleted, redirect back to logistics page
     if (
       scenarioComponents.filter((i) => i.id === d_id)[0].id
@@ -488,10 +488,11 @@ export default function Editor(props) {
     ) {
       setCurrentPageID(-1);
       setScenarioComponent(scenarioComponents[0].component);
+      samePage = true;
     }
     setScenarioComponents(scenarioComponents.filter((i) => i.id !== d_id));
     setShowEditor(false);
-    handleDelete(setDeleteValues, d_id);
+    handleDelete(setDeleteValues, d_id, samePage);
   };
 
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
@@ -523,12 +524,13 @@ export default function Editor(props) {
       setShowComponent(false);
       const endpoint = '/api/pages/';
       // eslint-disable-next-line
-            let c = null;
+      let c = null;
       // eslint-disable-next-line
-            let p = null;
+      let p = null;
       let postReqBody;
 
       function onSuccess(resp) {
+        setGlobalUnsaved(false);
         setAddNewPageId(resp.data.PAGE);
         setShouldFetch(shouldFetch + 1);
       }
@@ -686,6 +688,7 @@ export default function Editor(props) {
     );
   }
 
+  // Warn users when leaving editor view if there are unsaved changes
   useBeforeunload((event) => {
     if (globalUnsaved) {
       event.preventDefault();

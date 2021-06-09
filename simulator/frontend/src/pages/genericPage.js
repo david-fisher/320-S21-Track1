@@ -8,6 +8,7 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core';
+import InnerHTML from 'dangerously-set-html-content';
 import GlobalContext from '../Context/GlobalContext';
 
 const TextTypography = withStyles({
@@ -50,7 +51,6 @@ export default function GenericPage({
   const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
-  body = body.replace(/\\"/g, '"');
 
   const Buttons = (
     <Grid container direction="row" justify="space-between">
@@ -60,7 +60,7 @@ export default function GenericPage({
             variant="contained"
             disableElevation
             color="primary"
-            onClick={() => getPrevPage(prevPageEndpoint, contextObj.pages)}
+            onClick={() => getPrevPage(contextObj.activeIndex - 1)}
           >
             Back
           </Button>
@@ -95,7 +95,7 @@ export default function GenericPage({
       </Box>
       <Grid container spacing={2} style={{ width: '100%' }}>
         <Grid item style={{ width: '100%' }}>
-          <div dangerouslySetInnerHTML={{ __html: body }} />
+          <InnerHTML html={body.replace(/\\"/g, '"')} />
         </Grid>
       </Grid>
     </div>

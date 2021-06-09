@@ -13,11 +13,44 @@ import {
   TableContainer,
   TableBody,
   Paper,
+  makeStyles,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { STUDENT_ID } from '../constants/config';
-import get from '../universalHTTPRequests/get';
+import get from '../universalHTTPRequestsEditor/get';
+import ErrorBanner from '../components/Banners/ErrorBanner';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    color: '#5b7f95',
+  },
+  errorContainer: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  backButton: {
+    marginLeft: '0rem',
+    marginRight: '0rem',
+    marginTop: '1rem',
+  },
+  nextButton: {
+    marginRight: '0rem',
+    marginTop: '1rem',
+  },
+  button: {
+    width: '100%',
+    textTransform: 'unset',
+  },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+}));
 
 // eslint-disable-next-line
 const TextTypography = withStyles({
@@ -88,16 +121,17 @@ const StyledTabs = withStyles({
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
 Radar.propTypes = {
-  versionID: PropTypes.number.isRequired,
+  scenarioID: PropTypes.number.isRequired,
 };
-function Radar({ versionID }) {
+export default function Radar({ scenarioID }) {
+  const classes = useStyles();
   const chartContainer = useRef(null);
   // eslint-disable-next-line
   const [chartInstance, setChartInstance] = useState(null);
   const [coverage, setCoverage] = useState([]);
   const [value, setValue] = React.useState(0);
 
-  const endpointGet = `/scenarios/radar?userId=${STUDENT_ID}&versionId=${versionID}`;
+  const endpointGet = `/scenarios/radar?userId=${STUDENT_ID}&scenarioID=${scenarioID}`;
   // eslint-disable-next-line
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
@@ -109,13 +143,13 @@ function Radar({ versionID }) {
 
   const getData = () => {
     function onSuccess(response) {
-      console.log(response);
       setCoverage(response.data.result);
       createChart(response.data.result);
     }
 
-    function onFailure(err) {
-      console.log('Error');
+    function onFailure(e) {
+      setErrorBannerMessage('Failed to get Radar Plot data. Please refresh the page.');
+      setErrorBannerFade(true);
     }
     get(setFetchScenariosResponse, endpointGet, onFailure, onSuccess);
   };
@@ -143,7 +177,6 @@ function Radar({ versionID }) {
       const lbls = cov.map((x) => x.name);
       const vals = cov.map((x) => x.percentage);
       const average = vals.reduce((a, b) => a + b) / vals.length;
-      console.log(average);
       const config = {
         type: 'radar',
         data: {
@@ -186,7 +219,6 @@ function Radar({ versionID }) {
 
       if (chartContainer && chartContainer.current) {
         const newChartInstance = new Chart(chartContainer.current, config);
-        console.log(newChartInstance);
         setChartInstance(newChartInstance);
       }
     }
@@ -203,8 +235,25 @@ function Radar({ versionID }) {
     setValue(newValue);
   };
 
+  const [errorBannerMessage, setErrorBannerMessage] = useState('');
+  const [errorBannerFade, setErrorBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setErrorBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [errorBannerFade]);
+
   return (
     <div>
+      <div className={classes.bannerContainer}>
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
+      </div>
       <StyledTabs
         value={value}
         variant="fullWidth"
@@ -261,5 +310,3 @@ function Radar({ versionID }) {
     </div>
   );
 }
-
-export default Radar;

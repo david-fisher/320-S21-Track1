@@ -18,11 +18,16 @@ export const ActionPageHelpInfo = [
         What you see in the text editor is what the player will see in the scenario.`,
   },
   {
-    title: 'Option 1 and 2',
-    description: `This is where you dictate the 2 decisions the player can make. 
-        These fields cannot be empty or be the same.
+    title: 'Add choice',
+    description: `This is where you add the choices that a player can make. 
+        These fields cannot be empty or have any duplicates.
         The next page a player sees is based on what the player selects, 
         dictated by the order chosen in the Flow Diagram.`,
+  },
+  {
+    title: 'Page Preview',
+    description: `Selecting "Page Preview" will show a page preview that will 
+        present exactly how the page will look like to the player.`,
   },
   {
     title: 'Save',

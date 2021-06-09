@@ -31,6 +31,11 @@ export const ReflectionPageHelpInfo = [
             'Questions cannot be empty, and there cannot be duplicate questions.',
   },
   {
+    title: 'Page Preview',
+    description: `Selecting this button will show a page preview that will 
+        present exactly how the page will look like to the player.`,
+  },
+  {
     title: 'Save',
     description: 'Selecting "Save" will save your changes.',
   },

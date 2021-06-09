@@ -46,6 +46,16 @@ class ConversationsViewSet(viewsets.ModelViewSet):
     filterset_fields = ['STAKEHOLDER', 'QUESTION']
 
 
+class user_accessViewSet(viewsets.ModelViewSet):
+    queryset = user_access.objects.all()
+     # Will raise a PermissionDenied exception if the test fails.
+    permissions_classes = [
+        permissions.IsFaculty
+    ]
+    serializer_class = user_accessSerializer
+    filter_backends = [DjangoFilterBackend]
+
+
 class multi_conv(APIView):
     def put(self, request, *args, **kwargs):
         STAKEHOLDER = self.request.query_params.get('STAKEHOLDER')
@@ -88,7 +98,7 @@ class multi_coverage(APIView):
 
 class CoverageViewSet(viewsets.ModelViewSet):
     queryset = coverage.objects.all()
-    permission_classe = [permissions.IsFaculty]
+    permission_classes = [permissions.IsFaculty]
     serializer_class = coverageSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['STAKEHOLDER']
@@ -103,12 +113,9 @@ class UsersViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = UserSerializer
 
-class UserTypesViewSet(viewsets.ModelViewSet):
-    queryset = UserTypes.objects.all()
-    permission_classes = [
-        permissions.IsFaculty
-    ]
-    serializer_class = UserTypesSerializer
+
+
+
 
 
 class ScenariosForViewSet(viewsets.ModelViewSet):
@@ -117,6 +124,8 @@ class ScenariosForViewSet(viewsets.ModelViewSet):
         permissions.IsFaculty
     ]
     serializer_class = Scenarios_forSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['COURSE']
 
 class ScenariosViewSet(viewsets.ModelViewSet):
     queryset = scenarios.objects.all()
@@ -160,10 +169,6 @@ class Reflection_QuestionsViewSet(viewsets.ModelViewSet):
         permissions.IsFaculty
     ]
     serializer_class = Reflection_questionsSerializer
-
-
-
-
 
 
 class CoursesViewSet(viewsets.ModelViewSet):
@@ -987,6 +992,35 @@ class coverages_page(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class IssueCoverage(APIView):
+    def post(self, request, *args, **kwargs):
+    
+        serializer = IssuesSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            issueid = serializer.data['ISSUE']
+            scenarioid = serializer.data['SCENARIO']
+            queryset = stakeholders.objects.filter(SCENARIO=scenarioid)
+            data = StakeholdersSerializer(queryset, many=True).data
+            for item in data:
+                itemdict = {}
+                itemdict['STAKEHOLDER'] = item['STAKEHOLDER']
+                itemdict['ISSUE'] = issueid
+                itemdict['NAME'] = serializer.data['NAME']
+                itemdict['COVERAGE_SCORE'] = 0
+                itemdict['SUMMARY'] = ""
+                print(itemdict)
+                itemSerializer = coverageSerializer(data=itemdict)
+                if itemSerializer.is_valid():
+                    itemSerializer.save()
+                else:
+                    return Response(itemSerializer.errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class stakeholders_page(APIView):
     
@@ -1143,6 +1177,7 @@ class stakeholders_page(APIView):
                 itemdict['ISSUE'] = item['ISSUE']
                 itemdict['NAME'] = item['NAME']
                 itemdict['COVERAGE_SCORE'] = 0
+                itemdict['SUMMARY'] = ""
                 print(itemdict)
                 itemSerializer = coverageSerializer(data=itemdict)
                 if itemSerializer.is_valid():
@@ -1273,4 +1308,57 @@ class coverages_page(APIView):
         )
 
         return Response(stkholder, status=status.HTTP_200_OK)
+
+
+class scenarios_forapi(APIView):
+
+    def add_detail(self, users):
+    
+        for user1 in users:
+            user_id = user1['user_id']
+
+            queryset1 = scenarios.objects.filter(user=user_id)
+            scenList1 = ScenariosSerializer(queryset1, many=True).data
+            
+            for scen in scenList1:
+                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print(queryset2)
+                scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
+                if(not len(scenList2) == 0):
+                    scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+            user1['SCENARIO'] = scenList1
+
+        return users
+
+
+    def get(self, request, *args, **kwargs):
+        # http://127.0.0.1:8000/scenario_for_user?netid=phaas
+
+        NET_ID = self.request.query_params.get('netid')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
+        if NET_ID != None:
+            # checking valid scenario ID
+            try:
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                Users.objects.get(user_id=NET_ID)
+                queryset = Users.objects.filter(
+                    user_id=NET_ID)
+                data = list(UserSerializer(queryset, many=True).data)
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
+
+            # return an error for non-existed scenario id
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
+
+    
+
+
 

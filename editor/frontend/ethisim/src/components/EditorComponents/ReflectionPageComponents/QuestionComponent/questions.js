@@ -22,11 +22,11 @@ export default function QuestionFields({
   // We set a temporary unique ID.
   function setNewIssueID() {
     let newID = Math.floor(Math.random() * 10000000);
-    let collision = questions.filter((data) => data.id === newID).length !== 0;
+    let collision = questions.filter((data) => data.RQ_ID === newID).length !== 0;
     while (collision) {
       newID = Math.floor(Math.random() * 10000000);
       const checkNewID = newID;
-      collision = questions.data.filter((data) => data.id === checkNewID)
+      collision = questions.data.filter((data) => data.RQ_ID === checkNewID)
         .length !== 0;
     }
     return newID;
@@ -34,7 +34,7 @@ export default function QuestionFields({
 
   const removeQuestion = (questionID) => {
     setGlobalUnsaved(true);
-    const leftQuestions = questions.filter((q) => q.id !== questionID);
+    const leftQuestions = questions.filter((q) => q.RQ_ID !== questionID);
     setQuestions(leftQuestions);
     const reqBody = leftQuestions.map((obj) => obj.REFLECTION_QUESTION);
     setReqBodyNew(reqBody);
@@ -47,7 +47,7 @@ export default function QuestionFields({
     newQuestions = [...newQuestions, ''];
     setReqBodyNew(newQuestions);
     const newQuestionsList = questions.concat({
-      id: setNewIssueID(),
+      RQ_ID: setNewIssueID(),
       REFLECTION_QUESTION: '',
     });
     setQuestions(newQuestionsList);
@@ -68,8 +68,8 @@ export default function QuestionFields({
       <form id="form">
         {questions.map((data) => (
           <QuestionField
-            key={data.id}
-            id={data.id}
+            key={data.RQ_ID}
+            id={data.RQ_ID}
             removeQuestion={removeQuestion}
             question={data.REFLECTION_QUESTION}
             listOfQuestions={questions}

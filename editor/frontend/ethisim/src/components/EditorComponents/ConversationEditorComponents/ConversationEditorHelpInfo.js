@@ -30,16 +30,21 @@ export const ConversationEditorHelpInfo = [
   Clicking on the Main Conversation section will expand the section for editing.`,
   },
   {
-    title: 'View Questions',
+    title: 'Coverage',
+    description: `This is where you decide the "issue coverage" of the particular stakeholder.
+  Selecting "Point Selection" will allow you to input the appropriate scores and stakeholder summaries for each ethical issue.`,
+  },
+  {
+    title: 'Questions',
     description: `If a student decides to speak with the stakeholder, 
   the student can pick questions to ask to the stakeholder, 
   in which the stakeholder will respond with an appropriate answer.
-  Selecting "View Questions" will allow you to input questions and answers for the stakeholder.`,
+  Selecting "Questions" will allow you to input questions and answers for the stakeholder.`,
   },
   {
-    title: 'Point Selection',
-    description: `This is where you decide the "issue coverage" of the particular stakeholder.
-  Selecting "Point Selection" will allow you to input the appropriate scores for each ethical issue.`,
+    title: 'Stakeholder Preview',
+    description: `Selecting "Stakeholder Preview" will show how 
+  the stakeholder component will exactly look like to the player.`,
   },
   {
     title: 'Delete',

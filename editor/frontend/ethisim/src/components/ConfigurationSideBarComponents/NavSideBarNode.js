@@ -46,6 +46,8 @@ NavSideBarNode.propTypes = {
   scenarioPages: PropTypes.any,
   isIntroPage: PropTypes.bool,
   curPage: PropTypes.any,
+  currentTime: PropTypes.string,
+  setCurrentTime: PropTypes.func,
 };
 
 export default function NavSideBarNode(props) {
@@ -147,7 +149,6 @@ export default function NavSideBarNode(props) {
 
   function handleDisplayComponent() {
     if (!curPage) {
-      // Reset global unsaved to false when going to new component
       setGlobalUnsaved(false);
       onClick(id, title, scenarioPages);
     }

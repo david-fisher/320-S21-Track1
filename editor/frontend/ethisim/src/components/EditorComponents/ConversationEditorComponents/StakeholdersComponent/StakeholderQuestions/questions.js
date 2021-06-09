@@ -7,6 +7,7 @@ import put from '../../../../../universalHTTPRequests/put';
 import post from '../../../../../universalHTTPRequests/post';
 import { ViewQuestionsHelpInfo } from './ViewQuestionsHelpInfo';
 import GenericHelpButton from '../../../../HelpButton/GenericHelpButton';
+import { getCurrentTimeInt, checkTime } from '../../../../CheckTime';
 
 QuestionFields.propTypes = {
   qrs: PropTypes.any,
@@ -69,8 +70,15 @@ export default function QuestionFields({
     loading: true,
     error: null,
   });
+
+  /*
+    * This section is about managing time to prevent sending a combination of multiple
+    *    HTTP GET/POST/PUT/DELETE calls before a response is returned
+    */
+  const [currentTime, setCurrentTime] = useState(getCurrentTimeInt());
+
   const addQuestion = (e) => {
-    if (!checkTime(setCurrentTime, currentTime)) {
+    if (!checkTime(currentTime, setCurrentTime)) {
       return;
     }
     const endpointPOST = '/api/conversations/';
@@ -97,9 +105,6 @@ export default function QuestionFields({
     error: null,
   });
   const removeQuestion = (questionID) => {
-    if (!checkTime(setCurrentTime, currentTime)) {
-      return;
-    }
     const endpointDELETE = `/api/conversations/${questionID}/`;
     function onSuccess() {
       const leftQuestions = QRs.filter(
@@ -117,34 +122,6 @@ export default function QuestionFields({
     }
     deleteReq(setDelete, endpointDELETE, onFailure, onSuccess);
   };
-
-  /*
-     * This section is about managing time to prevent sending a combination of multiple
-     *    HTTP GET/POST/PUT/DELETE calls before a response is returned
-     */
-  const [currentTime, setCurrentTime] = useState(getCurrentTimeInt());
-  // gets the current time in hms and converts it to an int
-  function getCurrentTimeInt() {
-    const d = Date();
-    const h = d.substring(16, 18);
-    const m = d.substring(19, 21);
-    const s = d.substring(22, 24);
-    return 60 * (60 * h + m) + s;
-  }
-
-  // checks if at least 1 second has elapsed since last action
-  // if someone waits a multiple of exactly 24 hours since their last action they will
-  //    not be able to take an action for an additional second
-  function checkTime(setTime, t) {
-    let ret = false;
-    // current time difference is at least 1 second, but that SHOULD be ample time for
-    // the database to get back to the frontend
-    if (getCurrentTimeInt() - t !== 0) {
-      ret = true;
-    }
-    setTime(getCurrentTimeInt());
-    return ret;
-  }
 
   return (
     <div>

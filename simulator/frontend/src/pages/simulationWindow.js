@@ -1,19 +1,23 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Grid, Box } from '@material-ui/core';
+import {
+  Grid, Box, Typography, Button,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import ErrorIcon from '@material-ui/icons/Error';
 import PropTypes from 'prop-types';
-import Stepper from './components/stepper';
+import Stepper from '../components/stepper';
 import GenericPage from './genericPage';
 import Reflection from './reflection';
 import Action from './action';
 import Stakeholders from './stakeholders';
 import Feedback from './feedback';
 import { STUDENT_ID } from '../constants/config';
-import LoadingSpinner from './components/LoadingSpinner';
-import get from '../universalHTTPRequests/get';
-import post from '../universalHTTPRequests/post';
-import ErrorBanner from './components/Banners/ErrorBanner';
+import LoadingSpinner from '../components/LoadingSpinner';
+import get from '../universalHTTPRequestsEditor/get';
+import post from '../universalHTTPRequestsSimulator/post';
+import ErrorBanner from '../components/Banners/ErrorBanner';
 import GlobalContext from '../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +25,41 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  container: {
+    '@media (max-width:800px)': {
+      flexDirection: 'column',
+    },
+  },
+  stepper: {
+    '@media (max-width:800px)': {
+      maxWidth: '100%',
+      overflowX: 'scroll',
+    },
+  },
+  content: {
+    '@media (max-width:800px)': {
+      maxWidth: '100%',
+      padding: '5px',
+    },
+  },
+  errorContainer: {
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  issue: {
+    marginTop: theme.spacing(10),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  iconError: {
+    fontSize: '75px',
+  },
+  iconRefreshLarge: {
+    fontSize: '75px',
   },
 }));
 
@@ -35,25 +74,30 @@ export default function SimulationWindow(props) {
 
   const pathArray = location.pathname.split('/');
   const scenarioID = props.location.data
-    ? props.location.data.version_id
+    ? props.location.data.scenarioID
     : pathArray[pathArray.length - 2];
   const firstPage = props.location.data
-    ? props.location.data.first_page
+    ? props.location.data.firstPage
     : pathArray[pathArray.length - 1];
-  const versionID = scenarioID;
 
   const numConversations = props.location.data
-    ? props.location.data.num_conversations
+    ? props.location.data.numConversations
     : 3;
   // eslint-disable-next-line
   const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${versionID}`;
-  const firstPageEndpoint = `/scenarios/task?versionId=${versionID}&pageId=${firstPage}`;
+  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
+  const firstPageEndpoint = `/page?page_id=${firstPage}`;
   // eslint-disable-next-line
   const endpointGetMeta = "/scenarios?userId=" + STUDENT_ID;
-  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+  const [fetchFirstPage, setFirstPage] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+  // eslint-disable-next-line
+  const [startSession, setStartSession] = useState({
     data: null,
     loading: false,
     error: false,
@@ -66,18 +110,18 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [],
       }));
-      get(setFetchScenariosResponse, firstPageEndpoint, onFailure, onSuccess);
+      get(setFirstPage, firstPageEndpoint, onFailure, onSuccess);
     }
     function onSuccess(response) {
-      const data = response.data.result[0];
-      const next = response.data.result[0].next_page;
-      const nextEndpoint = `/scenarios/task?versionId=${versionID}&pageId=${next}`;
+      const { data } = response;
+      const next = data.NEXT_PAGE;
+      const nextEndpoint = `/page?page_id=${next}`;
       const component = (
         <GenericPage
           isIntro
           sessionID={sessionID}
-          pageTitle={data.page_title}
-          body={data.body}
+          pageTitle={data.PAGE_TITLE}
+          body={data.PAGE_BODY}
           getNextPage={getNextPage}
           nextPageEndpoint={nextEndpoint}
         />
@@ -85,22 +129,30 @@ export default function SimulationWindow(props) {
       const newPage = {
         visited: false,
         completed: false,
-        id: data.page_id,
-        title: data.page_title,
+        id: data.PAGE,
+        title: data.PAGE_TITLE,
         pageEndpoint: firstPageEndpoint,
         nextPageEndpoint: nextEndpoint,
         component,
       };
       setPlayerContext((oldObj) => ({
         ...oldObj,
+        numConversations,
+        activeIndex: 0,
         pages: [...oldObj.pages, newPage],
       }));
     }
     function onFailure() {
-      setErrorBannerMessage('Failed to get scenarios! Please try again.');
+      setErrorBannerMessage('Failed to start session! Please try again.');
       setErrorBannerFade(true);
     }
-    post(setFetchScenariosResponse, endpointSess, onFailure, startSess);
+    // This allows for a cleaner loading spinner animation (rather than being cut up)
+    setFirstPage({
+      data: null,
+      loading: true,
+      error: false,
+    });
+    post(setStartSession, endpointSess, null, startSess);
   };
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
@@ -108,11 +160,13 @@ export default function SimulationWindow(props) {
       case 'G':
         return (
           <GenericPage
+            key={data.PAGE}
             isIntro={false}
-            pageTitle={data.page_title}
-            body={data.body}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -120,13 +174,14 @@ export default function SimulationWindow(props) {
       case 'R':
         return (
           <Reflection
-            versionID={versionID}
-            pageID={data.page_id}
-            pageTitle={data.page_title}
-            body={data.body}
-            questions={data.questions}
+            key={data.PAGE}
+            scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
+            questions={data.REFLECTION_QUESTIONS}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -134,12 +189,13 @@ export default function SimulationWindow(props) {
       case 'S':
         return (
           <Stakeholders
-            versionID={versionID}
-            pageID={data.page_id}
-            pageTitle={data.page_title}
-            body={data.body}
+            key={data.PAGE}
+            scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
@@ -147,15 +203,16 @@ export default function SimulationWindow(props) {
       case 'A':
         return (
           <Action
+            key={data.PAGE}
             sessionID={sessionID}
-            versionID={versionID}
-            pageID={data.page_id}
-            pageTitle={data.page_title}
-            body={data.body}
-            choices={data.choices}
+            scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
+            choices={data.CHOICES}
             choiceChosen={data.choiceChosen}
             getNextPage={getNextPage}
-            getPrevPage={getPrevPage}
+            getPrevPage={getExistingPage}
             prevPageEndpoint={prevPageEndpoint}
           />
         );
@@ -163,8 +220,8 @@ export default function SimulationWindow(props) {
         return (
           <Feedback
             sessionID={sessionID}
-            versionID={versionID}
-            getPrevPage={getPrevPage}
+            scenarioID={scenarioID}
+            getPrevPage={getExistingPage}
             prevPageEndpoint={prevPageEndpoint}
           />
         );
@@ -172,24 +229,18 @@ export default function SimulationWindow(props) {
     }
   }
 
-  let getPrevPage = (prevPageEndpoint, pages) => {
-    function onSuccess(response) {
-      const data = response.data.result[0];
-      const indexInPages = pages.findIndex((obj) => obj.id === data.page_id);
-      setPlayerContext((oldObj) => ({
-        ...oldObj,
-        activeIndex: indexInPages,
-      }));
-    }
-
-    function onFailure() {
-      setErrorBannerMessage('Failed to get page! Please try again.');
-      setErrorBannerFade(true);
-    }
-
-    get(setFetchScenariosResponse, prevPageEndpoint, onFailure, onSuccess);
+  const getExistingPage = (index) => {
+    setPlayerContext((oldObj) => ({
+      ...oldObj,
+      activeIndex: index,
+    }));
   };
 
+  const [fetchNextPage, setNextPage] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
   let getNextPage = (nextPageEndpoint, index, pages) => {
     // Last page, show feedback page
     if (!nextPageEndpoint) {
@@ -220,15 +271,15 @@ export default function SimulationWindow(props) {
     }
 
     function onSuccess(response) {
-      const data = response.data.result[0];
-      const indexInPages = pages.findIndex((obj) => obj.id === data.page_id);
+      const { data } = response;
+      const indexInPages = pages.findIndex((obj) => obj.id === data.PAGE);
       if (indexInPages === -1) {
-        const next = response.data.result[0].next_page;
+        const next = data.NEXT_PAGE;
         const nextEndpoint = !next || next <= 0
           ? null
-          : `/scenarios/task?versionId=${versionID}&pageId=${next}`;
+          : `/page?page_id=${next}`;
         const component = getPageComponent(
-          data.page_type,
+          data.PAGE_TYPE,
           data,
           nextEndpoint,
           pages[index].pageEndpoint,
@@ -236,8 +287,8 @@ export default function SimulationWindow(props) {
         const newPage = {
           visited: false,
           completed: false,
-          title: data.page_title,
-          id: data.page_id,
+          title: data.PAGE_TITLE,
+          id: data.PAGE,
           pageEndpoint: nextPageEndpoint,
           nextPageEndpoint: nextEndpoint,
           component,
@@ -263,7 +314,14 @@ export default function SimulationWindow(props) {
       setErrorBannerFade(true);
     }
 
-    get(setFetchScenariosResponse, nextPageEndpoint, onFailure, onSuccess);
+    if ((index + 1) < pages.length) {
+      setPlayerContext((oldObj) => ({
+        ...oldObj,
+        activeIndex: oldObj.activeIndex + 1,
+      }));
+    } else {
+      get(setNextPage, nextPageEndpoint, onFailure, onSuccess);
+    }
   };
 
   useEffect(getFirstPage, []);
@@ -279,11 +337,23 @@ export default function SimulationWindow(props) {
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
 
-  if (fetchScenariosResponse.loading) {
+  if (fetchFirstPage.error) {
+    // TODO fix
+    const onClick = fetchFirstPage.error ? getFirstPage : fetchNextPage.error ? getNextPage : getExistingPage;
     return (
       <div>
-        <div style={{ marginTop: '100px' }}>
-          <LoadingSpinner />
+        <div className={classes.issue}>
+          <ErrorIcon className={classes.iconError} />
+          <Typography align="center" variant="h3">
+            Error in fetching page data.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onClick}
+          >
+            <RefreshIcon className={classes.iconRefreshLarge} />
+          </Button>
         </div>
       </div>
     );
@@ -294,27 +364,24 @@ export default function SimulationWindow(props) {
       <div className={classes.bannerContainer}>
         <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
       </div>
-      <Grid container spacing={2}>
-        {/* <GatheredInfoContext.Provider value={infoIdsState}> */}
-        <Grid item lg={3} md={2} sm={2}>
-          <Stepper setActivePage={getPrevPage} />
+      <Grid container className={classes.container}>
+        <Grid item xs={3} className={classes.stepper}>
+          <Stepper setActivePage={getExistingPage} />
         </Grid>
-        <Grid item lg={8} md={8} sm={8}>
-          <Box>
-            {playerContext.pages[playerContext.activeIndex]
+        <Grid item xs={8} className={classes.content}>
+          {(fetchFirstPage.loading || fetchNextPage.loading)
+            ? (
+              <div style={{ marginTop: '100px' }}>
+                <LoadingSpinner />
+              </div>
+            )
+            : (
+              <Box>
+                {playerContext.pages[playerContext.activeIndex]
               && playerContext.pages[playerContext.activeIndex].component}
-          </Box>
+              </Box>
+            )}
         </Grid>
-        {/*
-          <Grid container item lg={3} md={2} sm={2}>
-            <Grid item lg={12}>
-             <InfoGatheredList pages={pages}/>
-            </Grid>
-            <Grid item lg={12}>
-            </Grid>
-          </Grid>
-        </GatheredInfoContext.Provider>
-        */}
       </Grid>
     </GlobalContext.Provider>
   );
