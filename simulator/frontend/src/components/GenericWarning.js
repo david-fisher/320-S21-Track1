@@ -12,14 +12,14 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-GenericUnsavedWarning.propTypes = {
+GenericWarning.propTypes = {
   func: PropTypes.func.isRequired,
   open: PropTypes.any.isRequired,
   setOpen: PropTypes.any.isRequired,
 };
 
-export default function GenericUnsavedWarning(props) {
-  GenericUnsavedWarning.propTypes = props.data;
+export default function GenericWarning(props) {
+  GenericWarning.propTypes = props.data;
   const data = props;
   // func is the function that occurs when user wants to leave without saving changes
   const {

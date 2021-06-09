@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import './index.css';
-import Nav from './Nav';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const theme = createMuiTheme({
@@ -17,7 +17,7 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <React.StrictMode>
     <MuiThemeProvider theme={theme}>
-      <Nav />
+      <App />
     </MuiThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),

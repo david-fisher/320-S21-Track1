@@ -5,7 +5,6 @@ import Login from './pages/login';
 import Dashboard from './pages/dashboard';
 import Editor from './pages/editor';
 import Data from './pages/data';
-// import Homepage from './pages/homepage';
 
 export default function App() {
   return (
