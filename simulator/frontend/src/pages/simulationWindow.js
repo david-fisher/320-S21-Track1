@@ -8,7 +8,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
 import PropTypes from 'prop-types';
 import Stepper from '../components/stepper';
-import GenericPage from '../components/SimulationWindowComponents/genericPage';
+import GenericPage from '../components/SimulationWindowComponents/generic';
 import Reflection from '../components/SimulationWindowComponents/reflection';
 import Action from '../components/SimulationWindowComponents/action';
 import Stakeholders from '../components/SimulationWindowComponents/stakeholders';
