@@ -434,31 +434,90 @@ class logistics_page(APIView):
 
 #returns list of scenarios for given professor along with list of associated courses
 class dashboard_page(APIView):
-    def get(self, request, *args, **kwargs):
+    # def get(self, request, *args, **kwargs):
         
-        #take professor_id as input from URL by adding ?professor_id=<the id #> to the end of the url.
-        PROFESSOR = self.request.query_params.get('professor_id')
-        #TODO check that id != none
-        #get all scenarios belonging to this professor
-        scenario_query = scenarios.objects.filter(user_id__user_id = PROFESSOR).values()
-        #loop through scenarios and append required information (course, page info)
-        logistics = []
-        for scenario in scenario_query:
-            scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scenario['SCENARIO']).values()
-            course_id_array = []
-            for x in scenarios_for_query:
-                course_id_array.append(x['COURSE_id'])
+    #     #take professor_id as input from URL by adding ?professor_id=<the id #> to the end of the url.
+    #     PROFESSOR = self.request.query_params.get('professor_id')
+    #     #TODO check that id != none
+    #     #get all scenarios belonging to this professor
+    #     scenario_query = scenarios.objects.filter(user_id__user_id = PROFESSOR).values()
+    #     #loop through scenarios and append required information (course, page info)
+    #     logistics = []
+    #     for scenario in scenario_query:
+    #         scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scenario['SCENARIO']).values()
+    #         course_id_array = []
+    #         for x in scenarios_for_query:
+    #             course_id_array.append(x['COURSE_id'])
 
-            course_dict_array = []
-            for x in course_id_array:
-                course = courses.objects.get(COURSE= x)
-                course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
-                course_dict_array.append(course_dict)
+    #         course_dict_array = []
+    #         for x in course_id_array:
+    #             course = courses.objects.get(COURSE= x)
+    #             course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+    #             course_dict_array.append(course_dict)
                     
-            scenario["COURSES"] = course_dict_array
-            logistics.append(scenario)
+    #         scenario["COURSES"] = course_dict_array
+    #         logistics.append(scenario)
                 
-        return Response(logistics)
+    #     return Response(logistics)
+
+    def add_detail(self, users):
+        
+        for user1 in users:
+            user_id = user1['user_id']
+
+            queryset1 = scenarios.objects.filter(user=user_id)
+            scenList1 = ScenariosSerializer(queryset1, many=True).data
+            
+            for scen in scenList1:
+                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print(queryset2)
+                scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
+                if(not len(scenList2) == 0):
+                    scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                course_id_array = []
+                for x in scenarios_for_query:
+                    course_id_array.append(x['COURSE_id'])
+
+                course_dict_array = []
+                for x in course_id_array:
+                    course = courses.objects.get(COURSE= x)
+                    course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+                    course_dict_array.append(course_dict)
+                    
+                scen["COURSES"] = course_dict_array
+
+            user1['SCENARIO'] = scenList1
+
+        return users
+
+
+    def get(self, request, *args, **kwargs):
+        # http://127.0.0.1:8000/scenario_for_user?netid=phaas
+
+        NET_ID = self.request.query_params.get('professor_id')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
+        if NET_ID != None:
+            # checking valid scenario ID
+            try:
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                Users.objects.get(user_id=NET_ID)
+                queryset = Users.objects.filter(
+                    user_id=NET_ID)
+                data = list(UserSerializer(queryset, many=True).data)
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
+
+            # return an error for non-existed scenario id
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
 
         """format:
 
@@ -479,6 +538,7 @@ class dashboard_page(APIView):
     def post(self, request, *args, **kwargs):
         #save the scenario
         request.data["user_id"] = request.data["PROFESSOR"]
+        user = request.data["PROFESSOR"]
         del request.data["PROFESSOR"]
         scenario_serializer = ScenariosSerializer(data = request.data)
         if not (scenario_serializer.is_valid()):
@@ -504,6 +564,24 @@ class dashboard_page(APIView):
 
             for_serializer.save()
 
+        #add access level 1 to the user that creates the scenario
+        access_detail = {
+            "USER_ID": user,
+            "ACCESS_LEVEL": 1,
+            "SCENARIO_ID": scenario_dict['SCENARIO']
+        }
+
+        user_access_serializer = user_accessSerializer(data=access_detail)
+        print(user_access_serializer)
+        if user_access_serializer.is_valid():
+            user_access_serializer.save()
+        else:
+            print("intro page saved incorrectly")
+            print(user_access_serializer.errors)
+            return Response(user_access_serializer.errors)
+
+
+
         #create a new intro page
         intro_page = {
         "PAGE_TYPE": "I",
@@ -524,6 +602,7 @@ class dashboard_page(APIView):
             print(intro_page_serializer.errors)
             return Response(intro_page_serializer.errors)
 
+        
         #TODO create blank stakeholder page and return it
         #page must be called STAKEHOLDER_PAGE and serialier must be called stakeholder_page_serializer
         STAKEHOLDER_PAGE = {
@@ -1327,6 +1406,19 @@ class scenarios_forapi(APIView):
                 print(scenList2)
                 if(not len(scenList2) == 0):
                     scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                course_id_array = []
+                for x in scenarios_for_query:
+                    course_id_array.append(x['COURSE_id'])
+
+                course_dict_array = []
+                for x in course_id_array:
+                    course = courses.objects.get(COURSE= x)
+                    course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+                    course_dict_array.append(course_dict)
+                    
+                scen["COURSES"] = course_dict_array
 
             user1['SCENARIO'] = scenList1
 
