@@ -510,7 +510,7 @@ class dashboard_page(APIView):
                 Users.objects.get(user_id=NET_ID)
                 queryset = Users.objects.filter(
                     user_id=NET_ID)
-                data = list(UserSerializer(queryset, many=True).data)
+                data = UserSerializer(queryset, many=True).data
                 data = self.add_detail(data)
                 return Response(data, status=status.HTTP_200_OK)
 
@@ -1441,7 +1441,7 @@ class scenarios_forapi(APIView):
                 Users.objects.get(user_id=NET_ID)
                 queryset = Users.objects.filter(
                     user_id=NET_ID)
-                data = list(UserSerializer(queryset, many=True).data)
+                data = UserSerializer(queryset, many=True).data
                 data = self.add_detail(data)
                 return Response(data, status=status.HTTP_200_OK)
 
