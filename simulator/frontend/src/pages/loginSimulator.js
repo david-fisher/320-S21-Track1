@@ -8,7 +8,7 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
 
 const useStyles = makeStyles((theme) => ({

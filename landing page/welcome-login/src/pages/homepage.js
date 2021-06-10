@@ -111,8 +111,8 @@ function StudentAccess() {
           variant="contained"
           color="primary"
         >
-          <Typography variant="h5" display="block" noWrap>
-            Log in as Student
+          <Typography variant="h5" display="block" align="center">
+            Log in as Simulator Player
           </Typography>
         </Button>
         <Button
@@ -124,14 +124,13 @@ function StudentAccess() {
           variant="contained"
           color="primary"
         >
-          <Typography variant="h5" display="block" noWrap>
-            Log in as Editor
+          <Typography variant="h5" display="block" align="center">
+            Log in as Scenario Editor
           </Typography>
         </Button>
       </Container>
       <Container className={classes.studentButtonsContainer}>
         <Button
-          // onClick={() => window.location.href = DOMAIN + DOMAIN + ((process.env.NODE_ENV === 'production') ? '/simulator' : ':3001')}
           className={classes.guestButton}
           variant="contained"
           color="gray"
