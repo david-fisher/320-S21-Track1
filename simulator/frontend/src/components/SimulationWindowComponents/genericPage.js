@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
-import GlobalContext from '../Context/GlobalContext';
+import GlobalContext from '../../Context/GlobalContext';
 
 const TextTypography = withStyles({
   root: {
