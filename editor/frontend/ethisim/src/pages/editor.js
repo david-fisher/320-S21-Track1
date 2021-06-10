@@ -31,7 +31,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import ErrorBanner from '../components/Banners/ErrorBanner';
 
-import GlobalUnsavedContext from '../components/Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../Context/GlobalUnsavedContext';
 import universalPost from '../universalHTTPRequests/post';
 import universalFetch from '../universalHTTPRequests/get';
 import universalDelete from '../universalHTTPRequests/delete';

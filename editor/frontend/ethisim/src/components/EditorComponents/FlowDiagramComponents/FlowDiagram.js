@@ -33,7 +33,7 @@ import put from '../../../universalHTTPRequests/put';
 import LoadingSpinner from '../../LoadingSpinner';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 import { FlowDiagramHelpInfo } from './FlowDiagramHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 
