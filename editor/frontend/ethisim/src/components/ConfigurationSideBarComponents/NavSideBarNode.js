@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import GenericUnsavedWarning from '../WarningDialogs/GenericUnsavedWarning';
 import GenericDeleteWarning from '../WarningDialogs/GenericDeleteWarning';
-import GlobalUnsavedContext from '../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
   pageButton: {

@@ -6,9 +6,9 @@ import {
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import InnerHTML from 'dangerously-set-html-content';
-import { BACK_URL_EDITOR, STUDENT_ID, SCENARIO_ID } from '../constants/config';
-import { ScenariosContext } from '../App';
-import post from '../universalHTTPRequestsEditor/post';
+import { BACK_URL_EDITOR, STUDENT_ID, SCENARIO_ID } from '../../constants/config';
+import { ScenariosContext } from '../../App';
+import post from '../../universalHTTPRequestsEditor/post';
 
 const TextTypography = withStyles({
   root: {

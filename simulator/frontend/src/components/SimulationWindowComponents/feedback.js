@@ -9,10 +9,10 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import RadarPlot from './radarPlot';
-import GlobalContext from '../Context/GlobalContext';
-import { STUDENT_ID } from '../constants/config';
-import post from '../universalHTTPRequestsSimulator/post';
-import ErrorBanner from '../components/Banners/ErrorBanner';
+import GlobalContext from '../../Context/GlobalContext';
+import { STUDENT_ID } from '../../constants/config';
+import post from '../../universalHTTPRequestsSimulator/post';
+import ErrorBanner from '../Banners/ErrorBanner';
 
 const TextTypography = withStyles({
   root: {

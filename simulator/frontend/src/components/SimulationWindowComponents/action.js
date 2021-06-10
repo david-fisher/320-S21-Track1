@@ -9,13 +9,13 @@ import {
   Grid,
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
-import { STUDENT_ID } from '../constants/config';
-import get from '../universalHTTPRequestsSimulator/get';
-import post from '../universalHTTPRequestsSimulator/post';
-import GlobalContext from '../Context/GlobalContext';
-import ErrorBanner from '../components/Banners/ErrorBanner';
-import LoadingSpinner from '../components/LoadingSpinner';
-import GenericWarning from '../components/GenericWarning';
+import { STUDENT_ID } from '../../constants/config';
+import get from '../../universalHTTPRequestsSimulator/get';
+import post from '../../universalHTTPRequestsSimulator/post';
+import GlobalContext from '../../Context/GlobalContext';
+import ErrorBanner from '../Banners/ErrorBanner';
+import LoadingSpinner from '../LoadingSpinner';
+import GenericWarning from '../GenericWarning';
 
 const useStyles = makeStyles((theme) => ({
   root: {

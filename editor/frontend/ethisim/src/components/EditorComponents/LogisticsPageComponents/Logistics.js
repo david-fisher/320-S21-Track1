@@ -19,7 +19,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import Tags from './DropDown';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import { LogisticsHelpInfo } from './LogistcsHelpInfo';
 
@@ -538,13 +538,13 @@ export default function Logistics({ scenario_ID }) {
             <TextField
               error
               helperText={errorNumConvosText}
-              value={numConvos}
+              value={numConvos || ''}
               rows={1}
               onChange={handleOnChangeNumConvo}
             />
           ) : (
             <TextField
-              value={numConvos}
+              value={numConvos || ''}
               rows={1}
               onChange={handleOnChangeNumConvo}
             />
