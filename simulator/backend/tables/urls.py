@@ -23,6 +23,8 @@ urlpatterns = [
     path('multi_reflection', multi_reflection.as_view()),
     path('scenarios/session/start', views.startSession, name="startSession"),
     path('scenarios/session/end', views.endSession, name="endSession"),
+    path('scenarios/sessiontimes/start', views.startSessionTimes, name="startSessionTimes"),
+    path('scenarios/sessiontimes/end', views.endSessionTimes, name="endSessionTimes"),
 ]
 
 urlpatterns += router.urls
