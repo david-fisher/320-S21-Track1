@@ -57,6 +57,21 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     background: 'black',
   },
+  issue: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  iconError: {
+    paddingRight: theme.spacing(2),
+    fontSize: '75px',
+  },
+  iconRefreshLarge: {
+    fontSize: '75px',
+  },
+  iconRefreshSmall: {
+    fontSize: '30px',
+  },
 }));
 
 // TODO change when backend gets implemented

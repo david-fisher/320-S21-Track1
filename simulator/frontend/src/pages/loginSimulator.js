@@ -10,6 +10,8 @@ import {
 } from '@material-ui/core';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
+import post from '../universalHTTPRequestsSimulator/post';
+import { DEV } from '../constants/config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -41,16 +43,50 @@ export default function LoginSimulator() {
     loading: true,
     error: false,
   });
-
+  const [postShibAttributes, setPostShibAttributes] = useState({
+    data: null,
+    loading: true,
+    error: false,
+  });
+  const [redirect, setRedirect] = useState(false);
   // reload page to right place
   function getLoginData() {
+    function onSuccessPost(resp) {
+      setRedirect(true);
+    }
     function onSuccess(resp) {
-      console.log(resp);
+      post(setPostShibAttributes, '/registerUser', null, onSuccessPost, {
+        netId: resp.data.uid,
+        email: resp.data.displayName,
+        name: resp.data.eduPersonPrimaryAffiliation,
+        affiliation: resp.data.mail,
+      });
+    }
+    if (DEV) {
+      setShibAttributes({
+        data: {
+          result: {
+            userId: 'phaas',
+            name: 'phaas',
+            affliation: 'employee',
+            email: 'phaas@cs.umass.edu',
+          },
+        },
+        loading: false,
+        error: false,
+      });
+      setPostShibAttributes({
+        ...postShibAttributes,
+        loading: false,
+      });
+      setRedirect(true);
+      return;
     }
     get(setShibAttributes, '/shib/attributes', null, onSuccess);
   }
   useEffect(getLoginData, []);
-  if (shibAttributes.loading) {
+
+  if (postShibAttributes.loading) {
     return (
       <Container component="main" maxWidth="xs">
         <div>
@@ -62,7 +98,7 @@ export default function LoginSimulator() {
     );
   }
 
-  if (shibAttributes.error) {
+  if (shibAttributes.error || postShibAttributes.error) {
     return (
       <Container component="main" maxWidth="xs">
         <div>
@@ -84,7 +120,7 @@ export default function LoginSimulator() {
     );
   }
 
-  if (shibAttributes.data) {
+  if (redirect) {
     console.log(shibAttributes.data);
     return (
       <Redirect
