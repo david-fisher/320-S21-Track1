@@ -189,3 +189,65 @@ def endSession(request):
     elif request.method == "GET":
         return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
 
+def startSessionTimes(request):
+    if request.method == "POST":
+        sessionId = int(request.GET['sessionId'])
+        pageId = int(request.GET['pageId'])
+
+        # Check if there is a User given the userId 
+        try:
+            session = sessions.objects.get(SESSION_ID=sessionId)
+        except users.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        message = None
+        # Obtain session field based on given params
+        try:
+            sessionTimes = session_times.objects.get(SESSION_ID=session.SESSION_ID, PAGE_ID=pageId)
+            sessionTimes.MOST_RECENT_ACCESS = datetime.now()
+            sessionTimes.save()
+            message = 'Session resumed successfully.'
+        except session_times.DoesNotExist:
+            sessionTimes = session_times(SESSION_ID_id=session.SESSION_ID, PAGE_ID=pageId, START_TIME=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
+            sessionTimes.save()
+            message = 'Session created succesfully.'
+
+        responseObj = {}
+        responseObj["sessionId"] = session.SESSION_ID
+        responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+
+def endSessionTimes(request):
+    if request.method == "POST":
+        sessionId = int(request.GET['sessionId'])
+        pageId = int(request.GET['pageId'])
+
+        # Check if there is a User given the userId 
+        try:
+            session = session_times.objects.get(SESSION_ID=sessionId)
+        except users.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        try:
+            session = session_times.objects.get(SESSION_ID_id=session.SESSION_ID, PAGE_ID=pageId)
+            session.END_TIME = datetime.now()
+            session.save()
+        except session_times.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'Session does not exist so it cannot be ended.'})
+
+        responseObj = {}
+        responseObj["sessionId"] = session.SESSION_ID
+        responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
+        
+        return JsonResponse(status=200, data={'status': 200, 'message': 'Session successfully ended.'})
+    
+    elif request.method == "GET":
+        return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+

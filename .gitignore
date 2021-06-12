@@ -35,3 +35,5 @@ apache_server/localhost-shibboleth/
 
 node_modules/**
 .eslintcache
+
+editor/backend/venv/

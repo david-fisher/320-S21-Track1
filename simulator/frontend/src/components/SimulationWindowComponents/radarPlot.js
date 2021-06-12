@@ -17,9 +17,9 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { STUDENT_ID } from '../constants/config';
-import get from '../universalHTTPRequestsEditor/get';
-import ErrorBanner from '../components/Banners/ErrorBanner';
+import { STUDENT_ID } from '../../constants/config';
+import get from '../../universalHTTPRequestsEditor/get';
+import ErrorBanner from '../Banners/ErrorBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {

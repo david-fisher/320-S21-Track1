@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import EntryField from './IssueEntryField';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 const useStyles = makeStyles((theme) => ({
   container: {

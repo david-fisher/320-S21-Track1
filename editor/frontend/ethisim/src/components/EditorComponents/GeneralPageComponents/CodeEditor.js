@@ -3,7 +3,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs';
 import PropTypes from 'prop-types';
 import './prism.css';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 CodeEditor.propTypes = {
   body: PropTypes.string.isRequired,

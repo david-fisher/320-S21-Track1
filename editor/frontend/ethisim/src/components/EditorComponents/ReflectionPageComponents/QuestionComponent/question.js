@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
-import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../../Context/GlobalUnsavedContext';
 
 QuestionField.propTypes = {
   removeQuestion: PropTypes.any,

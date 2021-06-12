@@ -364,10 +364,10 @@ export default function Dashboard() {
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      let finishedScenarios = response.data.filter(
+      let finishedScenarios = response.data[0].SCENARIO.filter(
         (data) => data.IS_FINISHED,
       );
-      let unfinishedScenarios = response.data.filter(
+      let unfinishedScenarios = response.data[0].SCENARIO.filter(
         (data) => !data.IS_FINISHED,
       );
       finishedScenarios = finishedScenarios.map((data) => (
@@ -398,7 +398,8 @@ export default function Dashboard() {
       setUnfinishedScenarios(unfinishedScenarios);
     }
 
-    function onFailure() {
+    function onFailure(e) {
+      console.log(e);
       setErrorBannerMessage('Failed to get scenarios! Please try again.');
       setErrorBannerFade(true);
     }

@@ -13,14 +13,14 @@ import ErrorIcon from '@material-ui/icons/Error';
 import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
 // eslint-disable-next-line
-import { STUDENT_ID } from '../constants/config';
-import GlobalContext from '../Context/GlobalContext';
-import get from '../universalHTTPRequestsSimulator/get';
-import post from '../universalHTTPRequestsSimulator/post';
-import LoadingSpinner from '../components/LoadingSpinner';
-import SuccessBanner from '../components/Banners/SuccessBanner';
-import ErrorBanner from '../components/Banners/ErrorBanner';
-import GenericWarning from '../components/GenericWarning';
+import { STUDENT_ID } from '../../constants/config';
+import GlobalContext from '../../Context/GlobalContext';
+import get from '../../universalHTTPRequestsSimulator/get';
+import post from '../../universalHTTPRequestsSimulator/post';
+import LoadingSpinner from '../LoadingSpinner';
+import SuccessBanner from '../Banners/SuccessBanner';
+import ErrorBanner from '../Banners/ErrorBanner';
+import GenericWarning from '../GenericWarning';
 
 const TextTypography = withStyles({
   root: {

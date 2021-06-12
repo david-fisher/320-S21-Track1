@@ -17,14 +17,14 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InnerHTML from 'dangerously-set-html-content';
 import PropTypes from 'prop-types';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../LoadingSpinner';
 import Conversation from './conversation';
-import post from '../universalHTTPRequestsSimulator/post';
-import getSimulator from '../universalHTTPRequestsSimulator/get';
-import getEditor from '../universalHTTPRequestsEditor/get';
-import GlobalContext from '../Context/GlobalContext';
-import GenericWarning from '../components/GenericWarning';
-import ErrorBanner from '../components/Banners/ErrorBanner';
+import post from '../../universalHTTPRequestsSimulator/post';
+import getSimulator from '../../universalHTTPRequestsSimulator/get';
+import getEditor from '../../universalHTTPRequestsEditor/get';
+import GlobalContext from '../../Context/GlobalContext';
+import GenericWarning from '../GenericWarning';
+import ErrorBanner from '../Banners/ErrorBanner';
 
 const TextTypography = withStyles({
   root: {
