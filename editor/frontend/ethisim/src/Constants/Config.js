@@ -4,3 +4,4 @@ export const DOMAIN = process.env.NODE_ENV === 'production'
 export const BACK_URL_EDITOR = `${DOMAIN}:8000`;
 export const BACK_URL_SIMULATOR = `${DOMAIN}:7000/backend`;
 export const PRODUCTION = process.env.NODE_ENV === 'production';
+export const baseURL = `${DOMAIN}:8000`;

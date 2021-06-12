@@ -12,7 +12,7 @@ import TextFormatIcon from '@material-ui/icons/TextFormat';
 import Body from './Body';
 import CodeEditor from './CodeEditor';
 import ChangeEditorWarning from '../../WarningDialogs/ChangeEditorWarning';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 // We know if a page is using the CodeEditor if the string has the tag "<!--CodeEditor-->"" at the end"
 Toggle.propTypes = {

@@ -156,7 +156,7 @@ export default function Home(props) {
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      const scenarios = response.data.map((data) => ({
+      const scenarios = response.data[0].SCENARIO.map((data) => ({
         title: data.NAME,
         numConversations: data.NUM_CONVERSATION,
         isFinished: false,

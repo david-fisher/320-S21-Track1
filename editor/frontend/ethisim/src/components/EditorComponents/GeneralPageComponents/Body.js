@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 import PropTypes from 'prop-types';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 Body.propTypes = {
   body: PropTypes.string.isRequired,

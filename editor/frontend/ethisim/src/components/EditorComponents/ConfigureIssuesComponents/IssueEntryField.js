@@ -7,7 +7,7 @@ import GenericDeleteWarning from '../../WarningDialogs/GenericDeleteWarning';
 import deleteReq from '../../../universalHTTPRequests/delete';
 import post from '../../../universalHTTPRequests/post';
 import put from '../../../universalHTTPRequests/put';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 
 const endpointPOST = '/issue';
 // Need issueID
