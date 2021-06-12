@@ -1329,27 +1329,65 @@ class coverages_page(APIView):
 #     })
 # });
 
-class scenarios_api(APIView):
+class scenarios_forapi(APIView):
+    
+    def add_detail(self, users):
+    
+        for user1 in users:
+            user_id = user1['user_id']
+
+            queryset1 = scenarios.objects.filter(user=user_id)
+            scenList1 = ScenariosSerializer(queryset1, many=True).data
+            
+            for scen in scenList1:
+                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print(queryset2)
+                scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
+                if(not len(scenList2) == 0):
+                    scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                course_id_array = []
+                for x in scenarios_for_query:
+                    course_id_array.append(x['COURSE_id'])
+
+                course_dict_array = []
+                for x in course_id_array:
+                    course = courses.objects.get(COURSE= x)
+                    course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+                    course_dict_array.append(course_dict)
+                    
+                scen["COURSES"] = course_dict_array
+
+            user1['SCENARIO'] = scenList1
+
+        return users
+
+
     def get(self, request, *args, **kwargs):
+        # http://127.0.0.1:8000/scenario_for_user?netid=phaas
+
         NET_ID = self.request.query_params.get('netid')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
         if NET_ID != None:
-            # checking valid student's NetID
+            # checking valid scenario ID
             try:
-                x = user_access.objects.all().select_related('SCENARIO_ID').filter(USER_ID_id=NET_ID)
-                data = json.loads(serializers.serialize('json', x))[0]['fields'].items()
-                ans = []
-                
-                for obj in data:
-
-                    print(obj[1]) 
-                    # q = scenarios.objects.all().filter(SCENARIO=obj['SCENARIO_ID'])
-                
-
-                return Response('message', status=status.HTTP_404_NOT_FOUND)
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                Users.objects.get(user_id=NET_ID)
+                queryset = Users.objects.filter(
+                    user_id=NET_ID)
+                data = UserSerializer(queryset, many=True).data
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
 
             # return an error for non-existed scenario id
-            except scenarios.DoesNotExist:
-                message = {'MESSAGE': 'INVALID SCENARIO ID'}
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
                 return Response(message, status=status.HTTP_404_NOT_FOUND)
 
 class register_user_api(APIView):
