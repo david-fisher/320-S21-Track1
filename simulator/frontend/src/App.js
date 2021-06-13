@@ -11,10 +11,11 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
-  BrowserRouter as Router, Switch, Route, Link,
+  HashRouter as Router, Switch, Route, Link, Redirect,
 } from 'react-router-dom';
 import Home from './pages/home';
 import SimulationWindow from './pages/simulationWindow';
+import LoginSimulator from './pages/loginSimulator';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,13 +89,16 @@ export default function Nav() {
             {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
             <Switch>
-              <Route path="/" exact>
-                <Home />
+              <Route exact path="/">
+                <Redirect to="/dashboard" />
               </Route>
+              <Route path="/loginSimulator" component={LoginSimulator} />
+              <Route path="/dashboard" render={(props) => <Home {...props} />} />
               <Route
                 path="/simulation/:id"
                 render={(props) => <SimulationWindow {...props} />}
               />
+              <Redirect from="*" to="/loginSimulator" />
             </Switch>
           </ThemeProvider>
         </div>

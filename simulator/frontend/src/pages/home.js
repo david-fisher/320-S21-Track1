@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../App.css';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -56,6 +56,21 @@ const useStyles = makeStyles((theme) => ({
     variant: 'contained',
     color: 'white',
     background: 'black',
+  },
+  issue: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  iconError: {
+    paddingRight: theme.spacing(2),
+    fontSize: '75px',
+  },
+  iconRefreshLarge: {
+    fontSize: '75px',
+  },
+  iconRefreshSmall: {
+    fontSize: '30px',
   },
 }));
 
@@ -128,7 +143,10 @@ const StyledTabs = withStyles({
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
-export default function Home() {
+Home.propTypes = {
+  location: PropTypes.any,
+};
+export default function Home(props) {
   const classes = useStyles();
   // post on success, concatenating a scenario card to array
   // delete on success, concatenating a scenario card to array
@@ -146,6 +164,10 @@ export default function Home() {
   });
   // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
+  const history = useHistory();
+  console.log(props.location.data);
+  const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
+  console.log(userID);
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
@@ -206,7 +228,7 @@ export default function Home() {
     }
     getEditor(
       setFetchScenariosResponse,
-      `${endpointGet}phaas`,
+      `${endpointGet}${userID}`,
       onFailure,
       onSuccess,
     );

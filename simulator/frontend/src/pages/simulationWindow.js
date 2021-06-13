@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import {
   Grid, Box, Typography, Button,
 } from '@material-ui/core';
@@ -71,14 +71,16 @@ SimulationWindow.propTypes = {
 export default function SimulationWindow(props) {
   const classes = useStyles();
   const location = useLocation();
-
+  const history = useHistory();
+  // eslint-disable-next-line
   const pathArray = location.pathname.split('/');
+
   const scenarioID = props.location.data
     ? props.location.data.scenarioID
-    : pathArray[pathArray.length - 2];
+    : history.push('/dashboard'); // prevents users from manually inserting scenarioID - firstPage in URL
   const firstPage = props.location.data
     ? props.location.data.firstPage
-    : pathArray[pathArray.length - 1];
+    : history.push('/dashboard');
 
   const numConversations = props.location.data
     ? props.location.data.numConversations
@@ -87,8 +89,10 @@ export default function SimulationWindow(props) {
   const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
+
+  const endpointSession = `/scenarios/session/start?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
   const firstPageEndpoint = `/page?page_id=${firstPage}`;
+
   // eslint-disable-next-line
   const endpointGetMeta = "/scenarios?userId=" + STUDENT_ID;
   const [fetchFirstPage, setFirstPage] = useState({
@@ -102,6 +106,14 @@ export default function SimulationWindow(props) {
     loading: false,
     error: false,
   });
+  // eslint-disable-next-line
+  const [startSessionPage, setStartSessionPage] = useState({
+    data: null,
+    loading: false,
+    error: false,
+  });
+
+  // start overall session for scenario (if necessary) => get first page data => start session time for page (if necessary)
   const getFirstPage = () => {
     function startSess(response) {
       setPlayerContext(() => ({
@@ -110,9 +122,9 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [],
       }));
-      get(setFirstPage, firstPageEndpoint, onFailure, onSuccess);
+      get(setFirstPage, firstPageEndpoint, onFailure, onSuccessGetFirstPage);
     }
-    function onSuccess(response) {
+    function onSuccessGetFirstPage(response) {
       const { data } = response;
       const next = data.NEXT_PAGE;
       const nextEndpoint = `/page?page_id=${next}`;
@@ -141,18 +153,22 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [...oldObj.pages, newPage],
       }));
+      // const endpointSessionPage = `/scenarios/sessiontimes/start?sessionId=${playerContext.sessionID}&pageId=${data.PAGE}`;
+      // console.log(endpointSessionPage);
+      // post(startSessionPage, endpointSessionPage);
     }
+
     function onFailure() {
       setErrorBannerMessage('Failed to start session! Please try again.');
       setErrorBannerFade(true);
     }
     // This allows for a cleaner loading spinner animation (rather than being cut up)
-    setFirstPage({
+    setStartSessionPage({
       data: null,
       loading: true,
       error: false,
     });
-    post(setStartSession, endpointSess, null, startSess);
+    post(setStartSession, endpointSession, null, startSess);
   };
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
@@ -369,7 +385,7 @@ export default function SimulationWindow(props) {
           <Stepper setActivePage={getExistingPage} />
         </Grid>
         <Grid item xs={8} className={classes.content}>
-          {(fetchFirstPage.loading || fetchNextPage.loading)
+          {(startSessionPage.loading || fetchNextPage.loading)
             ? (
               <div style={{ marginTop: '100px' }}>
                 <LoadingSpinner />
