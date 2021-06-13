@@ -544,6 +544,7 @@ export default function Stakeholders({
           nextPageEndpoint,
           contextObj.activeIndex,
           contextObj.pages,
+          contextObj.sessionID,
         )}
         setOpen={setOpenWarning}
         open={openWarning}
@@ -583,6 +584,7 @@ export default function Stakeholders({
                 nextPageEndpoint,
                 contextObj.activeIndex,
                 contextObj.pages,
+                contextObj.sessionID,
               )
               : handleOpenWarning
           }

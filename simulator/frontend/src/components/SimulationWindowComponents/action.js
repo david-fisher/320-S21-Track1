@@ -122,6 +122,7 @@ export default function Action({
         `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
+        contextObj.sessionID,
       );
       setChosenAction((cur) => selectedAction);
     }
@@ -142,6 +143,7 @@ export default function Action({
         `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
+        contextObj.sessionID,
       );
     }
   };
@@ -195,6 +197,7 @@ export default function Action({
               `/page?page_id=${nextPageID}`,
               contextObj.activeIndex,
               contextObj.pages,
+              contextObj.sessionID,
             );
           }}
         >

@@ -113,8 +113,9 @@ export default function SimulationWindow(props) {
     error: false,
   });
 
-  // start overall session for scenario (if necessary) => get first page data => start session time for page (if necessary)
+  // start overall session for scenario (if necessary) => start session time for page (if necessary) => get first page data
   const getFirstPage = () => {
+    let sessionID;
     function startSess(response) {
       setPlayerContext(() => ({
         numConversations,
@@ -122,13 +123,18 @@ export default function SimulationWindow(props) {
         activeIndex: 0,
         pages: [],
       }));
+      sessionID = response.data.result.sessionId;
       get(setFirstPage, firstPageEndpoint, onFailure, onSuccessGetFirstPage);
     }
+    let next;
+    let nextEndpoint;
+    let component;
+    let newPage;
     function onSuccessGetFirstPage(response) {
       const { data } = response;
-      const next = data.NEXT_PAGE;
-      const nextEndpoint = `/page?page_id=${next}`;
-      const component = (
+      next = data.NEXT_PAGE;
+      nextEndpoint = `/page?page_id=${next}`;
+      component = (
         <GenericPage
           isIntro
           sessionID={sessionID}
@@ -138,7 +144,7 @@ export default function SimulationWindow(props) {
           nextPageEndpoint={nextEndpoint}
         />
       );
-      const newPage = {
+      newPage = {
         visited: false,
         completed: false,
         id: data.PAGE,
@@ -147,17 +153,17 @@ export default function SimulationWindow(props) {
         nextPageEndpoint: nextEndpoint,
         component,
       };
+      const endpointSessionPage = `/scenarios/sessiontimes/start?sessionId=${sessionID}&pageId=${data.PAGE}`;
+      post(setStartSessionPage, endpointSessionPage, onFailure, onSuccessNewSession);
+    }
+    function onSuccessNewSession() {
       setPlayerContext((oldObj) => ({
         ...oldObj,
         numConversations,
         activeIndex: 0,
         pages: [...oldObj.pages, newPage],
       }));
-      // const endpointSessionPage = `/scenarios/sessiontimes/start?sessionId=${playerContext.sessionID}&pageId=${data.PAGE}`;
-      // console.log(endpointSessionPage);
-      // post(startSessionPage, endpointSessionPage);
     }
-
     function onFailure() {
       setErrorBannerMessage('Failed to start session! Please try again.');
       setErrorBannerFade(true);
@@ -257,7 +263,8 @@ export default function SimulationWindow(props) {
     loading: false,
     error: false,
   });
-  let getNextPage = (nextPageEndpoint, index, pages) => {
+  // End session Time => Get Page Data=> Start new Session Time for next page => Load page data
+  let getNextPage = (nextPageEndpoint, index, pages, sessionID) => {
     // Last page, show feedback page
     if (!nextPageEndpoint) {
       const component = getPageComponent(
@@ -285,22 +292,26 @@ export default function SimulationWindow(props) {
       }));
       return;
     }
-
+    let next;
+    let nextEndpoint;
+    let component;
+    let newPage;
+    let copy;
     function onSuccess(response) {
       const { data } = response;
       const indexInPages = pages.findIndex((obj) => obj.id === data.PAGE);
       if (indexInPages === -1) {
-        const next = data.NEXT_PAGE;
-        const nextEndpoint = !next || next <= 0
+        next = data.NEXT_PAGE;
+        nextEndpoint = !next || next <= 0
           ? null
           : `/page?page_id=${next}`;
-        const component = getPageComponent(
+        component = getPageComponent(
           data.PAGE_TYPE,
           data,
           nextEndpoint,
           pages[index].pageEndpoint,
         );
-        const newPage = {
+        newPage = {
           visited: false,
           completed: false,
           title: data.PAGE_TITLE,
@@ -309,7 +320,7 @@ export default function SimulationWindow(props) {
           nextPageEndpoint: nextEndpoint,
           component,
         };
-        const copy = [...pages, newPage];
+        copy = [...pages, newPage];
         copy[index].completed = true;
         copy[index].visited = true;
         setPlayerContext((oldObj) => ({
@@ -317,6 +328,8 @@ export default function SimulationWindow(props) {
           activeIndex: oldObj.activeIndex + 1,
           pages: copy,
         }));
+        const endpointSessionPage = `/scenarios/sessiontimes/start?sessionId=${sessionID}&pageId=${data.PAGE}`;
+        post(setStartSessionPage, endpointSessionPage, onFailure, onSuccessNewSession);
       } else {
         setPlayerContext((oldObj) => ({
           ...oldObj,
@@ -324,19 +337,30 @@ export default function SimulationWindow(props) {
         }));
       }
     }
-
+    function onSuccessNewSession() {
+      setPlayerContext((oldObj) => ({
+        ...oldObj,
+        numConversations,
+        activeIndex: 0,
+        pages: [...oldObj.pages, newPage],
+      }));
+    }
     function onFailure(e) {
       setErrorBannerMessage('Failed to get page! Please try again.');
       setErrorBannerFade(true);
     }
 
+    function onSuccessPost() {
+      get(setNextPage, nextPageEndpoint, onFailure, onSuccess);
+    }
+    const endpointSessionPage = `/scenarios/sessiontimes/end?sessionId=${sessionID}&pageId=${pages[index].id}`;
     if ((index + 1) < pages.length) {
       setPlayerContext((oldObj) => ({
         ...oldObj,
         activeIndex: oldObj.activeIndex + 1,
       }));
     } else {
-      get(setNextPage, nextPageEndpoint, onFailure, onSuccess);
+      post(setStartSessionPage, endpointSessionPage, onFailure, onSuccessPost);
     }
   };
 
