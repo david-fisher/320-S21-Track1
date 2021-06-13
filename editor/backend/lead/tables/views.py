@@ -1329,27 +1329,65 @@ class coverages_page(APIView):
 #     })
 # });
 
-class scenarios_api(APIView):
+class scenarios_forapi(APIView):
+    
+    def add_detail(self, users):
+    
+        for user1 in users:
+            user_id = user1['user_id']
+
+            queryset1 = scenarios.objects.filter(user=user_id)
+            scenList1 = ScenariosSerializer(queryset1, many=True).data
+            
+            for scen in scenList1:
+                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print(queryset2)
+                scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
+                if(not len(scenList2) == 0):
+                    scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                course_id_array = []
+                for x in scenarios_for_query:
+                    course_id_array.append(x['COURSE_id'])
+
+                course_dict_array = []
+                for x in course_id_array:
+                    course = courses.objects.get(COURSE= x)
+                    course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+                    course_dict_array.append(course_dict)
+                    
+                scen["COURSES"] = course_dict_array
+
+            user1['SCENARIO'] = scenList1
+
+        return users
+
+
     def get(self, request, *args, **kwargs):
+        # http://127.0.0.1:8000/scenario_for_user?netid=phaas
+
         NET_ID = self.request.query_params.get('netid')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
         if NET_ID != None:
-            # checking valid student's NetID
+            # checking valid scenario ID
             try:
-                x = user_access.objects.all().select_related('SCENARIO_ID').filter(USER_ID_id=NET_ID)
-                data = json.loads(serializers.serialize('json', x))[0]['fields'].items()
-                ans = []
-                
-                for obj in data:
-
-                    print(obj[1]) 
-                    # q = scenarios.objects.all().filter(SCENARIO=obj['SCENARIO_ID'])
-                
-
-                return Response('message', status=status.HTTP_404_NOT_FOUND)
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                Users.objects.get(user_id=NET_ID)
+                queryset = Users.objects.filter(
+                    user_id=NET_ID)
+                data = UserSerializer(queryset, many=True).data
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
 
             # return an error for non-existed scenario id
-            except scenarios.DoesNotExist:
-                message = {'MESSAGE': 'INVALID SCENARIO ID'}
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
                 return Response(message, status=status.HTTP_404_NOT_FOUND)
 
 class register_user_api(APIView):
@@ -1389,3 +1427,198 @@ class register_user_api(APIView):
             return self.makeJSONResponse({"msg": "created", "status": True}, 200) # returns 200 status code with 'created' msg
 
         return self.makeJSONResponse({"msg": "exists", "status": True}, 200) # returns 200 status code with 'exists' msg
+
+class dashboard_page(APIView):
+    # def get(self, request, *args, **kwargs):
+        
+    #     #take professor_id as input from URL by adding ?professor_id=<the id #> to the end of the url.
+    #     PROFESSOR = self.request.query_params.get('professor_id')
+    #     #TODO check that id != none
+    #     #get all scenarios belonging to this professor
+    #     scenario_query = scenarios.objects.filter(user_id__user_id = PROFESSOR).values()
+    #     #loop through scenarios and append required information (course, page info)
+    #     logistics = []
+    #     for scenario in scenario_query:
+    #         scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scenario['SCENARIO']).values()
+    #         course_id_array = []
+    #         for x in scenarios_for_query:
+    #             course_id_array.append(x['COURSE_id'])
+
+    #         course_dict_array = []
+    #         for x in course_id_array:
+    #             course = courses.objects.get(COURSE= x)
+    #             course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+    #             course_dict_array.append(course_dict)
+                    
+    #         scenario["COURSES"] = course_dict_array
+    #         logistics.append(scenario)
+                
+    #     return Response(logistics)
+
+    def add_detail(self, users):
+        
+        for user1 in users:
+            user_id = user1['user_id']
+
+            queryset1 = scenarios.objects.filter(user=user_id)
+            scenList1 = ScenariosSerializer(queryset1, many=True).data
+            
+            for scen in scenList1:
+                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print(queryset2)
+                scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
+                if(not len(scenList2) == 0):
+                    scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                course_id_array = []
+                for x in scenarios_for_query:
+                    course_id_array.append(x['COURSE_id'])
+
+                course_dict_array = []
+                for x in course_id_array:
+                    course = courses.objects.get(COURSE= x)
+                    course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
+                    course_dict_array.append(course_dict)
+                    
+                scen["COURSES"] = course_dict_array
+
+            user1['SCENARIO'] = scenList1
+
+        return users
+
+
+    def get(self, request, *args, **kwargs):
+        # http://127.0.0.1:8000/scenario_for_user?netid=phaas
+
+        NET_ID = self.request.query_params.get('professor_id')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
+        if NET_ID != None:
+            # checking valid scenario ID
+            try:
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                Users.objects.get(user_id=NET_ID)
+                queryset = Users.objects.filter(
+                    user_id=NET_ID)
+                data = UserSerializer(queryset, many=True).data
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
+
+            # return an error for non-existed scenario id
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
+
+        """format:
+        {
+        "NAME": "Best Test",
+        "IS_FINISHED": false,
+        "PUBLIC": false,
+        "NUM_CONVERSATION": 5,
+        "PROFESSOR": 12345678,
+        "COURSES":[
+            {"COURSE": 1},
+            {"COURSE": 2},
+            {"COURSE": 3}
+        ]
+        }
+        """
+
+    def post(self, request, *args, **kwargs):
+        #save the scenario
+        request.data["user_id"] = request.data["PROFESSOR"]
+        user = request.data["PROFESSOR"]
+        del request.data["PROFESSOR"]
+        scenario_serializer = ScenariosSerializer(data = request.data)
+        if not (scenario_serializer.is_valid()):
+            print(scenario_serializer.errors)
+            print("scenario saved incorrectly")
+            return Response(scenario_serializer.errors)
+        scenario_serializer.save()
+        scenario_dict = scenario_serializer.data
+        
+        #get array of courses from frontend
+        COURSES = request.data['COURSES']
+        for course in COURSES:
+            scenarios_for_dict = {
+                "SCENARIO" : scenario_dict['SCENARIO'],
+                "COURSE" : course['COURSE'],
+            }
+            print(scenarios_for_dict)
+            print(scenario_dict)
+            for_serializer = Scenarios_forSerializer(data=scenarios_for_dict)
+            if not for_serializer.is_valid():
+                print("scenarios_for saved incorrectly")
+                return Response(for_serializer.errors)
+
+            for_serializer.save()
+
+        #add access level 1 to the user that creates the scenario
+        access_detail = {
+            "USER_ID": user,
+            "ACCESS_LEVEL": 1,
+            "SCENARIO_ID": scenario_dict['SCENARIO']
+        }
+
+        user_access_serializer = user_accessSerializer(data=access_detail)
+        print(user_access_serializer)
+        if user_access_serializer.is_valid():
+            user_access_serializer.save()
+        else:
+            print("intro page saved incorrectly")
+            print(user_access_serializer.errors)
+            return Response(user_access_serializer.errors)
+
+
+
+        #create a new intro page
+        intro_page = {
+        "PAGE_TYPE": "I",
+        "PAGE_TITLE": "Introduction",
+        "PAGE_BODY": "Page body",
+        "SCENARIO": scenario_dict['SCENARIO'],
+        "NEXT_PAGE": None,
+        "X_COORDINATE": 0,
+        "Y_COORDINATE": 0
+        }
+
+        intro_page_serializer = PagesSerializer(data=intro_page)
+        print(intro_page_serializer)
+        if intro_page_serializer.is_valid():
+            intro_page_serializer.save()
+        else:
+            print("intro page saved incorrectly")
+            print(intro_page_serializer.errors)
+            return Response(intro_page_serializer.errors)
+
+        
+        #TODO create blank stakeholder page and return it
+        #page must be called STAKEHOLDER_PAGE and serialier must be called stakeholder_page_serializer
+        STAKEHOLDER_PAGE = {
+        "PAGE_TYPE": "S",
+        "PAGE_TITLE": "Stakeholders",
+        "PAGE_BODY": "Page of Stakeholders",
+        "SCENARIO": scenario_dict['SCENARIO'],
+        "NEXT_PAGE": None,
+        "X_COORDINATE": 0,
+        "Y_COORDINATE": 0,
+        }
+
+        stakeholder_page_serializer = PagesSerializer(data=STAKEHOLDER_PAGE)
+        if stakeholder_page_serializer.is_valid():
+            stakeholder_page_serializer.save()
+        else:
+            print("Stakeholders page saved incorrectly")
+            return Response(stakeholder_page_serializer.errors)
+
+
+        scenario_dict = ScenariosSerializer(scenarios.objects.get(SCENARIO = scenario_dict['SCENARIO'])).data
+        scenario_dict['COURSES'] = request.data['COURSES']
+        scenario_dict['INTRO_PAGE'] = intro_page_serializer.data
+        scenario_dict['STAKEHOLDER_PAGE'] = stakeholder_page_serializer.data
+        return Response(scenario_dict)
