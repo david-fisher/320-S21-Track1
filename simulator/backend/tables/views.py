@@ -229,7 +229,7 @@ def endSessionTimes(request):
 
         # Check if there is a User given the userId 
         try:
-            session = session_times.objects.get(SESSION_ID=sessionId)
+            session = sessions.objects.get(SESSION_ID=sessionId)
         except users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
