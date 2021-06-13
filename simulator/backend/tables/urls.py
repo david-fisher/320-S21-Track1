@@ -20,6 +20,7 @@ router.register('api/action_page_choices', action_page_choicesViewSet, 'action_p
 router.register('api/conversations_had', conversations_hadViewSet, 'conversations_had')
 
 urlpatterns = [
+    path('shib/attributes', views.readAttributes, name='readAttributes'),
     path('multi_reflection', multi_reflection.as_view()),
     path('scenarios/session/start', views.startSession, name="startSession"),
     path('scenarios/session/end', views.endSession, name="endSession"),

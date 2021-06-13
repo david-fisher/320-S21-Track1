@@ -10,14 +10,13 @@ export default function universalPost(
   onSuccess,
   requestBody,
 ) {
-  axios.defaults.withCredentials = true;
   setResponse({
     data: null,
     loading: true,
     error: null,
   });
   axios
-    .post(BACK_URL_EDITOR + endpoint, requestBody)
+    .post(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

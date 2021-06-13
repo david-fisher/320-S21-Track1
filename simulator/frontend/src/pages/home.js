@@ -228,7 +228,7 @@ export default function Home(props) {
     }
     getEditor(
       setFetchScenariosResponse,
-      `${endpointGet}phaas`,
+      `${endpointGet}${userID}`,
       onFailure,
       onSuccess,
     );

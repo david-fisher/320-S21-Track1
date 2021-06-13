@@ -61,7 +61,6 @@ export default function LoginEditor() {
         email: resp.data.result.email,
         name: resp.data.result.name,
         affiliation: resp.data.result.affiliation,
-        type: 'editor',
       });
     }
     if (DEV) {

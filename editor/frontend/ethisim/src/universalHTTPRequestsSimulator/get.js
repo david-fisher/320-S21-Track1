@@ -9,14 +9,13 @@ export default function universalFetch(
   onError,
   onSuccess,
 ) {
-  axios.defaults.withCredentials = true;
   setResponse({
     data: null,
     loading: true,
     error: null,
   });
   axios
-    .get(BACK_URL_SIMULATOR + endpoint)
+    .get(BACK_URL_SIMULATOR + endpoint, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

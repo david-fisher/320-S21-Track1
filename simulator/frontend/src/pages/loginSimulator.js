@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
-import post from '../universalHTTPRequestsSimulator/post';
+import post from '../universalHTTPRequestsEditor/post';
 import { DEV } from '../constants/config';
 
 const useStyles = makeStyles((theme) => ({
@@ -56,10 +56,10 @@ export default function LoginSimulator() {
     }
     function onSuccess(resp) {
       post(setPostShibAttributes, '/registerUser', null, onSuccessPost, {
-        netId: resp.data.uid,
-        email: resp.data.displayName,
-        name: resp.data.eduPersonPrimaryAffiliation,
-        affiliation: resp.data.mail,
+        netId: resp.data.result.userId,
+        email: resp.data.result.email,
+        name: resp.data.result.name,
+        affiliation: resp.data.result.affiliation,
       });
     }
     if (DEV) {
@@ -86,7 +86,7 @@ export default function LoginSimulator() {
   }
   useEffect(getLoginData, []);
 
-  if (postShibAttributes.loading) {
+  if (!redirect) {
     return (
       <Container component="main" maxWidth="xs">
         <div>
@@ -121,7 +121,6 @@ export default function LoginSimulator() {
   }
 
   if (redirect) {
-    console.log(shibAttributes.data);
     return (
       <Redirect
         to={{
