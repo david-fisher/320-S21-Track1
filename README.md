@@ -1,18 +1,53 @@
-# Development
+# EthiSim
+Ethisim is a web application that allows you to easily create, assign, and play through ethics simulations. Run them for a participation grade, or develop them further into longer discussions for class.
+- [Editor Schema](https://dbdiagram.io/d/60b569c6b29a09603d175d43)
+- [Simulator Schema](https://dbdiagram.io/d/60b7cc7fb29a09603d17b3d7)
+- [Editor Endpoints](https://docs.google.com/document/d/1QSiUe21Z_TgT5XZKyR0twevRM864_AswxzVdYLwqW1I/edit)
+- [Simulator Endpoints](https://docs.google.com/document/d/1mPsGafx3xefBldeQFl33UPGe8SpDAjI49Z4wJNDqltI/edit)
+## Table of Contents
+- [EthiSim](#ethisim)
+- [Development using Docker](#development-using-docker)
+  * [How to use docker-compose to build and run the web application](#how-to-use-docker-compose-to-build-and-run-the-web-application)
+    + [Preamble](#preamble)
+    + [Steps](#steps)
+    + [List of containers](#the-following-is-a-list-of-all-the-containers-that-are-run-after-performing-the-steps-outlined-above-along-with-their-port-mappings)
+- [How to run each component of EthiSim locally](#how-to-run-each-component-of-ethisim-locally)
+  * [Preliminary](#preliminary)
+    + [Frontend (React JS)](#frontend-react-js)
+    + [Backend (Django REST framework)](#backend-django-rest-framework)
+    + [Database (PostgreSQL)](#database-postgresql)
+  * [How to run EthiSim Landing Page](#how-to-run-ethisim-landing-page)
+    + [Frontend](#frontend)
+  * [How to run EthiSim Editor](#how-to-run-ethisim-editor)
+    + [Frontend](#frontend-1)
+    + [Backend](#backend)
+    + [Database](#database)
+  * [How to run EthiSim Simulator](#how-to-run-ethisim-simulator)
+    + [Frontend](#frontend-2)
+    + [Backend](#backend-1)
+    + [Database](#database-1)
+- [Production:](#production)
+  * [Preamble](#preamble-1)
+  * [Steps](#steps-1)
+- [CI/CD](#cicd)
+  * [Preamble](#preamble-2)
+  * [File Structure](#note)
+  * [How to get started](#how-to-get-started)
+ 
+# Development using Docker
 
 1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
 2. Replace .env file with specified parameters
 3. Get localhost-shiboleth from slack and place it within the apache-server. This folder contains files which override shibboleth files found in the base image. These files are setup to allow the host to run only on ethisim1.cs.umass.edu.  These updated files allow the dev to run on a localhost.
 
+## How to use docker-compose to build and run the web application
 
-### How to use docker-compose to build and run the web application
-
-#### Preamble: 
+### Preamble
 When Docker compose creates a container, it will first check to see if it can use images already in the local machine's cache. Thus when pulling new code to your local machine, you must ensure that all the images are new as well, and you are not using old images with new code. We can check all our current images in Docker using the command _docker images_. You will see that each Docker image has an associated **IMAGE ID**. To remove a specific image use the command _docker image rmi **_IMAGE_ID_**, where **IMAGE_ID** should be replaced with the image ID of the image you wish to remove. To remove all images on your local machine, use the command **docker rmi $(docker image -a -q)**. **WARNING**: This command will remove ALL images, meaning even those not associated with the Ethism repository. If you are unsure which images to remove, we recommend you clear all images in your cache associated with the Ethism repository.
 
 Since the react apps' source code is mounted as a volume on the respective container, the frontend teams won't have to delete the frontend images everytime they change the code. However, the backend teams would have to do so, in case they want to run the backend server inside the docker container, since the backend server doesn't restart on file change. **Team Kubernators** will ensure to communicate if they update any Dockerfiles, in which case the images will have to be removed.
 
-#### Steps:
+### Steps
 1. After following the steps outlined above, type _docker-compose up -d_ in your terminal window. The _-d_ argument stands for _detach_ and ensures that the containers spin up in the background and the terminal instance can be further used to run other commands.
 2. Since we have 3 different frontend components configured in one docker-compose file, there's a possibility, albeit remote, that if we run _docker-compose up -d_, we end up getting a timeout error for the frontend services. To remedy that, restart docker and paste these 2 commands in your terminal window:
       ###### _export DOCKER_CLIENT_TIMEOUT=120_
@@ -21,7 +56,7 @@ Since the react apps' source code is mounted as a volume on the respective conta
       The default timeout value is 60 and these commands will double it. The timeout value might need to be adjusted to an even higher value depending on your system. 
       Run _docker-compose up -d_ again.
 
-#### The following is a list of all the containers that are run after performing the steps outlined above along with their port mappings
+### The following is a list of all the containers that are run after performing the steps outlined above along with their port mappings
 
 1. **frontend-landing-page** - this container can be accessed on http at http://localhost:3007, if using in conjunction with the **shibd** container, it should be accessed on https at https://localhost
 2. **frontend-editor** - this container can be accessed on http at http://localhost:3009, if using in conjunction with the **shibd** container, it should be accessed on https at https://localhost/editor
@@ -30,11 +65,181 @@ Since the react apps' source code is mounted as a volume on the respective conta
 5. **backend-simulator** - this container can be accessed on http at http://localhost:7001, if using in conjunction with the **shibd** container, it should be accessed on https at https://localhost:7000
 6. **shibd** - this container runs the customized version of the apache server that is configured to work with shibboleth. The base image for this container resides in the _ikhurana/kbtesting:apache_. However, as mentioned earlier, the shibboleth configuration files present in the base image allow shibboleth to run only on _ethisim1.cs.umass.edu_ host. Those configuration files, along with a few other apache configuration files that are provided to us by Team Atlas and are responsible for handling proxy passes from https to http as well as redirection, are overwritten with the ones present in the apache_server directory in the project. This container effectively acts as an authentication middleware and guards the routes that need to be protected as specified in the requirements. This container can be stopped in case a developer needs to disable https and/or shibboleth by typing in _docker stop shibd_ in their terminal window. In that case, the other containers will have to be accessed using their http urls. 
 
+# How to run each component of EthiSim locally
+
+## **Preliminary**
+
+### **Frontend (React JS)**
+1. Download node.js version 12.18.4 and npm https://www.npmjs.com/get-npm
+
+### **Backend (Django REST framework)**
+
+#### On MAC
+1. Install python3 https://www.python.org/downloads/ 
+2. sudo pip3 install pipenv (do it globally)
+
+#### On WINDOWS
+1. https://www.python.org/downloads/ (Checkmark all optional features, add Python to environment variables)
+
+### **Database (PostgreSQL)**
+We will be developing using CSCF database servers and their credentials. 
+One can develop locally by following these instructions. We use a 2 database architecture, so the following commands (steps 1 - 6) will be repeated twice in the /editor and /simulator directories.
+
+0. Make sure you can python https://www.python.org/downloads/  and postgres https://www.postgresql.org/download/ installed on your local machine.
+
+1. Setup your local POSTGRES editor and simulator databases. You must create 2 databases, one for the editor and another for the simulator.
+- You can use the following to guide on how you can setup your local POSTGRES DB: https://medium.com/@rudipy/how-to-connecting-postgresql-with-a-django-application-f479dc949a11
+
+2. Connect local POSTGRES editor and simulator databases to Django application
+- Navigate to ./simulator/simulator_backend/simulator_backend/ and ./editor/backend/lead directory and add .env files with the following environment variables:
+
+![environment variables](./simulator/steminist_simulator_backend/img/environment_variables.png)
+
+3. Install dependencies, Follow [Editor backend instructions](#backend) and [Simulator backend instructions](#backend-1).
+```
+pip install -r requirements.txt or pip3 install -r requirements.txt 
+```
+
+4. Apply migrations to your local editor and simulator DB.
+- Navigate to ./simulator/simulator_backend/simulator_backend/simulator_backend and ./editor/backend/lead/lead and run the following command for both:
+```
+python manage.py migrate or py install -r requirements.txt 
+```
+
+5. Seed the editor and simulator database (add initial data). This will add data to the editor and simulator databases respectfully.
+- In the same directory as above, run the following command:
+```
+python manage.py loaddata data/dump.json or py manage.py loaddata data/dump.json
+```
+
+6. Run servers. 
+- In the same directory as above, run the following command:
+```
+python manage.py runserver or py manage.py runserver
+```
+
+7. Voila. You can now interact with our API by making the appropriate API calls.
+- Download [DBeaver](https://dbeaver.io/) as a database GUI 
+
+### If you run into errors with Postgres, it will be helpful to drop the database and start from scratch:
+1. Login as a postgres superuser with the following command and type in the superuser's password(created when you first installed Postgres) when prompted.
+There is more than 1 way to do this step.
+```
+psql -U postgres
+```
+2. Drop simulator_backend database and create it again.
+```
+DROP DATABASE simulator_backend;
+CREATE DATABASE simulator_backend;
+```
+3. Grant all privileges to your postgres user.
+```
+GRANT ALL PRIVILEGES ON DATABASE simulator_backend TO gerrygan;
+```
+4. Exit postgres command line.
+```
+\q
+```
+5. Continue from Step 4 above(Apply migrations to your local DB).
+
+## **How to run EthiSim Landing Page**
+The landing page only has a frontend component.
+
+### Frontend
+1. `cd landing page/welcome-login`
+2. Run `npm i` inside terminal/gitbash, this should install all dependencies.
+3. Run `npm start` inside the terminal
+
+The page should open in a browser in localhost:3006 when its ready. <br />
+If it does not open up by itself, type [http://localhost:3006/home] and it should open
+
+## **How to run EthiSim Editor**
+The Editor has a frontend, backend, and database component.
+
+### **Frontend**
+1. `cd editor/frontend/ethisim`
+2. Run `npm i` inside terminal/gitbash, this should install all dependencies.
+3. Run `npm start` inside the terminal
+
+The page should open in a browser in localhost:3001 when its ready.
+If it does not open up by itself, type [http://localhost:3001] and it should open
+
+You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
+
+### **Backend**
+
+#### On MAC
+1. `cd editor/backend`
+2. `pipenv shell`
+3. `pipenv install -r requirements.txt`
+4. `cd lead` (editor/backend/lead)
+5. `python3 manage.py runserver`
+
+#### How to run server on MAC
+1. `cd editor/backend`
+2. `pipenv shell`
+3. `cd lead` (editor/backend/lead)
+4. `python3 manage.py runserver`
+
+#### On WINDOWS
+1. `cd editor/backend` 
+2. `pip install -r requirements.txt` (If you run into errors, insert py -m before each command)
+3. `cd lead` (editor/backend/lead)
+4. `python manage.py runserver` (or `py manage.py runserver`)
+
+#### How to run server on Windows
+1. `cd editor/backend/lead`
+2. `py -m manage.py runserver`
+
+### **Database**
+Follow [Database (PostgreSQL) instructions](#database-postgresql)
+
+## **How to run EthiSim Simulator**
+The Editor has a frontend, backend, and database component.
+
+### **Frontend**
+1. `cd simulator/frontend`
+2. Run `npm i` inside terminal/gitbash, this should install all dependencies.
+3. Run `npm start` inside the terminal
+
+The page should open in a browser in localhost:3000 when its ready.
+If it does not open up by itself, type [http://localhost:3000] and it should open
+
+You are done, but note that you will need to have the back-end and database running as well for the front-end to see current scenarios on the dashboard.
+
+### **Backend**
+
+#### On MAC
+1. `cd simulator/steminist_simulator_backend`
+2. `pipenv shell`
+3. `pipenv install -r requirements.txt`
+4. `cd simulator_backend` (simulator/steminist_simulator_backend/simulator_backend)
+5. `python3 manage.py runserver`
+
+#### How to run server on MAC
+1. `cd simulator/steminist_simulator_backend`
+2. `pipenv shell`
+3. `cd simulator_backend` (simulator/steminist_simulator_backend/simulator_backend)
+4. `python3 manage.py runserver`
+
+#### On WINDOWS
+1. `cd simulator/steminist_simulator_backend`
+2. `pip install -r requirements.txt` (If you run into errors, insert py -m before each command)
+3. `cd simulator_backend` (simulator/steminist_simulator_backend/simulator_backend)
+4. `python manage.py runserver` (or `py manage.py runserver`)
+
+#### How to run server on Windows
+1. `cd editor/backend/lead`
+2. `py -m manage.py runserver`
+
+### **Database**
+Follow [Database (PostgreSQL) instructions](#database-postgresql)
+
 # Production
- #### Preamble:
+ #### Preamble
  Running the bundled software in a production environment requires a custom Apache+Shibboleth image that is used as a base image for the container that runs all different facets of the software. For the purpose of Demo or Die, the base image will be pulled from Dockerhub where it resides inside **_ikhurana/kbtesting_** repository under the name **_apache_**. **_Team Kubernators_** will provide all the files necessary for the creation of the base image as well as outline steps that need to be performed to successfully use this base image to run the container in the production environment. This guide assumes that you have successfully installed and configured Apache and Shibboleth on your production server.
  
- #### Steps:
+ #### Steps
 1. Clone the Git repository https://github.com/david-fisher/320-S21-Track1 to your local machine.
 2. Copy the Dockerfile and the docker-compose.yml file from the root directory of the project to any directory on your production server. (The name "EthiSim" will be used  throughout this document to refer to this parent directory, but any name can be used in the  actual implementation).
 
@@ -70,7 +275,7 @@ This github repository has a continuous integration workflow configured in the f
 6. Pull newly built images from dacollins/ethisim
 7. Rebuild the application with the updated images
 
-#### Note
+#### File Structure
 ##### This is the file structure for this track
 
 ##### simulator

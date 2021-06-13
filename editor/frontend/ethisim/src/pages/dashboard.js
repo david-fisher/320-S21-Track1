@@ -19,6 +19,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ScenarioCard from '../components/DashboardComponents/ScenarioCard';
 import AddNewScenarioCard from '../components/DashboardComponents/AddNewScenarioCard';
 import Copyright from '../components/Copyright';
@@ -71,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO when Shibboleth gets implemented
-const endpointGet = '/dashboard?professor_id=phaas';
+const endpointGet = '/dashboard?professor_id=';
 const endpointGetCourses = '/api/courses/';
 const endpointPost = '/dashboard';
 const endpointDelete = '/api/scenarios/';
@@ -122,10 +124,16 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-// Passing props with React Router in Material UI: https://stackoverflow.com/questions/30115324/pass-props-in-link-react-router
-export default function Dashboard() {
-  const classes = useStyles();
+Dashboard.propTypes = {
+  location: PropTypes.any,
+};
 
+// Passing props with React Router in Material UI: https://stackoverflow.com/questions/30115324/pass-props-in-link-react-router
+export default function Dashboard(props) {
+  const classes = useStyles();
+  const history = useHistory();
+  const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginEditor');
+  console.log(userID);
   // post on success, concatenating a scenario card to array
   // delete on success, concatenating a scenario card to array
 
@@ -172,7 +180,7 @@ export default function Dashboard() {
     IS_FINISHED: false,
     PUBLIC: false,
     NUM_CONVERSATIONS: 0,
-    PROFESSOR: 'phaas', // TODO change
+    PROFESSOR: userID, // TODO change
     COURSES: [],
   });
 
@@ -249,7 +257,7 @@ export default function Dashboard() {
         IS_FINISHED: false,
         PUBLIC: false,
         NUM_CONVERSATIONS: 0,
-        PROFESSOR: 'phaas',
+        PROFESSOR: userID,
         COURSES: [],
       });
       // Smooth loading animation, loading animation will not reset during POST and GET Request
@@ -258,6 +266,7 @@ export default function Dashboard() {
         loading: true,
         error: null,
       });
+      console.log(NewScenario);
       post(
         setPost,
         endpointPost,
@@ -276,7 +285,7 @@ export default function Dashboard() {
       IS_FINISHED: false,
       PUBLIC: false,
       NUM_CONVERSATIONS: 0,
-      PROFESSOR: 'phaas',
+      PROFESSOR: userID,
       COURSES: [],
     });
     setErrorName(false);
@@ -403,7 +412,7 @@ export default function Dashboard() {
       setErrorBannerMessage('Failed to get scenarios! Please try again.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, endpointGet, onFailure, onSuccess);
+    get(setFetchScenariosResponse, endpointGet + userID, onFailure, onSuccess);
   };
 
   // Get Courses

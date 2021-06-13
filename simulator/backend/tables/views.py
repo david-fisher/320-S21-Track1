@@ -189,6 +189,24 @@ def endSession(request):
     elif request.method == "GET":
         return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
 
+def readAttributes(request):
+    try: 
+        resultData = {
+                "userId": request.META['uid'],
+                "name": request.META['displayName'],
+                "affliation": request.META['eduPersonPrimaryAffiliation'],
+                "email": request.META['mail']
+        }
+    except KeyError as ex:
+        resultData = {
+                "userId": "gerrygan",
+                "name": "Gerry Gan",
+                "affliation": "Student",
+                "email": "example@umass.edu"
+        }
+
+    return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
+
 def startSessionTimes(request):
     if request.method == "POST":
         sessionId = int(request.GET['sessionId'])
@@ -250,4 +268,3 @@ def endSessionTimes(request):
     
     elif request.method == "GET":
         return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
-
