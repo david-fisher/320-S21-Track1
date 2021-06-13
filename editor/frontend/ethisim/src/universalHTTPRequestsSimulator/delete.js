@@ -8,13 +8,14 @@ export default function universalDelete(
   onSuccess,
   requestBody,
 ) {
+  axios.defaults.withCredentials = true;
   setResponse({
     data: null,
     loading: true,
     error: null,
   });
   axios
-    .delete(BACK_URL_SIMULATOR + endpoint, requestBody, { withCredentials: true })
+    .delete(BACK_URL_SIMULATOR + endpoint, requestBody)
     .then((resp) => {
       setResponse({
         data: resp.data,

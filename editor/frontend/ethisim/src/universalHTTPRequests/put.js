@@ -8,13 +8,14 @@ export default function universalPut(
   onSuccess,
   requestBody,
 ) {
+  axios.defaults.withCredentials = true;
   setResponse({
     data: null,
     loading: true,
     error: null,
   });
   axios
-    .put(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .put(BACK_URL_EDITOR + endpoint, requestBody)
     .then((resp) => {
       setResponse({
         data: resp.data,

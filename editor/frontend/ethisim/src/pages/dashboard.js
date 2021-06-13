@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO when Shibboleth gets implemented
-const endpointGet = '/dashboard?professor_id=phaas';
+const endpointGet = '/dashboard?professor_id=';
 const endpointGetCourses = '/api/courses/';
 const endpointPost = '/dashboard';
 const endpointDelete = '/api/scenarios/';
@@ -180,7 +180,7 @@ export default function Dashboard(props) {
     IS_FINISHED: false,
     PUBLIC: false,
     NUM_CONVERSATIONS: 0,
-    PROFESSOR: 'phaas', // TODO change
+    PROFESSOR: userID, // TODO change
     COURSES: [],
   });
 
@@ -257,7 +257,7 @@ export default function Dashboard(props) {
         IS_FINISHED: false,
         PUBLIC: false,
         NUM_CONVERSATIONS: 0,
-        PROFESSOR: 'phaas',
+        PROFESSOR: userID,
         COURSES: [],
       });
       // Smooth loading animation, loading animation will not reset during POST and GET Request
@@ -266,6 +266,7 @@ export default function Dashboard(props) {
         loading: true,
         error: null,
       });
+      console.log(NewScenario);
       post(
         setPost,
         endpointPost,
@@ -284,7 +285,7 @@ export default function Dashboard(props) {
       IS_FINISHED: false,
       PUBLIC: false,
       NUM_CONVERSATIONS: 0,
-      PROFESSOR: 'phaas',
+      PROFESSOR: userID,
       COURSES: [],
     });
     setErrorName(false);
@@ -411,7 +412,7 @@ export default function Dashboard(props) {
       setErrorBannerMessage('Failed to get scenarios! Please try again.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, endpointGet, onFailure, onSuccess);
+    get(setFetchScenariosResponse, endpointGet + userID, onFailure, onSuccess);
   };
 
   // Get Courses

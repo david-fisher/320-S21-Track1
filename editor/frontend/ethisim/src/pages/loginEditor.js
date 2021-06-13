@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
-import post from '../universalHTTPRequestsSimulator/post';
+import post from '../universalHTTPRequests/post';
 import { DEV } from '../Constants/Config';
 
 const useStyles = makeStyles((theme) => ({
@@ -57,10 +57,10 @@ export default function LoginEditor() {
     }
     function onSuccess(resp) {
       post(setPostShibAttributes, '/registerUser', null, onSuccessPost, {
-        netId: resp.data.uid,
-        email: resp.data.displayName,
-        name: resp.data.eduPersonPrimaryAffiliation,
-        affiliation: resp.data.mail,
+        netId: resp.data.result.userId,
+        email: resp.data.result.email,
+        name: resp.data.result.name,
+        affiliation: resp.data.result.affiliation,
         type: 'editor',
       });
     }
@@ -68,7 +68,7 @@ export default function LoginEditor() {
       setShibAttributes({
         data: {
           result: {
-            userId: 'phaas',
+            userId: 'enochhsiao',
             name: 'phaas',
             affliation: 'employee',
             email: 'phaas@cs.umass.edu',
@@ -88,7 +88,7 @@ export default function LoginEditor() {
   }
   useEffect(getLoginData, []);
 
-  if (postShibAttributes.loading) {
+  if (!redirect) {
     return (
       <Container component="main" maxWidth="xs">
         <div>
