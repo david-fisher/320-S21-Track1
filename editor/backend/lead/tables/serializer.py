@@ -8,6 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
         level = 1
 
+
 class user_accessSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_access
