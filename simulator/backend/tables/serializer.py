@@ -29,12 +29,12 @@ class course_assignmentSerializer(serializers.ModelSerializer):
 class sessionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = sessions
-        fields = ('SESSION_ID', 'USER_ID', 'SCENARIO_ID', 'IS_FINISHED')
+        fields = '__all__'
 
 class session_timesSerializer(serializers.ModelSerializer):
     class Meta:
         model = session_times
-        fields = ('SESSION_ID', 'PAGE_ID')
+        fields = '__all__'
 
 class reflections_takenSerializer(serializers.ModelSerializer):
     class Meta:

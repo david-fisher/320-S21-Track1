@@ -214,8 +214,9 @@ def startSessionTimes(request):
             message = 'Session created succesfully.'
 
         responseObj = {}
-        responseObj["sessionId"] = session.SESSION_ID
-        responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
+        responseObj["sessionId"] = sessionTimes.SESSION_ID_id
+        responseObj["mostRecentAccess"] = sessionTimes.MOST_RECENT_ACCESS
+        responseObj["endtime"] = sessionTimes.END_TIME
         
         return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
     
@@ -235,16 +236,16 @@ def endSessionTimes(request):
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            session = session_times.objects.get(SESSION_ID_id=session.SESSION_ID, PAGE_ID=pageId)
-            session.END_TIME = datetime.now()
-            session.save()
+            sessionTimes = session_times.objects.get(SESSION_ID_id=session.SESSION_ID, PAGE_ID=pageId)
+            sessionTimes.END_TIME = datetime.now()
+            sessionTimes.save()
         except session_times.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'Session does not exist so it cannot be ended.'})
 
         responseObj = {}
-        responseObj["sessionId"] = session.SESSION_ID
-        responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
+        responseObj["sessionId"] = sessionTimes.SESSION_ID
+        responseObj["mostRecentAccess"] = sessionTimes.MOST_RECENT_ACCESS
         
         return JsonResponse(status=200, data={'status': 200, 'message': 'Session successfully ended.'})
     
