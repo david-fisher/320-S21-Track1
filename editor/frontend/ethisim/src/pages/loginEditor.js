@@ -67,7 +67,7 @@ export default function LoginEditor() {
       setShibAttributes({
         data: {
           result: {
-            userId: 'enochhsiao',
+            userId: 'phaas',
             name: 'phaas',
             affliation: 'employee',
             email: 'phaas@cs.umass.edu',
@@ -81,9 +81,9 @@ export default function LoginEditor() {
         loading: false,
       });
       setRedirect(true);
-      return;
+    } else {
+      get(setShibAttributes, '/shib/attributes', null, onSuccess);
     }
-    get(setShibAttributes, '/shib/attributes', null, onSuccess);
   }
   useEffect(getLoginData, []);
 

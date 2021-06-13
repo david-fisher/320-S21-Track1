@@ -181,6 +181,7 @@ Stakeholders.propTypes = {
   nextPageEndpoint: PropTypes.any.isRequired,
   prevPageEndpoint: PropTypes.any.isRequired,
   scenarioID: PropTypes.number.isRequired,
+  hasVisitedPage: PropTypes.bool.isRequired,
 };
 export default function Stakeholders({
   getNextPage,
@@ -202,7 +203,7 @@ export default function Stakeholders({
   const [showStakeholders, setShowStakeholders] = useState(true);
   const [currentStakeholder, setCurrentStakeholder] = useState({});
   const [numStakeholderTalkedTo, setNumStakeholderTalkedTo] = useState(0);
-  const [hasTalkedWithStakeholders, setHasTalkedWithStakeholders] = useState(false);
+  const [hasTalkedWithStakeholders, setHasTalkedWithStakeholders] = useState(contextObj.pages[contextObj.activeIndex].completed);
   const createdCardStyles = cardStyles();
 
   const [errorBannerMessage, setErrorBannerMessage] = useState('');
@@ -265,10 +266,6 @@ export default function Stakeholders({
         stakeholders.filter((stakeholder) => stakeholder.id === selectedStakeholder.STAKEHOLDER_ID)[0].selected = true;
       });
       setNumStakeholderTalkedTo(stakeholdersSelected.length);
-      // TODO check with session time rather than stakeholdersSelected
-      if (stakeholdersSelected.length > 0) {
-        setHasTalkedWithStakeholders(true);
-      }
       setStakeholders(stakeholders);
     }
 
@@ -540,12 +537,15 @@ export default function Stakeholders({
   const Buttons = (
     <Grid container direction="row" justify="space-between">
       <GenericWarning
-        func={() => getNextPage(
-          nextPageEndpoint,
-          contextObj.activeIndex,
-          contextObj.pages,
-          contextObj.sessionID,
-        )}
+        func={() => {
+          setHasTalkedWithStakeholders(true);
+          getNextPage(
+            nextPageEndpoint,
+            contextObj.activeIndex,
+            contextObj.pages,
+            contextObj.sessionID,
+          );
+        }}
         setOpen={setOpenWarning}
         open={openWarning}
         title="Warning"
@@ -580,12 +580,15 @@ export default function Stakeholders({
           color="primary"
           onClick={
             numStakeholderTalkedTo >= conversationLimit || hasTalkedWithStakeholders
-              ? () => getNextPage(
-                nextPageEndpoint,
-                contextObj.activeIndex,
-                contextObj.pages,
-                contextObj.sessionID,
-              )
+              ? () => {
+                setHasTalkedWithStakeholders(true);
+                getNextPage(
+                  nextPageEndpoint,
+                  contextObj.activeIndex,
+                  contextObj.pages,
+                  contextObj.sessionID,
+                );
+              }
               : handleOpenWarning
           }
         >

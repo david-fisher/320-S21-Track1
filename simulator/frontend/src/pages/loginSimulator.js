@@ -80,9 +80,9 @@ export default function LoginSimulator() {
         loading: false,
       });
       setRedirect(true);
-      return;
+    } else {
+      get(setShibAttributes, '/shib/attributes', null, onSuccess);
     }
-    get(setShibAttributes, '/shib/attributes', null, onSuccess);
   }
   useEffect(getLoginData, []);
 

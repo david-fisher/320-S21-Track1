@@ -165,9 +165,7 @@ export default function Home(props) {
   // eslint-disable-next-line
   const [shouldFetch, setShouldFetch] = useState(0);
   const history = useHistory();
-  console.log(props.location.data);
   const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
-  console.log(userID);
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
