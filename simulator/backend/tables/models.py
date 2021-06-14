@@ -13,7 +13,7 @@ class users(models.Model):
     EMAIL = models.EmailField()
 
 class courses(models.Model):
-    COURSE_ID = models.IntegerField()
+    COURSE_ID = models.IntegerField(primary_key=True)
     NAME = models.TextField()
 
 class course_invitations(models.Model):
@@ -21,6 +21,8 @@ class course_invitations(models.Model):
     ACCESS_KEY = models.IntegerField()
 
 class takes(models.Model):
+    class Meta:
+        unique_together = (('USER_ID'),('COURSE_ID'))
     USER_ID = models.ForeignKey(users, on_delete=CASCADE)
     COURSE_ID = models.ForeignKey(courses, on_delete=CASCADE)
 

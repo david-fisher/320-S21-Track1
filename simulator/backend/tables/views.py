@@ -52,6 +52,8 @@ class takesViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = takesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['USER_ID']
 
 
 class course_assignmentViewSet(viewsets.ModelViewSet):
@@ -251,4 +253,28 @@ def endSessionTimes(request):
     
     elif request.method == "GET":
         return JsonResponse(status=400, data={'status': 400, 'message': 'Use the POST method for requests to this endpoint'})
+
+
+class courses_for_user(APIView):
+    def get(self, request, *args, **kwargs):
+        
+        USER = self.request.query_params.get('user_id')
+        user_query = users.objects.filter(USER_ID = USER).values()
+        dashboard = []
+        for user in user_query:
+            courses_for_query = takes.objects.filter(USER_ID = user['USER_ID']).values()
+            course_id_array = []
+            for x in courses_for_query:
+                course_id_array.append(x['COURSE_ID_id'])
+
+            course_dict_array = []
+            for x in course_id_array:
+                course = courses.objects.get(COURSE_ID= x)
+                course_dict = {"COURSE":course.COURSE_ID, "NAME": course.NAME}
+                course_dict_array.append(course_dict)
+                    
+            user["COURSES"] = course_dict_array
+            dashboard.append(user)
+                
+        return Response(dashboard)
 
