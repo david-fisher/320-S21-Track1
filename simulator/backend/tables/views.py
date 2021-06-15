@@ -28,6 +28,8 @@ class usersViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = usersSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['USER_ID']
 
 
 class coursesViewSet(viewsets.ModelViewSet):
