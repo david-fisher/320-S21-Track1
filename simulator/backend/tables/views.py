@@ -52,8 +52,6 @@ class takesViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
     serializer_class = takesSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['USER_ID']
 
 
 class course_assignmentViewSet(viewsets.ModelViewSet):
@@ -277,4 +275,22 @@ class courses_for_user(APIView):
             dashboard.append(user)
                 
         return Response(dashboard)
+
+def readAttributes(request):
+    try: 
+        resultData = {
+                "userId": request.META['uid'],
+                "name": request.META['displayName'],
+                "affliation": request.META['eduPersonPrimaryAffiliation'],
+                "email": request.META['mail']
+        }
+    except KeyError as ex:
+        resultData = {
+                "userId": "gerrygan",
+                "name": "Gerry Gan",
+                "affliation": "Student",
+                "email": "example@umass.edu"
+        }
+
+    return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
