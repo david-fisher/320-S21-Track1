@@ -1,13 +1,13 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
-  Container, Typography, Button, Paper,
+  Typography, Paper, Button,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import WarningIcon from '@material-ui/icons/Warning';
 import Copyright from '../components/Copyright';
 import HomepageNavBar from '../components/HomepageComponents/HomepageNavBar';
 import Background from '../shared/umass.jpg';
-import { DOMAIN } from '../Constants/Config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   ethisimIntroContainer: {
     paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
@@ -45,25 +46,6 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     marginTop: theme.spacing(1),
-  },
-  accessButton: {
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: '225px',
-    textTransform: 'unset',
-    borderStyle: 'solid',
-    borderColor: 'black',
-    border: 2,
-  },
-  guestButton: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(3),
-    marginRight: theme.spacing(1),
-    width: '225px',
-    textTransform: 'unset',
-    borderStyle: 'none',
-    borderColor: 'black',
-    border: 2,
   },
   margin: {
     margin: theme.spacing(2),
@@ -75,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
     width: '100%',
     marginTop: theme.spacing(1),
-    '@media (min-height:485px)': {
+    '@media (min-height:575px)': {
       display: 'flex',
       alignItems: 'center',
       flexDirection: 'column',
@@ -94,55 +76,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '550px',
     padding: '15px',
   },
+  icon: {
+    width: '75px',
+    height: '75px',
+  },
 }));
-
-function StudentAccess() {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.buttonsContainer}>
-      <Container className={classes.studentButtonsContainer}>
-        <Button
-          component={Link}
-          onClick={() => {
-            window.location.href = `${DOMAIN}/Shibboleth.sso/Login?target=/loginSimulator`;
-          }}
-          className={classes.accessButton}
-          variant="contained"
-          color="primary"
-        >
-          <Typography variant="h5" display="block" align="center">
-            Log in as Simulator Player
-          </Typography>
-        </Button>
-        <Button
-          component={Link}
-          onClick={() => {
-            window.location.href = `${DOMAIN}/Shibboleth.sso/Login?target=/loginEditor`;
-          }}
-          className={classes.accessButton}
-          variant="contained"
-          color="primary"
-        >
-          <Typography variant="h5" display="block" align="center">
-            Log in as Scenario Editor
-          </Typography>
-        </Button>
-      </Container>
-      <Container className={classes.studentButtonsContainer}>
-        <Button
-          className={classes.guestButton}
-          variant="contained"
-          color="gray"
-        >
-          <Typography display="block" noWrap>
-            Try Ethisim as a Guest
-          </Typography>
-        </Button>
-      </Container>
-    </div>
-  );
-}
 
 const BlackTextTypography = withStyles({
   root: {
@@ -155,16 +93,26 @@ function EthisimIntro() {
 
   return (
     <div className={classes.ethisimIntroContainer}>
+      <WarningIcon className={classes.icon} />
       <BlackTextTypography variant="h3" align="center" className={classes.margin}>
-        Welcome to
-        {' '}
-        <b>Ethisim</b>
+        Access Denied
       </BlackTextTypography>
-      <BlackTextTypography align="center" className={classes.margin}>
-        Ethisim allows you to easily create and assign ethics
-        simulations. Run them for a participation grade, or
-        develop them further into longer discussions for class.
+      <BlackTextTypography align="center" className={classes.margin} variant="h6">
+        You do not have permission to access this page. Please contact us if you would like to gain access.
       </BlackTextTypography>
+      <Button
+        component={Link}
+        to={{
+          pathname: '/home',
+        }}
+        variant="contained"
+        color="primary"
+        style={{ textTransform: 'unset' }}
+      >
+        <Typography variant="h5" align="center">
+          Go back to Homepage
+        </Typography>
+      </Button>
     </div>
   );
 }
@@ -174,15 +122,14 @@ function TotalContainer() {
 
   return (
     <div className={classes.contentContainer}>
-      <Paper elevation={0}>
+      <Paper elevation={1}>
         <EthisimIntro />
-        <StudentAccess />
       </Paper>
     </div>
   );
 }
 
-export default function Homepage() {
+export default function ErrorPage() {
   const classes = useStyles();
 
   return (

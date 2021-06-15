@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BACK_URL_EDITOR } from '../Constants/Config';
+import { BACK_URL_SIMULATOR } from '../Constants/Config';
 
 // Universal fetch request using axios
 export default function universalPost(
@@ -16,7 +16,7 @@ export default function universalPost(
     error: null,
   });
   axios
-    .post(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .post(BACK_URL_SIMULATOR + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

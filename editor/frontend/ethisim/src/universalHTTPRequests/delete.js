@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { baseURL } from '../Constants/Config';
+import { BACK_URL_EDITOR } from '../Constants/Config';
 // Universal delete request using axios
 export default function universalDelete(
   setResponse,
@@ -14,7 +14,7 @@ export default function universalDelete(
     error: null,
   });
   axios
-    .delete(baseURL + endpoint, requestBody, { withCredentials: true })
+    .delete(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,
