@@ -166,10 +166,12 @@ export default function Editor(props) {
   const [openPopup, setOpenPopup] = useState(false);
 
   const location = useLocation();
+  const history = useHistory();
+  // eslint-disable-next-line
   const scenarioIDFromURL = location.pathname.split('/').pop();
   const scenario_ID = props.location.data
     ? props.location.data.SCENARIO
-    : scenarioIDFromURL;
+    : history.push('/loginEditor');
 
   // TODO when version control is implemented
   const tempVersionID = null;
@@ -695,7 +697,6 @@ export default function Editor(props) {
     }
   });
 
-  const history = useHistory();
   function returnToDashboard() {
     setGlobalUnsaved(false);
     history.push('/dashboard');

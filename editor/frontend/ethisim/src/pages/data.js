@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 
 import './data.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
 
@@ -126,10 +126,12 @@ export default function Data(props) {
   const classes = useStyles();
 
   const location = useLocation();
+  const history = useHistory();
+  // eslint-disable-next-line
   const scenarioIDFromURL = location.pathname.split('/').pop();
   const scenario_ID = props.location.data
     ? props.location.data.SCENARIO
-    : scenarioIDFromURL;
+    : history.push('/dashboard');
 
   const title = 'Student Data';
   const [open, setOpen] = useState(false);

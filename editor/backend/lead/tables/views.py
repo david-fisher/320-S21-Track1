@@ -18,6 +18,9 @@ from rest_framework import mixins
 from . import permissions
 from django.http import JsonResponse
 import urllib
+import csv
+import sys
+import os
 
 from .global_cache import *
 
@@ -1397,36 +1400,51 @@ class register_user_api(APIView):
     
     def checkRequest(self, request):
         data = request.data
-        print(data)
-        if ("netId" not in data) or ("affiliation" not in data) or ("name" not in data) or ("email" not in data):
-            print("wtf")
-            return self.makeJSONResponse({"msg": "json request not formatted properly", "status": False}, 400)
+        return ("netId" not in data) or ("affiliation" not in data) or ("name" not in data) or ("email" not in data) or ("type" not in data)
 
     def post(self, request, *args, **kwargs):
+        try:
+            if self.checkRequest(request): # checks if all the required fields are present in the incoming JSON request. If the check fails, 400 status code is returned
+                return self.makeJSONResponse({"msg": "json request not formatted properly", "status": False}, 400) 
 
-        self.checkRequest(request) # checks if all the required fields are present in the incoming JSON request. If the check fails, 400 status code is returned
+            if request.data["type"] == "editor": # if the request is coming from the editor frontend, then check if the user exists in the authorized_users text file or is an employee. If not return 401
+                affiliation = request.data["affiliation"]
+                if affiliation is not 'Employee':
+                    with open(os.path.abspath(os.getcwd()) + '/lead/tables/authorized_users.txt') as csv_file:
+                        csv_reader = csv.reader(csv_file, delimiter='\n')
+                        authorized = False
+                        email = request.data["email"]
+                        for row in csv_reader:
+                            if email == row[0]:
+                                authorized = True
+                                break
+                        if not authorized:
+                            return self.makeJSONResponse({"msg": "unauthorized", "status": False}, 401);
+            
+            resultset = cache.get(request.data["netId"]) # tries to look up for the net id in the cache
+            userFound = resultset != None # sets the userFound variable, pretty intuitive
 
-        resultset = cache.get(request.data["netId"]) # tries to look up for the net id in the cache
-        userFound = resultset != None # sets the userFound variable, pretty intuitive
+            if not userFound: # proceeds to communicate the database if cache miss
+                query = Users.objects.all().filter(user_id=request.data["netId"]); 
+                resultset = list(UserSerializer(query, many=True).data)
+                userFound = len(resultset) == 1
+                if userFound:
+                    cache.put(request.data["netId"], True) # if found in the database, populates the cache
 
-        if not userFound: # proceeds to communicate the database if cache miss
-            query = Users.objects.all().filter(user_id=request.data["netId"]); 
-            resultset = list(UserSerializer(query, many=True).data)
-            userFound = len(resultset) == 1
-            if userFound:
-                cache.put(request.data["netId"], True) # if found in the database, populates the cache
-    
-        if not userFound: # if db miss, creates a new record in the database
-            user_id = request.data["netId"]
-            email = request.data["email"]
-            affiliation = request.data["affiliation"]
-            name = request.data["name"]
-            Users.objects.create(user_id=user_id, EMAIL=email, AFFILIATION=affiliation, NAME=name).save() # writes to the db
-            cache.put(user_id, True) # populates the cache
+            created = False
+            if not userFound: # if db miss, creates a new record in the database
+                user_id = request.data["netId"]
+                email = request.data["email"]
+                affiliation = request.data["affiliation"]
+                name = request.data["name"]
+                Users.objects.create(user_id=user_id, EMAIL=email, AFFILIATION=affiliation, NAME=name).save() # writes to the db
+                cache.put(user_id, True) # populates the cache
+                created = True
 
-            return self.makeJSONResponse({"msg": "created", "status": True}, 200) # returns 200 status code with 'created' msg
-
-        return self.makeJSONResponse({"msg": "exists", "status": True}, 200) # returns 200 status code with 'exists' msg
+            return self.makeJSONResponse({"msg": "created" if created else "exists", "status": True}, 200) # returns 200 status code with 'exists' msg
+        
+        except FileNotFoundError:
+            return self.makeJSONResponse({"msg": str(FileNotFoundError), "status": False}, 500) # return 500 in case the backend goes boom!
 
 class dashboard_page(APIView):
     # def get(self, request, *args, **kwargs):
