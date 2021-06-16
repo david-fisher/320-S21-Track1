@@ -81,7 +81,7 @@ class conversations(models.Model):
 
 
 class courses(models.Model):
-    COURSE = models.IntegerField(default=None, primary_key = True)
+    COURSE = models.CharField(default=None, primary_key = True, max_length=10)
     NAME = models.CharField(max_length = 1000)
 
 

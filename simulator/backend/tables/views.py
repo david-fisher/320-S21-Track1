@@ -29,7 +29,7 @@ class usersViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['USER_ID']
+    filterset_fields = ['user_id']
 
 
 class coursesViewSet(viewsets.ModelViewSet):
@@ -133,6 +133,13 @@ def startSession(request):
         userId = (request.GET['userId'])
         scenarioId = int(request.GET['scenarioId'])
 
+        try:
+            scenario = scenarios.objects.get(SCENARIO=scenarioId)
+        except scenarios.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No sxenario found with the given scenarioId'})
+        
+
         # Check if there is a User given the userId 
         try:
             user = Users.objects.get(USER_ID=userId)
@@ -143,7 +150,7 @@ def startSession(request):
         message = None
         # Obtain session field based on given params
         try:
-            session = sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenarioId)
+            session = sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenario.SCENARIO)
             session.MOST_RECENT_ACCESS = datetime.now()
             session.save()
             message = 'Session resumed successfully.'
@@ -166,6 +173,13 @@ def endSession(request):
         userId = (request.GET['userId'])
         scenarioId = int(request.GET['scenarioId'])
 
+        try:
+            scenario = scenarios.objects.get(SCENARIO=scenarioId)
+        except scenarios.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No sxenario found with the given scenarioId'})
+        
+
         # Check if there is a User given the userId 
         try:
             user = Users.objects.get(USER_ID=userId)
@@ -174,7 +188,7 @@ def endSession(request):
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            session = sessions.objects.get(USER_ID_id=user.USER_ID, SCENARIO_ID=scenarioId)
+            session = sessions.objects.get(USER_ID_id=user.USER_ID, SCENARIO_ID=scenario.SCENARIO)
             session.IS_FINISHED = True
             session.DATE_FINISHED = datetime.now()
             session.save()
@@ -217,6 +231,12 @@ def startSessionTimes(request):
         # Check if there is a User given the userId 
         try:
             session = sessions.objects.get(SESSION_ID=sessionId)
+        except Users.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        try:
+            page = pages.objects.get(PAGE_ID=pageId)
         except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
@@ -277,18 +297,18 @@ class courses_for_user(APIView):
     def get(self, request, *args, **kwargs):
         
         USER = self.request.query_params.get('user_id')
-        user_query = Users.objects.filter(USER_ID = USER).values()
+        user_query = Users.objects.filter(user_id = USER).values()
         dashboard = []
         for user in user_query:
-            courses_for_query = takes.objects.filter(USER_ID = user['USER_ID']).values()
+            courses_for_query = takes.objects.filter(USER_ID = user['user_id']).values()
             course_id_array = []
             for x in courses_for_query:
                 course_id_array.append(x['COURSE_ID_id'])
 
             course_dict_array = []
             for x in course_id_array:
-                course = courses.objects.get(COURSE_ID= x)
-                course_dict = {"COURSE":course.COURSE_ID, "NAME": course.NAME}
+                course = courses.objects.get(COURSE= x)
+                course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
                 course_dict_array.append(course_dict)
                     
             user["COURSES"] = course_dict_array
