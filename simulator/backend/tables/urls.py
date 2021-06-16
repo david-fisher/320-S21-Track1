@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 from . import views
 
 router = routers.DefaultRouter()
-router.register('api/users', usersViewSet, 'users')
+router.register('api/users', usersViewSet, 'Users')
 router.register('api/courses', coursesViewSet, 'courses')
 router.register('api/takes', takesViewSet, 'takes')
 router.register('api/course_invitations', course_invitationsViewSet, 'course_invitations')
@@ -16,7 +16,7 @@ router.register('api/course_assignment', course_assignmentViewSet, 'course_assig
 router.register('api/sessions', sessionsViewSet, 'sessions')
 router.register('api/session_times', session_timesViewSet, 'session_times')
 router.register('api/reflections_taken', reflections_takenViewSet, 'reflections_taken')
-router.register('api/action_page_choices', action_page_choicesViewSet, 'action_page_choices')
+router.register('api/action_page_choices', action_page_responsesViewSet, 'action_page_choices')
 router.register('api/conversations_had', conversations_hadViewSet, 'conversations_had')
 
 urlpatterns = [

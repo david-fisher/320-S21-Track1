@@ -23,11 +23,11 @@ import tables.models as md
 # Create your views here.
 
 class usersViewSet(viewsets.ModelViewSet):
-    queryset = users.objects.all()
+    queryset = Users.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = usersSerializer
+    serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['USER_ID']
 
@@ -37,7 +37,7 @@ class coursesViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = coursesSerializer
+    serializer_class = CoursesSerializer
 
 
 class course_invitationsViewSet(viewsets.ModelViewSet):
@@ -90,12 +90,12 @@ class reflections_takenViewSet(viewsets.ModelViewSet):
     filterset_fields = ['RQ_ID', 'SESSION_ID', 'PAGE_ID']
 
 
-class action_page_choicesViewSet(viewsets.ModelViewSet):
+class action_page_responsesViewSet(viewsets.ModelViewSet):
     queryset = action_page_choices.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = action_page_choicesSerializer
+    serializer_class = action_page_responsesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['APC_ID', 'SESSION_ID', 'PAGE_ID']
 
@@ -135,8 +135,8 @@ def startSession(request):
 
         # Check if there is a User given the userId 
         try:
-            user = users.objects.get(USER_ID=userId)
-        except users.DoesNotExist:
+            user = Users.objects.get(USER_ID=userId)
+        except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
@@ -168,8 +168,8 @@ def endSession(request):
 
         # Check if there is a User given the userId 
         try:
-            user = users.objects.get(USER_ID=userId)
-        except users.DoesNotExist:
+            user = Users.objects.get(USER_ID=userId)
+        except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
@@ -217,7 +217,7 @@ def startSessionTimes(request):
         # Check if there is a User given the userId 
         try:
             session = sessions.objects.get(SESSION_ID=sessionId)
-        except users.DoesNotExist:
+        except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
@@ -251,7 +251,7 @@ def endSessionTimes(request):
         # Check if there is a User given the userId 
         try:
             session = sessions.objects.get(SESSION_ID=sessionId)
-        except users.DoesNotExist:
+        except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
@@ -277,7 +277,7 @@ class courses_for_user(APIView):
     def get(self, request, *args, **kwargs):
         
         USER = self.request.query_params.get('user_id')
-        user_query = users.objects.filter(USER_ID = USER).values()
+        user_query = Users.objects.filter(USER_ID = USER).values()
         dashboard = []
         for user in user_query:
             courses_for_query = takes.objects.filter(USER_ID = user['USER_ID']).values()
@@ -296,21 +296,4 @@ class courses_for_user(APIView):
                 
         return Response(dashboard)
 
-def readAttributes(request):
-    try: 
-        resultData = {
-                "userId": request.META['uid'],
-                "name": request.META['displayName'],
-                "affliation": request.META['eduPersonPrimaryAffiliation'],
-                "email": request.META['mail']
-        }
-    except KeyError as ex:
-        resultData = {
-                "userId": "gerrygan",
-                "name": "Gerry Gan",
-                "affliation": "Student",
-                "email": "example@umass.edu"
-        }
-
-    return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})
 
