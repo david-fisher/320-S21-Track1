@@ -1478,18 +1478,20 @@ class dashboard_page(APIView):
         for user1 in users:
             user_id = user1['user_id']
 
-            queryset1 = scenarios.objects.filter(user=user_id)
+            queryset1 = scenarios.objects.filter()
             scenList1 = ScenariosSerializer(queryset1, many=True).data
+            print(scenList1)
             
             for scen in scenList1:
-                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
+                print("AAAAA")
+                queryset2= user_access.objects.filter(USER_ID_id=user_id, SCENARIO_ID_id = scen['SCENARIO'])
                 print(queryset2)
                 scenList2 = user_accessSerializer(queryset2, many=True).data
                 print(scenList2)
                 if(not len(scenList2) == 0):
                     scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
 
-                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO_id = scen['SCENARIO']).values()
                 course_id_array = []
                 for x in scenarios_for_query:
                     course_id_array.append(x['COURSE_id'])
@@ -1525,6 +1527,7 @@ class dashboard_page(APIView):
                     user_id=NET_ID)
                 data = UserSerializer(queryset, many=True).data
                 data = self.add_detail(data)
+                print(data)
                 return Response(data, status=status.HTTP_200_OK)
 
             # return an error for non-existed scenario id
