@@ -68,8 +68,9 @@ export default function LoginSimulator() {
           result: {
             userId: 'phaas',
             name: 'phaas',
-            affliation: 'employee',
+            affiliation: 'employee',
             email: 'phaas@cs.umass.edu',
+            type: 'simulator',
           },
         },
         loading: false,
