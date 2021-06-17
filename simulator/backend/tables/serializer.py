@@ -5,8 +5,7 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = '__all__'
-        level = 1
+        fields = ('user_id', 'NAME', 'AFFILIATION', 'EMAIL')
 
 
 class user_accessSerializer(serializers.ModelSerializer):

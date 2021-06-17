@@ -306,12 +306,27 @@ class courses_for_user(APIView):
                 course_id_array.append(x['COURSE_ID_id'])
 
             course_dict_array = []
+            # print(user)
             for x in course_id_array:
                 course = courses.objects.get(COURSE= x)
                 course_dict = {"COURSE":course.COURSE, "NAME": course.NAME}
                 course_dict_array.append(course_dict)
+                scenarios_for_query = scenarios_for.objects.filter(COURSE=x).values()
+                scenario_dict = []
+                # print(scenarios_for_query)
+                # print(course_dict)
+                for scen in scenarios_for_query:
+                    scenar = scenarios.objects.get(SCENARIO = scen['SCENARIO_id'])
+                    first_page = pages.objects.get(SCENARIO = scen['SCENARIO_id'], PAGE_TYPE = "I")
+                    # scenar_serializer = ScenariosSerializer(scenar, many=True).data
+                    if scenar.IS_FINISHED == True:
+                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "IS_FINISHED": scenar.IS_FINISHED, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE})
+                course_dict["SCENARIOS"] = scenario_dict
+                # print(scenario_dict)
+                # print(x)
                     
             user["COURSES"] = course_dict_array
+            # print(user)
             dashboard.append(user)
                 
         return Response(dashboard)

@@ -26,7 +26,7 @@ urlpatterns = [
     path('scenarios/session/end', views.endSession, name="endSession"),
     path('scenarios/sessiontimes/start', views.startSessionTimes, name="startSessionTimes"),
     path('scenarios/sessiontimes/end', views.endSessionTimes, name="endSessionTimes"),
-    path('courses_for_user', courses_for_user.as_view())
+    path('dashboard', courses_for_user.as_view())
 ]
 
 urlpatterns += router.urls

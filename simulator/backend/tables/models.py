@@ -7,7 +7,7 @@ from django.db.models.fields.related import ForeignKey, OneToOneField
 
 class scenarios(models.Model):
     SCENARIO = models.AutoField(primary_key = True, editable=False)
-    user = models.ForeignKey('Users', to_field = 'user_id', on_delete =models.CASCADE, related_name="scenario_creator2", null=True, db_column="USER_ID", default="phaas")
+    user = models.ForeignKey('Users', on_delete =models.CASCADE, default="phaas")
     NAME = models.CharField(max_length = 1000)
     PUBLIC = models.BooleanField(default = False)
     IS_FINISHED = models.BooleanField(default = False)
