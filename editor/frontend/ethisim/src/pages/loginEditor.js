@@ -70,7 +70,7 @@ export default function LoginEditor() {
           result: {
             userId: 'phaas',
             name: 'phaas',
-            affliation: 'employee',
+            affiliation: 'employee',
             email: 'phaas@cs.umass.edu',
           },
         },
