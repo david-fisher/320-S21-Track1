@@ -136,7 +136,7 @@ export default function QuestionFields({
         color="primary"
         style={{ textTransform: 'unset' }}
       >
-        Add Questions
+        Add Question
       </Button>
       <Button
         id="button"

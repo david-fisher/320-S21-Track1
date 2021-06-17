@@ -75,6 +75,7 @@ export default function GenericPage({
             nextPageEndpoint,
             contextObj.activeIndex,
             contextObj.pages,
+            contextObj.sessionID,
           )}
         >
           Next

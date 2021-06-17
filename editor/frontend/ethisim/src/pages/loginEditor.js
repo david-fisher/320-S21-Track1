@@ -61,15 +61,16 @@ export default function LoginEditor() {
         email: resp.data.result.email,
         name: resp.data.result.name,
         affiliation: resp.data.result.affiliation,
+        type: 'editor',
       });
     }
     if (DEV) {
       setShibAttributes({
         data: {
           result: {
-            userId: 'enochhsiao',
+            userId: 'phaas',
             name: 'phaas',
-            affliation: 'employee',
+            affiliation: 'employee',
             email: 'phaas@cs.umass.edu',
           },
         },
@@ -81,9 +82,9 @@ export default function LoginEditor() {
         loading: false,
       });
       setRedirect(true);
-      return;
+    } else {
+      get(setShibAttributes, '/shib/attributes', null, onSuccess);
     }
-    get(setShibAttributes, '/shib/attributes', null, onSuccess);
   }
   useEffect(getLoginData, []);
 
