@@ -173,7 +173,7 @@ class course_assignmentSerializer(serializers.ModelSerializer):
 class sessionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = sessions
-        fields = '__all__'
+        fields = ('SESSION_ID', 'USER_ID', 'SCENARIO_ID', 'DATE_STARTED', 'DATE_FINISHED', 'IS_FINISHED', 'MOST_RECENT_ACCESS')
 
 class session_timesSerializer(serializers.ModelSerializer):
     class Meta:

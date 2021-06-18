@@ -137,12 +137,12 @@ def startSession(request):
             scenario = scenarios.objects.get(SCENARIO=scenarioId)
         except scenarios.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
-                                                'message': 'No sxenario found with the given scenarioId'})
+                                                'message': 'No scenario found with the given scenarioId'})
         
 
         # Check if there is a User given the userId 
         try:
-            user = Users.objects.get(USER_ID=userId)
+            user = Users.objects.get(user_id=userId)
         except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
@@ -150,12 +150,12 @@ def startSession(request):
         message = None
         # Obtain session field based on given params
         try:
-            session = sessions.objects.get(USER_ID=user.USER_ID, SCENARIO_ID=scenario.SCENARIO)
+            session = sessions.objects.get(USER_ID=user.user_id, SCENARIO_ID_id=scenario.SCENARIO)
             session.MOST_RECENT_ACCESS = datetime.now()
             session.save()
             message = 'Session resumed successfully.'
         except sessions.DoesNotExist:
-            session = sessions(USER_ID_id=user.USER_ID, SCENARIO_ID=scenarioId, DATE_STARTED=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
+            session = sessions(USER_ID_id=user.user_id, SCENARIO_ID_id=scenario.SCENARIO, DATE_STARTED=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
             session.save()
             message = 'Session created succesfully.'
 
@@ -177,18 +177,18 @@ def endSession(request):
             scenario = scenarios.objects.get(SCENARIO=scenarioId)
         except scenarios.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
-                                                'message': 'No sxenario found with the given scenarioId'})
+                                                'message': 'No scenario found with the given scenarioId'})
         
 
         # Check if there is a User given the userId 
         try:
-            user = Users.objects.get(USER_ID=userId)
+            user = Users.objects.get(user_id=userId)
         except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            session = sessions.objects.get(USER_ID_id=user.USER_ID, SCENARIO_ID=scenario.SCENARIO)
+            session = sessions.objects.get(USER_ID_id=user.user_id, SCENARIO_ID_id=scenario.SCENARIO)
             session.IS_FINISHED = True
             session.DATE_FINISHED = datetime.now()
             session.save()
@@ -236,7 +236,7 @@ def startSessionTimes(request):
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            page = pages.objects.get(PAGE_ID=pageId)
+            page = pages.objects.get(PAGE=pageId)
         except Users.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
@@ -244,12 +244,12 @@ def startSessionTimes(request):
         message = None
         # Obtain session field based on given params
         try:
-            sessionTimes = session_times.objects.get(SESSION_ID=session.SESSION_ID, PAGE_ID=pageId)
+            sessionTimes = session_times.objects.get(SESSION_ID_id=session.SESSION_ID, PAGE_ID_id=page.PAGE)
             sessionTimes.MOST_RECENT_ACCESS = datetime.now()
             sessionTimes.save()
             message = 'Session resumed successfully.'
         except session_times.DoesNotExist:
-            sessionTimes = session_times(SESSION_ID_id=session.SESSION_ID, PAGE_ID=pageId, START_TIME=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
+            sessionTimes = session_times(SESSION_ID_id=session.SESSION_ID, PAGE_ID_id=page.PAGE, START_TIME=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
             sessionTimes.save()
             message = 'Session created succesfully.'
 
@@ -276,7 +276,13 @@ def endSessionTimes(request):
                                                 'message': 'No User found based on given user Id'})
 
         try:
-            sessionTimes = session_times.objects.get(SESSION_ID_id=session.SESSION_ID, PAGE_ID=pageId)
+            page = pages.objects.get(PAGE=pageId)
+        except Users.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,
+                                                'message': 'No User found based on given user Id'})
+
+        try:
+            sessionTimes = session_times.objects.get(SESSION_ID_id=session.SESSION_ID, PAGE_ID_id=page.PAGE)
             sessionTimes.END_TIME = datetime.now()
             sessionTimes.save()
         except session_times.DoesNotExist:
