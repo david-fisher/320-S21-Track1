@@ -64,6 +64,17 @@ export default function LoginEditor() {
         type: 'editor',
       });
     }
+
+    function onFailure(resp) {
+      post(setPostShibAttributes, '/registerUser', null, onSuccessPost, {
+        netId: resp.data.result.userId,
+        email: resp.data.result.email,
+        name: resp.data.result.name,
+        affiliation: resp.data.result.affiliation,
+        type: 'editor',
+      });
+    }
+
     if (DEV) {
       setShibAttributes({
         data: {
@@ -83,7 +94,7 @@ export default function LoginEditor() {
       });
       setRedirect(true);
     } else {
-      get(setShibAttributes, '/shib/attributes', null, onSuccess);
+      get(setShibAttributes, '/shib/attributes', null, onSuccess, onFailure);
     }
   }
   useEffect(getLoginData, []);

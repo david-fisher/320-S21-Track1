@@ -13,7 +13,6 @@ import Reflection from '../components/SimulationWindowComponents/reflection';
 import Action from '../components/SimulationWindowComponents/action';
 import Stakeholders from '../components/SimulationWindowComponents/stakeholders';
 import Feedback from '../components/SimulationWindowComponents/feedback';
-import { STUDENT_ID } from '../constants/config';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsEditor/get';
 import post from '../universalHTTPRequestsSimulator/post';
@@ -78,23 +77,18 @@ export default function SimulationWindow(props) {
   const scenarioID = props.location.data
     ? props.location.data.scenarioID
     : history.push('/dashboard'); // prevents users from manually inserting scenarioID - firstPage in URL
-  const firstPage = props.location.data
-    ? props.location.data.firstPage
-    : history.push('/dashboard');
+  const { firstPage, numConversations, userID } = props.location.data;
 
-  const numConversations = props.location.data
-    ? props.location.data.numConversations
-    : 3;
   // eslint-disable-next-line
   const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
 
-  const endpointSession = `/scenarios/session/start?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
+  const endpointSession = `/scenarios/session/start?userId=${userID}&scenarioId=${scenarioID}`;
   const firstPageEndpoint = `/page?page_id=${firstPage}`;
 
   // eslint-disable-next-line
-  const endpointGetMeta = "/scenarios?userId=" + STUDENT_ID;
+  const endpointGetMeta = "/scenarios?userId=" + userID;
   const [fetchFirstPage, setFirstPage] = useState({
     data: null,
     loading: false,
@@ -118,6 +112,7 @@ export default function SimulationWindow(props) {
     let sessionID;
     function startSess(resp) {
       setPlayerContext(() => ({
+        userID,
         numConversations,
         sessionID: resp.data.result.sessionId,
         activeIndex: 0,
