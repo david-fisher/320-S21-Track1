@@ -237,7 +237,7 @@ def startSessionTimes(request):
 
         try:
             page = pages.objects.get(PAGE=pageId)
-        except Users.DoesNotExist:
+        except pages.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
@@ -277,7 +277,7 @@ def endSessionTimes(request):
 
         try:
             page = pages.objects.get(PAGE=pageId)
-        except Users.DoesNotExist:
+        except pages.DoesNotExist:
             return JsonResponse(status=404, data={'status': 404,
                                                 'message': 'No User found based on given user Id'})
 
@@ -324,9 +324,15 @@ class courses_for_user(APIView):
                 for scen in scenarios_for_query:
                     scenar = scenarios.objects.get(SCENARIO = scen['SCENARIO_id'])
                     first_page = pages.objects.get(SCENARIO = scen['SCENARIO_id'], PAGE_TYPE = "I")
+                    finished = False
+                    sess_list = sessions.objects.all()
+                    for sess in sess_list:
+                        if(sess.SCENARIO_ID_id == scen['SCENARIO_id']):
+                            finished = sess.IS_FINISHED
+                        
                     # scenar_serializer = ScenariosSerializer(scenar, many=True).data
                     if scenar.IS_FINISHED == True:
-                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "IS_FINISHED": scenar.IS_FINISHED, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE})
+                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "STUDENT_FINISHED": finished})
                 course_dict["SCENARIOS"] = scenario_dict
                 # print(scenario_dict)
                 # print(x)
