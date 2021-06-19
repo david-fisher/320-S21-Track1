@@ -1410,7 +1410,7 @@ class register_user_api(APIView):
             if request.data["type"] == "editor": # if the request is coming from the editor frontend, then check if the user exists in the authorized_users text file or is an employee. If not return 401
                 affiliation = request.data["affiliation"]
                 if affiliation is not 'Employee':
-                    with open(os.path.abspath(os.getcwd()) + '/lead/tables/authorized_users.txt') as csv_file:
+                    with open(os.path.join(sys.path[0], "tables/authorized_users.txt")) as csv_file:
                         csv_reader = csv.reader(csv_file, delimiter='\n')
                         authorized = False
                         email = request.data["email"]
