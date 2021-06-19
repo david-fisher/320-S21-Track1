@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState, useEffect, useRef, useContext,
+} from 'react';
 import Chart from 'chart.js';
 import {
   Grid,
@@ -17,9 +19,9 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { STUDENT_ID } from '../../constants/config';
 import get from '../../universalHTTPRequestsEditor/get';
 import ErrorBanner from '../Banners/ErrorBanner';
+import GlobalContext from '../../Context/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,11 +129,13 @@ export default function Radar({ scenarioID }) {
   const classes = useStyles();
   const chartContainer = useRef(null);
   // eslint-disable-next-line
+  const [contextObj, setContextObj] = useContext(GlobalContext);
+  // eslint-disable-next-line
   const [chartInstance, setChartInstance] = useState(null);
   const [coverage, setCoverage] = useState([]);
   const [value, setValue] = React.useState(0);
 
-  const endpointGet = `/scenarios/radar?userId=${STUDENT_ID}&scenarioID=${scenarioID}`;
+  const endpointGet = `/scenarios/radar?userId=${contextObj.userID}&scenarioID=${scenarioID}`;
   // eslint-disable-next-line
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,

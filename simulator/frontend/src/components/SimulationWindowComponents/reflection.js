@@ -13,7 +13,6 @@ import ErrorIcon from '@material-ui/icons/Error';
 import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
 // eslint-disable-next-line
-import { STUDENT_ID } from '../../constants/config';
 import GlobalContext from '../../Context/GlobalContext';
 import get from '../../universalHTTPRequestsSimulator/get';
 import post from '../../universalHTTPRequestsSimulator/post';

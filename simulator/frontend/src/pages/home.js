@@ -17,14 +17,9 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from '../components/scenarioCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getSimulator from '../universalHTTPRequestsSimulator/get';
-import getEditor from '../universalHTTPRequestsEditor/get';
-// eslint-disable-next-line
 import CodeButton from '../components/classCodeDialog';
-// eslint-disable-next-line
-import ProgressBar from '../components/progressBar';
-// eslint-disable-next-line
-import { STUDENT_ID } from '../constants/config';
 import ErrorBanner from '../components/Banners/ErrorBanner';
+import SuccessBanner from '../components/Banners/SuccessBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
   },
   errorContainer: {
     marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  bannerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -73,11 +73,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '30px',
   },
 }));
-
-// TODO change when backend gets implemented
-const endpointGet = '/dashboard?professor_id=';
-// eslint-disable-next-line
-const endpointPost = "/dashboard";
 
 function TabPanel(props) {
   const {
@@ -162,69 +157,79 @@ export default function Home(props) {
     loading: false,
     error: false,
   });
-  // eslint-disable-next-line
-  const [shouldFetch, setShouldFetch] = useState(0);
+  const [successBannerMessage, setSuccessBannerMessage] = useState('');
+  const [successBannerFade, setSuccessBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSuccessBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [successBannerFade]);
   const history = useHistory();
   const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
   // Get Scenario
-  const getData = () => {
+  // addCourse - to trigger success banner for successfully adding a course
+  const getData = (addCourse) => {
     function onSuccess(response) {
-      const scenarios = response.data[0].SCENARIO.map((data) => ({
-        title: data.NAME,
-        numConversations: data.NUM_CONVERSATION,
+      let scenarios = response.data[0].COURSES.filter((data) => data.SCENARIOS.length > 0).map((data) => ({
+        title: data.SCENARIOS[0].NAME,
+        numConversations: data.SCENARIOS[0].NUM_CONVERSATION,
         isFinished: false,
-        date: data.DATE_CREATED,
-        scenarioID: data.SCENARIO,
-        firstPage: null,
-        courses: data.COURSES,
+        date: data.SCENARIOS[0].DATE_CREATED,
+        scenarioID: data.SCENARIOS[0].SCENARIO,
+        firstPage: data.SCENARIOS[0].FIRST_PAGE,
+        courses: [data.NAME],
+        userID,
       }));
-      // TODO temporary requests to get first Page field
-      scenarios.forEach((obj) => {
-        function onSuccessSessions(resp) {
+      const scenarioMap = new Map();
+      // For duplicated scenarios with multiple courses
+      scenarios.forEach((data) => {
+        console.log(data);
+        if (scenarioMap.has(data.scenarioID)) {
+          const newScenarioData = scenarioMap.get(data.scenarioID);
+          newScenarioData.courses.push(data.courses[0]);
+          scenarioMap.set(data.scenarioID, newScenarioData);
+        } else {
+          scenarioMap.set(data.scenarioID, data);
+        }
+      });
+      scenarios = Array.from(scenarioMap, ([name, value]) => (value));
+      function onSuccessSessions(resp) {
+        scenarios.forEach((obj) => {
           if (resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID).length) {
             obj.isFinished = resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID)[0].IS_FINISHED;
           }
-          const scen = {
-            incompleteScenarios: scenarios.filter((s) => !s.isFinished),
-            completeScenarios: scenarios.filter((s) => s.isFinished),
-          };
-          setScenarioList(scen);
-        }
-        function onSuccess(resp) {
-          obj.firstPage = resp.data.PAGES.filter(({ PAGE_TYPE }) => PAGE_TYPE === 'I')[0].PAGE;
-          getSimulator(
-            setFetchScenariosResponse,
-            '/api/sessions/',
-            null,
-            onSuccessSessions,
+        });
+        const scen = {
+          incompleteScenarios: scenarios.filter((s) => !s.isFinished),
+          completeScenarios: scenarios.filter((s) => s.isFinished),
+        };
+        setScenarioList(scen);
+        if (addCourse) {
+          setSuccessBannerMessage(
+            'Successfully added course!',
           );
+          setSuccessBannerFade(true);
         }
-        getEditor(
-          setFetchScenariosResponse,
-          `/logistics?scenario_id=${obj.scenarioID}`,
-          null,
-          onSuccess,
-        );
-      });
+      }
 
-      /*
-      complete = complete.map((data) => ({
-        title: data.name,
-        num_conversations: data.num_conversation,
-        is_finished: data.is_finished,
-        date: data.last_date_modified,
-        scenarioID: data.scenarioID,
-        firstPage: data.firstPage,
-        course: data.course_name,
-      }));
-      */
+      getSimulator(
+        setFetchScenariosResponse,
+        '/api/sessions/',
+        onFailure,
+        onSuccessSessions,
+      );
     }
 
     function onFailure(e) {
       setErrorBannerMessage('Failed to get scenarios! Please refresh the page.');
       setErrorBannerFade(true);
     }
-    getEditor(
+
+    const endpointGet = '/dashboard?user_id=';
+    getSimulator(
       setFetchScenariosResponse,
       `${endpointGet}${userID}`,
       onFailure,
@@ -256,7 +261,7 @@ export default function Home(props) {
     setValue(newValue);
   };
 
-  useEffect(getData, [shouldFetch]);
+  useEffect(getData, []);
 
   if (fetchScenariosResponse.loading) {
     return (
@@ -289,7 +294,14 @@ export default function Home(props) {
   return (
     <div className={classes.root}>
       <div className={classes.bannerContainer}>
-        <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
       </div>
       <StyledTabs
         value={value}
@@ -305,6 +317,7 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* incomplete scenarios section */}
+          <CodeButton userID={userID} getData={getData} />
           <Grid
             container
             direction="row"
@@ -346,6 +359,7 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* completed scenarioList section */}
+          <CodeButton userID={userID} />
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>

@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import RadarPlot from './radarPlot';
 import GlobalContext from '../../Context/GlobalContext';
-import { STUDENT_ID } from '../../constants/config';
+
 import post from '../../universalHTTPRequestsSimulator/post';
 import ErrorBanner from '../Banners/ErrorBanner';
 
@@ -53,7 +53,7 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
 
     return () => clearTimeout(timeout);
   }, [errorBannerFade]);
-  const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&scenarioId=${scenarioID}`;
+  const endpointSess = `/scenarios/session/end?userId=${contextObj.userID}&scenarioId=${scenarioID}`;
   // eslint-disable-next-line
   const [endSessionObj, setEndSessionObj] = useState({
     data: null,

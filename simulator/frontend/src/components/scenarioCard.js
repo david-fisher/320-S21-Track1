@@ -12,7 +12,7 @@ export default function ScenarioCard({
 }) {
   // scenario card for the simulator homepage
   const word = finished ? 'Completed on: ' : 'Assigned: ';
-  let coursesToString = courses ? courses.reduce((acc, cur) => `${acc}, ${cur.NAME}`, '') : '';
+  let coursesToString = courses ? courses.reduce((acc, cur) => `${acc}, ${cur}`, '') : '';
   coursesToString = coursesToString !== '' ? coursesToString.substring(1, coursesToString.length) : '';
 
   return (

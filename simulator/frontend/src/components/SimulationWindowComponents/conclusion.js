@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   withStyles, Typography, Box, Grid, Button,
@@ -6,9 +6,10 @@ import {
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import InnerHTML from 'dangerously-set-html-content';
-import { BACK_URL_EDITOR, STUDENT_ID, SCENARIO_ID } from '../../constants/config';
+import { BACK_URL_EDITOR, SCENARIO_ID } from '../../constants/config';
 import { ScenariosContext } from '../../App';
 import post from '../../universalHTTPRequestsEditor/post';
+import GlobalContext from '../../Context/GlobalContext';
 
 const TextTypography = withStyles({
   root: {
@@ -40,6 +41,7 @@ export default function Conclusion({
   activePage,
   setActivePage,
 }) {
+  const [contextObj, setContextObj] = useContext(GlobalContext);
   const [body, setBody] = useState('');
   const [scenarios, setScenarios] = React.useContext(ScenariosContext);
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
@@ -48,7 +50,7 @@ export default function Conclusion({
     error: false,
   });
   const [shouldFetch, setShouldFetch] = useState(0);
-  const endpointSess = `/scenarios/session/end?userId=${STUDENT_ID}&versionId=${versionID}`;
+  const endpointSess = `/scenarios/session/end?userId=${contextObj.userID}&versionId=${versionID}`;
 
   const closeSession = () => {
     function onSuccess(response) {

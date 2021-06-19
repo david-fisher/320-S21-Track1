@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -49,9 +49,9 @@ export default function LoginEditor() {
     error: false,
   });
   const [redirect, setRedirect] = useState(false);
+  const history = useHistory();
   // reload page to right place
   function getLoginData() {
-    // TODO restrict access if needed
     function onSuccessPost(resp) {
       setRedirect(true);
     }
@@ -64,6 +64,12 @@ export default function LoginEditor() {
         type: 'editor',
       });
     }
+
+    function onFailure(resp) {
+      // User is not valid
+      history.push('/Shibboleth.sso/Logout?return=/#/error');
+    }
+
     if (DEV) {
       setShibAttributes({
         data: {
@@ -83,7 +89,7 @@ export default function LoginEditor() {
       });
       setRedirect(true);
     } else {
-      get(setShibAttributes, '/shib/attributes', null, onSuccess);
+      get(setShibAttributes, '/shib/attributes', null, onSuccess, onFailure);
     }
   }
   useEffect(getLoginData, []);
