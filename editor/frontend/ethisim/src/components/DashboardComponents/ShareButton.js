@@ -107,6 +107,8 @@ export default function ShareDialog(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        disableBackdropClick
+        disableEscapeKeyDown
       >
         <DialogTitle onClose={handleClose} />
         <DialogContent dividers>

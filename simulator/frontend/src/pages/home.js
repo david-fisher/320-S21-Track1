@@ -17,12 +17,9 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from '../components/scenarioCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getSimulator from '../universalHTTPRequestsSimulator/get';
-// eslint-disable-next-line
 import CodeButton from '../components/classCodeDialog';
-// eslint-disable-next-line
-import ProgressBar from '../components/progressBar';
-// eslint-disable-next-line
 import ErrorBanner from '../components/Banners/ErrorBanner';
+import SuccessBanner from '../components/Banners/SuccessBanner';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
   },
   errorContainer: {
     marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  bannerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -155,12 +157,21 @@ export default function Home(props) {
     loading: false,
     error: false,
   });
-  // eslint-disable-next-line
-  const [shouldFetch, setShouldFetch] = useState(0);
+  const [successBannerMessage, setSuccessBannerMessage] = useState('');
+  const [successBannerFade, setSuccessBannerFade] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSuccessBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [successBannerFade]);
   const history = useHistory();
   const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
   // Get Scenario
-  const getData = () => {
+  // addCourse - to trigger success banner for successfully adding a course
+  const getData = (addCourse) => {
     function onSuccess(response) {
       let scenarios = response.data[0].COURSES.filter((data) => data.SCENARIOS.length > 0).map((data) => ({
         title: data.SCENARIOS[0].NAME,
@@ -196,6 +207,12 @@ export default function Home(props) {
           completeScenarios: scenarios.filter((s) => s.isFinished),
         };
         setScenarioList(scen);
+        if (addCourse) {
+          setSuccessBannerMessage(
+            'Successfully added course!',
+          );
+          setSuccessBannerFade(true);
+        }
       }
 
       getSimulator(
@@ -244,7 +261,7 @@ export default function Home(props) {
     setValue(newValue);
   };
 
-  useEffect(getData, [shouldFetch]);
+  useEffect(getData, []);
 
   if (fetchScenariosResponse.loading) {
     return (
@@ -277,7 +294,14 @@ export default function Home(props) {
   return (
     <div className={classes.root}>
       <div className={classes.bannerContainer}>
-        <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
       </div>
       <StyledTabs
         value={value}
@@ -293,6 +317,7 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* incomplete scenarios section */}
+          <CodeButton userID={userID} getData={getData} />
           <Grid
             container
             direction="row"
@@ -334,6 +359,7 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* completed scenarioList section */}
+          <CodeButton userID={userID} />
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>

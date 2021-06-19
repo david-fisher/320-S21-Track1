@@ -133,7 +133,6 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const history = useHistory();
   const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginEditor');
-  console.log(userID);
   // post on success, concatenating a scenario card to array
   // delete on success, concatenating a scenario card to array
 
