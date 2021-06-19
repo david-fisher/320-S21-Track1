@@ -16,6 +16,7 @@ import {
 import Home from './pages/home';
 import SimulationWindow from './pages/simulationWindow';
 import LoginSimulator from './pages/loginSimulator';
+import { DOMAIN } from './constants/config';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,7 +79,7 @@ export default function Nav() {
                   </Link>
                 </Typography>
                 <Button
-                  onClick={() => (window.location.href = '/Shibboleth.sso/Logout?return=/')}
+                  onClick={() => (window.location.href = `${DOMAIN}/Shibboleth.sso/Logout?return=/`)}
                   color="inherit"
                 >
                   LogOut
