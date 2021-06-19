@@ -67,7 +67,7 @@ export default function LoginEditor() {
 
     function onFailure(resp) {
       // User is not valid
-      history.push('/Shibboleth.sso/Logout?return=/#/error');
+      window.location.href = '/Shibboleth.sso/Logout?return=/#/error';
     }
 
     if (DEV) {
@@ -137,9 +137,5 @@ export default function LoginEditor() {
         }}
       />
     );
-  }
-
-  if (redirect) {
-    window.location.href = '/Shibboleth.sso/Logout?return=/#/error';
   }
 }
