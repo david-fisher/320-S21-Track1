@@ -210,14 +210,14 @@ def readAttributes(request):
         resultData = {
                 "userId": request.META['uid'],
                 "name": request.META['displayName'],
-                "affliation": request.META['eduPersonPrimaryAffiliation'],
+                "affiliation": request.META['eduPersonPrimaryAffiliation'],
                 "email": request.META['mail']
         }
     except KeyError as ex:
         resultData = {
                 "userId": "gerrygan",
                 "name": "Gerry Gan",
-                "affliation": "Student",
+                "affiliation": "Student",
                 "email": "example@umass.edu"
         }
 

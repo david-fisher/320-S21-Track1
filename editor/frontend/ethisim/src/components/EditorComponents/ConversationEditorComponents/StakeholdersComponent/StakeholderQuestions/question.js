@@ -88,7 +88,6 @@ export default function QuestionField({
             id="outlined-multiline-static"
             label="Question"
             multiline
-            rows={2}
             variant="outlined"
             value={questionValue}
             onChange={onChangeQuestion}
@@ -98,7 +97,6 @@ export default function QuestionField({
             id="outlined-multiline-static"
             label="Stakeholder Response"
             multiline
-            rows={2}
             variant="outlined"
             value={responseValue}
             onChange={onChangeResponse}

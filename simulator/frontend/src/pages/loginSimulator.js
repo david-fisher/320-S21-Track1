@@ -11,7 +11,7 @@ import {
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
 import post from '../universalHTTPRequestsEditor/post';
-import { DEV } from '../constants/config';
+import { DEV, STUDENT_ID } from '../constants/config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -60,16 +60,18 @@ export default function LoginSimulator() {
         email: resp.data.result.email,
         name: resp.data.result.name,
         affiliation: resp.data.result.affiliation,
+        type: 'simulator',
       });
     }
     if (DEV) {
       setShibAttributes({
         data: {
           result: {
-            userId: 'phaas',
+            userId: STUDENT_ID,
             name: 'phaas',
-            affliation: 'employee',
+            affiliation: 'employee',
             email: 'phaas@cs.umass.edu',
+            type: 'simulator',
           },
         },
         loading: false,
@@ -80,9 +82,9 @@ export default function LoginSimulator() {
         loading: false,
       });
       setRedirect(true);
-      return;
+    } else {
+      get(setShibAttributes, '/shib/attributes', null, onSuccess);
     }
-    get(setShibAttributes, '/shib/attributes', null, onSuccess);
   }
   useEffect(getLoginData, []);
 

@@ -37,3 +37,4 @@ node_modules/**
 .eslintcache
 
 editor/backend/venv/
+editor/backend/lead/tables/authorized_users.txt

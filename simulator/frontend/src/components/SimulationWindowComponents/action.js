@@ -9,7 +9,6 @@ import {
   Grid,
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
-import { STUDENT_ID } from '../../constants/config';
 import get from '../../universalHTTPRequestsSimulator/get';
 import post from '../../universalHTTPRequestsSimulator/post';
 import GlobalContext from '../../Context/GlobalContext';
@@ -90,7 +89,7 @@ export default function Action({
   // player submits action choice, can only submit once
   const endpointPOST = '/api/action_page_choices/';
   // eslint-disable-next-line
-  const endpointSess = `/scenarios/session/start?userId=${STUDENT_ID}&versionId=${scenarioID}`;
+  const endpointSess = `/scenarios/session/start?userId=${contextObj.userID}&versionId=${scenarioID}`;
 
   const [actionData, setActionData] = useState({
     data: null,
@@ -122,6 +121,7 @@ export default function Action({
         `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
+        contextObj.sessionID,
       );
       setChosenAction((cur) => selectedAction);
     }
@@ -142,6 +142,7 @@ export default function Action({
         `/page?page_id=${nextPageID}`,
         contextObj.activeIndex,
         contextObj.pages,
+        contextObj.sessionID,
       );
     }
   };
@@ -195,6 +196,7 @@ export default function Action({
               `/page?page_id=${nextPageID}`,
               contextObj.activeIndex,
               contextObj.pages,
+              contextObj.sessionID,
             );
           }}
         >
