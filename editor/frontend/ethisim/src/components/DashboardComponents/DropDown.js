@@ -36,11 +36,11 @@ export default function Tags(props) {
       <Autocomplete
         multiple
         id="checkboxes-tags-demo"
-        options={props.courses}
+        options={props.courses.sort((a, b) => a.COURSE.localeCompare(b.COURSE))}
         disableCloseOnSelect
         getOptionLabel={(option) => option.NAME}
         onChange={onTagsChange}
-        noOptionsText="Loading courses..."
+        noOptionsText="No courses found"
         renderOption={(option, { selected, inputValue }) => (
           <>
             <Checkbox

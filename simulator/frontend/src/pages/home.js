@@ -17,7 +17,6 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from '../components/scenarioCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getSimulator from '../universalHTTPRequestsSimulator/get';
-import getEditor from '../universalHTTPRequestsEditor/get';
 // eslint-disable-next-line
 import CodeButton from '../components/classCodeDialog';
 // eslint-disable-next-line

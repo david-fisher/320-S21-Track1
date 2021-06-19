@@ -28,7 +28,7 @@ import get from '../universalHTTPRequests/get';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import ErrorBanner from '../components/Banners/ErrorBanner';
-import Tags from '../components/DashboardComponents/DropDown';
+import CoursesDropDown from '../components/DashboardComponents/DropDown';
 import post from '../universalHTTPRequests/post';
 import deleteReq from '../universalHTTPRequests/delete';
 import DashboardNavBar from '../components/DashboardComponents/DashboardNavbar';
@@ -561,7 +561,7 @@ export default function Dashboard(props) {
             </form>
 
             <form style={{ marginBottom: 10 }}>
-              <Tags
+              <CoursesDropDown
                 courses={menuCourseItems}
                 update={updateSelectedClasses}
               />
