@@ -183,7 +183,7 @@ export default function Home(props) {
       setCourses(response.data[0].COURSES.map((data) => ({
         COURSE: data.COURSE,
         NAME: data.NAME,
-      })).sort((a, b) => a.COURSE.localeCompare(b.COURSE)));
+      })).sort((a, b) => a.COURSE.toString().localeCompare(b.COURSE.toString())));
       let scenarios = response.data[0].COURSES.filter((data) => data.SCENARIOS.length > 0).map((data) => ({
         title: data.SCENARIOS[0].NAME,
         numConversations: data.SCENARIOS[0].NUM_CONVERSATION,
