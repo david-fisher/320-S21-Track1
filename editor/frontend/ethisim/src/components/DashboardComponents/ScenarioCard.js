@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.primary.light,
     border: 3,
+    textDecoration: 'none',
   },
   buttonText: {
     width: '100%',

@@ -20,6 +20,7 @@ import getSimulator from '../universalHTTPRequestsSimulator/get';
 import CodeButton from '../components/classCodeDialog';
 import ErrorBanner from '../components/Banners/ErrorBanner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
+import EnrolledClassesButton from '../components/classesEnrolledDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     variant: 'contained',
     color: 'white',
     background: 'black',
+    textTransform: 'unset',
   },
   issue: {
     display: 'flex',
@@ -159,7 +161,7 @@ export default function Home(props) {
   });
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
   const [successBannerFade, setSuccessBannerFade] = useState(false);
-
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSuccessBannerFade(false);
@@ -173,6 +175,10 @@ export default function Home(props) {
   // addCourse - to trigger success banner for successfully adding a course
   const getData = (addCourse) => {
     function onSuccess(response) {
+      setCourses(response.data[0].COURSES.map((data) => ({
+        COURSE: data.COURSE,
+        NAME: data.NAME,
+      })).sort((a, b) => a.COURSE.localeCompare(b.COURSE)));
       let scenarios = response.data[0].COURSES.filter((data) => data.SCENARIOS.length > 0).map((data) => ({
         title: data.SCENARIOS[0].NAME,
         numConversations: data.SCENARIOS[0].NUM_CONVERSATION,
@@ -180,13 +186,17 @@ export default function Home(props) {
         date: data.SCENARIOS[0].DATE_CREATED,
         scenarioID: data.SCENARIOS[0].SCENARIO,
         firstPage: data.SCENARIOS[0].FIRST_PAGE,
-        courses: [data.NAME],
+        courses: [{
+          COURSE: data.COURSE,
+          NAME: data.NAME,
+        },
+        ],
         userID,
       }));
+
       const scenarioMap = new Map();
       // For duplicated scenarios with multiple courses
       scenarios.forEach((data) => {
-        console.log(data);
         if (scenarioMap.has(data.scenarioID)) {
           const newScenarioData = scenarioMap.get(data.scenarioID);
           newScenarioData.courses.push(data.courses[0]);
@@ -317,7 +327,10 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* incomplete scenarios section */}
-          <CodeButton userID={userID} getData={getData} />
+          <div style={{ marginRight: '5px' }}>
+            <EnrolledClassesButton courses={courses} />
+          </div>
+          <CodeButton userID={userID} getData={getData} courses={courses} />
           <Grid
             container
             direction="row"
@@ -359,7 +372,10 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* completed scenarioList section */}
-          <CodeButton userID={userID} />
+          <div style={{ marginRight: '5px' }}>
+            <EnrolledClassesButton courses={courses} />
+          </div>
+          <CodeButton userID={userID} getData={getData} courses={courses} />
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>

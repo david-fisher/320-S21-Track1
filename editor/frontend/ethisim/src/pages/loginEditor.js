@@ -11,7 +11,7 @@ import {
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
 import post from '../universalHTTPRequests/post';
-import { DEV } from '../Constants/Config';
+import { DEV, DOMAIN } from '../Constants/Config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -67,7 +67,7 @@ export default function LoginEditor() {
 
     function onFailure(resp) {
       // User is not valid
-      window.location.href = '/Shibboleth.sso/Logout?return=/#/error';
+      window.location.href = `${DOMAIN}/Shibboleth.sso/Logout?return=/#/error`;
     }
 
     if (DEV) {
