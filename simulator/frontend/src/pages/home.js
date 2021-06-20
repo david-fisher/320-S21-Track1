@@ -154,9 +154,14 @@ export default function Home(props) {
     incompleteScenarios: null,
     completeScenarios: null,
   });
+  const [fetchSessionsResponse, setFetchSessionsResponse] = useState({
+    data: null,
+    loading: true,
+    error: false,
+  });
   const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
     data: null,
-    loading: false,
+    loading: true,
     error: false,
   });
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
@@ -217,16 +222,15 @@ export default function Home(props) {
           completeScenarios: scenarios.filter((s) => s.isFinished),
         };
         setScenarioList(scen);
-        if (addCourse) {
+        if (addCourse === true) {
           setSuccessBannerMessage(
             'Successfully added course!',
           );
           setSuccessBannerFade(true);
         }
       }
-
       getSimulator(
-        setFetchScenariosResponse,
+        setFetchSessionsResponse,
         '/api/sessions/',
         onFailure,
         onSuccessSessions,
@@ -238,6 +242,12 @@ export default function Home(props) {
       setErrorBannerFade(true);
     }
 
+    // for smooth loading spinner animation
+    setFetchSessionsResponse({
+      data: null,
+      loading: true,
+      error: false,
+    });
     const endpointGet = '/dashboard?user_id=';
     getSimulator(
       setFetchScenariosResponse,
@@ -273,7 +283,7 @@ export default function Home(props) {
 
   useEffect(getData, []);
 
-  if (fetchScenariosResponse.loading) {
+  if (fetchSessionsResponse.loading) {
     return (
       <div>
         <div style={{ marginTop: '100px' }}>
