@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     color: '#FFF',
+    textTransform: 'unset',
+    textDecoration: 'none',
+  },
+  logout: {
+    textTransform: 'unset',
   },
   link: {
     '&:hover': {
@@ -71,18 +76,23 @@ export default function Nav() {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>
-                  <Link className={classes.link} to="/">
+                <div className={classes.title}>
+                  <Link className={classes.link} to="/" style={{ textDecoration: 'none' }}>
                     <Button className={classes.title} color="inherit">
-                      Home
+                      <Typography variant="h6">
+                        Home
+                      </Typography>
                     </Button>
                   </Link>
-                </Typography>
+                </div>
                 <Button
+                  className={classes.logout}
                   onClick={() => (window.location.href = `${DOMAIN}/Shibboleth.sso/Logout?return=/`)}
                   color="inherit"
                 >
-                  LogOut
+                  <Typography variant="h6" className={classes.title}>
+                    Logout
+                  </Typography>
                 </Button>
               </Toolbar>
             </AppBar>

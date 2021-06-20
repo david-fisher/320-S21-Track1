@@ -14,8 +14,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import post from '../universalHTTPRequestsSimulator/post';
-import ErrorBanner from './Banners/ErrorBanner';
-import EnrolledClassesButton from './classesEnrolledDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '6px',
   },
   saveButton: {
-    margin: theme.spacing(2),
     float: 'right',
     textTransform: 'unset',
   },
@@ -93,7 +90,7 @@ function DialogTitle(props) {
   const { onClose } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6">Add Courses</Typography>
+      <Typography variant="h6">Enrolled Courses</Typography>
       {onClose ? (
         <IconButton
           aria-label="close"
@@ -108,11 +105,9 @@ function DialogTitle(props) {
 }
 
 CodeDialog.propTypes = {
-  userID: PropTypes.string,
-  getData: PropTypes.func,
   courses: PropTypes.array,
 };
-export default function CodeDialog({ userID, getData, courses }) {
+export default function CodeDialog({ courses }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [course, setCourse] = useState('');
@@ -125,39 +120,6 @@ export default function CodeDialog({ userID, getData, courses }) {
     setOpen(false);
   };
 
-  // eslint-disable-next-line
-  const [postCourseResponse, setPostCourseResponse] = useState({
-    data: null,
-    loading: false,
-    error: false,
-  });
-
-  const [errorBannerFade, setErrorBannerFade] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setErrorBannerFade(false);
-    }, 1000);
-
-    return () => clearTimeout(timeout);
-  }, [errorBannerFade]);
-
-  const handleSubmit = () => {
-    function onSuccess(resp) {
-      setOpen(false);
-      getData(true);
-    }
-
-    function onFailure(resp) {
-      setErrorBannerFade(true);
-    }
-
-    post(setPostCourseResponse, '/api/takes/', onFailure, onSuccess, {
-      USER_ID: userID,
-      COURSE_ID: course.toUpperCase(),
-    });
-  };
-
   return (
     <div>
       <Button
@@ -166,9 +128,8 @@ export default function CodeDialog({ userID, getData, courses }) {
         onClick={handleClickOpen}
         className={classes.buttonText}
       >
-        <AddIcon />
         <Typography variant="subtitle1">
-          Add Course
+          Enrolled Courses
         </Typography>
       </Button>
       <Dialog
@@ -180,26 +141,28 @@ export default function CodeDialog({ userID, getData, courses }) {
         disableEscapeKeyDown
         open={open}
       >
-        <div className={classes.bannerContainer}>
-          <ErrorBanner
-            errorMessage="Course does not exist or course has already been added!"
-            fade={errorBannerFade}
-          />
-        </div>
         <DialogTitle onClose={handleClose} />
         <DialogContent dividers>
-          <div style={{ marginBottom: '16px' }}>
-            <EnrolledClassesButton courses={courses} />
-          </div>
-          <form className={classes.textField} noValidate autoComplete="off">
-            <ValidationTextField
-              label="Enter Course Code"
-              id="Enter Course Code"
-              variant="outlined"
-              value={course}
-              onInput={(e) => setCourse(e.target.value)}
-            />
-          </form>
+          {courses.map((data) => (
+            <form
+              style={{ marginBottom: 20 }}
+              key={data.COURSE}
+            >
+              <Button
+                className={classes.buttonText}
+                variant="contained"
+                color="primary"
+              >
+                <Typography
+                  display="block"
+                  variant="subtitle1"
+                  noWrap
+                >
+                  {data.NAME}
+                </Typography>
+              </Button>
+            </form>
+          ))}
         </DialogContent>
 
         <DialogActions>
@@ -207,10 +170,9 @@ export default function CodeDialog({ userID, getData, courses }) {
             className={classes.saveButton}
             autoFocus
             color="primary"
-            onClick={handleSubmit}
+            onClick={handleClose}
           >
-            <AddIcon />
-            Add Course
+            Exit
           </Button>
         </DialogActions>
       </Dialog>
