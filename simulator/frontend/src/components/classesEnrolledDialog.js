@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ShareIcon from '@material-ui/icons/Share';
 import {
   Typography,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  TextField,
   IconButton,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '6px',
   },
   saveButton: {
-    margin: theme.spacing(2),
     float: 'right',
     textTransform: 'unset',
   },
@@ -41,24 +37,23 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     textTransform: 'unset',
   },
+  bannerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 DialogTitle.propTypes = {
   onClose: PropTypes.any.isRequired,
 };
 
-const UserRole = [
-  { title: 'Read Only' },
-  { title: 'Edit Only' },
-  { title: 'Admin' },
-];
-
 function DialogTitle(props) {
   const classes = useStyles();
   const { onClose } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6">Share with Professor</Typography>
+      <Typography variant="h6">Enrolled Courses</Typography>
       {onClose ? (
         <IconButton
           aria-label="close"
@@ -72,15 +67,12 @@ function DialogTitle(props) {
   );
 }
 
-export default function ShareDialog(props) {
+CodeDialog.propTypes = {
+  courses: PropTypes.array,
+};
+export default function CodeDialog({ courses }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-
-  const [email, setEmail] = useState('');
-
-  const onChangeEmail = (event) => {
-    setEmail(event.target.value);
-  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -98,57 +90,51 @@ export default function ShareDialog(props) {
         onClick={handleClickOpen}
         className={classes.buttonText}
       >
-        <ShareIcon />
-        <Typography variant="subtitle1">Share</Typography>
+        <Typography variant="subtitle1">
+          Enrolled Courses
+        </Typography>
       </Button>
       <Dialog
         fullWidth
         maxWidth="sm"
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
         disableBackdropClick
         disableEscapeKeyDown
+        open={open}
       >
         <DialogTitle onClose={handleClose} />
         <DialogContent dividers>
-          <Typography align="left" variant="h6">
-            Select User Role
-          </Typography>
-          <Autocomplete
-            id="User_Role"
-            options={UserRole}
-            getOptionLabel={(option) => option.title}
-            style={{ width: 300 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="User Role Options"
-                variant="outlined"
-              />
-            )}
-          />
+          {courses.map((data) => (
+            <form
+              style={{ marginBottom: 20 }}
+              key={data.COURSE}
+            >
+              <Button
+                className={classes.buttonText}
+                variant="contained"
+                color="primary"
+              >
+                <Typography
+                  display="block"
+                  variant="subtitle1"
+                  noWrap
+                >
+                  {data.NAME}
+                </Typography>
+              </Button>
+            </form>
+          ))}
         </DialogContent>
 
         <DialogActions>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="Enter Email"
-            label="Enter Email"
-            name="Enter Email"
-            value={email}
-            onChange={onChangeEmail}
-          />
           <Button
             className={classes.saveButton}
             autoFocus
             color="primary"
             onClick={handleClose}
           >
-            Submit
+            Exit
           </Button>
         </DialogActions>
       </Dialog>

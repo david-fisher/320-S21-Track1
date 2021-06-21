@@ -423,8 +423,6 @@ export default function FlowDiagram({ scenario_ID }) {
 
     return (
       <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
         maxWidth="xs"
         aria-labelledby="confirmation-dialog-title"
         open={open}

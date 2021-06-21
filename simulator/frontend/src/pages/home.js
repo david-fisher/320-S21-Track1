@@ -17,13 +17,10 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from '../components/scenarioCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getSimulator from '../universalHTTPRequestsSimulator/get';
-import getEditor from '../universalHTTPRequestsEditor/get';
-// eslint-disable-next-line
 import CodeButton from '../components/classCodeDialog';
-// eslint-disable-next-line
-import ProgressBar from '../components/progressBar';
-// eslint-disable-next-line
 import ErrorBanner from '../components/Banners/ErrorBanner';
+import SuccessBanner from '../components/Banners/SuccessBanner';
+import EnrolledClassesButton from '../components/classesEnrolledDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +28,11 @@ const useStyles = makeStyles((theme) => ({
   },
   errorContainer: {
     marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  bannerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -55,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     variant: 'contained',
     color: 'white',
     background: 'black',
+    textTransform: 'unset',
   },
   issue: {
     display: 'flex',
@@ -151,18 +154,36 @@ export default function Home(props) {
     incompleteScenarios: null,
     completeScenarios: null,
   });
-  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+  const [fetchSessionsResponse, setFetchSessionsResponse] = useState({
     data: null,
-    loading: false,
+    loading: true,
     error: false,
   });
-  // eslint-disable-next-line
-  const [shouldFetch, setShouldFetch] = useState(0);
+  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+    data: null,
+    loading: true,
+    error: false,
+  });
+  const [successBannerMessage, setSuccessBannerMessage] = useState('');
+  const [successBannerFade, setSuccessBannerFade] = useState(false);
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSuccessBannerFade(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [successBannerFade]);
   const history = useHistory();
   const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
   // Get Scenario
-  const getData = () => {
+  // addCourse - to trigger success banner for successfully adding a course
+  const getData = (addCourse) => {
     function onSuccess(response) {
+      setCourses(response.data[0].COURSES.map((data) => ({
+        COURSE: data.COURSE,
+        NAME: data.NAME,
+      })).sort((a, b) => a.COURSE.toString().localeCompare(b.COURSE.toString())));
       let scenarios = response.data[0].COURSES.filter((data) => data.SCENARIOS.length > 0).map((data) => ({
         title: data.SCENARIOS[0].NAME,
         numConversations: data.SCENARIOS[0].NUM_CONVERSATION,
@@ -170,13 +191,17 @@ export default function Home(props) {
         date: data.SCENARIOS[0].DATE_CREATED,
         scenarioID: data.SCENARIOS[0].SCENARIO,
         firstPage: data.SCENARIOS[0].FIRST_PAGE,
-        courses: [data.NAME],
+        courses: [{
+          COURSE: data.COURSE,
+          NAME: data.NAME,
+        },
+        ],
         userID,
       }));
+
       const scenarioMap = new Map();
       // For duplicated scenarios with multiple courses
       scenarios.forEach((data) => {
-        console.log(data);
         if (scenarioMap.has(data.scenarioID)) {
           const newScenarioData = scenarioMap.get(data.scenarioID);
           newScenarioData.courses.push(data.courses[0]);
@@ -197,10 +222,15 @@ export default function Home(props) {
           completeScenarios: scenarios.filter((s) => s.isFinished),
         };
         setScenarioList(scen);
+        if (addCourse === true) {
+          setSuccessBannerMessage(
+            'Successfully added course!',
+          );
+          setSuccessBannerFade(true);
+        }
       }
-
       getSimulator(
-        setFetchScenariosResponse,
+        setFetchSessionsResponse,
         '/api/sessions/',
         onFailure,
         onSuccessSessions,
@@ -212,6 +242,12 @@ export default function Home(props) {
       setErrorBannerFade(true);
     }
 
+    // for smooth loading spinner animation
+    setFetchSessionsResponse({
+      data: null,
+      loading: true,
+      error: false,
+    });
     const endpointGet = '/dashboard?user_id=';
     getSimulator(
       setFetchScenariosResponse,
@@ -245,9 +281,9 @@ export default function Home(props) {
     setValue(newValue);
   };
 
-  useEffect(getData, [shouldFetch]);
+  useEffect(getData, []);
 
-  if (fetchScenariosResponse.loading) {
+  if (fetchSessionsResponse.loading) {
     return (
       <div>
         <div style={{ marginTop: '100px' }}>
@@ -278,7 +314,14 @@ export default function Home(props) {
   return (
     <div className={classes.root}>
       <div className={classes.bannerContainer}>
-        <ErrorBanner errorMessage={errorBannerMessage} fade={errorBannerFade} />
+        <SuccessBanner
+          successMessage={successBannerMessage}
+          fade={successBannerFade}
+        />
+        <ErrorBanner
+          errorMessage={errorBannerMessage}
+          fade={errorBannerFade}
+        />
       </div>
       <StyledTabs
         value={value}
@@ -294,6 +337,10 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* incomplete scenarios section */}
+          <div style={{ marginRight: '5px' }}>
+            <EnrolledClassesButton courses={courses} />
+          </div>
+          <CodeButton userID={userID} getData={getData} courses={courses} />
           <Grid
             container
             direction="row"
@@ -335,6 +382,10 @@ export default function Home(props) {
         <Grid container spacing={2} className={classes.grid}>
           {' '}
           {/* completed scenarioList section */}
+          <div style={{ marginRight: '5px' }}>
+            <EnrolledClassesButton courses={courses} />
+          </div>
+          <CodeButton userID={userID} getData={getData} courses={courses} />
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>
