@@ -11,7 +11,7 @@ import {
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsSimulator/get';
 import post from '../universalHTTPRequests/post';
-import { DEV } from '../Constants/Config';
+import { DEV, DOMAIN } from '../Constants/Config';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,12 +51,11 @@ export default function LoginEditor() {
   const [redirect, setRedirect] = useState(false);
   // reload page to right place
   function getLoginData() {
-    // TODO restrict access if needed
     function onSuccessPost(resp) {
       setRedirect(true);
     }
     function onSuccess(resp) {
-      post(setPostShibAttributes, '/registerUser', null, onSuccessPost, {
+      post(setPostShibAttributes, '/registerUser', onFailure, onSuccessPost, {
         netId: resp.data.result.userId,
         email: resp.data.result.email,
         name: resp.data.result.name,
@@ -66,13 +65,8 @@ export default function LoginEditor() {
     }
 
     function onFailure(resp) {
-      post(setPostShibAttributes, '/registerUser', null, onSuccessPost, {
-        netId: resp.data.result.userId,
-        email: resp.data.result.email,
-        name: resp.data.result.name,
-        affiliation: resp.data.result.affiliation,
-        type: 'editor',
-      });
+      // User is not valid
+      window.location.href = `${DOMAIN}/Shibboleth.sso/Logout?return=/#/error`;
     }
 
     if (DEV) {
@@ -142,9 +136,5 @@ export default function LoginEditor() {
         }}
       />
     );
-  }
-
-  if (redirect) {
-    window.location.href = '/Shibboleth.sso/Logout?return=/#/error';
   }
 }
