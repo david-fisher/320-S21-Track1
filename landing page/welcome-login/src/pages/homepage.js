@@ -3,7 +3,6 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Container, Typography, Button, Paper,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import Copyright from '../components/Copyright';
 import HomepageNavBar from '../components/HomepageComponents/HomepageNavBar';
 import Background from '../shared/umass.jpg';
@@ -75,14 +74,25 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
     width: '100%',
     marginTop: theme.spacing(1),
-    '@media (min-height:485px)': {
+    position: 'absolute',
+    bottom: '0px',
+    '@media (max-height:550px)': {
       display: 'flex',
       alignItems: 'center',
       flexDirection: 'column',
       justifyContent: 'center',
-      bottom: '0px',
       width: '100%',
-      position: 'absolute',
+      position: 'relative',
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+    },
+    '@media (max-width:500px)': {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      width: '100%',
+      position: 'relative',
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
     },
@@ -103,7 +113,6 @@ function StudentAccess() {
     <div className={classes.buttonsContainer}>
       <Container className={classes.studentButtonsContainer}>
         <Button
-          component={Link}
           onClick={() => {
             window.location.href = `${DOMAIN}/Shibboleth.sso/Login?target=/loginSimulator`;
           }}
@@ -116,7 +125,6 @@ function StudentAccess() {
           </Typography>
         </Button>
         <Button
-          component={Link}
           onClick={() => {
             window.location.href = `${DOMAIN}/Shibboleth.sso/Login?target=/loginEditor`;
           }}
@@ -133,7 +141,6 @@ function StudentAccess() {
         <Button
           className={classes.guestButton}
           variant="contained"
-          color="gray"
         >
           <Typography display="block" noWrap>
             Try Ethisim as a Guest
