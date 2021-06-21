@@ -8,6 +8,7 @@ from .serializer import *
 from django.core import serializers
 from rest_framework import status  
 import json
+from django.db.models import F
 from django.db import connection
 from rest_framework.parsers import JSONParser
 from rest_framework.viewsets import ModelViewSet
@@ -19,6 +20,7 @@ import urllib
 from datetime import datetime
 from django.utils import timezone
 import tables.models as md   
+import logging
 
 
 # Create your views here.
@@ -344,5 +346,86 @@ class courses_for_user(APIView):
             dashboard.append(user)
                 
         return Response(dashboard)
+
+
+def radarPlot(request):
+    if request.method == 'GET':
+        # retrieve user ID
+        try:
+            userID = (request.GET['userId'])
+        except Exception as ex:
+            return JsonResponse(status=400, message='Invalid User ID')
+        
+        # retrieve version ID
+        try:
+            scenarioID = int(request.GET['scenarioId'])
+        except Exception as ex:
+            return JsonResponse(status=400, message='Invalid Version ID')
+
+        resultData = []
+        try:
+            # check if user ID exist 
+            userObj = Users.objects.get(user_id=userID)
+
+            # check if version ID exist
+            scenarioObj = scenarios.objects.get(SCENARIO=scenarioID)
+            
+            # check if session ID exist
+            sessionQuerySet = sessions.objects.filter(USER_ID_id=userID, SCENARIO_ID_id=scenarioID).values('SESSION_ID')
+            if len(sessionQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Session ID found'})
+
+            print('AAAAA')
+
+            # check if issue ID exist
+            issueQuerySet = Issues.objects.filter(SCENARIO_id=scenarioID).values('ISSUE', 'NAME', 'IMPORTANCE_SCORE').order_by('-IMPORTANCE_SCORE')
+            if len(issueQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Issue ID found'})
+
+            # get all stakeholders
+            stakeholderQuerySet = stakeholders.objects.filter(SCENARIO_id=scenarioID).values('STAKEHOLDER')
+            if len(stakeholderQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'No Stakeholder ID found'})
+
+            print(sessionQuerySet)
+            print(issueQuerySet)
+            print(stakeholderQuerySet)
+
+            
+            # check if stakeholders have been talked to
+            stakeholderHadQuerySet = conversations_had.objects.filter(SESSION_ID_id=sessionQuerySet[0]['SESSION_ID']).values(STAKEHOLDER=F('STAKEHOLDER_ID_id'))
+            print(stakeholderHadQuerySet)
+            if len(stakeholderHadQuerySet) == 0:
+                return JsonResponse(status=404, data={'status': 404,'message': 'Stakeholder ID hasn\'t been submitted'})
+
+            print(stakeholderHadQuerySet)
+
+            issue_coverage = {}
+            for key in issueQuerySet:
+                issue_coverage[key['ISSUE']] = {'name': key['NAME'], 'student_coverage': 0.0, 'total_coverage': 0.0, 'student_percentage': 0.0, 'importance_coverage': 0.0, 'importance_score': key['IMPORTANCE_SCORE']}
+            for issue in issueQuerySet:
+                issueName = issue['NAME']
+                issueID = issue['ISSUE']
+                issueimpscore = issue['IMPORTANCE_SCORE']
+                for stakeholder in stakeholderQuerySet:
+                    coverage1 = coverage.objects.filter(ISSUE_id=issueID, STAKEHOLDER_id=stakeholder['STAKEHOLDER']).values()
+                    if len(coverage1) != 0:
+                        issue_coverage[issueID]['total_coverage'] += coverage1[0]['COVERAGE_SCORE'] # add total
+                        if stakeholder in stakeholderHadQuerySet: # if stakeholder has been talked to, add coverage
+                            issue_coverage[issueID]['student_coverage'] += coverage1[0]['COVERAGE_SCORE']
+                issue_coverage[issueID]['student_percentage'] = issue_coverage[issueID]['student_coverage'] / issue_coverage[issueID]['total_coverage'] * 100
+                issue_coverage[issueID]['importance_coverage'] = (issue_coverage[issueID]['student_coverage'] / issue_coverage[issueID]['total_coverage'])*(issueimpscore/5)
+            
+            for key in issue_coverage.keys():
+                resultData.append(issue_coverage[key])
+
+        except Users.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404, 'message': 'No User ID found'})
+        except scenarios.DoesNotExist:
+            return JsonResponse(status=404, data={'status': 404,'message': 'No Version ID found'})
+        except Exception as ex:
+            logging.exception("Exception thrown: Query Failed to retrieve Radar Plot")
+
+        return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
 
 

@@ -193,4 +193,4 @@ class action_page_responsesSerializer(serializers.ModelSerializer):
 class conversations_hadSerializer(serializers.ModelSerializer):
     class Meta:
         model = conversations_had
-        fields = ('SESSION_ID', 'STAKEHOLDER_ID', 'DATE_TAKEN')
+        fields = ('SESSION_ID', 'STAKEHOLDER', 'DATE_TAKEN')
