@@ -17,6 +17,7 @@ from rest_framework.decorators import api_view
 from rest_framework import mixins
 import urllib
 from datetime import datetime
+from django.utils import timezone
 import tables.models as md   
 
 
@@ -151,11 +152,11 @@ def startSession(request):
         # Obtain session field based on given params
         try:
             session = sessions.objects.get(USER_ID=user.user_id, SCENARIO_ID_id=scenario.SCENARIO)
-            session.MOST_RECENT_ACCESS = datetime.now()
+            session.MOST_RECENT_ACCESS = datetime.now(tz=timezone.utc)
             session.save()
             message = 'Session resumed successfully.'
         except sessions.DoesNotExist:
-            session = sessions(USER_ID_id=user.user_id, SCENARIO_ID_id=scenario.SCENARIO, DATE_STARTED=datetime.now(), MOST_RECENT_ACCESS=datetime.now())
+            session = sessions(USER_ID_id=user.user_id, SCENARIO_ID_id=scenario.SCENARIO, DATE_STARTED=datetime.now(tz=timezone.utc), MOST_RECENT_ACCESS=datetime.now(tz=timezone.utc))
             session.save()
             message = 'Session created succesfully.'
 
@@ -163,6 +164,7 @@ def startSession(request):
         responseObj["sessionId"] = session.SESSION_ID
         responseObj["mostRecentAccess"] = session.MOST_RECENT_ACCESS
         
+        print(responseObj)
         return JsonResponse(status=200, data={'status': 200, 'message': message, 'result': responseObj})
     
     elif request.method == "GET":
