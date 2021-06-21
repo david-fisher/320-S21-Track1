@@ -92,13 +92,13 @@ class reflections_takenViewSet(viewsets.ModelViewSet):
 
 
 class action_page_responsesViewSet(viewsets.ModelViewSet):
-    queryset = action_page_choices.objects.all()
+    queryset = action_page_responses.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = action_page_responsesSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['APC_ID', 'SESSION_ID', 'PAGE_ID']
+    filterset_fields = ['APC_ID', 'SESSION_ID', 'PAGE_ID_id']
 
 
 class conversations_hadViewSet(viewsets.ModelViewSet):

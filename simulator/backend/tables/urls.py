@@ -16,7 +16,7 @@ router.register('api/course_assignment', course_assignmentViewSet, 'course_assig
 router.register('api/sessions', sessionsViewSet, 'sessions')
 router.register('api/session_times', session_timesViewSet, 'session_times')
 router.register('api/reflections_taken', reflections_takenViewSet, 'reflections_taken')
-router.register('api/action_page_choices', action_page_responsesViewSet, 'action_page_choices')
+router.register('api/action_page_responses', action_page_responsesViewSet, 'action_page_responses')
 router.register('api/conversations_had', conversations_hadViewSet, 'conversations_had')
 
 urlpatterns = [
