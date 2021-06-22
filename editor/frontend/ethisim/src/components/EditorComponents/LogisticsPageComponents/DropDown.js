@@ -37,7 +37,7 @@ export default function Tags(props) {
       <Autocomplete
         multiple
         id="checkboxes-tags-demo"
-        options={props.courses}
+        options={props.courses.sort((a, b) => a.COURSE.toString().localeCompare(b.COURSE.toString()))}
         disableCloseOnSelect
         getOptionLabel={(option) => option.NAME}
         getOptionSelected={(option, value) => option.COURSE === value.COURSE}

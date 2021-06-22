@@ -5,7 +5,6 @@ import {
   Typography, Grid, Card, CardContent, Button,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-// import ShareIcon from '@material-ui/icons/Share';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import PropTypes from 'prop-types';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -213,7 +212,7 @@ export default function ScenarioCard({
         </Button>
       </Grid>
       <Grid className={classes.button} item xs={6}>
-        <ShareButton />
+        <ShareButton accessLevel={accessLevel} />
       </Grid>
 
       {dataButton}
