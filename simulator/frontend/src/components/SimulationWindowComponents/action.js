@@ -116,6 +116,7 @@ export default function Action({
       }));
     }
     function onFailure(e) {
+      setChosenAction(-1);
       setErrorBannerFade(true);
       setErrorBannerMessage('Failed to get action data! Please try again.');
     }
