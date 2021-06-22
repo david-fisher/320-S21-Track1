@@ -9,10 +9,10 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import RadarPlot from './radarPlot';
-import GlobalContext from '../../Context/GlobalContext';
+import GlobalContext from '../../../Context/GlobalContext';
 
-import post from '../../universalHTTPRequestsSimulator/post';
-import ErrorBanner from '../Banners/ErrorBanner';
+import post from '../../../universalHTTPRequestsSimulator/post';
+import ErrorBanner from '../../Banners/ErrorBanner';
 
 const TextTypography = withStyles({
   root: {
@@ -121,9 +121,9 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
           </TextTypography>
         </Box>
       </Grid>
-      <Grid container spacing={2}>
+      <Grid container style={{ maxWidth: '100%' }}>
         <Grid lg={12}>
-          <Box m="2rem">
+          <Box>
             <RadarPlot scenarioID={scenarioID} />
           </Box>
         </Grid>

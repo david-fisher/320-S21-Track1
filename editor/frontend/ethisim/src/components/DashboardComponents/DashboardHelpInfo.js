@@ -11,6 +11,11 @@ export const DashboardHelpInfo = [
             'Selecting "Create New Scenario" will open a dialog where you enter in information to create a new scenario.',
   },
   {
+    title: 'Access Level',
+    description:
+            'Access Level Admin can do all actions. Edit-Only can do save actions and cannot do add and delete actions. Read-Only can only view and cannot do any actions.',
+  },
+  {
     title: 'Edit',
     description:
             'Selecting "Edit" on a scenario will take you to the editor for that particular scenario.',

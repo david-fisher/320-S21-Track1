@@ -85,9 +85,9 @@ export default function Action({
     error: false,
   });
   // gets player's action choice if they exist
-  const endpointGET = `/api/action_page_choices/?SESSION_ID=${contextObj.sessionID}&PAGE_ID=${pageID}`;
+  const endpointGET = `/api/action_page_responses/?SESSION_ID=${contextObj.sessionID}&PAGE_ID_id=${pageID}`;
   // player submits action choice, can only submit once
-  const endpointPOST = '/api/action_page_choices/';
+  const endpointPOST = '/api/action_page_responses/';
   // eslint-disable-next-line
   const endpointSess = `/scenarios/session/start?userId=${contextObj.userID}&versionId=${scenarioID}`;
 
@@ -100,12 +100,12 @@ export default function Action({
   const [selectActionFunc, setSelectActionFunc] = useState(null);
 
   const getActionData = () => {
+    setActions(choices.map((obj) => ({
+      PAGE_ID: obj.PAGE_id, APC_ID: obj.APC_ID, SESSION_ID: contextObj.sessionID, CHOICE: obj.CHOICE, RESULT_PAGE_id: obj.RESULT_PAGE_id,
+    })).sort((a, b) => a.APC_ID - b.APC_ID));
     function onSuccess(response) {
       // Player has already chosen an action
       (response.data.length !== 0) ? setChosenAction(response.data[0].APC_ID) : setChosenAction(-1);
-      setActions(choices.map((obj) => ({
-        PAGE_ID: obj.PAGE_id, APC_ID: obj.APC_ID, SESSION_ID: contextObj.sessionID, CHOICE: obj.CHOICE, RESULT_PAGE_id: obj.RESULT_PAGE_id,
-      })).sort((a, b) => a.APC_ID - b.APC_ID));
     }
     function onFailure(e) {
       setErrorBannerFade(true);

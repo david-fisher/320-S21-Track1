@@ -104,6 +104,7 @@ ScenarioCard.propTypes = {
   dateCreated: PropTypes.string,
   courses: PropTypes.any,
   onDelete: PropTypes.any,
+  accessLevel: PropTypes.number,
 };
 
 export default function ScenarioCard({
@@ -114,10 +115,12 @@ export default function ScenarioCard({
   dateCreated,
   courses,
   onDelete,
+  accessLevel,
 }) {
   const [open, setOpen] = React.useState(false);
   const [openDeletePopup, setOpenDeletePopup] = React.useState(false);
   const classes = useStyles();
+  const accessLevelMap = ['Admin', 'Edit-Only', 'Read-Only'];
 
   const handleClickOpenDeletePopup = () => {
     setOpenDeletePopup(true);
@@ -232,6 +235,16 @@ export default function ScenarioCard({
             Date created:
             {' '}
             {dateCreated}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            color="textSecondary"
+            display="block"
+            noWrap
+          >
+            Access Level:
+            {' '}
+            {accessLevelMap[accessLevel - 1]}
           </Typography>
         </CardContent>
       </Card>

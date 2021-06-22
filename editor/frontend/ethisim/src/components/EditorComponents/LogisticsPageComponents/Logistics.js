@@ -20,6 +20,7 @@ import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import Tags from './DropDown';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import { LogisticsHelpInfo } from './LogistcsHelpInfo';
 
@@ -98,9 +99,10 @@ export default function Logistics({ scenario_ID }) {
     error: null,
   });
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   // eslint-disable-next-line
-    const [id, setId] = useState(scenario_ID);
+  const [id, setId] = useState(scenario_ID);
 
   // Authors mock implementation
   const [authors, setAuthors] = useState([]);
@@ -489,7 +491,7 @@ export default function Logistics({ scenario_ID }) {
             title="Logistics Help"
           />
         </div>
-        {globalUnsaved ? (
+        {globalUnsaved && accessLevel !== 3 ? (
           <Typography variant="h6" align="center" color="error">
             Unsaved
           </Typography>
@@ -595,6 +597,7 @@ export default function Logistics({ scenario_ID }) {
               variant="contained"
               color="primary"
               onClick={handleSave}
+              disabled={accessLevel === 3}
             >
               Save Scenario Info
             </Button>

@@ -16,7 +16,7 @@ export const LogisticsHelpInfo = [
   },
   {
     title: 'Max Number of Selected Conversations',
-    description: `The is where you decide the max number of selected conversations
+    description: `This is where you decide the max number of selected conversations
         you would like to permit students to speak with. 
         By default, the max number of selected conversations is zero. `,
   },

@@ -11,8 +11,8 @@ import Stepper from '../components/stepper';
 import GenericPage from '../components/SimulationWindowComponents/generic';
 import Reflection from '../components/SimulationWindowComponents/reflection';
 import Action from '../components/SimulationWindowComponents/action';
-import Stakeholders from '../components/SimulationWindowComponents/stakeholders';
-import Feedback from '../components/SimulationWindowComponents/feedback';
+import Stakeholders from '../components/SimulationWindowComponents/StakeholderPage/stakeholders';
+import Feedback from '../components/SimulationWindowComponents/FeedbackPage/feedback';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsEditor/get';
 import post from '../universalHTTPRequestsSimulator/post';
@@ -74,13 +74,16 @@ export default function SimulationWindow(props) {
   // eslint-disable-next-line
   const pathArray = location.pathname.split('/');
 
-  const scenarioID = props.location.data
-    ? props.location.data.scenarioID
-    : history.push('/dashboard'); // prevents users from manually inserting scenarioID - firstPage in URL
-  const { firstPage, numConversations, userID } = props.location.data;
+  if (!props.location.data) {
+    history.push('/dashboard');
+  }
+
+  const {
+    scenarioID, firstPage, numConversations, userID,
+  } = props.location.data ? props.location.data : {};
 
   // eslint-disable-next-line
-  const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
+  const [sessionID, setSessionID] = useState(-1);
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
 

@@ -6,6 +6,7 @@ import EntryField from './IssueEntryField';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,7 +34,8 @@ export default function IssueEntryFieldList({
 }) {
   const classes = useStyles();
   // eslint-disable-next-line
-    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   // When we select new issue button, we add new issue object into array.
   // We set a temporary unique ID.
@@ -108,6 +110,7 @@ export default function IssueEntryFieldList({
         onClick={addIssue}
         variant="contained"
         color="primary"
+        disabled={accessLevel !== 1}
       >
         Create Issue
       </Button>

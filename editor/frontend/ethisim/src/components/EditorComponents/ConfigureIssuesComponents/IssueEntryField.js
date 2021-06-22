@@ -8,6 +8,7 @@ import deleteReq from '../../../universalHTTPRequests/delete';
 import post from '../../../universalHTTPRequests/post';
 import put from '../../../universalHTTPRequests/put';
 import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 const endpointPOST = '/issue';
 // Need issueID
@@ -81,7 +82,9 @@ export default function IssueEntryField({
   const [newIssue, setNewIssue] = useState(isNewIssue);
   const [unsaved, setUnsaved] = useState(isNewIssue);
   // eslint-disable-next-line
-    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
+
   const handleChangeScore = (content) => {
     let arr = [...issueEntryFieldList.data];
     arr = arr.map((x) => {
@@ -288,7 +291,7 @@ export default function IssueEntryField({
 
   return (
     <div>
-      {unsaved ? (
+      {unsaved && accessLevel !== 3 ? (
         <Typography
           style={{ marginLeft: '20px' }}
           variant="h6"
@@ -360,6 +363,7 @@ export default function IssueEntryField({
               variant="contained"
               color="primary"
               onClick={() => saveIssue()}
+              disabled={accessLevel === 3}
             >
               Save
             </Button>
@@ -369,6 +373,7 @@ export default function IssueEntryField({
             variant="contained"
             color="primary"
             onClick={handleClickOpen}
+            disabled={accessLevel !== 1}
           >
             Delete
           </Button>

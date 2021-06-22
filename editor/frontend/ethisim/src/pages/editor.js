@@ -32,11 +32,11 @@ import SuccessBanner from '../components/Banners/SuccessBanner';
 import ErrorBanner from '../components/Banners/ErrorBanner';
 
 import GlobalUnsavedContext from '../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../Context/ScenarioAccessLevelContext';
 import universalPost from '../universalHTTPRequests/post';
 import universalFetch from '../universalHTTPRequests/get';
 import universalDelete from '../universalHTTPRequests/delete';
 import GenericUnsavedWarning from '../components/WarningDialogs/GenericUnsavedWarning';
-//  setResponse, endpoint, onError, onSuccess, requestBody
 
 const drawerWidth = 250;
 
@@ -173,6 +173,10 @@ export default function Editor(props) {
     ? props.location.data.SCENARIO
     : history.push('/loginEditor');
 
+  const accessLevel = props.location.data
+    ? props.location.data['ACCESS LEVEL']
+    : history.push('/loginEditor');
+
   // TODO when version control is implemented
   const tempVersionID = null;
 
@@ -203,6 +207,7 @@ export default function Editor(props) {
   const [currentPageID, setCurrentPageID] = useState(-1);
   const unsaved = useState(false);
   const [globalUnsaved, setGlobalUnsaved] = unsaved;
+
   // used for unsaved warning dialog
   const [openUnsavedWarningDialog, setOpenUnsavedWarningDialog] = useState(false);
   const handleOpenUnsavedWarningDialog = () => {
@@ -302,10 +307,11 @@ export default function Editor(props) {
     function onFailure() {
       // console.log('Failed to get logistics info');
     }
-
-    universalFetch(setGetValues, endpoint, onFailure, onSuccess, {
-      SCENARIO: scenario_ID,
-    });
+    if (scenario_ID) {
+      universalFetch(setGetValues, endpoint, onFailure, onSuccess, {
+        SCENARIO: scenario_ID,
+      });
+    }
   };
 
   function handleDelete(setDeleteValues, d_id, samePage) {
@@ -675,6 +681,7 @@ export default function Editor(props) {
             color="primary"
             onClick={handleAddNewComponent}
             className={classes.addPageButton}
+            disabled={accessLevel !== 1}
           >
             <AddIcon />
             Add Page
@@ -740,7 +747,7 @@ export default function Editor(props) {
             color="primary"
             className={classes.exitButton}
             onClick={
-                            globalUnsaved
+                            globalUnsaved && accessLevel !== 3
                               ? handleOpenUnsavedWarningDialog
                               : returnToDashboard
                         }
@@ -782,36 +789,38 @@ export default function Editor(props) {
   }
 
   return (
-    <GlobalUnsavedContext.Provider value={unsaved}>
-      <div className={classes.container}>
-        {NavBar}
-        <Sidebar />
-        <main
-          className={clsx(classes.content1, {
-            [classes.contentShift]: open,
-          })}
-        >
-          <div className={classes.drawerHeader} />
-          <div className={classes.bannerContainer}>
-            <SuccessBanner
-              successMessage={successBannerMessage}
-              fade={successBannerFade}
-            />
-            <ErrorBanner
-              errorMessage={errorBannerMessage}
-              fade={errorBannerFade}
-            />
-          </div>
-          {!getValues.data
+    <ScenarioAccessLevelContext.Provider value={accessLevel}>
+      <GlobalUnsavedContext.Provider value={unsaved}>
+        <div className={classes.container}>
+          {NavBar}
+          <Sidebar />
+          <main
+            className={clsx(classes.content1, {
+              [classes.contentShift]: open,
+            })}
+          >
+            <div className={classes.drawerHeader} />
+            <div className={classes.bannerContainer}>
+              <SuccessBanner
+                successMessage={successBannerMessage}
+                fade={successBannerFade}
+              />
+              <ErrorBanner
+                errorMessage={errorBannerMessage}
+                fade={errorBannerFade}
+              />
+            </div>
+            {!getValues.data
                     || scenarioComponent === null
                     || getValues.loading
                     || !showComponent ? (
                       <LoadingSpinner />
-            ) : (
-              <div>{scenarioComponent}</div>
-            )}
-        </main>
-      </div>
-    </GlobalUnsavedContext.Provider>
+              ) : (
+                <div>{scenarioComponent}</div>
+              )}
+          </main>
+        </div>
+      </GlobalUnsavedContext.Provider>
+    </ScenarioAccessLevelContext.Provider>
   );
 }

@@ -388,6 +388,7 @@ export default function Dashboard(props) {
           isFinished={data.IS_FINISHED}
           courses={data.COURSES}
           onDelete={deleteScenario}
+          accessLevel={data['ACCESS LEVEL']}
         />
       ));
       unfinishedScenarios = unfinishedScenarios.map((data) => (
@@ -400,6 +401,7 @@ export default function Dashboard(props) {
           finished={data.IS_FINISHED}
           courses={data.COURSES}
           onDelete={deleteScenario}
+          accessLevel={data['ACCESS LEVEL']}
         />
       ));
       setFinishedScenarios(finishedScenarios);
@@ -411,7 +413,9 @@ export default function Dashboard(props) {
       setErrorBannerMessage('Failed to get scenarios! Please try again.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, endpointGet + userID, onFailure, onSuccess);
+    if (userID) {
+      get(setFetchScenariosResponse, endpointGet + userID, onFailure, onSuccess);
+    }
   };
 
   // Get Courses
