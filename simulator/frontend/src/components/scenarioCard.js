@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Typography,
+} from '@material-ui/core';
 
 ScenarioCard.propTypes = {
   finished: PropTypes.bool.isRequired,
@@ -17,15 +20,15 @@ export default function ScenarioCard({
 
   return (
     <div>
-      <h2>{title}</h2>
-      <h4>
+      <Typography variant="h4" color="primary" style={{ margin: '8px' }}>{title}</Typography>
+      <Typography variant="h6" style={{ margin: '8px' }}>
         Courses:
         {coursesToString}
-      </h4>
-      <p>
+      </Typography>
+      <Typography variant="body1" style={{ margin: '8px' }}>
         {word}
         {date}
-      </p>
+      </Typography>
     </div>
   );
 }

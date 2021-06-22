@@ -169,13 +169,14 @@ export default function Editor(props) {
   const history = useHistory();
   // eslint-disable-next-line
   const scenarioIDFromURL = location.pathname.split('/').pop();
-  const scenario_ID = props.location.data
-    ? props.location.data.SCENARIO
-    : history.push('/loginEditor');
-
-  const accessLevel = props.location.data
-    ? props.location.data['ACCESS LEVEL']
-    : history.push('/loginEditor');
+  let scenario_ID;
+  let accessLevel;
+  if (props.location.data) {
+    scenario_ID = props.location.data.SCENARIO;
+    accessLevel = props.location.data['ACCESS LEVEL'];
+  } else {
+    history.push('/loginEditor');
+  }
 
   // TODO when version control is implemented
   const tempVersionID = null;

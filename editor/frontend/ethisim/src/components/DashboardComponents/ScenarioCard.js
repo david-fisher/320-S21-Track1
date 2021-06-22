@@ -184,6 +184,7 @@ export default function ScenarioCard({
           variant="contained"
           color="primary"
           onClick={handleClickOpenDeletePopup}
+          disabled={accessLevel !== 1}
         >
           <DeleteForeverIcon />
           <Typography variant="subtitle1" noWrap>

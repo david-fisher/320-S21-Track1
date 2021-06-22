@@ -79,7 +79,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -269,24 +269,29 @@ export default function Radar({ scenarioID }) {
         description={RadarPlotHelpInfo}
         title="Radar Plot"
       />
-      <Typography>
+      <Typography variant="body1">
         The summary value is a score that combines the degree of coverage with the importance of the issues covered.
       </Typography>
-      <Typography>
-        {'score >= 0.4: Good coverage behavior'}
+      <Typography variant="body1">
+        {'score >= 0.4: Good coverage behavior (Green on Radar Plot)'}
       </Typography>
-      <Typography>
-        {'0.4 >= score >= 0.2: Ok coverage behavior'}
+      <Typography variant="body1">
+        {'0.4 >= score >= 0.2: Ok coverage behavior (Yellow on Radar Plot)'}
       </Typography>
-      <Typography>
-        {'0.2 >= score >= 0: Poor coverage behavior'}
+      <Typography variant="body1">
+        {'0.2 >= score >= 0: Poor coverage behavior (Red on Radar Plot)'}
       </Typography>
       {totalScore !== -1
         ? (
           <Typography variant="h6">
             {`Total Summary Value Score: ${totalScore}`}
           </Typography>
-        ) : null}
+        )
+        : (
+          <Typography variant="h6">
+            Total Summary Value Score:
+          </Typography>
+        )}
       <StyledTabs
         value={tabValue}
         variant="fullWidth"

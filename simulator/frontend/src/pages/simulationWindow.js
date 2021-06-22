@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   Grid, Box, Typography, Button,
 } from '@material-ui/core';
@@ -69,10 +69,7 @@ SimulationWindow.propTypes = {
 };
 export default function SimulationWindow(props) {
   const classes = useStyles();
-  const location = useLocation();
   const history = useHistory();
-  // eslint-disable-next-line
-  const pathArray = location.pathname.split('/');
 
   if (!props.location.data) {
     history.push('/dashboard');
@@ -173,7 +170,9 @@ export default function SimulationWindow(props) {
       loading: true,
       error: false,
     });
-    post(setStartSession, endpointSession, null, startSess);
+    if (props.location.data) {
+      post(setStartSession, endpointSession, null, startSess);
+    }
   };
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {
