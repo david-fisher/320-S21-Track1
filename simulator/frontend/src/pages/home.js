@@ -17,7 +17,8 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from '../components/scenarioCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getSimulator from '../universalHTTPRequestsSimulator/get';
-import CodeButton from '../components/classCodeDialog';
+import getEditor from '../universalHTTPRequestsEditor/get';
+import CourseCodeButton from '../components/classCodeDialog';
 import ErrorBanner from '../components/Banners/ErrorBanner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import EnrolledClassesButton from '../components/classesEnrolledDialog';
@@ -160,8 +161,15 @@ export default function Home(props) {
     loading: true,
     error: false,
   });
+  // eslint-disable-next-line
+  const [fetchCoursesResponse, setFetchCoursesResponse] = useState({
+    data: null,
+    loading: true,
+    error: false,
+  });
   const [successBannerMessage, setSuccessBannerMessage] = useState('');
   const [successBannerFade, setSuccessBannerFade] = useState(false);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -173,8 +181,18 @@ export default function Home(props) {
   // Get Scenario
   // addCourse - to trigger success banner for successfully adding a course
   const getData = (addCourse) => {
-    function onSuccess(response) {
-      setCourses(response.data[0].COURSES.map((data) => ({
+    function onSuccessCourses(resp) {
+      setCourses(resp.data);
+      const endpointGet = '/dashboard?user_id=';
+      getSimulator(
+        setFetchScenariosResponse,
+        `${endpointGet}${userID}`,
+        onFailure,
+        onSuccessScenarios,
+      );
+    }
+    function onSuccessScenarios(response) {
+      setEnrolledCourses(response.data[0].COURSES.map((data) => ({
         COURSE: data.COURSE,
         NAME: data.NAME,
       })).sort((a, b) => a.COURSE.toString().localeCompare(b.COURSE.toString())));
@@ -244,12 +262,12 @@ export default function Home(props) {
       loading: true,
       error: false,
     });
-    const endpointGet = '/dashboard?user_id=';
-    getSimulator(
-      setFetchScenariosResponse,
-      `${endpointGet}${userID}`,
+    const endpointGetCourses = '/api/courses/';
+    getEditor(
+      setFetchCoursesResponse,
+      endpointGetCourses,
       onFailure,
-      onSuccess,
+      onSuccessCourses,
     );
   };
 
@@ -334,9 +352,9 @@ export default function Home(props) {
           {' '}
           {/* incomplete scenarios section */}
           <div style={{ marginRight: '5px' }}>
-            <EnrolledClassesButton courses={courses} />
+            <EnrolledClassesButton courses={enrolledCourses} />
           </div>
-          <CodeButton userID={userID} getData={getData} courses={courses} />
+          <CourseCodeButton userID={userID} getData={getData} enrolledCourses={enrolledCourses} courses={courses} />
           <Grid
             container
             direction="row"
@@ -379,9 +397,9 @@ export default function Home(props) {
           {' '}
           {/* completed scenarioList section */}
           <div style={{ marginRight: '5px' }}>
-            <EnrolledClassesButton courses={courses} />
+            <EnrolledClassesButton courses={enrolledCourses} />
           </div>
-          <CodeButton userID={userID} getData={getData} courses={courses} />
+          <CourseCodeButton userID={userID} getData={getData} enrolledCourses={enrolledCourses} courses={courses} />
           <Grid item xs={12}>
             <Typography variant="h2">Completed</Typography>
           </Grid>
