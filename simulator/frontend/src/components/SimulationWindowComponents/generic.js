@@ -34,7 +34,7 @@ GenericPage.propTypes = {
   isIntro: PropTypes.bool.isRequired,
   pageTitle: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  getNextPage: PropTypes.func.isRequired,
+  getNextPage: PropTypes.func,
   getPrevPage: PropTypes.func,
   nextPageEndpoint: PropTypes.string.isRequired,
   prevPageEndpoint: PropTypes.string,

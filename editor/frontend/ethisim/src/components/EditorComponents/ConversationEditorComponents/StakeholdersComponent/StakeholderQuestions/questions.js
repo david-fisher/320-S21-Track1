@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import QuestionField from './question';
@@ -8,6 +8,7 @@ import post from '../../../../../universalHTTPRequests/post';
 import { ViewQuestionsHelpInfo } from './ViewQuestionsHelpInfo';
 import GenericHelpButton from '../../../../HelpButton/GenericHelpButton';
 import { getCurrentTimeInt, checkTime } from '../../../../CheckTime';
+import ScenarioAccessLevelContext from '../../../../../Context/ScenarioAccessLevelContext';
 
 QuestionFields.propTypes = {
   qrs: PropTypes.any,
@@ -32,6 +33,7 @@ export default function QuestionFields({
 }) {
   const [error, setError] = useState(false);
   const [QRs, setQRs] = useState(qrs);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   // eslint-disable-next-line
     const [putValue, setPut] = useState({
@@ -135,6 +137,7 @@ export default function QuestionFields({
         variant="contained"
         color="primary"
         style={{ textTransform: 'unset' }}
+        disabled={accessLevel !== 1}
       >
         Add Question
       </Button>
@@ -144,12 +147,12 @@ export default function QuestionFields({
         color="primary"
         onClick={handleSave}
         style={{ textTransform: 'unset', marginLeft: '5px' }}
+        disabled={accessLevel === 3}
       >
         Save Changes
       </Button>
-      {unsaved ? (
+      {unsaved && accessLevel !== 3 ? (
         <Typography
-          style={{ marginLeft: '30px' }}
           variant="h6"
           align="center"
           color="error"
@@ -159,7 +162,6 @@ export default function QuestionFields({
       ) : null}
       {error ? (
         <Typography
-          style={{ marginLeft: '5px' }}
           variant="h6"
           align="center"
           color="error"

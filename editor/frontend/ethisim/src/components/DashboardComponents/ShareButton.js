@@ -72,7 +72,11 @@ function DialogTitle(props) {
   );
 }
 
-export default function ShareDialog(props) {
+ShareDialog.propTypes = {
+  accessLevel: PropTypes.number,
+};
+
+export default function ShareDialog({ accessLevel }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -97,6 +101,7 @@ export default function ShareDialog(props) {
         color="primary"
         onClick={handleClickOpen}
         className={classes.buttonText}
+        disabled={accessLevel !== 1}
       >
         <ShareIcon />
         <Typography variant="subtitle1">Share</Typography>

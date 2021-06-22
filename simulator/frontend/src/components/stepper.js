@@ -29,17 +29,6 @@ const useStyles = makeStyles((theme) => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
-  step: {
-    '&$completed': {
-      color: '#881C1C',
-    },
-    '&$active': {
-      color: '#881C1C',
-    },
-    '&$disabled': {
-      color: '#444e58',
-    },
-  },
 }));
 
 function getSteps(pages, navigatePageFunc) {
@@ -90,7 +79,7 @@ export default function VerticalLinearStepper({ setActivePage }) {
   return (
     <div className={classes.root}>
       <Box mt={3} ml={1}>
-        <Stepper activeStep={activeIndex} connector={width > 800 && <StepConnector />} orientation={width > 800 ? 'vertical' : 'horizontal'}>
+        <Stepper activeStep={activeIndex} connector={width > 800 ? <StepConnector /> : null} orientation={width > 800 ? 'vertical' : 'horizontal'}>
           {steps.map((label, index) => (
             <Step
               key={index}

@@ -19,9 +19,12 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import get from '../../universalHTTPRequestsEditor/get';
-import ErrorBanner from '../Banners/ErrorBanner';
-import GlobalContext from '../../Context/GlobalContext';
+import get from '../../../universalHTTPRequestsSimulator/get';
+import ErrorBanner from '../../Banners/ErrorBanner';
+import GlobalContext from '../../../Context/GlobalContext';
+import LoadingSpinner from '../../LoadingSpinner';
+import GenericHelpButton from '../../HelpButton/GenericHelpButton';
+import { RadarPlotHelpInfo } from './radarPlotHelpInfo';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +79,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -133,11 +136,11 @@ export default function Radar({ scenarioID }) {
   // eslint-disable-next-line
   const [chartInstance, setChartInstance] = useState(null);
   const [coverage, setCoverage] = useState([]);
-  const [value, setValue] = React.useState(0);
-
-  const endpointGet = `/scenarios/radar?userId=${contextObj.userID}&scenarioID=${scenarioID}`;
+  const [tabValue, setTabValue] = useState(0);
+  const [totalScore, setTotalScore] = useState(-1);
+  const endpointGet = `/scenarios/radar?userId=${contextObj.userID}&scenarioId=${scenarioID}`;
   // eslint-disable-next-line
-  const [fetchScenariosResponse, setFetchScenariosResponse] = useState({
+  const [fetchRadarData, setFetchRadarData] = useState({
     data: null,
     loading: false,
     error: null,
@@ -155,40 +158,39 @@ export default function Radar({ scenarioID }) {
       setErrorBannerMessage('Failed to get Radar Plot data. Please refresh the page.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, endpointGet, onFailure, onSuccess);
+    get(setFetchRadarData, endpointGet, onFailure, onSuccess);
   };
 
   useEffect(getData, [shouldFetch]);
 
+  // Max total_coverage score is 3, minimum is 0
+  // Sum of importance_coverage scores divided by max number of stakeholders that a user can talk to
   function colorLimit(average) {
-    if (average >= 60) {
-      return 'rgba(0, 128, 0, 0.2)'; // Green if average percentage above 60%
+    if (average >= 0.4) {
+      return 'rgba(0, 128, 0, 0.2)'; // Green if average percentage above 2
     }
-    if (average >= 30) {
-      return 'rgba(255, 255, 0, 0.2)'; // Yellow if average percentage above 30%
+    if (average >= 0.2) {
+      return 'rgba(255, 255, 0, 0.2)'; // Yellow if average percentage above 1
     }
 
-    return 'rgba(255, 0, 0, 0.2)'; // Red if average percentage below 30%
+    return 'rgba(255, 0, 0, 0.2)'; // Red if average percentage below 0
   }
-
-  useEffect(() => {
-    createChart(coverage);
-    // eslint-disable-next-line
-  }, [value]);
 
   function createChart(cov) {
     if (cov.length > 0) {
       const lbls = cov.map((x) => x.name);
-      const vals = cov.map((x) => x.percentage);
-      const average = vals.reduce((a, b) => a + b) / vals.length;
+      const vals = cov.map((x) => x.student_percentage);
+      const importanceCoverage = cov.map((x) => x.importance_coverage);
+      const totalWeight = importanceCoverage.reduce((a, b) => a + b) / contextObj.numConversations;
+      setTotalScore(totalWeight);
       const config = {
         type: 'radar',
         data: {
           labels: lbls,
           datasets: [
             {
-              label: 'Your Coverage',
-              backgroundColor: colorLimit(average),
+              label: 'Your Issue Coverage',
+              backgroundColor: colorLimit(totalWeight),
               data: vals,
             },
           ],
@@ -228,6 +230,11 @@ export default function Radar({ scenarioID }) {
     }
   }
 
+  useEffect(() => {
+    createChart(coverage);
+  // eslint-disable-next-line
+  }, [tabValue]);
+
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -236,7 +243,7 @@ export default function Radar({ scenarioID }) {
   }
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   const [errorBannerMessage, setErrorBannerMessage] = useState('');
@@ -258,8 +265,35 @@ export default function Radar({ scenarioID }) {
           fade={errorBannerFade}
         />
       </div>
+      <GenericHelpButton
+        description={RadarPlotHelpInfo}
+        title="Radar Plot"
+      />
+      <Typography variant="body1">
+        The summary value is a score that combines the degree of coverage with the importance of the issues covered.
+      </Typography>
+      <Typography variant="body1">
+        {'score >= 0.4: Good coverage behavior (Green on Radar Plot)'}
+      </Typography>
+      <Typography variant="body1">
+        {'0.4 >= score >= 0.2: Ok coverage behavior (Yellow on Radar Plot)'}
+      </Typography>
+      <Typography variant="body1">
+        {'0.2 >= score >= 0: Poor coverage behavior (Red on Radar Plot)'}
+      </Typography>
+      {totalScore !== -1
+        ? (
+          <Typography variant="h6">
+            {`Total Summary Value Score: ${totalScore}`}
+          </Typography>
+        )
+        : (
+          <Typography variant="h6">
+            Total Summary Value Score:
+          </Typography>
+        )}
       <StyledTabs
-        value={value}
+        value={tabValue}
         variant="fullWidth"
         centered
         onChange={handleChange}
@@ -269,45 +303,51 @@ export default function Radar({ scenarioID }) {
         <StyledTab label="List View" {...a11yProps(1)} />
       </StyledTabs>
       <Grid container direction="column" justify="center">
-        <TabPanel value={value} index={0}>
+        <TabPanel value={tabValue} index={0}>
           <div>
             <Grid container direction="row" justify="center">
-              <canvas ref={chartContainer} id="coverage-plot" />
+              { fetchRadarData.loading
+                ? <LoadingSpinner />
+                : <canvas ref={chartContainer} id="coverage-plot" /> }
             </Grid>
           </div>
         </TabPanel>
       </Grid>
 
       <Grid container direction="column" justify="center">
-        <TabPanel value={value} index={1}>
+        <TabPanel value={tabValue} index={1}>
           <Grid container direction="row" justify="center">
-            <TableContainer component={Paper}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Issue</TableCell>
-                    <TableCell align="right">Your Score</TableCell>
-                    <TableCell align="right">Max Score</TableCell>
-                    <TableCell align="right">Percentage&nbsp;(%)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {coverage.map((row) => (
-                    <TableRow key={row.name}>
-                      <TableCell component="th" scope="row">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.coverage}</TableCell>
-                      <TableCell align="right">{row.total}</TableCell>
-                      <TableCell align="right">
-                        {row.percentage.toFixed(2)}
-                        %
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            { fetchRadarData.loading
+              ? <LoadingSpinner />
+              : (
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Issue</TableCell>
+                        <TableCell align="right">Issue Importance Score (0-5)</TableCell>
+                        <TableCell align="right">Issue Coverage&nbsp;(%)</TableCell>
+                        <TableCell align="right">Total Coverage Score (0-1)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {coverage.map((row) => (
+                        <TableRow key={row.name}>
+                          <TableCell component="th" scope="row">
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="right">{row.importance_score}</TableCell>
+                          <TableCell align="right">
+                            {row.student_percentage.toFixed(2)}
+                            %
+                          </TableCell>
+                          <TableCell align="right">{row.importance_coverage.toFixed(2)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
           </Grid>
         </TabPanel>
       </Grid>

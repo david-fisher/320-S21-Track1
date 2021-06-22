@@ -100,22 +100,32 @@ export default function Action({
   const [selectActionFunc, setSelectActionFunc] = useState(null);
 
   const getActionData = () => {
-    setActions(choices.map((obj) => ({
+    const actionsForPage = choices.map((obj) => ({
       PAGE_ID: obj.PAGE_id, APC_ID: obj.APC_ID, SESSION_ID: contextObj.sessionID, CHOICE: obj.CHOICE, RESULT_PAGE_id: obj.RESULT_PAGE_id,
-    })).sort((a, b) => a.APC_ID - b.APC_ID));
+    })).sort((a, b) => a.APC_ID - b.APC_ID);
+    setActions(actionsForPage);
     function onSuccess(response) {
       // Player has already chosen an action
       (response.data.length !== 0) ? setChosenAction(response.data[0].APC_ID) : setChosenAction(-1);
-      // setActions(choices.map((obj) => ({
-      //   PAGE_ID: obj.PAGE_id, APC_ID: obj.APC_ID, SESSION_ID: contextObj.sessionID, CHOICE: obj.CHOICE, RESULT_PAGE_id: obj.RESULT_PAGE_id,
-      // })).sort((a, b) => a.APC_ID - b.APC_ID));
+      setContextObj((prev) => ({
+        ...prev,
+        [pageID]: {
+          chosenAction: (response.data.length !== 0) ? response.data[0].APC_ID : -1,
+          actions: actionsForPage,
+        },
+      }));
     }
     function onFailure(e) {
       setChosenAction(-1);
       setErrorBannerFade(true);
       setErrorBannerMessage('Failed to get action data! Please try again.');
     }
-    get(setActionData, endpointGET, onFailure, onSuccess);
+    if (contextObj[pageID]) {
+      setChosenAction(contextObj[pageID].chosenAction);
+      setActions(contextObj[pageID].actions);
+    } else {
+      get(setActionData, endpointGET, onFailure, onSuccess);
+    }
   };
   useEffect(getActionData, []);
 
@@ -127,7 +137,14 @@ export default function Action({
         contextObj.pages,
         contextObj.sessionID,
       );
-      setChosenAction((cur) => selectedAction);
+      setChosenAction(selectedAction);
+      setContextObj((prev) => ({
+        ...prev,
+        [pageID]: {
+          chosenAction: selectedAction,
+          actions,
+        },
+      }));
     }
     function onFailure() {
       setErrorBannerMessage('Failed to save action! Please try again.');

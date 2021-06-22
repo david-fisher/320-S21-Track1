@@ -15,6 +15,7 @@ import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
 import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 Reflection.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -97,6 +98,7 @@ export default function Reflection(props) {
   const [errorQuestions, setErrorQuestions] = useState(false);
   const [errorQuestionsMessage, setErrorQuestionsMessage] = useState('');
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   const postReqBody = {
     PAGE: pageID,
@@ -270,7 +272,7 @@ export default function Reflection(props) {
         description={ReflectionPageHelpInfo}
         title="Reflection Page Help"
       />
-      {globalUnsaved ? (
+      {globalUnsaved && accessLevel !== 3 ? (
         <Typography variant="h6" align="center" color="error">
           Unsaved
         </Typography>
@@ -309,6 +311,7 @@ export default function Reflection(props) {
         variant="contained"
         color="primary"
         onClick={savePage}
+        disabled={accessLevel === 3}
       >
         Save
       </Button>

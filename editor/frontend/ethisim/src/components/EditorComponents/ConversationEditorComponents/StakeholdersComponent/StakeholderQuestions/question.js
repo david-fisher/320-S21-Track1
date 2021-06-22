@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import GenericDeleteWarning from '../../../../WarningDialogs/GenericDeleteWarning';
+import ScenarioAccessLevelContext from '../../../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -37,6 +38,7 @@ export default function QuestionField({
 }) {
   const [questionValue, setQuestionValue] = useState(question);
   const [responseValue, setResponseValue] = useState(response);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   function updateQRs(shq, shr) {
     const updatedQRs = [...QRs];
@@ -109,6 +111,7 @@ export default function QuestionField({
             color="primary"
             onClick={handleClickOpen}
             style={{ textTransform: 'unset' }}
+            disabled={accessLevel !== 1}
           >
             Delete
           </Button>

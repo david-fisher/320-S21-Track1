@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -9,6 +9,7 @@ import { PointSelectionHelpInfo } from './PointSelectionHelpInfo';
 import GenericHelpButton from '../../../../HelpButton/GenericHelpButton';
 import StakeholderSummary from './StakeholderSummary';
 import ConvoPreview from './ConvoPreview';
+import ScenarioAccessLevelContext from '../../../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles({
   table: {
@@ -56,7 +57,7 @@ export default function StakeholderCoverageTable({
   // not needed for DELETE
   const [stakeholderCoverage, setStakeholderCoverage] = useState(coverage);
   const classes = useStyles();
-
+  const accessLevel = useContext(ScenarioAccessLevelContext);
   const [error, setError] = useState(false);
   // eslint-disable-next-line
     const [putValue, setPut] = useState({
@@ -74,7 +75,7 @@ export default function StakeholderCoverageTable({
         !obj.COVERAGE_SCORE.toString()
                 || isNaN(issueScore)
                 || issueScore.toString().indexOf('.') !== -1
-                || issueScore > 5
+                || issueScore > 3
                 || issueScore < 0
       );
     };
@@ -122,12 +123,12 @@ export default function StakeholderCoverageTable({
         color="primary"
         onClick={handleSave}
         style={{ textTransform: 'unset' }}
+        disabled={accessLevel === 3}
       >
         Save Changes
       </Button>
-      {unsaved ? (
+      {unsaved && accessLevel !== 3 ? (
         <Typography
-          style={{ marginLeft: '30px' }}
           variant="h6"
           align="center"
           color="error"
@@ -137,7 +138,6 @@ export default function StakeholderCoverageTable({
       ) : null}
       {error ? (
         <Typography
-          style={{ marginLeft: '5px' }}
           variant="h6"
           align="center"
           color="error"

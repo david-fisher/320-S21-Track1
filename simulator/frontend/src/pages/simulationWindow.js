@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   Grid, Box, Typography, Button,
 } from '@material-ui/core';
@@ -11,8 +11,8 @@ import Stepper from '../components/stepper';
 import GenericPage from '../components/SimulationWindowComponents/generic';
 import Reflection from '../components/SimulationWindowComponents/reflection';
 import Action from '../components/SimulationWindowComponents/action';
-import Stakeholders from '../components/SimulationWindowComponents/stakeholders';
-import Feedback from '../components/SimulationWindowComponents/feedback';
+import Stakeholders from '../components/SimulationWindowComponents/StakeholderPage/stakeholders';
+import Feedback from '../components/SimulationWindowComponents/FeedbackPage/feedback';
 import LoadingSpinner from '../components/LoadingSpinner';
 import get from '../universalHTTPRequestsEditor/get';
 import post from '../universalHTTPRequestsSimulator/post';
@@ -69,18 +69,18 @@ SimulationWindow.propTypes = {
 };
 export default function SimulationWindow(props) {
   const classes = useStyles();
-  const location = useLocation();
   const history = useHistory();
-  // eslint-disable-next-line
-  const pathArray = location.pathname.split('/');
 
-  const scenarioID = props.location.data
-    ? props.location.data.scenarioID
-    : history.push('/dashboard'); // prevents users from manually inserting scenarioID - firstPage in URL
-  const { firstPage, numConversations, userID } = props.location.data;
+  if (!props.location.data) {
+    history.push('/dashboard');
+  }
+
+  const {
+    scenarioID, firstPage, numConversations, userID,
+  } = props.location.data ? props.location.data : {};
 
   // eslint-disable-next-line
-  const [sessionID, setSessionID] = useState(-1); //TODO should not be hardcoded
+  const [sessionID, setSessionID] = useState(-1);
   const scenarioPlayerContext = useState({ pages: [], activeIndex: 0 });
   const [playerContext, setPlayerContext] = scenarioPlayerContext;
 
@@ -170,7 +170,9 @@ export default function SimulationWindow(props) {
       loading: true,
       error: false,
     });
-    post(setStartSession, endpointSession, null, startSess);
+    if (props.location.data) {
+      post(setStartSession, endpointSession, null, startSess);
+    }
   };
 
   function getPageComponent(type, data, nextPageEndpoint, prevPageEndpoint) {

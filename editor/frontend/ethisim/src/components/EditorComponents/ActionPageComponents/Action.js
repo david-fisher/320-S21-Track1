@@ -17,6 +17,7 @@ import HTMLPreview from '../HTMLPreview';
 import Choice from './Choice';
 import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 Action.propTypes = {
   scenarioComponents: PropTypes.any,
@@ -109,6 +110,7 @@ export default function Action(props) {
   const [errorBody, setErrorBody] = useState(false);
   const [errorChoices, setErrorChoices] = useState(false);
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   const postReqBody = {
     PAGE: pageID,
@@ -279,7 +281,7 @@ export default function Action(props) {
         description={ActionPageHelpInfo}
         title="Action Page Help"
       />
-      {globalUnsaved ? (
+      {globalUnsaved && accessLevel !== 3 ? (
         <Typography variant="h6" align="center" color="error">
           Unsaved
         </Typography>
@@ -329,6 +331,7 @@ export default function Action(props) {
             variant="contained"
             color="primary"
             onClick={savePage}
+            disabled={accessLevel === 3}
           >
             Save
           </Button>

@@ -14,6 +14,7 @@ import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
 import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -89,6 +90,7 @@ export default function Generic(props) {
   const [errorTitleText, setErrorTitleText] = useState(false);
   const [errorBody, setErrorBody] = useState(false);
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   const postReqBody = {
     PAGE_TYPE: page_type,
@@ -221,7 +223,7 @@ export default function Generic(props) {
         description={GenericPageHelpInfo}
         title="Generic Page Help"
       />
-      {globalUnsaved ? (
+      {globalUnsaved && accessLevel !== 3 ? (
         <Typography variant="h6" align="center" color="error">
           Unsaved
         </Typography>
@@ -245,6 +247,7 @@ export default function Generic(props) {
         variant="contained"
         color="primary"
         onClick={savePage}
+        disabled={accessLevel === 3}
       >
         Save
       </Button>

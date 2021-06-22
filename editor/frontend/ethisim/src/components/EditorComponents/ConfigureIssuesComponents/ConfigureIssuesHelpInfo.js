@@ -15,7 +15,7 @@ export const ConfigureIssuesHelpInfo = [
   },
   {
     title: 'Importance Score',
-    description: `The is where you decide the "ethical importance" of the issue.
+    description: `This is where you decide the "ethical importance" of the issue.
   Scores range from 0 to 5, 0 being not ethically important at all and 5 being very ethically important.`,
   },
   {

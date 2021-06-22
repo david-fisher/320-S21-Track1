@@ -91,7 +91,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -111,7 +111,6 @@ const StyledTab = withStyles((theme) => ({
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(18),
     backgroundColor: 'white',
-    // backgroundColor: '#d9d9d9',
     '&:hover': {
       backgroundColor: '#F7E7E7',
       color: 'black',
@@ -145,12 +144,9 @@ Home.propTypes = {
 };
 export default function Home(props) {
   const classes = useStyles();
-  // post on success, concatenating a scenario card to array
-  // delete on success, concatenating a scenario card to array
-  // when posting a new scenario setting fake id, now deleting that scenario, have to replace id with id in database
-  // post returns new id of scenario, when you concatenating to array set the id to that
+  const history = useHistory();
+  const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
   const [scenarioList, setScenarioList] = useState({
-    // temporary array of scenarios
     incompleteScenarios: null,
     completeScenarios: null,
   });
@@ -174,8 +170,6 @@ export default function Home(props) {
 
     return () => clearTimeout(timeout);
   }, [successBannerFade]);
-  const history = useHistory();
-  const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginSimulator');
   // Get Scenario
   // addCourse - to trigger success banner for successfully adding a course
   const getData = (addCourse) => {
@@ -229,12 +223,14 @@ export default function Home(props) {
           setSuccessBannerFade(true);
         }
       }
-      getSimulator(
-        setFetchSessionsResponse,
-        '/api/sessions/',
-        onFailure,
-        onSuccessSessions,
-      );
+      if (props.location.data) {
+        getSimulator(
+          setFetchSessionsResponse,
+          '/api/sessions/',
+          onFailure,
+          onSuccessSessions,
+        );
+      }
     }
 
     function onFailure(e) {
