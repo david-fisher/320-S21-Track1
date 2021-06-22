@@ -207,4 +207,4 @@ class conversations_had(models.Model):
         unique_together = (('SESSION_ID'),('STAKEHOLDER_ID'))
     SESSION_ID = models.ForeignKey(sessions, on_delete=CASCADE)
     DATE_TAKEN = models.DateTimeField(auto_now_add=True)
-    STAKEHOLDER_ID = models.ForeignKey('stakeholders', on_delete = models.CASCADE, db_column="STAKEHOLDER")
+    STAKEHOLDER_ID = models.ForeignKey('stakeholders', on_delete = models.CASCADE)
