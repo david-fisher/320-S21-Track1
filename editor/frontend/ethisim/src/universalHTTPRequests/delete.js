@@ -13,8 +13,16 @@ export default function universalDelete(
     loading: true,
     error: null,
   });
+
+  let config = {
+    headers: {
+      'api-username': process.env.API_USERNAME,
+      'api-token': process.env.API_PASSWORD
+    }
+  }
+
   axios
-    .delete(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .delete(BACK_URL_EDITOR + endpoint, requestBody, config, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,
