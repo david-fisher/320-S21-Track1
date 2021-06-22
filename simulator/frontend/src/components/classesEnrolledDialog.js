@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  TextField,
   IconButton,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
-import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
-import post from '../universalHTTPRequestsSimulator/post';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,40 +48,6 @@ DialogTitle.propTypes = {
   onClose: PropTypes.any.isRequired,
 };
 
-const ValidationTextField = withStyles({
-  root: {
-    width: '300px',
-    color: 'black',
-    alignItems: 'left',
-    '& .MuiOutlinedInput-root': {
-      '&:hover fieldset': {
-        borderColor: 'black',
-        borderWidth: '2',
-      },
-    },
-    '& .MuiFormLabel-root': {
-      color: 'black',
-    },
-    '& .MuiInputBase-root': {
-      color: 'black',
-    },
-    '& input:valid + fieldset': {
-      borderColor: 'black',
-      borderWidth: 2,
-    },
-    '& input:invalid + fieldset': {
-      borderColor: 'black',
-      borderWidth: 2,
-    },
-    '& input:valid:focus + fieldset': {
-      color: 'black',
-      borderColor: 'black',
-      borderLeftWidth: 6,
-      padding: '4px !important', // override inline-style
-    },
-  },
-})(TextField);
-
 function DialogTitle(props) {
   const classes = useStyles();
   const { onClose } = props;
@@ -110,7 +73,6 @@ CodeDialog.propTypes = {
 export default function CodeDialog({ courses }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [course, setCourse] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);

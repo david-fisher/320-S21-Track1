@@ -1409,8 +1409,10 @@ class register_user_api(APIView):
 
             if request.data["type"] == "editor": # if the request is coming from the editor frontend, then check if the user exists in the authorized_users text file or is an employee. If not return 401
                 affiliation = request.data["affiliation"]
-                if affiliation is not 'Employee':
-                    with open(os.path.join(sys.path[0], "tables/authorized_users.txt")) as csv_file:
+
+                if affiliation != 'Employee':
+                    with open(os.path.abspath(os.getcwd()) + '/lead/tables/authorized_users.txt') as csv_file:
+
                         csv_reader = csv.reader(csv_file, delimiter='\n')
                         authorized = False
                         email = request.data["email"]
@@ -1478,18 +1480,16 @@ class dashboard_page(APIView):
         for user1 in users:
             user_id = user1['user_id']
 
-            queryset1 = scenarios.objects.filter(user=user_id)
+            queryset1 = scenarios.objects.filter()
             scenList1 = ScenariosSerializer(queryset1, many=True).data
             
             for scen in scenList1:
-                queryset2= user_access.objects.filter(USER_ID=user_id, SCENARIO_ID = scen['SCENARIO'])
-                print(queryset2)
+                queryset2= user_access.objects.filter(USER_ID_id=user_id, SCENARIO_ID_id = scen['SCENARIO'])
                 scenList2 = user_accessSerializer(queryset2, many=True).data
-                print(scenList2)
                 if(not len(scenList2) == 0):
                     scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
 
-                scenarios_for_query = scenarios_for.objects.filter(SCENARIO = scen['SCENARIO']).values()
+                scenarios_for_query = scenarios_for.objects.filter(SCENARIO_id = scen['SCENARIO']).values()
                 course_id_array = []
                 for x in scenarios_for_query:
                     course_id_array.append(x['COURSE_id'])

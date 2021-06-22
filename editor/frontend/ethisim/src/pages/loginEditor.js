@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -49,7 +49,6 @@ export default function LoginEditor() {
     error: false,
   });
   const [redirect, setRedirect] = useState(false);
-  const history = useHistory();
   // reload page to right place
   function getLoginData() {
     function onSuccessPost(resp) {
