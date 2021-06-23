@@ -1407,8 +1407,9 @@ class register_user_api(APIView):
             if self.checkRequest(request): # checks if all the required fields are present in the incoming JSON request. If the check fails, 400 status code is returned
                 return self.makeJSONResponse({"msg": "json request not formatted properly", "status": False}, 400) 
 
-            if request.data["type"] == "editor": # if the request is coming from the editor frontend, then check if the user exists in the authorized_users text file or is an employee. If not return 401
+            if request.data["type"] == "editor": # if the request is coming from the editor frontend, then check if the user exists in whitelist table or is an employee. If not return 401
                 affiliation = request.data["affiliation"]
+<<<<<<< Updated upstream
                 if affiliation is not 'Employee':
                     with open(os.path.join(sys.path[0], "tables/authorized_users.txt")) as csv_file:
                         csv_reader = csv.reader(csv_file, delimiter='\n')
@@ -1420,6 +1421,16 @@ class register_user_api(APIView):
                                 break
                         if not authorized:
                             return self.makeJSONResponse({"msg": "unauthorized", "status": False}, 401);
+=======
+
+                if affiliation != 'Employee':
+
+                    query = EditorWhitelist.objects.all().filter(email=request.data["email"], netId=request.data["netId"])
+                    resultset = list(EditorWhitelistSerializer(query, many=True).data)
+                    authorized = len(resultset) == 1
+                    if not authorized:
+                        return self.makeJSONResponse({"msg": "unauthorized", "status": False}, 401);
+>>>>>>> Stashed changes
             
             resultset = cache.get(request.data["netId"]) # tries to look up for the net id in the cache
             userFound = resultset != None # sets the userFound variable, pretty intuitive
