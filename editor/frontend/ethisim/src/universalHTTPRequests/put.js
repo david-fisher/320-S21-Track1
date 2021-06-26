@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACK_URL_EDITOR } from '../Constants/Config';
+import { BACK_URL_EDITOR, APIKEY, APIUSER} from '../Constants/Config';
 // Universal put request using axios
 export default function universalPut(
   setResponse,
@@ -13,8 +13,15 @@ export default function universalPut(
     loading: true,
     error: null,
   });
+
+  let config = {
+    headers: {
+      'api-user': APIUSER,
+      'api-token': APIKEY
+    }
+  }
   axios
-    .put(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .put(BACK_URL_EDITOR + endpoint, requestBody, config, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

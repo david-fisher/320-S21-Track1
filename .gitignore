@@ -38,3 +38,5 @@ node_modules/**
 
 editor/backend/venv/
 editor/backend/lead/tables/authorized_users.txt
+
+setenv.sh

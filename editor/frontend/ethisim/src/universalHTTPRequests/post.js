@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BACK_URL_EDITOR } from '../Constants/Config';
+import { BACK_URL_EDITOR, APIKEY, APIUSER} from '../Constants/Config';
 
 // Universal fetch request using axios
 export default function universalPost(
@@ -15,8 +15,16 @@ export default function universalPost(
     loading: true,
     error: null,
   });
+
+  let config = {
+    headers: {
+      'api-user': APIUSER,
+      'api-token': APIKEY
+    }
+  }
+
   axios
-    .post(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .post(BACK_URL_EDITOR + endpoint, requestBody, config, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,
