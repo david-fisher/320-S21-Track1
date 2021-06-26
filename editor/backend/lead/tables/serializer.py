@@ -195,3 +195,13 @@ class conversations_hadSerializer(serializers.ModelSerializer):
     class Meta:
         model = conversations_had
         fields = ('SESSION_ID', 'STAKEHOLDER_ID', 'DATE_TAKEN')
+
+class EditorWhitelistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EditorWhitelist
+        fields = '__all__'
+
+class APITokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = APITokens
+        fields = '__all__'
