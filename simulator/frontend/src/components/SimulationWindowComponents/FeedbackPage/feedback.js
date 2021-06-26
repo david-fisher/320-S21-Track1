@@ -8,6 +8,7 @@ import {
   Button,
   makeStyles,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import RadarPlot from './radarPlot';
 import GlobalContext from '../../../Context/GlobalContext';
 
@@ -23,6 +24,10 @@ const TextTypography = withStyles({
 const useStyles = makeStyles((theme) => ({
   backButton: {
     marginLeft: '0rem',
+    marginRight: '0rem',
+    marginTop: '1rem',
+  },
+  nextButton: {
     marginRight: '0rem',
     marginTop: '1rem',
   },
@@ -84,6 +89,19 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
           onClick={() => getPrevPage(contextObj.activeIndex - 1)}
         >
           Back
+        </Button>
+      </Grid>
+      <Grid item className={classes.nextButton}>
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          component={Link}
+          to={{
+            pathname: '/dashboard',
+          }}
+        >
+          Exit
         </Button>
       </Grid>
     </Grid>

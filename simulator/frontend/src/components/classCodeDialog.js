@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import post from '../universalHTTPRequestsSimulator/post';
 import ErrorBanner from './Banners/ErrorBanner';
 import EnrolledClassesButton from './classesEnrolledDialog';
+import DropDownCourses from './DropDownCourses';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +57,7 @@ DialogTitle.propTypes = {
 
 const ValidationTextField = withStyles({
   root: {
+    margin: '10px',
     width: '300px',
     color: 'black',
     alignItems: 'left',
@@ -110,12 +112,17 @@ function DialogTitle(props) {
 CodeDialog.propTypes = {
   userID: PropTypes.string,
   getData: PropTypes.func,
+  enrolledCourses: PropTypes.array,
   courses: PropTypes.array,
 };
-export default function CodeDialog({ userID, getData, courses }) {
+export default function CodeDialog({
+  userID, getData, enrolledCourses, courses,
+}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  // eslint-disable-next-line
   const [course, setCourse] = useState('');
+  const [courseCode, setCourseCode] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -154,8 +161,13 @@ export default function CodeDialog({ userID, getData, courses }) {
 
     post(setPostCourseResponse, '/api/takes/', onFailure, onSuccess, {
       USER_ID: userID,
-      COURSE_ID: course.toUpperCase(),
+      COURSE_ID: courseCode.toUpperCase(),
     });
+  };
+
+  // Update Classes
+  const updateSelectedClasses = (selectedClasses) => {
+    setCourse(selectedClasses);
   };
 
   return (
@@ -189,15 +201,16 @@ export default function CodeDialog({ userID, getData, courses }) {
         <DialogTitle onClose={handleClose} />
         <DialogContent dividers>
           <div style={{ marginBottom: '16px' }}>
-            <EnrolledClassesButton courses={courses} />
+            <EnrolledClassesButton courses={enrolledCourses} />
           </div>
+          <DropDownCourses courses={courses} update={updateSelectedClasses} />
           <form className={classes.textField} noValidate autoComplete="off">
             <ValidationTextField
               label="Enter Course Code"
               id="Enter Course Code"
               variant="outlined"
-              value={course}
-              onInput={(e) => setCourse(e.target.value)}
+              value={courseCode}
+              onInput={(e) => setCourseCode(e.target.value)}
             />
           </form>
         </DialogContent>

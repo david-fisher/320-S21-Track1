@@ -104,10 +104,6 @@ export default function SimpleMenu() {
                             + (process.env.NODE_ENV === 'production'
                               ? '/Shibboleth.sso/Logout?return=/'
                               : ':3006'))}
-          component={Link}
-          to={{
-            pathname: '/home',
-          }}
         >
           Logout
         </MenuItem>
