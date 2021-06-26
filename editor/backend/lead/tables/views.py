@@ -1411,26 +1411,12 @@ class register_user_api(APIView):
                 affiliation = request.data["affiliation"]
 
                 if affiliation != 'Employee':
-<<<<<<< Updated upstream
-                    with open(os.path.abspath(os.getcwd()) + '/lead/tables/authorized_users.txt') as csv_file:
-
-                        csv_reader = csv.reader(csv_file, delimiter='\n')
-                        authorized = False
-                        email = request.data["email"]
-                        for row in csv_reader:
-                            if email == row[0]:
-                                authorized = True
-                                break
-                        if not authorized:
-                            return self.makeJSONResponse({"msg": "unauthorized", "status": False}, 401);
-=======
 
                     query = EditorWhitelist.objects.all().filter(email=request.data["email"], netId=request.data["netId"])
                     resultset = list(EditorWhitelistSerializer(query, many=True).data)
                     authorized = len(resultset) == 1
                     if not authorized:
                         return self.makeJSONResponse({"msg": "unauthorized", "status": False}, 401);
->>>>>>> Stashed changes
             
             resultset = cache.get(request.data["netId"]) # tries to look up for the net id in the cache
             userFound = resultset != None # sets the userFound variable, pretty intuitive

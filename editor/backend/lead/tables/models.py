@@ -207,9 +207,6 @@ class conversations_had(models.Model):
         unique_together = (('SESSION_ID'),('STAKEHOLDER_ID'))
     SESSION_ID = models.ForeignKey(sessions, on_delete=models.CASCADE)
     DATE_TAKEN = models.DateTimeField(auto_now_add=True)
-<<<<<<< Updated upstream
-    STAKEHOLDER_ID = models.ForeignKey('stakeholders', on_delete = models.CASCADE)
-=======
     STAKEHOLDER_ID = models.ForeignKey('stakeholders', on_delete = models.CASCADE)
 
 class EditorWhitelist(models.Model): 
@@ -222,4 +219,3 @@ class APITokens(models.Model):
     token = models.TextField(unique=True, db_column='token')
     user = models.CharField(db_column='user', max_length=150, unique=True)
 
->>>>>>> Stashed changes
