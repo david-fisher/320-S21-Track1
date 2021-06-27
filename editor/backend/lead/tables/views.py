@@ -1635,3 +1635,41 @@ class dashboard_page(APIView):
         scenario_dict['INTRO_PAGE'] = intro_page_serializer.data
         scenario_dict['STAKEHOLDER_PAGE'] = stakeholder_page_serializer.data
         return Response(scenario_dict)
+
+class share_functionality(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.data["EMAIL"]
+        access = request.data["ACCESS"]
+        scenario = request.data["SCENARIO"]
+
+        user_id = email[0:email.find('@')]
+        access_dict = {
+            "USER_ID": user_id,
+            "ACCESS_LEVEL": access,
+            "SCENARIO_ID": scenario
+        }
+
+        whitelist_dict = {
+            "netId": user_id,
+            "email": email
+        }
+
+        whitelist_serializer = EditorWhitelistSerializer(data=whitelist_dict)
+        print(whitelist_serializer)
+        if whitelist_serializer.is_valid():
+            whitelist_serializer.save()
+        else:
+            print("whitelist saved incorrectly")
+            print(whitelist_serializer.errors)
+            return Response(whitelist_serializer.errors)
+
+        user_access_serializer = user_accessSerializer(data=access_dict)
+        print(user_access_serializer)
+        if user_access_serializer.is_valid():
+            user_access_serializer.save()
+        else:
+            print("access saved incorrectly")
+            print(user_access_serializer.errors)
+            return Response(user_access_serializer.errors)
+
+        return Response(access_dict)
