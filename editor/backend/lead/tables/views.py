@@ -1575,7 +1575,8 @@ class dashboard_page(APIView):
         access_detail = {
             "USER_ID": user,
             "ACCESS_LEVEL": 1,
-            "SCENARIO_ID": scenario_dict['SCENARIO']
+            "SCENARIO_ID": scenario_dict['SCENARIO'],
+            "SHARED_BY": user
         }
 
         user_access_serializer = user_accessSerializer(data=access_detail)
@@ -1637,31 +1638,47 @@ class dashboard_page(APIView):
         return Response(scenario_dict)
 
 class share_functionality(APIView):
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         email = request.data["EMAIL"]
         access = request.data["ACCESS"]
         scenario = request.data["SCENARIO"]
+        sharer = request.data["USER_ID"]
 
         user_id = email[0:email.find('@')]
-        access_dict = {
-            "USER_ID": user_id,
-            "ACCESS_LEVEL": access,
-            "SCENARIO_ID": scenario
-        }
+
+        if(access == 0):
+            user_access.objects.get(USER_ID_id = sharer, SCENARIO_ID_id = scenario).delete()
+            if(user_access.objects.filter(SHARED_BY=sharer, SCENARIO_ID_id = scenario).exists()):
+                user_access.objects.filter(SHARED_BY=sharer, SCENARIO_ID_id = scenario).delete()
+            access_dict = {
+                "USER_ID": user_id,
+                "ACCESS_LEVEL": 1,
+                "SCENARIO_ID": scenario,
+                "SHARED_BY": sharer
+            }
+        else:
+            access_dict = {
+                "USER_ID": user_id,
+                "ACCESS_LEVEL": access,
+                "SCENARIO_ID": scenario,
+                "SHARED_BY": sharer
+            }
+
 
         whitelist_dict = {
             "netId": user_id,
             "email": email
         }
 
-        whitelist_serializer = EditorWhitelistSerializer(data=whitelist_dict)
-        print(whitelist_serializer)
-        if whitelist_serializer.is_valid():
-            whitelist_serializer.save()
-        else:
-            print("whitelist saved incorrectly")
-            print(whitelist_serializer.errors)
-            return Response(whitelist_serializer.errors)
+        if(not EditorWhitelist.objects.filter(netId=user_id).exists()):
+            whitelist_serializer = EditorWhitelistSerializer(data=whitelist_dict)
+            print(whitelist_serializer)
+            if whitelist_serializer.is_valid():
+                whitelist_serializer.save()
+            else:
+                print("whitelist saved incorrectly")
+                print(whitelist_serializer.errors)
+                return Response(whitelist_serializer.errors)
 
         user_access_serializer = user_accessSerializer(data=access_dict)
         print(user_access_serializer)

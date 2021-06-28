@@ -110,6 +110,7 @@ class user_access(models.Model):
     USER_ID = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access1", null=True)
     ACCESS_LEVEL = models.IntegerField()
     SCENARIO_ID = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name = "user_access1", null = True)
+    SHARED_BY = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access2", null=True, default = "phaas")
 
 
 class Issues(models.Model):
