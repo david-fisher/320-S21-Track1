@@ -7,6 +7,8 @@ WORKDIR /app
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
+ARG API_TOKEN
+
 # install app dependencies
 COPY package*.json ./
 
@@ -16,4 +18,4 @@ RUN npm install react-scripts@3.4.1 -g --silent
 # add app
 COPY . ./
 
-RUN REACT_APP_URL=https://ethisim1.cs.umass.edu REACT_APP_APIKEY=${{secrets.API_TOKEN}} npm run build
+RUN REACT_APP_URL=https://ethisim1.cs.umass.edu REACT_APP_APIKEY=${API_TOKEN} npm run build

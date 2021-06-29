@@ -59,6 +59,8 @@ jobs:
         with:
           context: ./editor/frontend/ethisim/
           file: ./editor/frontend/ethisim/Dockerfile.prod
+          args:
+            API_TOKEN: ${{ secrets.API_TOKEN }}
           push: true
           tags: ikhurana/ethisim-prod:frontend-editor
           cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-editor
@@ -108,6 +110,8 @@ jobs:
         with:
           context: ./simulator/frontend/
           file: ./simulator/frontend/Dockerfile.prod
+          args:
+            API_TOKEN: ${{ secrets.API_TOKEN }}
           push: true
           tags: ikhurana/ethisim-prod:frontend-simulator
           cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-simulator
