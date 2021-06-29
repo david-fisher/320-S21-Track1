@@ -56,11 +56,11 @@ jobs:
       #Build and push Editor Frontend image       
       - name: build and push editor frontend
         uses: docker/build-push-action@v2
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
         with:
           context: ./editor/frontend/ethisim/
           file: ./editor/frontend/ethisim/Dockerfile.prod
-          args:
-            API_TOKEN: ${{ secrets.API_TOKEN }}
           push: true
           tags: ikhurana/ethisim-prod:frontend-editor
           cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-editor
@@ -107,11 +107,11 @@ jobs:
       # Build and push Simulator Frontend image
       - name: build and push simulator frontend
         uses: docker/build-push-action@v2
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
         with:
           context: ./simulator/frontend/
           file: ./simulator/frontend/Dockerfile.prod
-          args:
-            API_TOKEN: ${{ secrets.API_TOKEN }}
           push: true
           tags: ikhurana/ethisim-prod:frontend-simulator
           cache-from: type=registery, ref=ikhurana/ethisim-prod:frontend-simulator
