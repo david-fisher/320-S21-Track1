@@ -137,14 +137,14 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
           <TextTypography variant="body1" display="block" gutterBottom>
             The color of the enclosed area represents your overall level of coverage for the entire scenario, taking into consideration the amount you covered each consideration along with each consideration's level of ethical relevance: red signifies insufficient coverage, yellow signifies sufficient coverage, and green signifies excellent coverage.
           </TextTypography>
-          <Typography variant="h6" gutterBottom>
+          {/* <Typography variant="h6" gutterBottom>
             Stakeholders Talked to:
           </Typography>
           {contextObj.stakeholderPage.stakeholders.filter((x) => x.selected).map((x, index) => (
             <TextTypography key={index} variant="body1" display="block" gutterBottom>
               {`${x.name} - ${x.job}`}
             </TextTypography>
-          ))}
+          ))} */}
         </Box>
       </Grid>
       <Grid container style={{ maxWidth: '100%' }}>

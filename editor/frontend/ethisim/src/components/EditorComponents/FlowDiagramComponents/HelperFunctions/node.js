@@ -99,3 +99,13 @@ export function conversationNode({ data }) {
     </>
   );
 }
+
+export function feedbackNode({ data }) {
+  return (
+    <>
+      <Handle type="target" position="top" />
+      Feedback
+      <Handle type="source" position="bottom" />
+    </>
+  );
+}

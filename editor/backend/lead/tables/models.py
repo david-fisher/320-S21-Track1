@@ -28,6 +28,7 @@ class pages(models.Model):
         ('R', 'REFLECTION'),
         ('S', 'STAKEHOLDER'),
         ('A', 'ACTION'),
+        ('F', 'FEEDBACK')
     )
     PAGE_TYPE = models.CharField(max_length = 2, choices = PAGE_CHOICES)
     PAGE_TITLE = models.CharField(max_length = 1000)

@@ -376,7 +376,7 @@ export default function Dashboard(props) {
         (data) => data.IS_FINISHED,
       );
       let unfinishedScenarios = response.data[0].SCENARIO.filter(
-        (data) => !data.IS_FINISHED,
+        (data) => !data.IS_FINISHED, 
       );
       finishedScenarios = finishedScenarios.map((data) => (
         <ScenarioCard

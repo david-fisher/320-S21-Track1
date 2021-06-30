@@ -331,7 +331,7 @@ class courses_for_user(APIView):
                     finished = False
                     sess_list = sessions.objects.all()
                     for sess in sess_list:
-                        if(sess.SCENARIO_ID_id == scen['SCENARIO_id']):
+                        if(sess.SCENARIO_ID_id == scen['SCENARIO_id'] and sess.USER_ID_id == USER):
                             finished = sess.IS_FINISHED
                         
                     # scenar_serializer = ScenariosSerializer(scenar, many=True).data

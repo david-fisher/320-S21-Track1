@@ -16,8 +16,8 @@ export default function universalPut(
 
   let config = {
     headers: {
-      'api-user': APIUSER,
-      'api-token': APIKEY
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
     }
   }
   axios

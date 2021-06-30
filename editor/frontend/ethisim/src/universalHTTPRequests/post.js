@@ -18,8 +18,8 @@ export default function universalPost(
 
   let config = {
     headers: {
-      'api-user': APIUSER,
-      'api-token': APIKEY
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
     }
   }
 

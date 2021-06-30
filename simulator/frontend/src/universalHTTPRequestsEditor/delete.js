@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACK_URL_EDITOR, APIKEY, APIUSER } from '../constants/config';
+import { BACK_URL_EDITOR} from '../constants/config';
 
 // Universal delete request using axios
 export default function universalDelete(
@@ -17,8 +17,8 @@ export default function universalDelete(
 
   let config = {
     headers: {
-      'api-user': APIUSER,
-      'api-token': APIKEY
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
     }
   }
 

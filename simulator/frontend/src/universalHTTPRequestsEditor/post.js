@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { BACK_URL_EDITOR, APIKEY, APIUSER } from '../constants/config';
+import { BACK_URL_EDITOR } from '../constants/config';
 
 // Universal fetch request using axios
 export default function universalPost(
@@ -18,8 +18,8 @@ export default function universalPost(
 
   let config = {
     headers: {
-      'api-user': APIUSER,
-      'api-token': APIKEY
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
     }
   }
 

@@ -97,6 +97,25 @@ export default function initializeElements(componentData) {
         },
         ...componentData,
       };
+      case 'F':
+      return {
+        id: componentData.PAGE,
+        type: 'feedbackNode',
+        data: { label: componentData.PAGE_TITLE },
+        style: {
+          border: '3px solid black',
+          borderRadius: '5%',
+          padding: 10,
+          overflowWrap: 'break-word',
+          width: '200px',
+          textAlign: 'center',
+        },
+        position: {
+          x: componentData.X_COORDINATE,
+          y: componentData.Y_COORDINATE,
+        },
+        ...componentData,
+      };
     default:
       return {
         id: componentData.PAGE,

@@ -128,6 +128,9 @@ export default function FlowDiagram({ scenario_ID }) {
     const stakeholderConversationElement = elements.filter(
       (componentData) => componentData.PAGE_TYPE === 'S',
     );
+    const feedbackElement = elements.filter(
+      (componentData) => componentData.PAGE_TYPE === 'F',
+    );
 
     const edges = elements.filter((componentData) => isEdge(componentData));
 
@@ -136,6 +139,7 @@ export default function FlowDiagram({ scenario_ID }) {
       reflectionElements,
       actionElements,
       stakeholderConversationElement,
+      feedbackElement,
       edges,
     );
 

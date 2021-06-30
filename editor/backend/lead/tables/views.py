@@ -754,7 +754,7 @@ class pages_page(APIView):
             return Response(pages_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
         # If the request is a generic page  
-        if (page_type == 'G' or page_type == 'I'):
+        if (page_type == 'G' or page_type == 'I' or page_type == 'F'):
             pages_serializer = PagesSerializer(data=request.data)
             if pages_serializer.is_valid():
                 pages_serializer.save()
@@ -869,7 +869,7 @@ class pages_page(APIView):
                 return Response(pages_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
             # Check page.PAGE_TYPE = 'GENERIC'
-            if (page_type == 'G' or page_type == 'I'):
+            if (page_type == 'G' or page_type == 'I' or page_type == 'F'):
                 pages_serializer = PagesSerializer(page, data=request.data)
                 if pages_serializer.is_valid():
                     pages_serializer.save()
@@ -1477,12 +1477,23 @@ class dashboard_page(APIView):
 
             queryset1 = scenarios.objects.filter()
             scenList1 = ScenariosSerializer(queryset1, many=True).data
+            scenList3 = []
             
             for scen in scenList1:
+                # a = scenarios.objects.get(SCENARIO=scen['SCENARIO'])
+                # a.refresh_from_db()
+                # if(user_access.objects.filter(USER_ID_id=user_id, SCENARIO_ID_id = scen['SCENARIO']).exists()):
+                #     b = user_access.objects.get(USER_ID_id=user_id, SCENARIO_ID_id = scen['SCENARIO'])
+                #     b.refresh_from_db()
                 queryset2= user_access.objects.filter(USER_ID_id=user_id, SCENARIO_ID_id = scen['SCENARIO'])
                 scenList2 = user_accessSerializer(queryset2, many=True).data
+                print(scenList2)
                 if(not len(scenList2) == 0):
                     scen['ACCESS LEVEL'] = scenList2[0]['ACCESS_LEVEL']
+                    scen['USER_FOR'] = scenList2[0]['USER_ID']
+
+                if 'USER_FOR' in scen and scen['USER_FOR'] == user_id:
+                    scenList3.append(scen)
 
                 scenarios_for_query = scenarios_for.objects.filter(SCENARIO_id = scen['SCENARIO']).values()
                 course_id_array = []
@@ -1497,7 +1508,9 @@ class dashboard_page(APIView):
                     
                 scen["COURSES"] = course_dict_array
 
-            user1['SCENARIO'] = scenList1
+
+            user1['SCENARIO'] = scenList3
+            print(scenList3)
 
         return users
 
@@ -1520,6 +1533,7 @@ class dashboard_page(APIView):
                     user_id=NET_ID)
                 data = UserSerializer(queryset, many=True).data
                 data = self.add_detail(data)
+                # print(data)
                 return Response(data, status=status.HTTP_200_OK)
 
             # return an error for non-existed scenario id
@@ -1609,6 +1623,26 @@ class dashboard_page(APIView):
             print("intro page saved incorrectly")
             print(intro_page_serializer.errors)
             return Response(intro_page_serializer.errors)
+        
+        # create a new feedback page
+        feedback_page = {
+        "PAGE_TYPE": "F",
+        "PAGE_TITLE": "Feedback",
+        "PAGE_BODY": "Feedback Page body",
+        "SCENARIO": scenario_dict['SCENARIO'],
+        "NEXT_PAGE": None,
+        "X_COORDINATE": 0,
+        "Y_COORDINATE": 0
+        }
+
+        feedback_page_serializer = PagesSerializer(data=feedback_page)
+        print(feedback_page_serializer)
+        if feedback_page_serializer.is_valid():
+            feedback_page_serializer.save()
+        else:
+            print("feedback page saved incorrectly")
+            print(feedback_page_serializer.errors)
+            return Response(feedback_page_serializer.errors)
 
         
         #TODO create blank stakeholder page and return it
@@ -1650,6 +1684,11 @@ class share_functionality(APIView):
             user_access.objects.get(USER_ID_id = sharer, SCENARIO_ID_id = scenario).delete()
             if(user_access.objects.filter(SHARED_BY=sharer, SCENARIO_ID_id = scenario).exists()):
                 user_access.objects.filter(SHARED_BY=sharer, SCENARIO_ID_id = scenario).delete()
+            if(scenarios.objects.filter(user=sharer, SCENARIO=scenario).exists()):
+                a = scenarios.objects.get(user=sharer, SCENARIO=scenario)
+                scenarios.objects.filter(user=sharer, SCENARIO=scenario).update(user=user_id)
+                a.refresh_from_db()
+                
             access_dict = {
                 "USER_ID": user_id,
                 "ACCESS_LEVEL": 1,
