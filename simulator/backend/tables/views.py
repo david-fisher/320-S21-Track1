@@ -394,9 +394,9 @@ def radarPlot(request):
             
             # check if stakeholders have been talked to
             stakeholderHadQuerySet = conversations_had.objects.filter(SESSION_ID_id=sessionQuerySet[0]['SESSION_ID']).values(STAKEHOLDER=F('STAKEHOLDER_ID_id'))
-            print(stakeholderHadQuerySet)
-            if len(stakeholderHadQuerySet) == 0:
-                return JsonResponse(status=404, data={'status': 404,'message': 'Stakeholder ID hasn\'t been submitted'})
+            # print(stakeholderHadQuerySet)
+            # if len(stakeholderHadQuerySet) == 0:
+            #     return JsonResponse(status=404, data={'status': 404,'message': 'Stakeholder ID hasn\'t been submitted'})
 
             print(stakeholderHadQuerySet)
 
