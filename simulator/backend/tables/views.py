@@ -336,7 +336,7 @@ class courses_for_user(APIView):
                         
                     # scenar_serializer = ScenariosSerializer(scenar, many=True).data
                     if scenar.IS_FINISHED == True:
-                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "STUDENT_FINISHED": finished})
+                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "IS_FINISHED": finished})
                 course_dict["SCENARIOS"] = scenario_dict
                 # print(scenario_dict)
                 # print(x)
