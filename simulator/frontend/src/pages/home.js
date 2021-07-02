@@ -225,7 +225,7 @@ export default function Home(props) {
       scenarios = Array.from(scenarioMap, ([name, value]) => (value));
       function onSuccessSessions(resp) {
         scenarios.forEach((obj) => {
-          if (resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID).length) {
+          if (resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID && o.USER_ID === obj.userID).length) {
             obj.isFinished = resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID)[0].IS_FINISHED;
           }
         });
