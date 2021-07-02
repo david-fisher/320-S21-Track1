@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACK_URL_EDITOR, APIKEY, APIUSER } from '../constants/config';
+import { BACK_URL_EDITOR} from '../constants/config';
 // Universal put request using axios
 export default function universalPut(
   setResponse,
@@ -16,8 +16,8 @@ export default function universalPut(
 
   let config = {
     headers: {
-      'api-user': APIUSER,
-      'api-token': APIKEY
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
     }
   }
   

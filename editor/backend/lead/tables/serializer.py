@@ -199,7 +199,7 @@ class conversations_hadSerializer(serializers.ModelSerializer):
 class EditorWhitelistSerializer(serializers.ModelSerializer):
     class Meta:
         model = EditorWhitelist
-        fields = '__all__'
+        fields = ('netId', "email")
 
 class APITokenSerializer(serializers.ModelSerializer):
     class Meta:

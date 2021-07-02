@@ -166,10 +166,10 @@ export default function Radar({ scenarioID }) {
   // Max total_coverage score is 3, minimum is 0
   // Sum of importance_coverage scores divided by max number of stakeholders that a user can talk to
   function colorLimit(average) {
-    if (average >= 0.4) {
+    if (average >= 0.45) {
       return 'rgba(0, 128, 0, 0.2)'; // Green if average percentage above 2
     }
-    if (average >= 0.2) {
+    if (average >= 0.1) {
       return 'rgba(255, 255, 0, 0.2)'; // Yellow if average percentage above 1
     }
 
@@ -284,7 +284,7 @@ export default function Radar({ scenarioID }) {
       {totalScore !== -1
         ? (
           <Typography variant="h6">
-            {`Total Summary Value Score: ${totalScore}`}
+            {`Total Summary Value Score: ${totalScore.toFixed(5)}`}
           </Typography>
         )
         : (

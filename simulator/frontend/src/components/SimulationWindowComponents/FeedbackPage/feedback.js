@@ -15,6 +15,7 @@ import GlobalContext from '../../../Context/GlobalContext';
 import post from '../../../universalHTTPRequestsSimulator/post';
 import ErrorBanner from '../../Banners/ErrorBanner';
 
+
 const TextTypography = withStyles({
   root: {
     color: '#373a3c',
@@ -107,6 +108,7 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
     </Grid>
   );
 
+
   return (
     <div>
       <div className={classes.bannerContainer}>
@@ -140,11 +142,14 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
           <Typography variant="h6" gutterBottom>
             Stakeholders Talked to:
           </Typography>
-          {contextObj.stakeholderPage.stakeholders.filter((x) => x.selected).map((x, index) => (
+          {
+          contextObj.stakeholderPage ? contextObj.stakeholderPage.stakeholders.filter((x) => x.selected).map((x, index) => (
             <TextTypography key={index} variant="body1" display="block" gutterBottom>
               {`${x.name} - ${x.job}`}
             </TextTypography>
-          ))}
+          )) : <Typography variant="h6" gutterBottom>
+          No stakeholders talked to
+        </Typography>}
         </Box>
       </Grid>
       <Grid container style={{ maxWidth: '100%' }}>

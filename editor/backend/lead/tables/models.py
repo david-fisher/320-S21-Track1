@@ -28,6 +28,7 @@ class pages(models.Model):
         ('R', 'REFLECTION'),
         ('S', 'STAKEHOLDER'),
         ('A', 'ACTION'),
+        ('F', 'FEEDBACK')
     )
     PAGE_TYPE = models.CharField(max_length = 2, choices = PAGE_CHOICES)
     PAGE_TITLE = models.CharField(max_length = 1000)
@@ -110,6 +111,7 @@ class user_access(models.Model):
     USER_ID = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access1", null=True)
     ACCESS_LEVEL = models.IntegerField()
     SCENARIO_ID = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name = "user_access1", null = True)
+    SHARED_BY = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access2", null=True, default = "phaas")
 
 
 class Issues(models.Model):
