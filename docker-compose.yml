@@ -95,6 +95,8 @@ services:
       - "3001:3001"
       - "443:443"
       - "80:80"
+    volumes:
+      - ./simulator/backend/tables:/var/www/django/simulator_backend/tables
     networks:
       - '320'
 

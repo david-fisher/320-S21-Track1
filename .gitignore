@@ -37,6 +37,7 @@ node_modules/**
 .eslintcache
 
 editor/backend/venv/
+simulator/backend/venv/
 editor/backend/lead/tables/authorized_users.txt
 
 setenv.sh
