@@ -51,12 +51,46 @@ class course_invitationsViewSet(viewsets.ModelViewSet):
     serializer_class = course_invitationsSerializer
 
 
-class takesViewSet(viewsets.ModelViewSet):
-    queryset = takes.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = takesSerializer
+# class takesViewSet(viewsets.ModelViewSet):
+#     queryset = takes.objects.all()
+#     permission_classes = [
+#         permissions.AllowAny
+#     ]
+#     serializer_class = takesSerializer
+
+class takesAPI(APIView):
+    def makeJSONResponse(self, data, code):
+        return Response(data, status=code, content_type="application/json")
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            id = (kwargs.get('id', None))
+
+            query = takes.objects.all() if id is None else takes.objects.filter(id=id)
+            result = list(takesSerializer(query, many=True).data)
+            return self.makeJSONResponse(result, 200)
+        except:
+            return self.makeJSONResponse({"msg": "Internal Service Error"}, 500)
+    
+    def post(self, request, *args, **kwargs):
+
+        data = request.data
+
+        if "USER_ID" not in data or "COURSE_ID" not in data or "ACCESS_KEY" not in data:
+            return self.makeJSONResponse({"msg": "Incorrect JSON body"}, 400)
+        
+        access_key = data["ACCESS_KEY"]
+        query = course_invitations.objects.filter(COURSE_ID_id=data["COURSE_ID"], ACCESS_KEY=access_key)
+
+        isValid = len(list(course_invitationsSerializer(query, many=True).data)) == 1
+
+        if not isValid:
+            return self.makeJSONResponse({"msg": "Incorrect access key"}, 400)
+        
+        query = takes.objects.create(USER_ID_id=data["USER_ID"], COURSE_ID_id=data["COURSE_ID"]).save()
+        return self.makeJSONResponse(data, 200)
+
 
 
 class course_assignmentViewSet(viewsets.ModelViewSet):

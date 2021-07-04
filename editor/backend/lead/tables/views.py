@@ -1395,7 +1395,7 @@ class scenarios_forapi(APIView):
             # return an error for non-existed scenario id
             except Users.DoesNotExist:
                 message = {'MESSAGE': 'INVALID netID'}
-                return Response(message, status=status.HTTP_404_NOT_FOUND)
+                return Response(message, status=status.HTTP_404_NOT_FOUND) 
 
 class register_user_api(APIView):
 
@@ -1536,7 +1536,7 @@ class ScriptPopulateCoursesInvitationsTable(APIView):
                 if not self.checkIfAccessKeyExists(key):
                     break
             
-            course_invitations.objects.create(COURSE_ID=record['COURSE'], ACCESS_KEY=key).save()
+            course_invitations.objects.create(COURSE_ID_id=record['COURSE'], ACCESS_KEY=key).save()
 
 
 class dashboard_page(APIView):
