@@ -17,14 +17,14 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InnerHTML from 'dangerously-set-html-content';
 import PropTypes from 'prop-types';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../../LoadingSpinner';
 import Conversation from './conversation';
-import post from '../universalHTTPRequestsSimulator/post';
-import getSimulator from '../universalHTTPRequestsSimulator/get';
-import getEditor from '../universalHTTPRequestsEditor/get';
-import GlobalContext from '../Context/GlobalContext';
-import GenericWarning from '../components/GenericWarning';
-import ErrorBanner from '../components/Banners/ErrorBanner';
+import post from '../../../universalHTTPRequestsSimulator/post';
+import getSimulator from '../../../universalHTTPRequestsSimulator/get';
+import getEditor from '../../../universalHTTPRequestsEditor/get';
+import GlobalContext from '../../../Context/GlobalContext';
+import GenericWarning from '../../GenericWarning';
+import ErrorBanner from '../../Banners/ErrorBanner';
 
 const TextTypography = withStyles({
   root: {
@@ -54,7 +54,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -191,18 +191,13 @@ export default function Stakeholders({
 }) {
   const classes = cardStyles();
   const [stakeholders, setStakeholders] = useState([]);
-  // eslint-disable-next-line
   const [contextObj, setContextObj] = useContext(GlobalContext);
-  // eslint-disable-next-line
-  const [conversationLimit, setConversationLimit] = useState(
-    contextObj.numConversations,
-  );
-
+  const conversationLimit = contextObj.numConversations;
   const [modalOpenToggles, setModalOpenToggles] = useState({});
   const [showStakeholders, setShowStakeholders] = useState(true);
   const [currentStakeholder, setCurrentStakeholder] = useState({});
   const [numStakeholderTalkedTo, setNumStakeholderTalkedTo] = useState(0);
-  const [hasTalkedWithStakeholders, setHasTalkedWithStakeholders] = useState(false);
+  const [hasTalkedWithStakeholders, setHasTalkedWithStakeholders] = useState(contextObj.pages[contextObj.activeIndex].completed);
   const createdCardStyles = cardStyles();
 
   const [errorBannerMessage, setErrorBannerMessage] = useState('');
@@ -228,7 +223,6 @@ export default function Stakeholders({
   });
   const getData = () => {
     function onSuccess(response) {
-      // setConversationLimit(...)
       const stakeholders = response.data.map((obj) => ({
         id: obj.STAKEHOLDER,
         name: obj.NAME,
@@ -244,12 +238,17 @@ export default function Stakeholders({
       setErrorBannerMessage('Failed to get stakeholder data! Please refresh the page.');
       setErrorBannerFade(true);
     }
-    setFetchConversationsHad({
-      data: null,
-      loading: true,
-      error: null,
-    });
-    getEditor(setFetchData, endpointStakeholdersGET, onFailure, onSuccess);
+    if (contextObj.stakeholderPage) {
+      setNumStakeholderTalkedTo(contextObj.stakeholderPage.numStakeholderTalkedTo);
+      setStakeholders(contextObj.stakeholderPage.stakeholders);
+    } else {
+      setFetchConversationsHad({
+        data: null,
+        loading: true,
+        error: null,
+      });
+      getEditor(setFetchData, endpointStakeholdersGET, onFailure, onSuccess);
+    }
   };
   useEffect(getData, []);
 
@@ -265,11 +264,14 @@ export default function Stakeholders({
         stakeholders.filter((stakeholder) => stakeholder.id === selectedStakeholder.STAKEHOLDER_ID)[0].selected = true;
       });
       setNumStakeholderTalkedTo(stakeholdersSelected.length);
-      // TODO check with session time rather than stakeholdersSelected
-      if (stakeholdersSelected.length > 0) {
-        setHasTalkedWithStakeholders(true);
-      }
       setStakeholders(stakeholders);
+      setContextObj((prev) => ({
+        ...prev,
+        stakeholderPage: {
+          stakeholders,
+          numStakeholderTalkedTo: stakeholdersSelected.length,
+        },
+      }));
     }
 
     function onFailure(e) {
@@ -313,6 +315,13 @@ export default function Stakeholders({
         setStakeholders(stakeholdersCopy);
         setShowStakeholders(false);
         toggleModal(id, false);
+        setContextObj((prev) => ({
+          ...prev,
+          stakeholderPage: {
+            stakeholders: stakeholdersCopy,
+            numStakeholderTalkedTo: numStakeholderTalkedTo + 1,
+          },
+        }));
       }
 
       function onFailure(e) {
@@ -410,7 +419,7 @@ export default function Stakeholders({
               borderRadius: '30px',
             },
           }}
-          open={modalOpenToggles[id]}
+          open={modalOpenToggles[id] ? modalOpenToggles[id] : false}
           onClose={() => toggleModal(id, false)}
           maxWidth="sm"
           fullWidth
@@ -438,7 +447,6 @@ export default function Stakeholders({
               <Avatar
                 style={{ height: '150px', width: '150px' }}
                 alt="Stakeholder Photo"
-                size
                 src={photo}
               />
             </div>
@@ -501,8 +509,8 @@ export default function Stakeholders({
       return (
         <div style={{ minWidth: '100%' }}>
           <Grid container spacing={3} justify="center">
-            {items.map((item) => (
-              <Grid item key={item.stakeholder_id} style={{ minWidth: '100%' }}>
+            {items.map((item, index) => (
+              <Grid item key={index} style={{ minWidth: '100%' }}>
                 {item}
               </Grid>
             ))}
@@ -524,8 +532,8 @@ export default function Stakeholders({
     return (
       <div style={{ minWidth: '100%' }}>
         <Grid container spacing={3} justify="center">
-          {items.map((item) => (
-            <Grid item style={{ minWidth: '100%' }}>{item}</Grid>
+          {items.map((item, index) => (
+            <Grid item key={index} style={{ minWidth: '100%' }}>{item}</Grid>
           ))}
         </Grid>
       </div>
@@ -540,11 +548,15 @@ export default function Stakeholders({
   const Buttons = (
     <Grid container direction="row" justify="space-between">
       <GenericWarning
-        func={() => getNextPage(
-          nextPageEndpoint,
-          contextObj.activeIndex,
-          contextObj.pages,
-        )}
+        func={() => {
+          setHasTalkedWithStakeholders(true);
+          getNextPage(
+            nextPageEndpoint,
+            contextObj.activeIndex,
+            contextObj.pages,
+            contextObj.sessionID,
+          );
+        }}
         setOpen={setOpenWarning}
         open={openWarning}
         title="Warning"
@@ -579,11 +591,15 @@ export default function Stakeholders({
           color="primary"
           onClick={
             numStakeholderTalkedTo >= conversationLimit || hasTalkedWithStakeholders
-              ? () => getNextPage(
-                nextPageEndpoint,
-                contextObj.activeIndex,
-                contextObj.pages,
-              )
+              ? () => {
+                setHasTalkedWithStakeholders(true);
+                getNextPage(
+                  nextPageEndpoint,
+                  contextObj.activeIndex,
+                  contextObj.pages,
+                  contextObj.sessionID,
+                );
+              }
               : handleOpenWarning
           }
         >
@@ -633,7 +649,7 @@ export default function Stakeholders({
               </TextTypography>
             </Box>
           </Grid>
-          <Grid spacing={2}>
+          <Grid>
             <Grid item lg={12} md={12} sm={12}>
               <Box m="1rem" align="center">
                 <TextTypography>
@@ -676,7 +692,7 @@ export default function Stakeholders({
                 {introText}
               </TextTypography>
             </Grid>
-            <Grid direction="column">
+            <Grid>
               <StyledTabs
                 value={value}
                 variant="fullWidth"

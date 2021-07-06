@@ -13,14 +13,13 @@ import ErrorIcon from '@material-ui/icons/Error';
 import InnerHTML from 'dangerously-set-html-content';
 import TextField from '@material-ui/core/TextField';
 // eslint-disable-next-line
-import { STUDENT_ID } from '../constants/config';
-import GlobalContext from '../Context/GlobalContext';
-import get from '../universalHTTPRequestsSimulator/get';
-import post from '../universalHTTPRequestsSimulator/post';
-import LoadingSpinner from '../components/LoadingSpinner';
-import SuccessBanner from '../components/Banners/SuccessBanner';
-import ErrorBanner from '../components/Banners/ErrorBanner';
-import GenericWarning from '../components/GenericWarning';
+import GlobalContext from '../../Context/GlobalContext';
+import get from '../../universalHTTPRequestsSimulator/get';
+import post from '../../universalHTTPRequestsSimulator/post';
+import LoadingSpinner from '../LoadingSpinner';
+import SuccessBanner from '../Banners/SuccessBanner';
+import ErrorBanner from '../Banners/ErrorBanner';
+import GenericWarning from '../GenericWarning';
 
 const TextTypography = withStyles({
   root: {
@@ -83,7 +82,7 @@ Reflection.propTypes = {
   questions: PropTypes.array,
   getNextPage: PropTypes.func.isRequired,
   getPrevPage: PropTypes.func.isRequired,
-  nextPageEndpoint: PropTypes.string.isRequired,
+  nextPageEndpoint: PropTypes.string,
   prevPageEndpoint: PropTypes.string.isRequired,
   scenarioID: PropTypes.number.isRequired,
   pageID: PropTypes.number.isRequired,
@@ -100,7 +99,6 @@ export default function Reflection({
   pageID,
 }) {
   const classes = useStyles();
-  // eslint-disable-next-line
   const [contextObj, setContextObj] = useContext(GlobalContext);
 
   const [savedAnswers, setSavedAnswers] = useState(false);
@@ -123,21 +121,43 @@ export default function Reflection({
       // Player has already responded
       if (response.data.length !== 0) {
         setSavedAnswers(true);
-        setReflection(response.data.map((obj, index) => ({
+        const reflectionQuestionsForPage = response.data.map((obj, index) => ({
           ...obj, REFLECTION_QUESTION: questions.filter((o) => o.RQ_ID = obj.RQ_ID)[0].REFLECTION_QUESTION,
-        })).sort((a, b) => a.RQ_ID - b.RQ_ID));
+        })).sort((a, b) => a.RQ_ID - b.RQ_ID);
+        setReflection(reflectionQuestionsForPage);
+        setContextObj((prev) => ({
+          ...prev,
+          [pageID]: {
+            savedAnswers: true,
+            reflection: reflectionQuestionsForPage,
+          },
+        }));
       } else {
         setSavedAnswers(false);
-        setReflection(questions.map((obj) => ({
+        const reflectionQuestionsForPage = questions.map((obj) => ({
           PAGE_ID: obj.PAGE_id, RQ_ID: obj.RQ_ID, SESSION_ID: contextObj.sessionID, REFLECTIONS: '', REFLECTION_QUESTION: obj.REFLECTION_QUESTION,
-        })).sort((a, b) => a.RQ_ID - b.RQ_ID));
+        })).sort((a, b) => a.RQ_ID - b.RQ_ID);
+        setReflection(reflectionQuestionsForPage);
+        setContextObj((prev) => ({
+          ...prev,
+          [pageID]: {
+            savedAnswers: false,
+            reflection: reflectionQuestionsForPage,
+          },
+        }));
       }
     }
     function onFailure(e) {
       setErrorBannerFade(true);
       setErrorBannerMessage('Failed to get reflection question page! Please try again.');
     }
-    get(setReflectionData, endpointGET, onFailure, onSuccess);
+    // Already visited page
+    if (contextObj[pageID]) {
+      setReflection(contextObj[pageID].reflection);
+      setSavedAnswers(contextObj[pageID].savedAnswers);
+    } else {
+      get(setReflectionData, endpointGET, onFailure, onSuccess);
+    }
   };
 
   useEffect(getReflectionData, []);
@@ -155,6 +175,13 @@ export default function Reflection({
       setSavedAnswers(true);
       setSuccessBannerFade(true);
       setSuccessBannerMessage('Successfully saved answers');
+      setContextObj((prev) => ({
+        ...prev,
+        [pageID]: {
+          savedAnswers: true,
+          reflection,
+        },
+      }));
     }
 
     function onFailure() {
@@ -257,6 +284,7 @@ export default function Reflection({
             nextPageEndpoint,
             contextObj.activeIndex,
             contextObj.pages,
+            contextObj.sessionID,
           )}
         >
           Next

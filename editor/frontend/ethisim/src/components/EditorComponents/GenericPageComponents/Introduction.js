@@ -8,12 +8,13 @@ import universalDelete from '../../../universalHTTPRequests/delete';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
 import LoadingSpinner from '../../LoadingSpinner';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 import { IntroductionPageHelpInfo } from './IntroductionPageHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
 import HTMLPreview from '../HTMLPreview';
 import Toggle from '../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
 import checkEditorType from '../GeneralPageComponents/checkEditorType';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -89,6 +90,7 @@ export default function Introduction(props) {
   const [errorTitle, setErrorTitle] = useState(false);
   const [errorTitleText, setErrorTitleText] = useState(false);
   const [errorBody, setErrorBody] = useState(false);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   const postReqBody = {
     PAGE_TYPE: page_type,
@@ -218,7 +220,7 @@ export default function Introduction(props) {
         description={IntroductionPageHelpInfo}
         title="Introduction Page Help"
       />
-      {globalUnsaved ? (
+      {globalUnsaved && accessLevel !== 3 ? (
         <Typography variant="h6" align="center" color="error">
           Unsaved
         </Typography>
@@ -243,6 +245,7 @@ export default function Introduction(props) {
         variant="contained"
         color="primary"
         onClick={savePage}
+        disabled={accessLevel === 3}
       >
         Save
       </Button>

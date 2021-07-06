@@ -15,8 +15,16 @@ export default function universalPost(
     loading: true,
     error: null,
   });
+
+  let config = {
+    headers: {
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
+    }
+  }
+
   axios
-    .post(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .post(BACK_URL_EDITOR + endpoint, requestBody, config, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

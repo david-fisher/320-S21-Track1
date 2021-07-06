@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
-import GlobalContext from '../Context/GlobalContext';
+import GlobalContext from '../../Context/GlobalContext';
 
 const TextTypography = withStyles({
   root: {
@@ -34,7 +34,7 @@ GenericPage.propTypes = {
   isIntro: PropTypes.bool.isRequired,
   pageTitle: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  getNextPage: PropTypes.func.isRequired,
+  getNextPage: PropTypes.func,
   getPrevPage: PropTypes.func,
   nextPageEndpoint: PropTypes.string.isRequired,
   prevPageEndpoint: PropTypes.string,
@@ -75,6 +75,7 @@ export default function GenericPage({
             nextPageEndpoint,
             contextObj.activeIndex,
             contextObj.pages,
+            contextObj.sessionID,
           )}
         >
           Next

@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import GenericUnsavedWarning from '../WarningDialogs/GenericUnsavedWarning';
 import GenericDeleteWarning from '../WarningDialogs/GenericDeleteWarning';
-import GlobalUnsavedContext from '../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   pageButton: {
@@ -63,6 +64,7 @@ export default function NavSideBarNode(props) {
   } = props;
 
   const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
   // used for delete warning dialog
   const [openDeleteWarningDialog, setOpenDeleteWarningDialog] = useState(false);
 
@@ -81,7 +83,7 @@ export default function NavSideBarNode(props) {
       className={classes.pageButtonSelected}
       variant="contained"
       onClick={
-                globalUnsaved && !curPage
+                globalUnsaved && !curPage && accessLevel !== 3
                   ? handleOpenUnsavedWarningDialog
                   : handleDisplayComponent
             }
@@ -95,7 +97,7 @@ export default function NavSideBarNode(props) {
       variant="contained"
       color="primary"
       onClick={
-                globalUnsaved && !curPage
+                globalUnsaved && !curPage && accessLevel !== 3
                   ? handleOpenUnsavedWarningDialog
                   : handleDisplayComponent
             }
@@ -130,18 +132,24 @@ export default function NavSideBarNode(props) {
           />
         </Grid>
         <Grid item xs={2} className={classes.deleteButtonContainer}>
-          <Button
-            className={classes.deleteButton}
-            color="primary"
-            onClick={handleOpenDeleteWarningDialog}
-          >
-            <DeleteForeverIcon />
-          </Button>
-          <GenericDeleteWarning
-            remove={() => deleteByID(id)}
-            open={openDeleteWarningDialog}
-            setOpen={setOpenDeleteWarningDialog}
-          />
+          {(accessLevel === 1)
+            ? (
+              <>
+                <Button
+                  className={classes.deleteButton}
+                  color="primary"
+                  onClick={handleOpenDeleteWarningDialog}
+                >
+                  <DeleteForeverIcon />
+                </Button>
+                <GenericDeleteWarning
+                  remove={() => deleteByID(id)}
+                  open={openDeleteWarningDialog}
+                  setOpen={setOpenDeleteWarningDialog}
+                />
+              </>
+            )
+            : null}
         </Grid>
       </Grid>
     );

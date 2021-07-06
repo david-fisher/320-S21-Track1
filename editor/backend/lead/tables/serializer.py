@@ -8,6 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
         level = 1
 
+
 class user_accessSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_access
@@ -154,3 +155,53 @@ class SuperScenariosSerialializer(serializers.ModelSerializer):
         model = scenarios
         fields = ("pages", "user_id", "SCENARIO", "NAME", 
         "IS_FINISHED", "PUBLIC", "DATE_CREATED", "stakeholders", "issues", "scenarios_for")
+
+class course_invitationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = course_invitations
+        fields = '__all__'
+
+class takesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = takes
+        fields = '__all__'
+
+class course_assignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = course_assignment
+        fields = '__all__'
+
+class sessionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = sessions
+        fields = '__all__'
+
+class session_timesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = session_times
+        fields = '__all__'
+
+class reflections_takenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = reflections_taken
+        fields = ('REFLECTIONS', 'RQ_ID', 'SESSION_ID', 'PAGE_ID')
+
+class action_page_responsesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = action_page_responses
+        fields = ('APC_ID', 'SESSION_ID', 'PAGE_ID', 'DATE_TAKEN')
+
+class conversations_hadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = conversations_had
+        fields = ('SESSION_ID', 'STAKEHOLDER_ID', 'DATE_TAKEN')
+
+class EditorWhitelistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EditorWhitelist
+        fields = ('netId', "email")
+
+class APITokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = APITokens
+        fields = '__all__'

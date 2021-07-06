@@ -21,7 +21,8 @@ import GenericDeleteWarning from '../../../WarningDialogs/GenericDeleteWarning';
 import GenericUnsavedWarning from '../../../WarningDialogs/GenericUnsavedWarning';
 import get from '../../../../universalHTTPRequests/get';
 import put from '../../../../universalHTTPRequests/put';
-import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../../../../Context/ScenarioAccessLevelContext';
 import HTMLPreview from '../../HTMLPreview';
 import StakeholderPreview from '../StakeholderPreview';
 import Toggle from '../../GeneralPageComponents/Toggle_TextEditor_CodeEditor';
@@ -163,6 +164,7 @@ export default function Stakeholder({
   });
   const [unsavedMainConvo, setUnsavedMainConvo] = useState(false);
   const [unsavedBio, setUnsavedBio] = useState(false);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
   const [unsavedQuestions, setUnsavedQuestions] = useState(false);
   const [unsavedPointSelection, setUnsavedPointSelection] = useState(false);
   const [generalUnsaved, setGeneralUnsaved] = useState(false);
@@ -512,7 +514,7 @@ export default function Stakeholder({
           fade={errorBannerFade}
         />
       </div>
-      {generalUnsaved ? (
+      {generalUnsaved && accessLevel !== 3 ? (
         <Typography
           style={{ marginLeft: '30px' }}
           variant="h6"
@@ -637,6 +639,7 @@ export default function Stakeholder({
             color="primary"
             onClick={saveStakeholders}
             className={classes.button}
+            disabled={accessLevel === 3}
           >
             Save
           </Button>
@@ -648,6 +651,7 @@ export default function Stakeholder({
             color="primary"
             onClick={handleOpenDeleteWarningDialog}
             className={classes.button}
+            disabled={accessLevel !== 1}
           >
             Delete
           </Button>
@@ -725,6 +729,7 @@ export default function Stakeholder({
                 onClick={saveStakeholders}
                 className={classes.button}
                 style={{ marginRight: '20px' }}
+                disabled={accessLevel === 3}
               >
                 Save
               </Button>
@@ -747,7 +752,7 @@ export default function Stakeholder({
             <div style={{ marginLeft: '20px', marginTop: '-20px' }}>
               <HTMLPreview dialogTitle="HTML Preview" body={stakeholderBiography} />
             </div>
-            {unsavedBio ? (
+            {unsavedBio && accessLevel !== 3 ? (
               <Typography
                 style={{ marginLeft: '3%', marginTop: '0px' }}
                 variant="h6"
@@ -800,6 +805,7 @@ export default function Stakeholder({
                 onClick={saveStakeholders}
                 className={classes.button}
                 style={{ marginRight: '50px' }}
+                disabled={accessLevel === 3}
               >
                 Save
               </Button>
@@ -822,7 +828,7 @@ export default function Stakeholder({
             <div style={{ marginLeft: '35px', marginTop: '-20px' }}>
               <HTMLPreview dialogTitle="HTML Preview" body={stakeholderConversation} />
             </div>
-            {unsavedMainConvo ? (
+            {unsavedMainConvo && accessLevel !== 3 ? (
               <Typography
                 style={{ marginLeft: '40px', marginTop: '0px' }}
                 variant="h6"

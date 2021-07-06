@@ -33,9 +33,10 @@ import put from '../../../universalHTTPRequests/put';
 import LoadingSpinner from '../../LoadingSpinner';
 import SuccessBanner from '../../Banners/SuccessBanner';
 import ErrorBanner from '../../Banners/ErrorBanner';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
 import { FlowDiagramHelpInfo } from './FlowDiagramHelpInfo';
 import GenericHelpButton from '../../HelpButton/GenericHelpButton';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   errorContainer: {
@@ -109,6 +110,7 @@ export default function FlowDiagram({ scenario_ID }) {
   const [elements, setElements] = useState([]);
   const [errorText, setErrorText] = useState('');
   const [unsaved, setUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   function positionElements(elements) {
     const introductionElement = elements.filter(
@@ -126,6 +128,9 @@ export default function FlowDiagram({ scenario_ID }) {
     const stakeholderConversationElement = elements.filter(
       (componentData) => componentData.PAGE_TYPE === 'S',
     );
+    const feedbackElement = elements.filter(
+      (componentData) => componentData.PAGE_TYPE === 'F',
+    );
 
     const edges = elements.filter((componentData) => isEdge(componentData));
 
@@ -134,6 +139,7 @@ export default function FlowDiagram({ scenario_ID }) {
       reflectionElements,
       actionElements,
       stakeholderConversationElement,
+      feedbackElement,
       edges,
     );
 
@@ -423,8 +429,6 @@ export default function FlowDiagram({ scenario_ID }) {
 
     return (
       <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
         maxWidth="xs"
         aria-labelledby="confirmation-dialog-title"
         open={open}
@@ -483,7 +487,7 @@ export default function FlowDiagram({ scenario_ID }) {
           title="Flow Diagram Help"
         />
       </div>
-      {unsaved ? (
+      {unsaved && accessLevel !== 3 ? (
         <Typography variant="h6" align="center" color="error">
           Unsaved
         </Typography>
@@ -526,6 +530,7 @@ export default function FlowDiagram({ scenario_ID }) {
             variant="contained"
             color="primary"
             onClick={save}
+            disabled={accessLevel === 3}
           >
             <Typography variant="h6" display="block" noWrap>
               Save Changes

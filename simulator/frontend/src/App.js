@@ -11,10 +11,12 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
-  BrowserRouter as Router, Switch, Route, Link,
+  HashRouter as Router, Switch, Route, Link, Redirect,
 } from 'react-router-dom';
 import Home from './pages/home';
 import SimulationWindow from './pages/simulationWindow';
+import LoginSimulator from './pages/loginSimulator';
+import { DOMAIN } from './constants/config';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     color: '#FFF',
+    textTransform: 'unset',
+    textDecoration: 'none',
+  },
+  logout: {
+    textTransform: 'unset',
   },
   link: {
     '&:hover': {
@@ -69,18 +76,23 @@ export default function Nav() {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" className={classes.title}>
-                  <Link className={classes.link} to="/">
+                <div className={classes.title}>
+                  <Link className={classes.link} to="/" style={{ textDecoration: 'none' }}>
                     <Button className={classes.title} color="inherit">
-                      Home
+                      <Typography variant="h6">
+                        Home
+                      </Typography>
                     </Button>
                   </Link>
-                </Typography>
+                </div>
                 <Button
-                  onClick={() => (window.location.href = '/Shibboleth.sso/Logout?return=/')}
+                  className={classes.logout}
+                  onClick={() => (window.location.href = `${DOMAIN}/Shibboleth.sso/Logout?return=/`)}
                   color="inherit"
                 >
-                  LogOut
+                  <Typography variant="h6" className={classes.title}>
+                    Logout
+                  </Typography>
                 </Button>
               </Toolbar>
             </AppBar>
@@ -88,13 +100,16 @@ export default function Nav() {
             {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
             <Switch>
-              <Route path="/" exact>
-                <Home />
+              <Route exact path="/">
+                <Redirect to="/dashboard" />
               </Route>
+              <Route path="/loginSimulator" component={LoginSimulator} />
+              <Route path="/dashboard" render={(props) => <Home {...props} />} />
               <Route
                 path="/simulation/:id"
                 render={(props) => <SimulationWindow {...props} />}
               />
+              <Redirect from="*" to="/loginSimulator" />
             </Switch>
           </ThemeProvider>
         </div>

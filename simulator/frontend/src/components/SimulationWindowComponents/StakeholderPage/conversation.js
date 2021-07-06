@@ -16,7 +16,7 @@ import {
   Checkbox,
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
-import get from '../universalHTTPRequestsEditor/get';
+import get from '../../../universalHTTPRequestsEditor/get';
 // import post from '../universalHTTPRequestsEditor/post';
 
 const TextTypography = withStyles({

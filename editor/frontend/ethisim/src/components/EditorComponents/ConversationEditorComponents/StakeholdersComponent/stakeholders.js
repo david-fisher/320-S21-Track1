@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +13,7 @@ import post from '../../../../universalHTTPRequests/post';
 import { ConversationEditorHelpInfo } from '../ConversationEditorHelpInfo';
 import GenericHelpButton from '../../../HelpButton/GenericHelpButton';
 import { getCurrentTimeInt, checkTime } from '../../../CheckTime';
+import ScenarioAccessLevelContext from '../../../../Context/ScenarioAccessLevelContext';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -73,6 +74,7 @@ export default function StakeholderFields({ scenario, version }) {
     loading: false,
     error: null,
   });
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   // eslint-disable-next-line
   const setStakeholders = (arr) => {
@@ -230,6 +232,7 @@ export default function StakeholderFields({ scenario, version }) {
         onClick={addStakeholder}
         variant="contained"
         color="primary"
+        disabled={accessLevel !== 1}
       >
         Add Stakeholder
       </Button>

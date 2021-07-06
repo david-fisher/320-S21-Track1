@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import './questions.css';
 import PropTypes from 'prop-types';
-import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../../Context/GlobalUnsavedContext';
 import QuestionField from './question';
+import ScenarioAccessLevelContext from '../../../../Context/ScenarioAccessLevelContext';
 
 QuestionFields.propTypes = {
   questions: PropTypes.any,
@@ -17,7 +18,9 @@ export default function QuestionFields({
   setReqBodyNew,
 }) {
   // eslint-disable-next-line
-    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
+
   // When we select new issue button, we add new issue object into array.
   // We set a temporary unique ID.
   function setNewIssueID() {
@@ -61,6 +64,7 @@ export default function QuestionFields({
         variant="contained"
         color="primary"
         style={{ textTransform: 'unset' }}
+        disabled={accessLevel !== 1}
       >
         Add Question
       </Button>

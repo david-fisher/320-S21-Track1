@@ -4,7 +4,8 @@ import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import GenericDeleteWarning from '../../WarningDialogs/GenericDeleteWarning';
-import GlobalUnsavedContext from '../../Context/GlobalUnsavedContext';
+import GlobalUnsavedContext from '../../../Context/GlobalUnsavedContext';
+import ScenarioAccessLevelContext from '../../../Context/ScenarioAccessLevelContext';
 
 QuestionField.propTypes = {
   removeChoice: PropTypes.any,
@@ -25,7 +26,8 @@ export default function QuestionField({
 }) {
   const [choiceValue, setQuestionValue] = useState(choice);
   // eslint-disable-next-line
-    const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const [globalUnsaved, setGlobalUnsaved] = useContext(GlobalUnsavedContext);
+  const accessLevel = useContext(ScenarioAccessLevelContext);
 
   const onChangeChoice = (event) => {
     setGlobalUnsaved(true);
@@ -66,6 +68,7 @@ export default function QuestionField({
               color="primary"
               onClick={handleClickOpen}
               style={{ textTransform: 'unset' }}
+              disabled={accessLevel !== 1}
             >
               Delete
             </Button>

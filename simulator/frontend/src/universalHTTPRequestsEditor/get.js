@@ -14,8 +14,16 @@ export default function universalFetch(
     loading: true,
     error: null,
   });
+
+  let config = {
+    headers: {
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
+    }
+  }
+
   axios
-    .get(BACK_URL_EDITOR + endpoint, { withCredentials: true })
+    .get(BACK_URL_EDITOR + endpoint, config, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

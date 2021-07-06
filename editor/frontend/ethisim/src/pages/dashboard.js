@@ -19,6 +19,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ScenarioCard from '../components/DashboardComponents/ScenarioCard';
 import AddNewScenarioCard from '../components/DashboardComponents/AddNewScenarioCard';
 import Copyright from '../components/Copyright';
@@ -26,7 +28,7 @@ import get from '../universalHTTPRequests/get';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import ErrorBanner from '../components/Banners/ErrorBanner';
-import Tags from '../components/DashboardComponents/DropDown';
+import CoursesDropDown from '../components/DashboardComponents/DropDown';
 import post from '../universalHTTPRequests/post';
 import deleteReq from '../universalHTTPRequests/delete';
 import DashboardNavBar from '../components/DashboardComponents/DashboardNavbar';
@@ -71,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO when Shibboleth gets implemented
-const endpointGet = '/dashboard?professor_id=phaas';
+const endpointGet = '/dashboard?professor_id=';
 const endpointGetCourses = '/api/courses/';
 const endpointPost = '/dashboard';
 const endpointDelete = '/api/scenarios/';
@@ -122,10 +124,15 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-// Passing props with React Router in Material UI: https://stackoverflow.com/questions/30115324/pass-props-in-link-react-router
-export default function Dashboard() {
-  const classes = useStyles();
+Dashboard.propTypes = {
+  location: PropTypes.any,
+};
 
+// Passing props with React Router in Material UI: https://stackoverflow.com/questions/30115324/pass-props-in-link-react-router
+export default function Dashboard(props) {
+  const classes = useStyles();
+  const history = useHistory();
+  const userID = props.location.data ? props.location.data.userData.userId : history.push('/loginEditor');
   // post on success, concatenating a scenario card to array
   // delete on success, concatenating a scenario card to array
 
@@ -172,7 +179,7 @@ export default function Dashboard() {
     IS_FINISHED: false,
     PUBLIC: false,
     NUM_CONVERSATIONS: 0,
-    PROFESSOR: 'phaas', // TODO change
+    PROFESSOR: userID, // TODO change
     COURSES: [],
   });
 
@@ -249,7 +256,7 @@ export default function Dashboard() {
         IS_FINISHED: false,
         PUBLIC: false,
         NUM_CONVERSATIONS: 0,
-        PROFESSOR: 'phaas',
+        PROFESSOR: userID,
         COURSES: [],
       });
       // Smooth loading animation, loading animation will not reset during POST and GET Request
@@ -258,6 +265,7 @@ export default function Dashboard() {
         loading: true,
         error: null,
       });
+      console.log(NewScenario);
       post(
         setPost,
         endpointPost,
@@ -276,7 +284,7 @@ export default function Dashboard() {
       IS_FINISHED: false,
       PUBLIC: false,
       NUM_CONVERSATIONS: 0,
-      PROFESSOR: 'phaas',
+      PROFESSOR: userID,
       COURSES: [],
     });
     setErrorName(false);
@@ -364,11 +372,11 @@ export default function Dashboard() {
   // Get Scenario
   const getData = () => {
     function onSuccess(response) {
-      let finishedScenarios = response.data.filter(
+      let finishedScenarios = response.data[0].SCENARIO.filter(
         (data) => data.IS_FINISHED,
       );
-      let unfinishedScenarios = response.data.filter(
-        (data) => !data.IS_FINISHED,
+      let unfinishedScenarios = response.data[0].SCENARIO.filter(
+        (data) => !data.IS_FINISHED, 
       );
       finishedScenarios = finishedScenarios.map((data) => (
         <ScenarioCard
@@ -380,6 +388,7 @@ export default function Dashboard() {
           isFinished={data.IS_FINISHED}
           courses={data.COURSES}
           onDelete={deleteScenario}
+          accessLevel={data['ACCESS LEVEL']}
         />
       ));
       unfinishedScenarios = unfinishedScenarios.map((data) => (
@@ -392,17 +401,21 @@ export default function Dashboard() {
           finished={data.IS_FINISHED}
           courses={data.COURSES}
           onDelete={deleteScenario}
+          accessLevel={data['ACCESS LEVEL']}
         />
       ));
       setFinishedScenarios(finishedScenarios);
       setUnfinishedScenarios(unfinishedScenarios);
     }
 
-    function onFailure() {
+    function onFailure(e) {
+      console.log(e);
       setErrorBannerMessage('Failed to get scenarios! Please try again.');
       setErrorBannerFade(true);
     }
-    get(setFetchScenariosResponse, endpointGet, onFailure, onSuccess);
+    if (userID) {
+      get(setFetchScenariosResponse, endpointGet + userID, onFailure, onSuccess);
+    }
   };
 
   // Get Courses
@@ -551,7 +564,7 @@ export default function Dashboard() {
             </form>
 
             <form style={{ marginBottom: 10 }}>
-              <Tags
+              <CoursesDropDown
                 courses={menuCourseItems}
                 update={updateSelectedClasses}
               />

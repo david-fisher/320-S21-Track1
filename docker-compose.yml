@@ -8,10 +8,9 @@ services:
     volumes:
       - ./editor/frontend/ethisim:/app
       - /app/node_modules
-    depends_on:
-      - backend-editor
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_APIKEY=${REACT_APP_APIKEY}
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     container_name: frontend-editor
@@ -26,10 +25,9 @@ services:
     volumes:
       - ./simulator/frontend:/app
       - /app/node_modules
-    depends_on:
-      - backend-simulator
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_APIKEY=${REACT_APP_APIKEY}
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     container_name: frontend-simulator
@@ -52,38 +50,39 @@ services:
     networks:
       - '320'
   
-  backend-simulator:
-    build:
-      context: simulator/steminist_simulator_backend
-    ports:
-      - 7001:8000
-    depends_on:
-      - database
-    environment:
-      - DB_HOST=${POSTGRESHOST}
-      - DATABASE_USER=${POSTGRESUSERNAME}
-      - DATABASE_PASSWORD=${POSTGRESPASSWORD}
-      - DATABASE_NAME=${POSTGRESDB}
-      - DB_PORT=5432
-    networks:
-      - '320'
-    container_name: backend-simulator
+  # backend-simulator:
+  #   build:
+  #     context: simulator/steminist_simulator_backend
+  #   ports:
+  #     - 7001:8000
+  #   depends_on:
+  #     - database
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DATABASE_USER=${DATABASE_USER}
+  #     - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+  #     - DATABASE_NAME=${DATABASE_NAME}
+  #     - DB_PORT=5432
+  #   networks:
+  #     - '320'
+  #   container_name: backend-simulator
 
-  backend-editor:
-    build:
-      context: editor/backend
-    ports:
-      - 8001:8000
-    depends_on:
-      - database
-    environment:
-      - POSTGRESHOST=${POSTGRESHOST}
-      - POSTGRESUSERNAME=${POSTGRESUSERNAME}
-      - POSTGRESPASSWORD=${POSTGRESPASSWORD}
-      - POSTGRESDB=${POSTGRESDB}
-    networks:
-      - '320'
-    container_name: backend-editor
+  # backend-editor:
+  #   build:
+  #     context: editor/backend
+  #   ports:
+  #     - 8001:8000
+  #   depends_on:
+  #     - database
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DATABASE_USER=${DATABASE_USER}
+  #     - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+  #     - DATABASE_NAME=${DATABASE_NAME}
+  #     - DB_PORT=5432
+  #   networks:
+  #     - '320'
+  #   container_name: backend-editor
 
   shibd:
     build:
@@ -96,27 +95,36 @@ services:
       - "3001:3001"
       - "443:443"
       - "80:80"
+    volumes:
+      - ./simulator/backend/tables:/var/www/django/simulator_backend/tables
     networks:
       - '320'
+
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DB_PORT=5432
     container_name: shibd
   
-  database:
-    image: postgres
-    container_name: postgres-db
-    environment:
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=postgres"
-      - "POSTGRES_DB=db"
-    ports:
-      - 5432:5432
-    expose:
-      - '5432'
-    restart: always
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - '320'
+  # database:
+  #   image: postgres
+  #   container_name: postgres-db
+  #   environment:
+  #     - "POSTGRES_USER=postgres"
+  #     - "POSTGRES_PASSWORD=postgres"
+  #     - "POSTGRES_DB=db"
+  #   ports:
+  #     - 5432:5432
+  #   expose:
+  #     - '5432'
+  #   restart: always
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #     - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  #   networks:
+  #     - '320'
 
 volumes:
   postgres-data:

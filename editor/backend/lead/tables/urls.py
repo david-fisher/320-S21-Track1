@@ -40,7 +40,11 @@ urlpatterns = [
     path('issue', IssueCoverage.as_view()),
     path('coverages', coverages_page.as_view()),
     path('page', pages_page.as_view()),
+    path('registerUser', register_user_api.as_view()),
     path('scenarios_for_user', scenarios_forapi.as_view()),
+    path('share_functionality', share_functionality.as_view()),
+    path('addCourse', coursesAPI.as_view()),
+    path('populateCourseInvitations', ScriptPopulateCoursesInvitationsTable.as_view())
 ] 
 
 urlpatterns += router.urls

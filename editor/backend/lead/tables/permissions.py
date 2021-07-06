@@ -12,11 +12,11 @@ class IsFaculty(permissions.BasePermission):
         resultData = {
             "userId": request.META['uid'],
             "name": request.META['displayName'],
-            "affliation": request.META['eduPersonPrimaryAffiliation'],
+            "affiliation": request.META['eduPersonPrimaryAffiliation'],
             "email": request.META['mail']
         }
         print(resultData)
-        return resultData.get("affliation") == 'employee' or resultData.get("affliation") == 'faculty'
+        return resultData.get("affiliation") == 'employee' or resultData.get("affiliation") == 'faculty'
     
     """def has_object_permission(self, request, view, obj):
         Object level permissions.

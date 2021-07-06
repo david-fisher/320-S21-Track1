@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACK_URL_EDITOR } from '../constants/config';
+import { BACK_URL_EDITOR} from '../constants/config';
 
 // Universal delete request using axios
 export default function universalDelete(
@@ -14,8 +14,16 @@ export default function universalDelete(
     loading: true,
     error: null,
   });
+
+  let config = {
+    headers: {
+      // 'api-user': APIUSER,
+      // 'api-token': APIKEY
+    }
+  }
+
   axios
-    .delete(BACK_URL_EDITOR + endpoint, requestBody, { withCredentials: true })
+    .delete(BACK_URL_EDITOR + endpoint, requestBody, config, { withCredentials: true })
     .then((resp) => {
       setResponse({
         data: resp.data,

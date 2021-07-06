@@ -5,7 +5,6 @@ import {
   Typography, Grid, Card, CardContent, Button,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-// import ShareIcon from '@material-ui/icons/Share';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import PropTypes from 'prop-types';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -44,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.primary.light,
     border: 3,
+    textDecoration: 'none',
   },
   buttonText: {
     width: '100%',
@@ -103,6 +103,7 @@ ScenarioCard.propTypes = {
   dateCreated: PropTypes.string,
   courses: PropTypes.any,
   onDelete: PropTypes.any,
+  accessLevel: PropTypes.number,
 };
 
 export default function ScenarioCard({
@@ -113,10 +114,12 @@ export default function ScenarioCard({
   dateCreated,
   courses,
   onDelete,
+  accessLevel,
 }) {
   const [open, setOpen] = React.useState(false);
   const [openDeletePopup, setOpenDeletePopup] = React.useState(false);
   const classes = useStyles();
+  const accessLevelMap = ['Admin', 'Edit-Only', 'Read-Only'];
 
   const handleClickOpenDeletePopup = () => {
     setOpenDeletePopup(true);
@@ -163,7 +166,7 @@ export default function ScenarioCard({
         <Button
           component={Link}
           to={{
-            pathname: `/editor/${scenarioID}`,
+            pathname: `/scenarioEditor/${scenarioID}`,
             data,
           }}
           className={classes.buttonText}
@@ -180,6 +183,7 @@ export default function ScenarioCard({
           variant="contained"
           color="primary"
           onClick={handleClickOpenDeletePopup}
+          disabled={accessLevel !== 1}
         >
           <DeleteForeverIcon />
           <Typography variant="subtitle1" noWrap>
@@ -208,7 +212,7 @@ export default function ScenarioCard({
         </Button>
       </Grid>
       <Grid className={classes.button} item xs={6}>
-        <ShareButton />
+        <ShareButton accessLevel={accessLevel} />
       </Grid>
 
       {dataButton}
@@ -231,6 +235,16 @@ export default function ScenarioCard({
             Date created:
             {' '}
             {dateCreated}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            color="textSecondary"
+            display="block"
+            noWrap
+          >
+            Access Level:
+            {' '}
+            {accessLevelMap[accessLevel - 1]}
           </Typography>
         </CardContent>
       </Card>

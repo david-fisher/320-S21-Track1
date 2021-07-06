@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models.deletion import CASCADE
+from django.db.models.fields.related import ForeignKey, OneToOneField
 # Create your models here.
 
 class scenarios(models.Model):
@@ -26,6 +28,7 @@ class pages(models.Model):
         ('R', 'REFLECTION'),
         ('S', 'STAKEHOLDER'),
         ('A', 'ACTION'),
+        ('F', 'FEEDBACK')
     )
     PAGE_TYPE = models.CharField(max_length = 2, choices = PAGE_CHOICES)
     PAGE_TITLE = models.CharField(max_length = 1000)
@@ -79,7 +82,7 @@ class conversations(models.Model):
 
 
 class courses(models.Model):
-    COURSE = models.IntegerField(default=None, primary_key = True)
+    COURSE = models.CharField(default=None, primary_key = True, max_length=10)
     NAME = models.CharField(max_length = 1000)
 
 
@@ -108,6 +111,7 @@ class user_access(models.Model):
     USER_ID = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access1", null=True)
     ACCESS_LEVEL = models.IntegerField()
     SCENARIO_ID = models.ForeignKey('scenarios', on_delete = models.CASCADE, related_name = "user_access1", null = True)
+    SHARED_BY = models.ForeignKey('Users', on_delete = models.CASCADE, related_name="user_access2", null=True, default = "phaas")
 
 
 class Issues(models.Model):
@@ -148,3 +152,72 @@ class Versions(models.Model):
 
     class Meta:
         db_table = 'versions'
+
+class course_invitations(models.Model):
+    COURSE_ID = models.ForeignKey(courses, on_delete=models.CASCADE)
+    ACCESS_KEY = models.CharField(max_length=6)
+
+class takes(models.Model):
+    class Meta:
+        unique_together = (('USER_ID'),('COURSE_ID'))
+    USER_ID = models.ForeignKey(Users, on_delete=models.CASCADE)
+    COURSE_ID = models.ForeignKey(courses, on_delete=models.CASCADE)
+
+
+class course_assignment(models.Model):
+    COURSE_ID = models.ForeignKey(courses, on_delete=models.CASCADE)
+    SCENARIO_ID = models.IntegerField()
+
+class sessions(models.Model):
+    SESSION_ID = models.AutoField(primary_key=True)
+    USER_ID = models.ForeignKey(Users, on_delete=models.CASCADE)
+    SCENARIO_ID = models.ForeignKey('scenarios', models.CASCADE, db_column='SCENARIO_ID')
+    DATE_STARTED = models.DateTimeField()
+    DATE_FINISHED = models.DateTimeField(null=True)
+    IS_FINISHED = models.BooleanField(default=False)
+    MOST_RECENT_ACCESS = models.DateTimeField()
+
+class session_times(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('PAGE_ID'))
+    SESSION_ID = models.ForeignKey(sessions, on_delete=models.CASCADE)
+    MOST_RECENT_ACCESS = models.DateTimeField(null=True)
+    PAGE_ID = models.ForeignKey('pages', on_delete=models.CASCADE)
+    START_TIME = models.DateTimeField()
+    END_TIME = models.DateTimeField(null=True)
+
+
+class reflections_taken(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('RQ_ID'))
+    REFLECTIONS = models.TextField()
+    RQ_ID = models.ForeignKey(reflection_question, on_delete=models.CASCADE)
+    SESSION_ID = models.ForeignKey(sessions, on_delete=models.CASCADE)
+    PAGE_ID = models.ForeignKey('pages', on_delete=models.CASCADE)
+    DATE_TAKEN = models.DateTimeField(auto_now_add=True)
+
+class action_page_responses(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('APC_ID'))
+    APC_ID = models.ForeignKey(action_page_choices, on_delete=models.CASCADE)
+    SESSION_ID = models.ForeignKey(sessions, on_delete=models.CASCADE)
+    PAGE_ID = models.ForeignKey('pages', on_delete=models.CASCADE)
+    DATE_TAKEN = models.DateTimeField(auto_now_add=True)
+
+class conversations_had(models.Model):
+    class Meta:
+        unique_together = (('SESSION_ID'),('STAKEHOLDER_ID'))
+    SESSION_ID = models.ForeignKey(sessions, on_delete=models.CASCADE)
+    DATE_TAKEN = models.DateTimeField(auto_now_add=True)
+    STAKEHOLDER_ID = models.ForeignKey('stakeholders', on_delete = models.CASCADE)
+
+class EditorWhitelist(models.Model): 
+    email = models.EmailField(db_column='Email', unique=True, max_length=225)
+    netId = models.CharField(db_column='NetId', max_length=150, unique=True)
+    id = models.AutoField(primary_key=True)
+
+class APITokens(models.Model):
+    id = models.AutoField(primary_key=True)
+    token = models.TextField(unique=True, db_column='token')
+    user = models.CharField(db_column='user', max_length=150, unique=True)
+
