@@ -279,6 +279,10 @@ export default function Editor(props) {
           // eslint-disable-next-line no-continue
           continue;
         }
+        if (pages[i].PAGE_TYPE === 'F') {
+          // eslint-disable-next-line no-continue
+          continue;
+        }
         // Intro page is first page on sidebar
         if (pages[i].PAGE_TYPE === 'I') {
           initialComponents.splice(4, 0, {
