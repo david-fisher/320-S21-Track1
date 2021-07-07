@@ -20,6 +20,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import SuccessBanner from '../Banners/SuccessBanner';
 import ErrorBanner from '../Banners/ErrorBanner';
 import GenericWarning from '../GenericWarning';
+import { Link } from 'react-router-dom';
 
 const TextTypography = withStyles({
   root: {
@@ -275,9 +276,9 @@ export default function Reflection({
         </Button>
       </Grid>
       <Grid item className={classes.nextButton}>
+      {nextPageEndpoint ? (
         <Button
           variant="contained"
-          disabled={!savedAnswers}
           disableElevation
           color="primary"
           onClick={() => getNextPage(
@@ -289,6 +290,18 @@ export default function Reflection({
         >
           Next
         </Button>
+        ) : (
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          component={Link}
+          to={{
+            pathname: '/dashboard',
+          }}
+        >
+          Exit
+        </Button> )}
       </Grid>
     </Grid>
   );
