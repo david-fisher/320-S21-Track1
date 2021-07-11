@@ -23,6 +23,8 @@ import ErrorBanner from '../components/Banners/ErrorBanner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import EnrolledClassesButton from '../components/classesEnrolledDialog';
 
+import axios from 'axios';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

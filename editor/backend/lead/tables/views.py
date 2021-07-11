@@ -1445,7 +1445,8 @@ class register_user_api(APIView):
             return self.makeJSONResponse({"msg": "created" if created else "exists", "status": True}, 200) # returns 200 status code with 'exists' msg
         
         except:
-            return self.makeJSONResponse({"msg": "internal server error", "status": False}, 500) # return 500 in case the backend goes boom!
+            print(print(sys.exc_info()))
+            return self.makeJSONResponse({"msg": sys.exc_info(), "status": False}, 500) # return 500 in case the backend goes boom!
 
 
 class coursesAPI(APIView):
@@ -1721,24 +1722,24 @@ class dashboard_page(APIView):
             return Response(intro_page_serializer.errors)
         
         # create a new feedback page
-        feedback_page = {
-        "PAGE_TYPE": "F",
-        "PAGE_TITLE": "Feedback",
-        "PAGE_BODY": "Feedback Page body",
-        "SCENARIO": scenario_dict['SCENARIO'],
-        "NEXT_PAGE": None,
-        "X_COORDINATE": 0,
-        "Y_COORDINATE": 0
-        }
+        # feedback_page = {
+        # "PAGE_TYPE": "F",
+        # "PAGE_TITLE": "Feedback",
+        # "PAGE_BODY": "Feedback Page body",
+        # "SCENARIO": scenario_dict['SCENARIO'],
+        # "NEXT_PAGE": None,
+        # "X_COORDINATE": 0,
+        # "Y_COORDINATE": 0
+        # }
 
-        feedback_page_serializer = PagesSerializer(data=feedback_page)
-        print(feedback_page_serializer)
-        if feedback_page_serializer.is_valid():
-            feedback_page_serializer.save()
-        else:
-            print("feedback page saved incorrectly")
-            print(feedback_page_serializer.errors)
-            return Response(feedback_page_serializer.errors)
+        # feedback_page_serializer = PagesSerializer(data=feedback_page)
+        # print(feedback_page_serializer)
+        # if feedback_page_serializer.is_valid():
+        #     feedback_page_serializer.save()
+        # else:
+        #     print("feedback page saved incorrectly")
+        #     print(feedback_page_serializer.errors)
+        #     return Response(feedback_page_serializer.errors)
 
         
         #TODO create blank stakeholder page and return it

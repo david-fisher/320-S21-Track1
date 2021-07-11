@@ -253,10 +253,10 @@ def readAttributes(request):
         }
     except KeyError as ex:
         resultData = {
-                "userId": "gerrygan",
-                "name": "Gerry Gan",
-                "affiliation": "Student",
-                "email": "example@umass.edu"
+#                "userId": "gerrygan",
+ #               "name": "Gerry Gan",
+  #              "affiliation": "Student",
+   #             "email": "example@umass.edu"
         }
 
     return JsonResponse(status=200, data={'status': 200, 'message':'success', 'result': resultData})

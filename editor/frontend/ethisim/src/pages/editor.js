@@ -288,6 +288,9 @@ export default function Editor(props) {
             component: null,
           });
         } else {
+          if(pages[i].PAGE_TYPE === 'F') {
+            continue;
+          }
           initialComponents.push({
             id: pages[i].PAGE,
             title: pages[i].PAGE_TITLE,

@@ -55,6 +55,7 @@ export default function LoginEditor() {
       setRedirect(true);
     }
     function onSuccess(resp) {
+      console.log(resp);
       post(setPostShibAttributes, '/registerUser', onFailure, onSuccessPost, {
         netId: resp.data.result.userId,
         email: resp.data.result.email,
