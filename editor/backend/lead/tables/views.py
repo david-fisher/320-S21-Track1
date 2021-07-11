@@ -1672,7 +1672,7 @@ class dashboard_page(APIView):
         return Response(scenario_dict)
 
 class share_functionality(APIView):
-    def put(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         email = request.data["EMAIL"]
         access = request.data["ACCESS"]
         scenario = request.data["SCENARIO"]
