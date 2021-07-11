@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACK_URL_EDITOR, APIKEY, APIUSER} from '../Constants/Config';
+import { BACK_URL_EDITOR} from '../Constants/Config';
 // Universal delete request using axios
 export default function universalDelete(
   setResponse,
