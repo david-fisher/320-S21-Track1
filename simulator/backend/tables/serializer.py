@@ -178,7 +178,7 @@ class sessionsSerializer(serializers.ModelSerializer):
 class session_timesSerializer(serializers.ModelSerializer):
     class Meta:
         model = session_times
-        fields = '__all__'
+        fields = ('MOST_RECENT_ACCESS', 'START_TIME', 'END_TIME', 'SESSION_ID', 'PAGE_ID')
 
 class reflections_takenSerializer(serializers.ModelSerializer):
     class Meta:

@@ -336,7 +336,7 @@ class courses_for_user(APIView):
                         
                     # scenar_serializer = ScenariosSerializer(scenar, many=True).data
                     if scenar.IS_FINISHED == True:
-                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "STUDENT_FINISHED": finished})
+                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "IS_FINISHED": finished})
                 course_dict["SCENARIOS"] = scenario_dict
                 # print(scenario_dict)
                 # print(x)
@@ -427,5 +427,77 @@ def radarPlot(request):
             logging.exception("Exception thrown: Query Failed to retrieve Radar Plot")
 
         return JsonResponse(status=200, data={'status': 200, 'message': 'success', 'result': resultData})
+
+
+class studentData(APIView):
+    def add_detail(self, scenarios):
+        for scenario1 in scenarios:
+            scenario_id = scenario1['SCENARIO']
+
+            queryset1 = sessions.objects.filter(SCENARIO_ID=scenario_id)
+            sessList1 = sessionsSerializer(queryset1, many=True).data
+            for sess in sessList1:
+                queryset2= session_times.objects.filter(SESSION_ID = sess['SESSION_ID'])
+                print(queryset2)
+                sessList2 = session_timesSerializer(queryset2, many=True).data
+
+                for sess_time in sessList2:
+                    queryset = pages.objects.get(PAGE = sess_time['PAGE_ID'])
+                    querysetList = PagesSerializer(queryset).data
+                    if(not len(querysetList) == 0):
+                        sess_time['PAGE_TITLE'] = querysetList['PAGE_TITLE']
+                    if(action_page_responses.objects.filter(SESSION_ID_id = sess_time['SESSION_ID'], PAGE_ID_id = sess_time['PAGE_ID']).exists()):
+                        apr_queryset = action_page_responses.objects.get(SESSION_ID_id = sess_time['SESSION_ID'], PAGE_ID_id = sess_time['PAGE_ID'])
+                        apr_querysetList1 = action_page_responsesSerializer(apr_queryset).data
+                        sess_time['ACTION_CHOSEN']= action_page_choices.objects.filter(APC_ID = apr_querysetList1['APC_ID']).values('CHOICE')
+                    if(reflections_taken.objects.filter(SESSION_ID_id = sess_time['SESSION_ID'], PAGE_ID_id = sess_time['PAGE_ID']).exists()):
+                        rq_queryset = reflections_taken.objects.filter(SESSION_ID_id = sess_time['SESSION_ID'], PAGE_ID_id = sess_time['PAGE_ID'])
+                        rq_querysetList1 = reflections_takenSerializer(rq_queryset, many=True).data
+                        List3 = []
+                        for rq in rq_querysetList1:
+                            print('AAAAA')
+                            List3.append(rq['REFLECTIONS'])
+                        sess_time['REFLECTIONS_TAKEN'] = List3
+                    if(sess_time['PAGE_TITLE'] == 'Stakeholders'):
+                        conv_queryset = conversations_had.objects.filter(SESSION_ID = sess_time['SESSION_ID'])
+                        conv_list = conversations_hadSerializer(conv_queryset, many=True).data
+                        List4 = []
+                        for conv in conv_list:
+                            List4.append(stakeholders.objects.filter(STAKEHOLDER = conv['STAKEHOLDER_ID']).values('NAME'))
+                        sess_time['STAKEHOLDERS_SPOKEN_TO']= List4
+
+
+                sess["SESSION TIMES"]= sessList2
+
+            scenario1["SESSION"]= sessList1
+        return scenarios
+
+
+
+    def get(self, request, *args, **kwargs):
+        scenarioID = self.request.query_params.get('scenarioID')
+        # STAKEHOLDER_ID = self.request.GET.get('stakeholder_id')
+
+        # handle request for scenario_id
+        # get all stakeholder in scenario with id = scenario_id
+        if scenarioID != None:
+            # checking valid scenario ID
+            try:
+                # return empty if scenario doesn't have any stakeholder
+                # return list of stakeholder belong to that scenario
+                scenarios.objects.get(SCENARIO=scenarioID)
+                queryset = scenarios.objects.filter(SCENARIO=scenarioID)
+                data = ScenariosSerializer(queryset, many=True).data
+                data = self.add_detail(data)
+                return Response(data, status=status.HTTP_200_OK)
+
+            # return an error for non-existed scenario id
+            except Users.DoesNotExist:
+                message = {'MESSAGE': 'INVALID netID'}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
+
+        
+
+
 
 

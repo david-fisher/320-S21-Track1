@@ -104,6 +104,11 @@ ScenarioCard.propTypes = {
   courses: PropTypes.any,
   onDelete: PropTypes.any,
   accessLevel: PropTypes.number,
+  userID: PropTypes.string,
+  setSuccessBannerFade: PropTypes.any,
+  setSuccessBannerMessage: PropTypes.any,
+  setErrorBannerFade: PropTypes.any,
+  setErrorBannerMessage: PropTypes.any,
 };
 
 export default function ScenarioCard({
@@ -115,6 +120,11 @@ export default function ScenarioCard({
   courses,
   onDelete,
   accessLevel,
+  userID,
+  setSuccessBannerFade,
+  setSuccessBannerMessage,
+  setErrorBannerFade,
+  setErrorBannerMessage,
 }) {
   const [open, setOpen] = React.useState(false);
   const [openDeletePopup, setOpenDeletePopup] = React.useState(false);
@@ -212,7 +222,13 @@ export default function ScenarioCard({
         </Button>
       </Grid>
       <Grid className={classes.button} item xs={6}>
-        <ShareButton accessLevel={accessLevel} />
+        <ShareButton accessLevel={accessLevel} 
+        scenarioID={scenarioID}
+        userID={userID} 
+        setErrorBannerFade={setErrorBannerFade}
+        setErrorBannerMessage={setErrorBannerMessage}
+        setSuccessBannerMessage={setSuccessBannerMessage}
+        setSuccessBannerFade={setSuccessBannerFade}/>
       </Grid>
 
       {dataButton}

@@ -27,7 +27,8 @@ urlpatterns = [
     path('scenarios/sessiontimes/start', views.startSessionTimes, name="startSessionTimes"),
     path('scenarios/sessiontimes/end', views.endSessionTimes, name="endSessionTimes"),
     path('dashboard', courses_for_user.as_view()),
-    path('scenarios/radar', views.radarPlot, name='radarPlot')
+    path('scenarios/radar', views.radarPlot, name='radarPlot'),
+    path('studentData', studentData.as_view()),
 ]
 
 urlpatterns += router.urls

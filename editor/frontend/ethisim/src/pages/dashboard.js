@@ -178,6 +178,7 @@ export default function Dashboard(props) {
     NAME: ' ',
     IS_FINISHED: false,
     PUBLIC: false,
+    DEMO_MODE: false,
     NUM_CONVERSATIONS: 0,
     PROFESSOR: userID, // TODO change
     COURSES: [],
@@ -204,6 +205,7 @@ export default function Dashboard(props) {
   const handleClickOpen = () => {
     setOpen(true);
     NewScenario.PUBLIC = false;
+    NewScenario.DEMO_MODE = false;
     setNewScenario(NewScenario);
     getCourses();
   };
@@ -255,6 +257,7 @@ export default function Dashboard(props) {
         NAME: ' ',
         IS_FINISHED: false,
         PUBLIC: false,
+        DEMO_MODE: false,
         NUM_CONVERSATIONS: 0,
         PROFESSOR: userID,
         COURSES: [],
@@ -283,6 +286,7 @@ export default function Dashboard(props) {
       NAME: ' ',
       IS_FINISHED: false,
       PUBLIC: false,
+      DEMO_MODE: false,
       NUM_CONVERSATIONS: 0,
       PROFESSOR: userID,
       COURSES: [],
@@ -303,6 +307,7 @@ export default function Dashboard(props) {
     NewScenario.PUBLIC = !NewScenario.PUBLIC;
     setNewScenario(NewScenario);
   };
+
 
   // Update Classes
   const updateSelectedClasses = (selectedClasses) => {
@@ -389,6 +394,11 @@ export default function Dashboard(props) {
           courses={data.COURSES}
           onDelete={deleteScenario}
           accessLevel={data['ACCESS LEVEL']}
+          userID = {userID}
+          setErrorBannerFade={setErrorBannerFade}
+          setErrorBannerMessage={setErrorBannerMessage}
+          setSuccessBannerMessage={setSuccessBannerMessage}
+          setSuccessBannerFade={setSuccessBannerFade}
         />
       ));
       unfinishedScenarios = unfinishedScenarios.map((data) => (
@@ -402,6 +412,11 @@ export default function Dashboard(props) {
           courses={data.COURSES}
           onDelete={deleteScenario}
           accessLevel={data['ACCESS LEVEL']}
+          userID = {userID}
+          setErrorBannerFade={setErrorBannerFade}
+          setErrorBannerMessage={setErrorBannerMessage}
+          setSuccessBannerMessage={setSuccessBannerMessage}
+          setSuccessBannerFade={setSuccessBannerFade}
         />
       ));
       setFinishedScenarios(finishedScenarios);

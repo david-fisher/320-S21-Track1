@@ -239,9 +239,15 @@ export default function SimulationWindow(props) {
       case 'F':
         return (
           <Feedback
+            key={data.PAGE}
             sessionID={sessionID}
             scenarioID={scenarioID}
+            pageID={data.PAGE}
+            pageTitle={data.PAGE_TITLE}
+            body={data.PAGE_BODY}
+            getNextPage={getNextPage}
             getPrevPage={getExistingPage}
+            nextPageEndpoint={nextPageEndpoint}
             prevPageEndpoint={prevPageEndpoint}
           />
         );
@@ -270,32 +276,32 @@ export default function SimulationWindow(props) {
   // End session Time => Get Page Data=> Start new Session Time for next page => Load page data
   let getNextPage = (nextPageEndpoint, index, pages, sessionID) => {
     // TODO Last page, show feedback page
-    if (!nextPageEndpoint) {
-      const component = getPageComponent(
-        'F',
-        null,
-        null,
-        pages[index].pageEndpoint,
-      );
-      const newPage = {
-        visited: false,
-        completed: false,
-        title: 'Feedback',
-        id: -1,
-        pageEndpoint: null,
-        nextPageEndpoint: null,
-        component,
-      };
-      const copy = [...pages, newPage];
-      copy[index].completed = true;
-      copy[index].visited = true;
-      setPlayerContext((oldObj) => ({
-        ...oldObj,
-        activeIndex: oldObj.activeIndex + 1,
-        pages: copy,
-      }));
-      return;
-    }
+    // if (!nextPageEndpoint) {
+    //   const component = getPageComponent(
+    //     'F',
+    //     data,
+    //     nextEndpoint,
+    //     pages[index].pageEndpoint,
+    //   );
+    //   const newPage = {
+    //     visited: false,
+    //     completed: false,
+    //     title: 'Feedback',
+    //     id: -1,
+    //     pageEndpoint: null,
+    //     nextPageEndpoint: null,
+    //     component,
+    //   };
+    //   const copy = [...pages, newPage];
+    //   copy[index].completed = true;
+    //   copy[index].visited = true;
+    //   setPlayerContext((oldObj) => ({
+    //     ...oldObj,
+    //     activeIndex: oldObj.activeIndex + 1,
+    //     pages: copy,
+    //   }));
+    //   return;
+    // }
 
     let data;
     let next;
@@ -303,6 +309,8 @@ export default function SimulationWindow(props) {
     let component;
     let newPage;
     let copy;
+
+
     function onSuccess(resp) {
       data = resp.data;
       const indexInPages = pages.findIndex((obj) => obj.id === data.PAGE);

@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import InnerHTML from 'dangerously-set-html-content';
 import GlobalContext from '../../Context/GlobalContext';
+import { Link } from 'react-router-dom';
 
 const TextTypography = withStyles({
   root: {
@@ -52,6 +53,7 @@ export default function GenericPage({
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
 
+
   const Buttons = (
     <Grid container direction="row" justify="space-between">
       <Grid item className={classes.backButton}>
@@ -66,7 +68,9 @@ export default function GenericPage({
           </Button>
         )}
       </Grid>
+      
       <Grid item className={classes.nextButton}>
+      {nextPageEndpoint ? (
         <Button
           variant="contained"
           disableElevation
@@ -80,6 +84,18 @@ export default function GenericPage({
         >
           Next
         </Button>
+        ) : (
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          component={Link}
+          to={{
+            pathname: '/dashboard',
+          }}
+        >
+          Exit
+        </Button> )}
       </Grid>
     </Grid>
   );

@@ -42,9 +42,11 @@ const useStyles = makeStyles((theme) => ({
 Feedback.propTypes = {
   scenarioID: PropTypes.number.isRequired,
   getPrevPage: PropTypes.func.isRequired,
+  getNextPage: PropTypes.func,
   prevPageEndpoint: PropTypes.string.isRequired,
+  nextPageEndpoint: PropTypes.string.isRequired,
 };
-export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) {
+export default function Feedback({ scenarioID, getPrevPage, getNextPage, prevPageEndpoint, nextPageEndpoint }) {
   const classes = useStyles();
   // eslint-disable-next-line
   let [contextObj, setContextObj] = useContext(GlobalContext);
@@ -93,6 +95,21 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
         </Button>
       </Grid>
       <Grid item className={classes.nextButton}>
+      {nextPageEndpoint ? (
+        <Button
+          variant="contained"
+          disableElevation
+          color="primary"
+          onClick={() => getNextPage(
+            nextPageEndpoint,
+            contextObj.activeIndex,
+            contextObj.pages,
+            contextObj.sessionID,
+          )}
+        >
+          Next
+        </Button>
+        ) : (
         <Button
           variant="contained"
           disableElevation
@@ -103,7 +120,7 @@ export default function Feedback({ scenarioID, getPrevPage, prevPageEndpoint }) 
           }}
         >
           Exit
-        </Button>
+        </Button> )}
       </Grid>
     </Grid>
   );
