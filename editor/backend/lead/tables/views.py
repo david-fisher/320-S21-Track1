@@ -1685,9 +1685,8 @@ class share_functionality(APIView):
             if(user_access.objects.filter(SHARED_BY=sharer, SCENARIO_ID_id = scenario).exists()):
                 user_access.objects.filter(SHARED_BY=sharer, SCENARIO_ID_id = scenario).delete()
             if(scenarios.objects.filter(user=sharer, SCENARIO=scenario).exists()):
-                a = scenarios.objects.get(user=sharer, SCENARIO=scenario)
                 scenarios.objects.filter(user=sharer, SCENARIO=scenario).update(user=user_id)
-                a.refresh_from_db()
+    
                 
             access_dict = {
                 "USER_ID": user_id,

@@ -177,6 +177,7 @@ export default function Logistics({ scenario_ID }) {
   const [numConvos, setNumConvos] = useState(0);
   const [isPublic, setIsPublic] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
 
   // For Banners
   useEffect(() => {
@@ -205,6 +206,12 @@ export default function Logistics({ scenario_ID }) {
     setGlobalUnsaved(true);
     setIsFinished(event.target.checked);
     setEdit({ ...NewScenario, IS_FINISHED: event.target.checked });
+  };
+
+  const handleOnChangeDemo = (event) => {
+    setGlobalUnsaved(true);
+    setIsDemo(event.target.checked);
+    setEdit({ ...NewScenario, DEMO_MODE: event.target.checked });
   };
 
   const handleOnChangeNumConvo = (event) => {
@@ -255,6 +262,7 @@ export default function Logistics({ scenario_ID }) {
     NUM_CONVERSATION: 0,
     PROFESSOR: 0,
     IS_FINISHED: false,
+    DEMO_MODE: false,
     DATE_CREATED: ' ',
     COURSES: [],
   });
@@ -268,10 +276,12 @@ export default function Logistics({ scenario_ID }) {
       NewScenario.NUM_CONVERSATION = response.data.NUM_CONVERSATION;
       NewScenario.PROFESSOR = response.data.PROFESSOR;
       NewScenario.IS_FINISHED = response.data.IS_FINISHED;
+      NewScenario.DEMO_MODE = response.data.DEMO_MODE;
       NewScenario.DATE_CREATED = response.data.DATA_CREATED;
       NewScenario.COURSES = response.data.COURSES;
       setScenarioName(response.data.NAME);
       setIsFinished(response.data.IS_FINISHED);
+      setIsDemo(response.data.DEMO_MODE);
       setIsPublic(response.data.PUBLIC);
       setNumConvos(response.data.NUM_CONVERSATION);
       setEdit(NewScenario);
@@ -576,6 +586,17 @@ export default function Logistics({ scenario_ID }) {
               />
                           )}
             label="Published"
+            labelPlacement="start"
+          />
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={isDemo}
+                onChange={handleOnChangeDemo}
+                color="primary"
+              />
+                          )}
+            label="Demo Mode"
             labelPlacement="start"
           />
         </form>

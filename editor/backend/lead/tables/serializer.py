@@ -12,14 +12,14 @@ class UserSerializer(serializers.ModelSerializer):
 class user_accessSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_access
-        fields = '__all__'
+        fields = ('USER_ID', 'ACCESS_LEVEL', 'SCENARIO_ID', 'SHARED_BY')
 
 
 class ScenariosSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
     class Meta:
         model = scenarios
-        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PUBLIC', 'user_id', 'DATE_CREATED', 'NUM_CONVERSATION')
+        fields = ('SCENARIO', 'NAME', 'IS_FINISHED', 'PUBLIC','DEMO_MODE', 'user_id', 'DATE_CREATED', 'NUM_CONVERSATION')
 
     def create(self, validated_data):
         user_id = validated_data.pop('user_id')

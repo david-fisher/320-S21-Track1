@@ -11,6 +11,7 @@ class scenarios(models.Model):
     NAME = models.CharField(max_length = 1000)
     PUBLIC = models.BooleanField(default = False)
     IS_FINISHED = models.BooleanField(default = False)
+    DEMO_MODE = models.BooleanField(default = False)
     DATE_CREATED = models.DateField(auto_now_add=True)
     NUM_CONVERSATION = models.IntegerField(db_column='NUM_CONVERSATION', blank=True, null=True)  # Field name made lowercase.
     # models.OneToOneField('pages', on_delete = models.CASCADE, related_name = "scenarios1", default = 1)

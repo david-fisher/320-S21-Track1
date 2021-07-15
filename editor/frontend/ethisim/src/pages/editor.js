@@ -254,6 +254,7 @@ export default function Editor(props) {
         title: logistics_and_pages.NAME,
         is_finished: logistics_and_pages.IS_FINISHED,
         public_scenario: logistics_and_pages.PUBLIC,
+        demo_cenario: logistics_and_pages.DEMO_MODE,
         num_convos: logistics_and_pages.NUM_CONVERSATION,
         professors: [logistics_and_pages.PROFESSOR],
         courses: logistics_and_pages.COURSES,
