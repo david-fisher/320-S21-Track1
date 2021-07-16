@@ -273,13 +273,13 @@ export default function Radar({ scenarioID }) {
         The summary value is a score that combines the degree of coverage with the importance of the issues covered.
       </Typography>
       <Typography variant="body1">
-        {'score >= 0.4: Good coverage behavior (Green on Radar Plot)'}
+        {'score >= 0.45: Good coverage behavior (Green on Radar Plot)'}
       </Typography>
       <Typography variant="body1">
-        {'0.4 >= score >= 0.2: Ok coverage behavior (Yellow on Radar Plot)'}
+        {'0.45 >= score >= 0.1: Ok coverage behavior (Yellow on Radar Plot)'}
       </Typography>
       <Typography variant="body1">
-        {'0.2 >= score >= 0: Poor coverage behavior (Red on Radar Plot)'}
+        {'0.1 >= score >= 0: Poor coverage behavior (Red on Radar Plot)'}
       </Typography>
       {totalScore !== -1
         ? (
