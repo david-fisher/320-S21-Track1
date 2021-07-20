@@ -29,6 +29,7 @@ export default function Tags(props) {
 
   const onTagsChange = (event, values) => {
     props.update(values);
+    props.handleCourseCode(values);
   };
 
   return (

@@ -21,7 +21,6 @@ export default function universalFetch(
       // 'api-token': APIKEY
     }
   }
-
   axios
     .get(BACK_URL_EDITOR + endpoint, config, { withCredentials: true })
     .then((resp) => {

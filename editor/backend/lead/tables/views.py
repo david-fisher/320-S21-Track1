@@ -21,6 +21,9 @@ import urllib
 import csv
 import sys
 import os
+import hashlib
+import base64
+import time
 
 from .global_cache import *
 
@@ -184,6 +187,7 @@ class CoursesViewSet(viewsets.ModelViewSet):
     queryset = courses.objects.all()
     permission_classes = [permissions.IsFaculty]
     serializer_class = CoursesSerializer
+
 
 
 
@@ -1391,7 +1395,7 @@ class scenarios_forapi(APIView):
             # return an error for non-existed scenario id
             except Users.DoesNotExist:
                 message = {'MESSAGE': 'INVALID netID'}
-                return Response(message, status=status.HTTP_404_NOT_FOUND)
+                return Response(message, status=status.HTTP_404_NOT_FOUND) 
 
 class register_user_api(APIView):
 
@@ -1440,8 +1444,101 @@ class register_user_api(APIView):
 
             return self.makeJSONResponse({"msg": "created" if created else "exists", "status": True}, 200) # returns 200 status code with 'exists' msg
         
-        except FileNotFoundError:
-            return self.makeJSONResponse({"msg": str(FileNotFoundError), "status": False}, 500) # return 500 in case the backend goes boom!
+        except:
+            print(print(sys.exc_info()))
+            return self.makeJSONResponse({"msg": sys.exc_info(), "status": False}, 500) # return 500 in case the backend goes boom!
+
+
+class coursesAPI(APIView):
+
+    def makeJSONResponse(self, data, code):
+        return Response(data, status=code, content_type="application/json")
+    
+    def checkRequest(self, request):
+        data = request.data
+        return ("courseId" not in data) or ("courseName" not in data)
+    
+    def generateUniqueAccessCode(self, courseId):
+        # add the current timestamp(in ms) to the courseId to make it unique for every request
+        courseId += str(round(time.time() * 1000))
+        # generate a sha256 hash from this unique courseId. Given the limited number of courses and billions of unique hashes possible, the probability of collision is significantly less
+        m = hashlib.sha256()
+        m.update(courseId.encode())
+        hash_str = m.hexdigest()
+        # truncate the hash
+        hash_str = hash_str[0:6]
+
+        return hash_str
+    
+    def checkIfAccessKeyExists(self, key):
+
+        query = course_invitations.objects.filter(ACCESS_KEY=key)
+        return len(list(course_invitationsSerializer(query, many=True).data)) == 1
+    
+    def post(self, request, *args, **kwargs):
+
+        try:
+            if self.checkRequest(request):
+                return self.makeJSONResponse({"msg": "JSON request not formatted properly", "status": False}, 400)
+            
+            # get the course name and course id from the request body
+            courseName = request.data["courseName"]
+            courseId = str(request.data["courseId"])
+
+            # write a new record to the courses table
+            courses.objects.all().create(COURSE=courseId, NAME=courseName).save()
+
+            # keep generating access key until it no longer already exists in the table.
+            # we'd only have a maximum of I think 100 courses, so odds are infinitesimally small that we'd even run into collisions
+            # but it's a safe approach to have that check
+            
+            key = ""
+            while True:
+                key = self.generateUniqueAccessCode(courseId)
+                print(key)
+                if not self.checkIfAccessKeyExists(key):
+                    break
+
+            return self.makeJSONResponse({"msg": "The key is " + key, "status": True}, 200)
+        
+        except:
+            print(sys.exc_info())
+            return self.makeJSONResponse({"msg": "Internal server error", "status": False}, 500)
+
+
+class ScriptPopulateCoursesInvitationsTable(APIView):
+
+    def generateUniqueAccessCode(self, courseId):
+        # add the current timestamp(in ms) to the courseId to make it unique for every request
+        courseId += str(round(time.time() * 1000))
+        # generate a sha256 hash from this unique courseId. Given the limited number of courses and billions of unique hashes possible, the probability of collision is significantly less
+        m = hashlib.sha256()
+        m.update(courseId.encode())
+        hash_str = m.hexdigest()
+        # truncate the hash
+        hash_str = hash_str[0:6]
+
+        return hash_str
+    
+    def checkIfAccessKeyExists(self, key):
+
+        query = course_invitations.objects.filter(ACCESS_KEY=key)
+        return len(list(course_invitationsSerializer(query, many=True).data)) == 1
+
+    def get(self, request, *args, **kwargs):
+        query = courses.objects.all()
+        result = CoursesSerializer(query, many=True).data
+
+        for record in result:
+            print(record)
+            key = ""
+            while True:
+                key = self.generateUniqueAccessCode(record['COURSE'])
+                if not self.checkIfAccessKeyExists(key):
+                    break
+            
+            course_invitations.objects.create(COURSE_ID_id=record['COURSE'], ACCESS_KEY=key).save()
+
 
 class dashboard_page(APIView):
     # def get(self, request, *args, **kwargs):
@@ -1625,24 +1722,24 @@ class dashboard_page(APIView):
             return Response(intro_page_serializer.errors)
         
         # create a new feedback page
-        feedback_page = {
-        "PAGE_TYPE": "F",
-        "PAGE_TITLE": "Feedback",
-        "PAGE_BODY": "Feedback Page body",
-        "SCENARIO": scenario_dict['SCENARIO'],
-        "NEXT_PAGE": None,
-        "X_COORDINATE": 0,
-        "Y_COORDINATE": 0
-        }
+        # feedback_page = {
+        # "PAGE_TYPE": "F",
+        # "PAGE_TITLE": "Feedback",
+        # "PAGE_BODY": "Feedback Page body",
+        # "SCENARIO": scenario_dict['SCENARIO'],
+        # "NEXT_PAGE": None,
+        # "X_COORDINATE": 0,
+        # "Y_COORDINATE": 0
+        # }
 
-        feedback_page_serializer = PagesSerializer(data=feedback_page)
-        print(feedback_page_serializer)
-        if feedback_page_serializer.is_valid():
-            feedback_page_serializer.save()
-        else:
-            print("feedback page saved incorrectly")
-            print(feedback_page_serializer.errors)
-            return Response(feedback_page_serializer.errors)
+        # feedback_page_serializer = PagesSerializer(data=feedback_page)
+        # print(feedback_page_serializer)
+        # if feedback_page_serializer.is_valid():
+        #     feedback_page_serializer.save()
+        # else:
+        #     print("feedback page saved incorrectly")
+        #     print(feedback_page_serializer.errors)
+        #     return Response(feedback_page_serializer.errors)
 
         
         #TODO create blank stakeholder page and return it

@@ -122,11 +122,16 @@ export default function CodeDialog({
   const [open, setOpen] = useState(false);
   // eslint-disable-next-line
   const [course, setCourse] = useState('');
+  const [accessKey, setAccessKey] = useState('');
   const [courseCode, setCourseCode] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const handleCourseCode = (val) => {
+    setCourseCode(val.COURSE);
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -158,10 +163,10 @@ export default function CodeDialog({
     function onFailure(resp) {
       setErrorBannerFade(true);
     }
-
     post(setPostCourseResponse, '/api/takes/', onFailure, onSuccess, {
       USER_ID: userID,
       COURSE_ID: courseCode.toUpperCase(),
+      ACCESS_KEY: accessKey
     });
   };
 
@@ -203,14 +208,14 @@ export default function CodeDialog({
           <div style={{ marginBottom: '16px' }}>
             <EnrolledClassesButton courses={enrolledCourses} />
           </div>
-          <DropDownCourses courses={courses} update={updateSelectedClasses} />
+          <DropDownCourses courses={courses} update={updateSelectedClasses}  handleCourseCode={handleCourseCode}/>
           <form className={classes.textField} noValidate autoComplete="off">
             <ValidationTextField
               label="Enter Course Code"
               id="Enter Course Code"
               variant="outlined"
-              value={courseCode}
-              onInput={(e) => setCourseCode(e.target.value)}
+              value={accessKey}
+              onInput={(e) => setAccessKey(e.target.value)}
             />
           </form>
         </DialogContent>

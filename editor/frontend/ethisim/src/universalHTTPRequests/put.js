@@ -13,7 +13,7 @@ export default function universalPut(
     loading: true,
     error: null,
   });
-
+  console.log(document.cookie + "ishaan");
   let config = {
     headers: {
       // 'api-user': APIUSER,

@@ -23,6 +23,8 @@ import ErrorBanner from '../components/Banners/ErrorBanner';
 import SuccessBanner from '../components/Banners/SuccessBanner';
 import EnrolledClassesButton from '../components/classesEnrolledDialog';
 
+import axios from 'axios';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -224,6 +226,7 @@ export default function Home(props) {
       });
       scenarios = Array.from(scenarioMap, ([name, value]) => (value));
       function onSuccessSessions(resp) {
+        console.log(resp);
         scenarios.forEach((obj) => {
           if (resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID && o.USER_ID === obj.userID).length) {
             obj.isFinished = resp.data.filter((o) => o.SCENARIO_ID === obj.scenarioID)[0].IS_FINISHED;

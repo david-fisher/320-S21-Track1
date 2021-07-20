@@ -156,7 +156,7 @@ class Versions(models.Model):
 
 class course_invitations(models.Model):
     COURSE_ID = models.ForeignKey(courses, on_delete=CASCADE)
-    ACCESS_KEY = models.IntegerField()
+    ACCESS_KEY = models.CharField(max_length=6)
 
 class takes(models.Model):
     class Meta:

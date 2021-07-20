@@ -10,7 +10,6 @@ from . import views
 router = routers.DefaultRouter()
 router.register('api/users', usersViewSet, 'Users')
 router.register('api/courses', coursesViewSet, 'courses')
-router.register('api/takes', takesViewSet, 'takes')
 router.register('api/course_invitations', course_invitationsViewSet, 'course_invitations')
 router.register('api/course_assignment', course_assignmentViewSet, 'course_assignment')
 router.register('api/sessions', sessionsViewSet, 'sessions')
@@ -22,6 +21,8 @@ router.register('api/conversations_had', conversations_hadViewSet, 'conversation
 urlpatterns = [
     path('shib/attributes', views.readAttributes, name='readAttributes'),
     path('multi_reflection', multi_reflection.as_view()),
+    url(r'^api/takes/?$', takesAPI.as_view()),
+    url(r'^api/takes/(?P<id>.+)/?$', takesAPI.as_view()),
     path('scenarios/session/start', views.startSession, name="startSession"),
     path('scenarios/session/end', views.endSession, name="endSession"),
     path('scenarios/sessiontimes/start', views.startSessionTimes, name="startSessionTimes"),

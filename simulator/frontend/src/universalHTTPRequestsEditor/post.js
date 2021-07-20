@@ -22,7 +22,6 @@ export default function universalPost(
       // 'api-token': APIKEY
     }
   }
-
   axios
     .post(BACK_URL_EDITOR + endpoint, requestBody, config, { withCredentials: true })
     .then((resp) => {

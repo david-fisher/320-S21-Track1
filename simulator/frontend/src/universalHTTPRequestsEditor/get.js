@@ -14,7 +14,6 @@ export default function universalFetch(
     loading: true,
     error: null,
   });
-
   let config = {
     headers: {
       // 'api-user': APIUSER,
