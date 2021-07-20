@@ -329,14 +329,16 @@ class courses_for_user(APIView):
                     scenar = scenarios.objects.get(SCENARIO = scen['SCENARIO_id'])
                     first_page = pages.objects.get(SCENARIO = scen['SCENARIO_id'], PAGE_TYPE = "I")
                     finished = False
+                    session_id = 0
                     sess_list = sessions.objects.all()
                     for sess in sess_list:
                         if(sess.SCENARIO_ID_id == scen['SCENARIO_id'] and sess.USER_ID_id == USER):
                             finished = sess.IS_FINISHED
+                            session_id = sess.SESSION_ID
                         
                     # scenar_serializer = ScenariosSerializer(scenar, many=True).data
                     if scenar.IS_FINISHED == True:
-                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "IS_FINISHED": finished})
+                        scenario_dict.append({"SCENARIO": scenar.SCENARIO, "USER":scenar.user_id, "NAME":scenar.NAME, "PUBLIC":scenar.PUBLIC, "DATE_CREATED": scenar.DATE_CREATED, "NUM_CONVERSATION": scenar.NUM_CONVERSATION, "FIRST_PAGE": first_page.PAGE, "IS_FINISHED": finished, "DEMO_MODE": scenar.DEMO_MODE, "SESSION_ID": session_id})
                 course_dict["SCENARIOS"] = scenario_dict
                 # print(scenario_dict)
                 # print(x)

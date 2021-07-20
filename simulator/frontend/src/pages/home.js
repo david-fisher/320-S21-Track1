@@ -17,6 +17,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import ScenarioCard from '../components/scenarioCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import getSimulator from '../universalHTTPRequestsSimulator/get';
+import deleteReq from '../universalHTTPRequestsSimulator/delete';
 import getEditor from '../universalHTTPRequestsEditor/get';
 import CourseCodeButton from '../components/classCodeDialog';
 import ErrorBanner from '../components/Banners/ErrorBanner';
@@ -151,6 +152,11 @@ export default function Home(props) {
     incompleteScenarios: null,
     completeScenarios: null,
   });
+  const [deleteReqValue, setDeleteResponse] = useState({
+    data: null,
+    loading: false,
+    error: null,
+  });
   const [fetchSessionsResponse, setFetchSessionsResponse] = useState({
     data: null,
     loading: true,
@@ -203,6 +209,8 @@ export default function Home(props) {
         date: data.SCENARIOS[0].DATE_CREATED,
         scenarioID: data.SCENARIOS[0].SCENARIO,
         firstPage: data.SCENARIOS[0].FIRST_PAGE,
+        demoMode: data.SCENARIOS[0].DEMO_MODE,
+        sessionId: data.SCENARIOS[0].SESSION_ID,
         courses: [{
           COURSE: data.COURSE,
           NAME: data.NAME,
@@ -210,6 +218,28 @@ export default function Home(props) {
         ],
         userID,
       }));
+
+      function onSuccess(response) {
+      }
+
+      const endpointDELETE = '/api/sessions/';
+      
+      scenarios.forEach((data) => {
+        console.log(data.demoMode)
+        if(data.demoMode === true && data.sessionId !== 0){
+          console.log('BBBBBBB')
+            deleteReq(
+              setDeleteResponse,
+              `${endpointDELETE + data.sessionId}/`,
+              onError,
+              onSuccess,
+            );
+        }
+        else{
+        }
+      });
+
+      // console.log('AAAAAA')
 
       const scenarioMap = new Map();
       // For duplicated scenarios with multiple courses
@@ -249,6 +279,14 @@ export default function Home(props) {
           onSuccessSessions,
         );
       }
+      // console.log('AAAAAA')
+
+      
+    }
+
+    function onError(e) {
+      setErrorBannerMessage('Failed to get scenarios! Please refresh the page.');
+      setErrorBannerFade(true);
     }
 
     function onFailure(e) {
